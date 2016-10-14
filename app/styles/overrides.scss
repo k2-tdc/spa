@@ -1,0 +1,499 @@
+$icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+@import 'bootstrap-sass-official/assets/stylesheets/bootstrap.scss';
+@import 'header';
+@import 'mmenu';
+
+body,
+html {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  min-width: 320px;
+}
+
+body {
+  background-color: #fff;
+  font-family: Arial, Verdana, "細明體", "新細明體", "標楷體", Helvetica;
+  position: relative;
+  -webkit-text-size-adjust: none;
+}
+
+body * {
+  text-shadow: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1;
+  font-weight: bold;
+  margin: 20px 0 10px;
+}
+
+h1,
+h2,
+h3 {
+  font-size: 18px;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 16px;
+}
+
+p {
+  margin: 0 0 10px;
+}
+
+a,
+a:active,
+a:hover,
+a:link,
+a:visited {
+  color: inherit;
+  text-decoration: underline;
+}
+
+nav:not(.mm-menu) {
+  display: none;
+}
+
+.content,
+.footer,
+.header {
+  text-align: center;
+}
+
+.footer,
+.header {
+  background: #777;
+  font-weight: bold;
+  color: #fff;
+  line-height: 40px;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  padding: 0 50px;
+}
+
+.header.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.footer.fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+#content {
+  padding: 110px 20px 20px;
+}
+/* OVERRIDES START */
+textarea {
+  resize: none;
+}
+/* FORM */
+.form-sep {
+  height: 20px;
+  display: block;
+  width: 100%;
+}
+
+.panel-default {
+  border: 0;
+  box-shadow: none;
+}
+
+.panel-default > .panel-heading {
+  border: 1px rgba(0, 0, 0, .1) solid;
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.panel-title {
+  text-align: left;
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+.panel-title > .btn-group {
+  display: inline-block;
+  width: 100%;
+}
+
+div.check-status > button.btn.btn-default.dropdown-toggle.btn-block {
+  border: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: left;
+}
+
+div.check-status > button.btn.btn-default.dropdown-toggle.btn-block:active,
+div.check-status > button.btn.btn-default.dropdown-toggle.btn-block:focus,
+div.check-status > button.btn.btn-default.dropdown-toggle.btn-block:hover {
+  background: initial;
+}
+
+div.check-status > button.btn.btn-default.dropdown-toggle > span.glyphicon {
+  font-size: 14px;
+}
+
+ul.dropdown-menu > li > a {
+  text-decoration: none;
+}
+
+ul.dropdown-menu > li > a:hover {
+  color: #f47820;
+}
+
+div.check-status > ul.dropdown-menu {
+  width: 100%;
+  margin-left: 0;
+}
+
+label.control-label {
+  color: rgb(0, 85, 255);
+  font-weight: lighter;
+  text-align: left;
+  float: left;
+}
+
+.btn-primary {
+  background: white;
+  border-color: rgb(0, 85, 255);
+  color: rgb(0, 85, 255);
+}
+
+.btn-primary:hover {
+  background: white;
+  border-color: #f47820;
+  color: #f47820;
+}
+
+.newrequest-basic-information {
+  padding: 20px 0;
+  width: 100%;
+  margin: 0;
+}
+
+.newrequest-basic-information > div {
+  line-height: 35px;
+  text-align: left;
+  margin: 0;
+}
+
+div.newrequest-title {
+  color: rgb(0, 85, 255);
+  line-height: 35px;
+  text-align: left;
+}
+
+.select-applicant,
+.select-service,
+.select-service-header {
+  border: 1px rgba(0, 0, 0, .1) solid;
+  margin-bottom: 0;
+}
+
+.select-applicant > .panel-body {
+  padding: 15px;
+}
+
+.select-applicant > .panel-body > div {
+  text-align: left;
+  line-height: 35px;
+  padding: 0;
+}
+
+.select-applicant > .panel-body > label {
+  padding: 0;
+  text-align: left;
+  line-height: 36px;
+}
+
+.select-applicant button:not(.dropdown-toggle) {
+  width: calc(100% - 26px);
+  text-align: left;
+}
+
+ul.dropdown-menu {
+  margin-left: 15px;
+  width: calc(100% - 30px);
+}
+
+.nav-header-main ul.dropdown-menu {
+  margin-left: 0;
+}
+
+.request-application > .row {
+  margin: 0;
+}
+
+.request-application > .row > div {
+  text-align: left;
+}
+
+.select-service-header input[type=checkbox] {
+  -ms-transform: scale(2);
+  /* IE */
+  -moz-transform: scale(2);
+  /* FF */
+  -webkit-transform: scale(2);
+  /* Safari and Chrome */
+  -o-transform: scale(2);
+  /* Opera */
+  float: left;
+  margin: 8px 20px 0 5px;
+}
+
+.select-service-header .checkbox-option {
+  line-height: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.select-service-header .checkbox-option-drop {
+  text-align: right;
+}
+
+.select-service-header .checkbox-option-drop > span {
+  width: 30px;
+  height: 30px;
+  line-height: 28px;
+  border-radius: 50%;
+  border: 2px grey solid;
+  text-align: center;
+}
+
+.sep-space {
+  height: 10px;
+}
+
+.select-service .select-service-title {
+  text-transform: uppercase;
+  line-height: 40px;
+  text-align: left;
+}
+
+.select-service {
+  margin-bottom: 0;
+}
+
+.select-service span.select-applicant-step {
+  border-radius: 50%;
+  border: 1px grey solid;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  display: block;
+  text-align: center;
+  font-weight: bold;
+}
+
+div.full-width > button:not(.dropdown-toggle):not(.btn-add) {
+  width: calc(100% - 26px);
+  text-align: left;
+}
+
+span.glyphicon.glyphicon-remove.select-applicant-del {
+  display: block;
+  line-height: 30px;
+  width: 30px;
+  height: 30px;
+  background-color: #f57921;
+  border-radius: 50%;
+  text-align: center;
+  color: white;
+}
+
+span.glyphicon.glyphicon-menu-down,
+span.glyphicon.glyphicon-menu-up {
+  cursor: pointer;
+}
+
+span.service-title-desp {
+  text-transform: initial;
+  color: grey;
+  margin-left: 20px;
+}
+
+.onsite-standby-service span.service-title-desp {
+  margin-left: 0;
+  display: block;
+}
+
+.select-service-header div.newrequest-title {}
+
+.btn-orange {
+  color: white;
+  background-color: #f57921;
+  border-color: #f57921;
+}
+
+.panel-title {
+  line-height: 40px;
+}
+
+.panel-active {
+  box-shadow: 0 0 10px #f57921;
+}
+
+.contact-group {
+  text-align: left;
+}
+
+div.dataTables_info,
+div.dataTables_length,
+div.dataTables_wrapper table {
+  text-align: left;
+}
+
+.form-control:focus {
+  border-color: rgb(244, 120, 32);
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(244, 120, 32, .6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(244, 120, 32, .6);
+}
+
+.btn:focus {
+  outline-color: rgb(244, 120, 32);
+}
+
+/* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
+@media screen and (max-width: 767px) {
+  #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+    font-size: 13px;
+    padding: 6px 0;
+    letter-spacing: -0.5px;
+  }
+  /* HEADER */
+  #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+
+  html.mm-opening #header {
+    position: absolute;
+  }
+
+  #header_top > .header-top-group > .sep-vertical {
+    margin: 7px 5px;
+  }
+
+  #header_top .logo-hktdc {
+    width: 80px;
+    margin-right: 10px;
+  }
+
+  #header_main .logo-hktdc {
+    display: none;
+  }
+
+  #header_main > span.sep-space {
+    width: 0;
+  }
+
+  span.nav-header-user-text {
+    display: none;
+  }
+
+  .header-top-group > .sep-vertical,
+  .header-top-group > a {
+    display: none;
+  }
+
+  .table-responsive {
+    border: 0;
+  }
+  @media screen and (min-width: 520px) {
+    #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+      font-size: 16px;
+    }
+  }
+}
+
+/* TABLET > Desktop */
+@media screen and (min-width: 768px) {
+  #header_top .logo-hktdc {
+    display: none;
+  }
+  /* MMenu OVERRIDES */
+  html.mm-opened.mm-opening #mm-blocker.mm-slideout {
+    position: fixed;
+    top: 30px;
+    left: -440px;
+    width: 60px;
+    height: 60px;
+  }
+
+  html.mm-opened.mm-opening .mm-menu.mm-offcanvas {
+    position: absolute;
+    left: -440px;
+    top: 90px;
+    z-index: 2;
+    max-width: 300px;
+  }
+
+  html.mm-opened .mm-menu.mm-offcanvas.mm-current {
+    left: 0;
+  }
+
+  html.mm-opening #page.mm-slideout {
+    transform: none;
+    background: initial;
+    height: 100%;
+  }
+
+  html.mm-opening #page.mm-slideout #content {
+    padding: 110px 20px 20px;
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    height: calc(100%);
+    overflow-y: scroll;
+  }
+
+  #header_main > span.sep-space {
+    width: 20px;
+  }
+
+  html.mm-opening #header_main > span.sep-space {
+    width: 90px;
+  }
+
+  html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+    letter-spacing: -0.5px;
+  }
+  @media screen and (max-width:959px) {
+    span.nav-header-user-text {
+      display: none;
+    }
+
+    #header_main .logo-hktdc {
+      display: none;
+    }
+
+    #header_top .logo-hktdc {
+      display: initial;
+      width: 80px;
+      margin-right: 20px;
+    }
+
+    html.mm-opening #header_main > span.sep-space {
+      width: 250px;
+    }
+  }
+}
