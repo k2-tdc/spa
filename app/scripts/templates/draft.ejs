@@ -1,0 +1,93 @@
+<div class="panel panel-default">
+  <div class="panel-heading" role="tab" id="headingOne">
+    <h3 class="panel-title">
+      <!-- Single button -->
+      <div class="btn-group check-status">
+        <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          MY Drafts
+          <span class="glyphicon glyphicon-menu-down"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="new-request.html">New Request</a>
+          </li>
+          <li>
+            <a href="#">Another Status</a>
+          </li>
+          <li>
+            <a href="#">Approval Status</a>
+          </li>
+        </ul>
+      </div>
+    </h3>
+  </div>
+  <div id="checkStatus">
+    <div class="panel-body">
+
+      <form class="form-horizontal">
+
+        <div class="form-group">
+          <label for="ref_id" class="col-sm-2 control-label">Ref. ID</label>
+          <div class="col-sm-10">
+            <input type="text" id="txtrefid" class="form-control" placeholder="">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
+          <div class="col-xs-6 col-sm-5">
+            <div class="input-group date pick-date-start" data-provide="datepicker">
+              <input type="text" id="txtfromdate" class="form-control">
+              <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-5">
+            <div class="input-group date pick-date-end" data-provide="datepicker">
+              <input type="text" id="txttodate" class="form-control">
+              <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="status" class="col-sm-2 control-label">Applicant</label>
+          <div class="col-sm-10">
+            <select id="divApplicant" class="form-control"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-1">
+            <input type="button" class="btn btn-primary" value="Search" id="btnSearchDraft">
+
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<div class="table-responsive">
+  <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>Last Action Date</th>
+        <th>Applicatant</th>
+        <th>Ref. ID / Summary</th>
+        <th style="width:20px;">Opertion</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Last Action Date</th>
+        <th>Applicatant</th>
+        <th>Ref. ID / Summary</th>
+        <th>Opertion</th>
+      </tr>
+    </tfoot>
+    <tbody id="Draftbody"></tbody>
+
+  </table>
+</div>

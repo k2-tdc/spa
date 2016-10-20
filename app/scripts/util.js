@@ -1,6 +1,39 @@
-/* copy from sample may useful */
-
+/* all application level methods should be placed here */
 window.utils = {
+
+  setApiURL: function(env) {
+    // console.log(env);
+    var envConfig = window.Hktdc.Config.environments[env || 'localDev'].api;
+    var host = envConfig.host;
+    var port = (envConfig.port) ? ':' + envConfig.port : '';
+    var base = envConfig.base;
+    Hktdc.Config.apiURL = 'http://' + host + port + base;
+    console.log(Hktdc.Config.apiURL);
+  },
+
+  parseQueryString: function(queryString) {
+    var params = {};
+    if (queryString) {
+      _.each(
+        _.map(decodeURI(queryString).split(/&/g), function(el, i) {
+          var aux = el.split('='),
+            o = {};
+          if (aux.length >= 1) {
+            var val = undefined;
+            if (aux.length == 2)
+              val = aux[1];
+            o[aux[0]] = val;
+          }
+          return o;
+        }),
+        function(o) {
+          _.extend(params, o);
+        }
+      );
+    }
+    return params;
+  },
+
   // Asynchronously load templates located in separate .html files
   loadTemplate: function(views, callback) {
 

@@ -1,0 +1,227 @@
+[
+  {
+    "GUID": "e5e0e7a0-4c3c-41fd-909f-392a4c8c64ae",
+    "Name": "Acquire Hardware/Software/IT Services",
+    "Level2": [
+      {
+        "GUID": "00000000-0000-0000-0000-000000000000",
+        "Name": "Request for Software",
+        "SValue": null,
+        "Level3": [
+          {
+            "GUID": "ff56016d-c80f-4961-b471-d14d985803b3",
+            "Name": "MS Office",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "20208e76-4c50-4dcb-a3ac-b43318b89e33",
+            "Name": "Adobe Photoshop",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "3f96ee9e-8864-4157-a7e2-9d9fd5b5269f",
+            "Name": "Adobe Acrobat Reader",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "552c9f91-5bfd-4291-b1ec-40fdb6537e35",
+            "Name": "Apple iTune",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "f94138b6-ccc5-4373-85f2-c19427014d74",
+            "Name": "Others",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          }
+        ]
+      },
+      {
+        "GUID": "00000000-0000-0000-0000-000000000000",
+        "Name": "Request for Hardware",
+        "SValue": null,
+        "Level3": [
+          {
+            "GUID": "083443a4-69a5-42a5-8552-2a8ae7d1ae29",
+            "Name": "iPad/ Tablet",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "8fdd1d27-a20d-4e4e-a01c-73d62a26002f",
+            "Name": "Notebook /Desktop",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "24faf99e-91ff-48ed-9350-8bf4f9c996e1",
+            "Name": "Printer",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "c823438f-5af6-47c9-859c-20b1739ab7c8",
+            "Name": "Others",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          }
+        ]
+      },
+      {
+        "GUID": "00000000-0000-0000-0000-000000000000",
+        "Name": "Request for Maintenance Services",
+        "SValue": null,
+        "Level3": [
+          {
+            "GUID": "559d0ea5-2ac5-47c8-9796-af9e9ce4b0a0",
+            "Name": "Services type(hardware, software, applications)\r\n",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          }
+        ]
+      },
+      {
+        "GUID": "00000000-0000-0000-0000-000000000000",
+        "Name": "Request for IT Services(for IT only)",
+        "SValue": null,
+        "Level3": [
+          {
+            "GUID": "4b61d14b-90d5-4ef8-9c28-4618750bb51f",
+            "Name": "Request for IT Services",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0005",
+            "Enabled": 1,
+            "ControlFlag": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "GUID": "c99f26ca-afe1-458d-8058-f1e269eefedd",
+    "Name": "Acquire General Support/ Stand-by Services",
+    "Level2": [
+      {
+        "GUID": "00000000-0000-0000-0000-000000000000",
+        "Name": "Request for General Support",
+        "SValue": null,
+        "Level3": [
+          {
+            "GUID": "b5d56502-e2bf-4d52-85d1-c93b0e553cf3",
+            "Name": "Expand printing quota",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "7f6c4d39-5d02-4a46-9eea-d4ac8bfc2b83",
+            "Name": "Expand mailbox size",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "bee28a67-94e6-4b7c-84fe-8deedc01f3ed",
+            "Name": "Create WIN Project folder",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "cb2ead7b-e03e-4dc0-93df-bbdcd05eccd4",
+            "Name": "Grant access to third party Outlook calendar",
+            "SValue": null,
+            "Approver": "IT0002",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 1
+          },
+          {
+            "GUID": "37a33ee2-97ed-4f20-8bd9-12317e8f4028",
+            "Name": "Others",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 1
+          }
+        ]
+      },
+      {
+        "GUID": "00000000-0000-0000-0000-000000000000",
+        "Name": "Request for Onsite/Stand-by Services",
+        "SValue": null,
+        "Level3": [
+          {
+            "GUID": "e815c55b-aa03-4ea1-8631-89cef8b380f1",
+            "Name": "(PC setup/onsite standby/equipment leasing)",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 2
+          },
+          {
+            "GUID": "276848e9-3d7f-4aa9-bf6f-d497b3a1a68e",
+            "Name": "Name of event/activities",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 2
+          },
+          {
+            "GUID": "f15ed335-e182-4b76-b730-c78ad66bbbf6",
+            "Name": "Date of event/activities",
+            "SValue": null,
+            "Approver": "IT0001",
+            "ActionTaker": "IT0006",
+            "Enabled": 1,
+            "ControlFlag": 2
+          }
+        ]
+      }
+    ]
+  }
+]

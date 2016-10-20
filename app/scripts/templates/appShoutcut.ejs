@@ -1,0 +1,19 @@
+<button type="button" class="btn btn-default dropdown-toggle btnnavheader" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <%= ActiveApp.ProcessDisplayName %>
+    <span class="glyphicon glyphicon-menu-down">
+    </span>
+</button>
+<ul class="dropdown-menu ulnav-header-main">
+  <%
+  _.each(PList, function(app){
+  %>
+    <li>
+      <a class="processlist" id="<%= app.ProcessGUID %>">
+        <%=app.ProcessDisplayName%>
+      </a>
+    </li>
+
+  <%
+  });
+  %>
+</ul>

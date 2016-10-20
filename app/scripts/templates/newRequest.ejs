@@ -1,0 +1,213 @@
+<div class="panel panel-default">
+  <div class="panel-heading" role="tab" id="headingOne">
+    <h3 class="panel-title">
+      <!-- Single button -->
+      <div class="btn-group check-status">
+        <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          New Request
+          <span class="glyphicon glyphicon-menu-down"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="index.html">Check Status</a></li>
+          <li><a href="#">Another Status</a></li>
+          <li><a href="#">Approval Status</a></li>
+        </ul>
+      </div>
+    </h3>
+  </div>
+  <div id="newRequest">
+
+    <div class="newrequest-basic-information">
+      <div class="row">
+        <div class="col-xs-2 col-md-2 newrequest-title">Status</div>
+        <div class="col-xs-10 col-md-4" id="divStatus">New</div>
+        <div class="col-xs-2 col-md-2 newrequest-title">Prepared by</div>
+        <div class="col-xs-10 col-md-4" id="divPreparedby"></div>
+      </div>
+      <div class="row">
+        <div class="col-xs-2 col-md-2 newrequest-title">Ref ID</div>
+        <div class="col-xs-10 col-md-4" id="divRefID"></div>
+        <div class="col-xs-2 col-md-2 newrequest-title">Create Date</div>
+        <div class="col-xs-10 col-md-4" id="divCreateddate"></div>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default select-applicant">
+      <div class="panel-body">
+        <div class="row">
+          <label for="applicant" class="col-sm-2 control-label">Applicant</label>
+          <div class="col-xs-10 col-md-10 btn-group full-width">
+
+            <button type="button" class="btn btn-default btnapplicant" data-toggle="dropdown" id="divapplicant">--Select--</button>
+            <button type="button" class="btn btn-default dropdown-toggle btnapplicant" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul id="divApplicant" style="height:250px;overflow-y:scroll" class="dropdown-menu">
+            </ul>
+          </div>
+        </div>
+        <div class="row" style="display:none">
+          <div class="col-xs-2 col-md-2 newrequest-title">Title</div>
+          <div class="col-xs-10 col-md-10" id="divtitle"></div>
+        </div>
+        <div class="row" style="display:none">
+          <div class="col-xs-2 col-md-2 newrequest-title">Office</div>
+          <div class="col-xs-10 col-md-10" id="divoffice"></div>
+        </div>
+        <div class="row">
+          <div class="col-xs-2 col-md-2 newrequest-title">Department</div>
+          <div class="col-xs-10 col-md-10" id="divdepartment"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="request-application">
+      <div class="row">
+        <div class="col-xs-10 col-md-10 newrequest-title">Service Acquired for</div>
+      </div>
+      <div class="panel panel-default select-service-header">
+        <div class="panel-body">
+          <div id="divservice">
+            <!-- ========================= -->
+            <!-- service type content here -->
+            <!-- ========================= -->
+          </div>
+
+
+          <div class="row">
+            <div class="col-xs-12 col-md-12 newrequest-title">Justification and Important Notes<span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <textarea class="form-control" rows="3" id="txtjustification"></textarea>
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-12 col-md-12 newrequest-title">Expected Delivery Date</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-10 col-sm-10">
+              <div class="input-group date pick-date-start" data-provide="datepicker">
+                <input type="text" class="form-control" id="txtexpectedDD">
+                <div class="input-group-addon">
+                  <span class="glyphicon glyphicon-th"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-12 col-md-12 newrequest-title">Frequency/Duration of Use</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-10 col-sm-10">
+              <input type="text" class="form-control" id="txtfrequency">
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-12 col-md-12 newrequest-title">Estimated Cost (HK$)</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-10 col-sm-10">
+              <input type="text" class="form-control" id="txtestimatedcost">
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-12 col-md-12 newrequest-title">Budget Provided</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-10 col-sm-10">
+              <input type="text" class="form-control" id="txtbudgetprovided">
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-12 col-md-12 newrequest-title">Budgeted Sum</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-10 col-sm-10">
+              <input type="text" class="form-control" id="txtbudgetsum">
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-2 col-sm-2 newrequest-title">Recommend By</div>
+            <div class="col-xs-8 col-md-8 btn-group full-width">
+              <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="divrecommend">--Select--</button>
+              <button type="button" class="btn btn-default dropdown-toggle recommend" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul id="ulrecommend" style="height:250px;overflow-y:scroll" class="dropdown-menu">
+
+              </ul>
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-2 col-sm-2 newrequest-title">CC</div>
+            <div class="col-xs-9 col-md-9 contact-group">
+
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-2 col-sm-2 newrequest-title">&nbsp;</div>
+            <div class="col-xs-8 col-md-8 btn-group full-width">
+              <button type="button" class="btn btn-default btncc" data-toggle="dropdown" id="divcc">--Select--</button>
+              <button type="button" class="btn btn-default dropdown-toggle btncc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <ul id="ulcc" style="height:250px;overflow-y:scroll" class="dropdown-menu">
+
+              </ul>
+            </div>
+
+
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-2 col-sm-2 newrequest-title">Remark</div>
+            <div class="col-xs-8 col-md-8">
+              <textarea class="form-control" rows="3" id="txtremark"></textarea>
+            </div>
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-2 col-sm-2 newrequest-title">Attachment</div>
+            <div class="col-xs-4 col-md-3 btn-group">
+              <span class="btn btn-orange fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Add files...</span>
+                <input type="file" name="files[]" id="Fileattach" multiple="multiple" />
+              </span>
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-xs-2 col-sm-2 newrequest-title"></div>
+            <div class="col-xs-4 col-md-3 btn-group" style="text-align: left;" id="divfilename">
+            </div>
+
+          </div>
+          <div class="sep-space"></div>
+          <div class="row">
+            <div class="col-xs-10 col-md-10 btn-group center">
+              <button class="btn btn-primary" id="btnBack" style="display:none" type="button">Back</button>
+              <button class="btn btn-primary" id="btnsave" type="button">Save</button>
+              <button class="btn btn-primary" id="btnapprover" type="button">Send to Approver</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

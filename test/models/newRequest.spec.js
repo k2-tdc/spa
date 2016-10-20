@@ -1,10 +1,10 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('Menu View', function () {
+describe('NewRequest Model', function () {
 
     beforeEach(function () {
-        this.MenuView = new Hktdc.Views.Menu();
+        this.NewRequestModel = new Hktdc.Models.NewRequest();
     });
 
 });

@@ -5,9 +5,9 @@ Hktdc.Collections = Hktdc.Collections || {};
 (function () {
   'use strict';
 
-  Hktdc.Collections.About = Backbone.Collection.extend({
+  Hktdc.Collections.ServiceLevel3 = Backbone.Collection.extend({
 
-    model: Hktdc.Models.About
+    model: Hktdc.Models.ServiceLevel3
 
   });
 

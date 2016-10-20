@@ -1,10 +1,10 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('Menu View', function () {
+describe('StutusOption View', function () {
 
     beforeEach(function () {
-        this.MenuView = new Hktdc.Views.Menu();
+        this.StutusOptionView = new Hktdc.Views.StutusOption();
     });
 
 });

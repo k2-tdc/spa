@@ -5,20 +5,11 @@ Hktdc.Views = Hktdc.Views || {};
 (function () {
   'use strict';
 
-  Hktdc.Views.TopMenu = Backbone.View.extend({
+  Hktdc.Views.Draft = Backbone.View.extend({
 
-    template: JST['app/scripts/templates/topMenu.ejs'],
+    el: '#mainContent',
 
-    el : '#header_top',
-    /*
-    tagName: 'div',
-
-    id: '',
-
-    className: '',
-
-    events: {},
-    */
+    template: JST['app/scripts/templates/draft.ejs'],
 
     initialize: function () {
       // this.listenTo(this.model, 'change', this.render);
@@ -26,8 +17,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function () {
-      // var data = this.model.toJSON() || ;
       this.$el.html(this.template());
+      // this.$el.html(this.template(this.model.toJSON()));
     }
 
   });

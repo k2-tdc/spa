@@ -6,9 +6,40 @@ window.Hktdc = {
   Collections: {},
   Views: {},
   Routers: {},
-  init: function () {
+  Config: {
+    apiURL: false,
+    accessToken: 'testing',
+    userID: "aachen",
+    RuleCode: "IT0008;IT0009",
+    environments: {
+      dev: {
+        api: {
+          host: '192.168.100.238',
+          port: '84',
+          base: '/api/request'
+        }
+      },
+      localDev: {
+        api: {
+          host: 'localhost',
+          port: '9999',
+          base: '/api/request'
+        }
+      },
+      uat: {
+        api: {
+          host: 'api.uat.hktdc.org',
+          port: '84',
+          base: '/api/request'
+        }
+      }
+    }
+  },
+
+  init: function (env) {
     'use strict';
-    console.debug('Initiating HKTDC Workflow Applicaiton...');
+    window.utils.setApiURL(env);
+    console.debug('[ main.js ] - Initiating HKTDC Workflow Applicaiton...');
 
     /* TODO: check auth */
 
@@ -16,18 +47,13 @@ window.Hktdc = {
 
         /* TODO: then Get Menu items from remote */
 
-        /* then Set Menu */
-        console.debug('setting up application...');
+        /* then initialize the application */
+        console.debug('[ main.js ] - setting up application...');
 
         /* - Router */
         new this.Routers['Main']();
         Backbone.history.start();
 
-        /* - Common Views */
-        new this.Views['TopMenu']();
-        new this.Views['SideMenu']();
-
-        // new this.Views['SideMenu']();
 
       /* else */
 

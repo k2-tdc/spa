@@ -1,0 +1,28 @@
+<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="userMenu">
+  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+  <span id="spnUsername" class="nav-header-user-text">
+    <%= user.UserName %>
+  </span>
+  <span class="glyphicon glyphicon-menu-down"></span>
+</button>
+
+<ul class="dropdown-menu userMenu">
+  <li>
+    <a href="#">
+      <span class="glyphicon icon-group"></span>
+      Delegation
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="glyphicon glyphicon-share-alt"></span>
+      Share
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <span class="glyphicon glyphicon-log-out"></span>
+      Logout
+    </a>
+  </li>
+</ul>

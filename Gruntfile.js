@@ -53,6 +53,10 @@ module.exports = function (grunt) {
           'test/spec/**/*.js'
         ]
       },
+      bower: {
+				files: ['bower.json'],
+				tasks: ['wiredep']
+			},
       jst: {
         files: [
           '<%= yeoman.app %>/scripts/templates/*.ejs'
@@ -102,6 +106,13 @@ module.exports = function (grunt) {
             ];
           }
         }
+      }
+    },
+
+    // Automatically inject Bower components into the app
+    wiredep: {
+      task: {
+        src: ['<%= yeoman.app %>/index.html']
       }
     },
     open: {
@@ -289,6 +300,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'wiredep',
       'createDefaultTemplate',
       'jst',
       'sass:server',
@@ -320,6 +332,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'wiredep',
     'createDefaultTemplate',
     'jst',
     'sass:dist',

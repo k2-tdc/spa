@@ -1,10 +1,10 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('Menu View', function () {
+describe('ServiceLevel2 View', function () {
 
     beforeEach(function () {
-        this.MenuView = new Hktdc.Views.Menu();
+        this.ServiceLevel2View = new Hktdc.Views.ServiceLevel2();
     });
 
 });

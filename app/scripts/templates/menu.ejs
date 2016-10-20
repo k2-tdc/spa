@@ -1,0 +1,57 @@
+<div class="mm-panels mm-vertical">
+  <div class="mm-panel mm-vertical mm-opened mm-current" id="mm-0">
+      <ul class="mm-listview mm-vertical">
+
+
+        <%
+        _.each(data, function(items, index) {
+          // if no submenu
+          if (items.sumenu === null) {
+          %>
+
+          <li routename='<%= items.RouteName%>'>
+            <a href='<%= items.Route %>'>
+              <%= items.Name %>
+              <% if (items.Scount) { %>
+              <span class='menu-index-value outline'><%=items.Scount%></span>
+              <% } %>
+              <span class='glyphicon glyphicon-menu-right'></span>
+            </a>
+          </li>
+
+          <%
+          // have submenu
+          } else {
+          %>
+
+          <li class='menu-section'>
+            <span><%=items.Name%></span>
+          </li>
+
+          <%
+          // looping the submenu
+          _.each(items.sumenu, function(submenu, sindex) {
+          %>
+
+          <li>
+            <a href='<%=submenu.Route%>'>
+              <%= submenu.Name %>
+              <% if(submenu.Scount) { %>
+              <span class='menu-index-value outline'><%=submenu.Scount%></span>
+              <% }
+              %>
+              <span class='glyphicon glyphicon-menu-right'></span>
+            </a>
+          </li>
+
+          <%
+          });
+          %>
+
+        <%
+        }
+      });
+      %>
+    </ul>
+  </div>
+</div>

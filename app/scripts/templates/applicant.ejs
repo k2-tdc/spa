@@ -1,0 +1,10 @@
+<option value=null>--Select--</option>
+<%
+_.each(data, function(item, index) {
+%>
+  <option value="<%=item.UserId%>">
+    <%=item.UserFullName%>
+  </option>
+<%
+});
+%>
