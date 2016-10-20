@@ -19,6 +19,13 @@ window.Hktdc = {
           base: '/api/request'
         }
       },
+      dev12: {
+        api: {
+          host: 'hktdc.api.vicosys.com.hk',
+          port: '80',
+          base: '/api/request'
+        }
+      },
       localDev: {
         api: {
           host: 'localhost',
