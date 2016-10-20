@@ -293,7 +293,7 @@ module.exports = function (grunt) {
         'jst',
         'sass:server',
         'connect:test',
-        'open:test',
+        // 'open:test',
         'watch'
       ]);
     }
@@ -305,7 +305,7 @@ module.exports = function (grunt) {
       'jst',
       'sass:server',
       'connect:livereload',
-      'open:server',
+      // 'open:server',
       'watch'
     ]);
   });
