@@ -2,7 +2,7 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/assets/fonts/bootstr
 @import 'bootstrap-sass-official/assets/stylesheets/bootstrap.scss';
 @import 'header';
 @import 'mmenu';
-
+// @import 'newRequest';
 body,
 html {
   padding: 0;
@@ -220,6 +220,11 @@ div.newrequest-title {
   padding: 0;
   text-align: left;
   line-height: 36px;
+}
+
+.select-applicant .applicant-list{
+  height:250px;
+  overflow-y:scroll;
 }
 
 .select-applicant button:not(.dropdown-toggle) {

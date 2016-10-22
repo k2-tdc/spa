@@ -284,6 +284,7 @@ module.exports = function (grunt) {
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'open:server', 'connect:dist:keepalive']);
+      return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
 
     if (target === 'test') {
@@ -293,7 +294,7 @@ module.exports = function (grunt) {
         'jst',
         'sass:server',
         'connect:test',
-        // 'open:test',
+        'open:test',
         'watch'
       ]);
     }

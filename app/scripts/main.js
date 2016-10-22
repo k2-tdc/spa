@@ -6,6 +6,7 @@ window.Hktdc = {
   Collections: {},
   Views: {},
   Routers: {},
+  Dispatcher: _.extend({}, Backbone.Events),
   Config: {
     apiURL: false,
     accessToken: 'testing',
@@ -14,7 +15,7 @@ window.Hktdc = {
     environments: {
       dev: {
         api: {
-          host: '192.168.100.238',
+          host: 'localhost',
           port: '84',
           base: '/api/request'
         }
@@ -73,6 +74,6 @@ window.Hktdc = {
 
 $(document).ready(function () {
   'use strict';
-  Hktdc.init();
-
+  // Hktdc.init('dev');
+  Hktdc.init('localDev');
 });

@@ -37,14 +37,15 @@
       <div class="panel-body">
         <div class="row">
           <label for="applicant" class="col-sm-2 control-label">Applicant</label>
-          <div class="col-xs-10 col-md-10 btn-group full-width">
+          <div class="col-xs-10 col-md-10 btn-group full-width divApplicant">
 
             <button type="button" class="btn btn-default btnapplicant" data-toggle="dropdown" id="divapplicant">--Select--</button>
             <button type="button" class="btn btn-default dropdown-toggle btnapplicant" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
-            <ul id="divApplicant" style="height:250px;overflow-y:scroll" class="dropdown-menu">
+            <ul class="dropdown-menu applicant-list">
+              <option value="null">--Select--</option>
             </ul>
           </div>
         </div>
@@ -69,7 +70,7 @@
       </div>
       <div class="panel panel-default select-service-header">
         <div class="panel-body">
-          <div id="divservice">
+          <div id="service-container">
             <!-- ========================= -->
             <!-- service type content here -->
             <!-- ========================= -->

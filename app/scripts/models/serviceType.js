@@ -5,9 +5,9 @@ Hktdc.Models = Hktdc.Models || {};
 (function () {
   'use strict';
 
-  Hktdc.Models.ServiceLevel2 = Backbone.Model.extend({
+  Hktdc.Models.ServiceType = Backbone.Model.extend({
 
-    idAttribute: 'GUID',
+    // idAttribute: 'Name',
 
     initialize: function() {
     },

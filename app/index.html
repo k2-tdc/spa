@@ -6,13 +6,17 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.tmp) styles/main.css -->
+    <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/jQuery.mmenu/dist/css/jquery.mmenu.all.css" />
     <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
     <!-- endbower -->
-    <!-- <link rel="stylesheet" href="styles/main.css"> -->
+    <!-- endbuild -->
+
+
+
+    <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/overrides.css">
     <!-- endbuild -->
   </head>
@@ -76,10 +80,11 @@
     <script src="scripts/views/stutusOption.js"></script>
     <script src="scripts/views/applicant.js"></script>
     <script src="scripts/views/status.js"></script>
-    <script src="scripts/views/service.js"></script>
     <script src="scripts/views/draft.js"></script>
-    <script src="scripts/views/serviceLevel2.js"></script>
-    <script src="scripts/views/serviceLevel3.js"></script>
+    <script src="scripts/views/serviceCatagory.js"></script>
+    <script src="scripts/views/serviceType.js"></script>
+    <script src="scripts/views/serviceRequest.js"></script>
+    <script src="scripts/views/serviceObject.js"></script>
 
 
     <script src="scripts/models/menu.js"></script>
@@ -90,16 +95,18 @@
     <script src="scripts/models/stutusOption.js"></script>
     <script src="scripts/models/applicant.js"></script>
     <script src="scripts/models/status.js"></script>
-    <script src="scripts/models/service.js"></script>
-    <script src="scripts/models/serviceLevel2.js"></script>
-    <script src="scripts/models/serviceLevel3.js"></script>
+    <script src="scripts/models/serviceCatagory.js"></script>
+    <script src="scripts/models/serviceType.js"></script>
+    <script src="scripts/models/serviceRequest.js"></script>
+    <script src="scripts/models/serviceObject.js"></script>
 
 
     <script src="scripts/collections/menu.js"></script>
-    <!-- <script src="scripts/collections/applicant.js"></script> -->
-    <script src="scripts/collections/serviceLevel3.js"></script>
-    <script src="scripts/collections/service.js"></script>
-    <script src="scripts/collections/serviceLevel2.js"></script>
+    <script src="scripts/collections/serviceCatagory.js"></script>
+    <script src="scripts/collections/serviceRequest.js"></script>
+    <script src="scripts/collections/serviceType.js"></script>
+    <script src="scripts/collections/serviceObject.js"></script>
+    <script src="scripts/collections/applicant.js"></script>
     <!-- endbuild -->
 </body>
 </html>

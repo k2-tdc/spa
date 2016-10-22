@@ -7,12 +7,24 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.NewRequest = Backbone.Model.extend({
 
-    url: '',
-
     initialize: function() {
     },
 
     defaults: {
+      preparedBy: null,
+      department: null,
+      createDate: new Date,
+      applicant: null,
+      requestService: [],
+      notes: null,
+      deliveryDate: null,
+      duration: null,
+      cost: null,
+      budget: null,
+      budgetSum: null,
+      recommend: null,
+      remark: null,
+
     },
 
     validate: function(attrs, options) {

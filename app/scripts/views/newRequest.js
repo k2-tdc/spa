@@ -13,33 +13,38 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
+      var self = this;
       this.render();
 
       /* create service collections */
-      var serviceCollections = new Hktdc.Collections.Service();
-
-      serviceCollections.fetch({
+      var serviceCatagoryCollections = new Hktdc.Collections.ServiceCatagory();
+      serviceCatagoryCollections.fetch({
         // headers: {
         //   "Authorization": 'Bearer ' + Hktdc.Config.accessToken
         // },
         success: function() {
           try {
             console.debug('[views/newRequest.js] - onLoadData');
-            serviceCollections.each(function(serviceModel, idx){
-              var serviceView = new Hktdc.Views.Service({model: serviceModel});
-              console.log(serviceView.el);
-              $('#divservice').append(serviceView.el);
-
+            var serviceCatagoryListView = new Hktdc.Views.ServiceCatagoryList({
+              collection: serviceCatagoryCollections,
             });
+            serviceCatagoryListView.render();
+            $('#service-container').html(serviceCatagoryListView.el);
 
           } catch (e) {
-            console.error('error on rendering service level1', e);
+            console.error('error on rendering service level1::', e);
           }
         },
+
         error: function(model, response) {
           console.error(JSON.stringify(response, null, 2));
         }
       });
+
+
+      /* common component */
+      // $('.divApplicant', this.el).append(new Hktdc.Views.ApplicantList().el);
+
     },
 
     render: function() {

@@ -1,0 +1,30 @@
+<div class="panel panel-default select-service">
+  <div class="panel-body">
+    <div class="row">
+      <div id="<%= serviceType.GUID%>" class="col-xs-12 col-md-12 select-service-title">
+        <%= serviceType.Name%>
+      </div>
+    </div>
+
+    <div class="service-request-container">
+      <!-- level 3 contents here -->
+    </div>
+
+    <!-- Add Button: click to add a row to level 3 -->
+    <%
+    if (serviceType.needAddBtn) {
+    %>
+    <div class="row">
+      <div class="col-xs-4 col-md-3 btn-group">
+        <button type="button" class="btn btn-orange btn-add">
+          <span class="glyphicon glyphicon-plus"></span>
+          &nbsp;add
+        </button>
+      </div>
+    </div>
+    <%
+    }
+    %>
+
+  </div>
+</div>
