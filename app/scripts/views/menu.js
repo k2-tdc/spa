@@ -35,7 +35,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function () {
       // console.log(this.model.toJSON());
-      var menu = this.model.toJSON().Menu;
+      console.log(this.model);
+      var rawMenu = this.model.toJSON();
+      var menu = (_.isArray(rawMenu)) ? rawMenu[0].Menu : rawMenu.Menu;
+      console.log(menu);
       var self = this;
       /* map the name, the server should return the route later */
       _.each(menu, function(raw){
