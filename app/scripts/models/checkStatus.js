@@ -2,7 +2,7 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.CheckStatus = Backbone.Model.extend({
@@ -21,10 +21,9 @@ Hktdc.Models = Hktdc.Models || {};
       UserId: ''
     },
 
-    validate: function(attrs, options) {
-    },
+    validate: function(attrs, options) {},
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

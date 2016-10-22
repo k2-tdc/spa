@@ -2,7 +2,7 @@
 
 Hktdc.Routers = Hktdc.Routers || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Routers.Main = Backbone.Router.extend({
@@ -32,7 +32,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       menuCollection.fetch({
         success: function(collection) {
           var menu = collection.toJSON()[0];
-          var menuModel = new Hktdc.Models.Menu({Menu: menu.Menu});
+          var menuModel = new Hktdc.Models.Menu({
+            Menu: menu.Menu
+          });
           var menuView = new Hktdc.Views.Menu({
             model: menuModel
           });
@@ -51,7 +53,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           // console.log(JSON.stringify(Backbone.history.getHash(), null, 2));
           menuModel.set('activeTab', JSON.stringify(Backbone.history.getHash()));
         },
-        error: function(){
+        error: function() {
           console.log('error on rendering menu');
         }
       });
@@ -65,7 +67,7 @@ Hktdc.Routers = Hktdc.Routers || {};
 
       // TODO: get filter params from query string
       var csView = new Hktdc.Views.CheckStatus({
-        model: checkStatus.attributes
+        model: checkStatus
       });
     },
 

@@ -2,7 +2,7 @@
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.CheckStatus = Backbone.View.extend({
@@ -11,7 +11,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     el: '#mainContent',
 
-    initialize: function () {
+    events: {
+      'click #btnSearchCheckStatus': 'doSearch'
+    },
+
+    initialize: function() {
       console.debug('[ views/checkStatus.js ] - Initizing check status views');
       // this.listenTo(this.model, 'change', this.render);
       this.render();
@@ -21,42 +25,82 @@ Hktdc.Views = Hktdc.Views || {};
 
     },
 
-    render: function () {
-      // this.$el.html(this.template(this.model.toJSON()));
-      this.$el.html(this.template());
-      var filterArr = _.map(this.model, function(val, filter){
+    doSearch: function() {
+      this.model.set('CStat', $('#ddindexstatus :selected', this.el).val());
+      this.model.set('ReferID', $('#txtindexrefid', this.el).val());
+      this.model.set('FDate', $('#txtIndexfromdate', this.el).val());
+      this.model.set('TDate', $('#txtIndextodate', this.el).val());
+      // this.model.set('Appl', $('#ddIndexapplicant :selected', this.el).val());
+      // this.model.set('UserId', $('#ddIndexapplicant :selected', this.el).val());
+      this.statusDataTable.ajax.url(this.getAjaxURL()).load();
+    },
+
+    getAjaxURL: function() {
+      var filterArr = _.map(this.model.toJSON(), function(val, filter) {
         return filter + '=' + val;
       });
-      // console.log(JSON.stringify(filterArr, null, 2));
-      var statusApiURL = Hktdc.Config.apiURL+'/GetRequestDetails?' + filterArr.join('&');
-      // var statusApiURL = Hktdc.Config.apiURL+'/GetRequestDetails?' + 'CStat=null&ReferID=&FDate=&TDate=&Appl=null&UserId=aachen'
-      // console.log(statusApiURL);
+      var statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
 
+      return statusApiURL;
+    },
+
+    render: function() {
+      // this.$el.html(this.template(this.model.toJSON()));
+      var self = this;
+      this.$el.html(this.template());
 
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable funciton */
-      $("#statusTable").DataTable({
+      this.statusDataTable = $("#statusTable").DataTable({
         ajax: {
-          url: statusApiURL,
+          url: this.getAjaxURL(),
           // data.statusApiURL
-          dataSrc: function(data){
+          dataSrc: function(data) {
             // console.log(JSON.stringify({ data: data }, null, 2));
-            return data;
+            var modData = _.map(data, function(row) {
+              return {
+                lastActionDate: row.SubmittedOn,
+                applicant: row.ApplicantFNAME,
+                summary: self.getSummaryFromRow(row.FormID, row.RequestList),
+                status: self.getStatusFrowRow(row.FormStatus, row.ApproverFNAME)
+              }
+            });
+            return modData;
+            // return { data: modData, recordsTotal: modData.length };
           }
         },
-        stateLoadParams: function (settings, data) {
-          console.log('ihfslcmkenlf');
-          // data.search.search = "";
-        },
-        serverSide: true,
-        columns: [
-          { data: "SubmittedOn" },
-          { data: "ApplicantFNAME" },
-          { data: "ApplicantFNAME" },
-          { data: "FormStatus" }
-        ],
+        columns: [{
+          data: "lastActionDate"
+        }, {
+          data: "applicant"
+        }, {
+          data: "summary"
+        }, {
+          data: "status"
+        }],
         bRetrieve: true
       });
+    },
+
+    getSummaryFromRow: function(formID, requestList) {
+      var summary = "Ref.ID : " + formID;
+      _.each(requestList, function(Level1) {
+        summary += "<br /><strong style='text-decoration: underline'>" + Level1.Name + "</strong><br />";
+        _.each(Level1.Level2, function(Level2) {
+          summary += " <br /><strong><span style='margin-left:10px;'>" + "--" + Level2.Name + " </span></strong><br />";
+          _.each(Level2.Level3, function(Level3) {
+            if (Level3.Name != null)
+              summary += "<br /><span style='margin-left:20px;'>" + "---" + Level3.Name + " </span><br /> ";
+          });
+        });
+      });
+
+      return summary;
+
+    },
+
+    getStatusFrowRow: function(status, approver) {
+      return status + '<br />Recommend by: <br />' + approver;
     }
 
   });
