@@ -11,14 +11,16 @@ Hktdc.Views = Hktdc.Views || {};
 
     el : '#menu',
 
-    linkMap: {
-      'NEW_REQUEST': '/#new_request',
-      'DRAFT_LIST': '/#draft',
-      'ALL_TASKS': '/#',
-      'APPROVAL_TASKS': '/#',
-      'CHECK_STATUS': '/#check_status',
-      'USAGE_REPORT': '/#',
-      'QUICK_USER_GUIDE': '/#'
+    getLinkMap: function () {
+      return {
+        'NEW_REQUEST': Hktdc.Config.projectPath + '/#new_request',
+        'DRAFT_LIST': Hktdc.Config.projectPath + '/#draft',
+        'ALL_TASKS': Hktdc.Config.projectPath + '/#',
+        'APPROVAL_TASKS': Hktdc.Config.projectPath + '/#',
+        'CHECK_STATUS': Hktdc.Config.projectPath + '/#check_status',
+        'USAGE_REPORT': Hktdc.Config.projectPath + '/#',
+        'QUICK_USER_GUIDE': Hktdc.Config.projectPath + '/#'
+      };
     },
 
     initialize: function () {
@@ -35,28 +37,28 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function () {
       // console.log(this.model.toJSON());
-      console.log(this.model);
       var rawMenu = this.model.toJSON();
       var menu = (_.isArray(rawMenu)) ? rawMenu[0].Menu : rawMenu.Menu;
-      console.log(menu);
       var self = this;
+      var linkMap = self.getLinkMap();
+      console.log(linkMap);
       /* map the name, the server should return the route later */
       _.each(menu, function(raw){
         if (raw.sumenu) {
           _.each(raw.sumenu, function(subMenuRaw){
             var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ','_');
             // console.log(upperLodash);
-            subMenuRaw.Route = self.linkMap[upperLodash] || '#';
+            subMenuRaw.Route = linkMap[upperLodash] || '#';
             subMenuRaw.RouteName = upperLodash || 'HOME';
           });
         } else {
           var upperLodash = raw.Name.trim().toUpperCase().replace(' ','_');
-          raw.Route = self.linkMap[upperLodash] || '#';
+          raw.Route = linkMap[upperLodash] || '#';
           raw.RouteName = upperLodash || 'HOME';
 
         }
         // console.log(upperLodash);
-        raw.Route = self.linkMap[upperLodash] || '#';
+        raw.Route = linkMap[upperLodash] || '#';
         raw.RouteName = upperLodash || 'HOME';
       });
 

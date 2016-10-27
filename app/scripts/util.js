@@ -1,17 +1,26 @@
 /* all application level methods should be placed here */
 window.utils = {
 
-  setApiURL: function(env) {
+  setURL: function (env) {
     // console.log(env);
-    var envConfig = window.Hktdc.Config.environments[env || 'localDev'].api;
-    var host = envConfig.host;
-    var port = (envConfig.port) ? ':' + envConfig.port : '';
-    var base = envConfig.base;
-    Hktdc.Config.apiURL = 'http://' + host + port + base;
-    console.log(Hktdc.Config.apiURL);
+    var envConfig = window.Hktdc.Config.environments[env || 'localDev'];
+    var host = envConfig.api.host;
+    var port = (envConfig.api.port) ? ':' + envConfig.api.port : '';
+    var base = envConfig.api.base;
+    var protocol = envConfig.api.protocol || 'http';
+    Hktdc.Config.apiURL = protocol + '://' + host + port + base;
+
+    // Hktdc.Config.SPADomain = envConfig.SPADomain;
+    Hktdc.Config.projectPath = envConfig.projectPath;
+    Hktdc.Config.OAuthLoginUrl = envConfig.SPADomain + envConfig.OAuthLoginPath;
+    Hktdc.Config.OAuthGetTokenUrl = envConfig.SPADomain + envConfig.OAuthGetTokenPath;
+    Hktdc.Config.SPAHomeUrl = envConfig.SPADomain + envConfig.SPAHomePath;
+    Hktdc.Config.OAuthGetUserIDURL = envConfig.SPADomain + envConfig.OAuthGetUserIDPath;
+    console.log(Hktdc.Config);
+    // console.log(Hktdc.Config.apiURL);
   },
 
-  parseQueryString: function(queryString) {
+  parseQueryString: function (queryString) {
     var params = {};
     if (queryString) {
       _.each(
@@ -20,7 +29,7 @@ window.utils = {
             o = {};
           if (aux.length >= 1) {
             var val = undefined;
-            if (aux.length == 2)
+            if (aux.length === 2)
               val = aux[1];
             o[aux[0]] = val;
           }
@@ -34,23 +43,10 @@ window.utils = {
     return params;
   },
 
-  // Asynchronously load templates located in separate .html files
-  loadTemplate: function(views, callback) {
-
-    var deferreds = [];
-
-    $.each(views, function(index, view) {
-      if (window[view]) {
-        deferreds.push($.get('scripts/templates/' + view + '.ejs', function(tpl) {
-          window[view].prototype.template = _.template(tpl);
-        }));
-      } else {
-        alert(view + " not found");
-      }
-    });
-
-    $.when.apply(null, deferreds).done(callback);
+  setAuthHeader: function (xhr) {
+    xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
   },
+  // Asynchronously load templates located in separate .html files
 
   displayValidationErrors: function(messages) {
     for (var key in messages) {
@@ -74,7 +70,7 @@ window.utils = {
   },
 
   showAlert: function(title, text, klass) {
-    $('.alert').removeClass("alert-error alert-warning alert-success alert-info");
+    $('.alert').removeClass('alert-error alert-warning alert-success alert-info');
     $('.alert').addClass(klass);
     $('.alert').html('<strong>' + title + '</strong> ' + text);
     $('.alert').show();
@@ -82,6 +78,123 @@ window.utils = {
 
   hideAlert: function() {
     $('.alert').hide();
+  },
+
+  /* =============================================>>>>>
+  = OAuth Login =
+  ===============================================>>>>> */
+
+  getCookie: function(cname) {
+    var name = cname + '=';
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return '';
+  },
+
+  createCORSRequest: function(method, url) {
+    var xhr = new XMLHttpRequest();
+    if ('withCredentials' in xhr) {
+      // XHR for Chrome/Firefox/Opera/Safari.
+      xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != 'undefined') {
+      // XDomainRequest for IE.
+      xhr = new XDomainRequest();
+      xhr.open(method, url);
+      alert('IE 8/9');
+    } else {
+      // CORS not supported.
+      xhr = null;
+    }
+    return xhr;
+  },
+
+  getAccessToken: function(onSuccess, onError) {
+    var self = this;
+    var accessToken = '';
+    var refreshToken = self.getCookie('REFRESH-TOKEN');
+
+    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
+
+    if (!refreshToken) {
+      // Initiate OAuth login flow
+      // console.log(oauthUrl);
+      window.location.href = oauthUrl;
+    } else {
+      accessToken = self.getCookie('ACCESS-TOKEN');
+      console.log('accessToken:' + accessToken);
+
+      if (accessToken !== '') {
+        // Send GET request to token endpoint for getting access token through AJAX
+        console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
+        var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
+        if (!xhr) {
+          onError('CORS not supported');
+          return false;
+        }
+        xhr.setRequestHeader('X-REFRESH-TOKEN', refreshToken);
+
+        // Response handlers.
+        xhr.onload = function () {
+          var text = xhr.responseText;
+          console.log('After AJAX, result:' + text + '   accessToken:' + accessToken);
+
+          accessToken = self.getCookie('ACCESS-TOKEN');
+          onSuccess(accessToken);
+        };
+
+        xhr.onerror = function () {
+          var text = xhr.responseText;
+          onError(text);
+          // alert(text);
+        };
+
+        xhr.send();
+      } else {
+        console.error('no access token');
+        window.location.href = oauthUrl;
+      }
+    }
+  },
+
+  getLoginUserIdByToken: function (accessToken, onSuccess, onError) {
+    var Userid = '';
+    var self = this;
+    var url = window.Hktdc.Config.OAuthGetUserIDURL + '?access_token=' + accessToken;
+    var xhr = self.createCORSRequest('GET', url);
+    if (!xhr) {
+      onError('CORS not supported');
+      return;
+    }
+    // xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+
+    // Response handlers.
+    xhr.onload = function () {
+      var text = xhr.responseText;
+      var objLoginUser = JSON.parse(text);
+      Userid = objLoginUser.user_id;
+
+      onSuccess(Userid);
+      // alert(Userid);
+      // return objLoginUser;
+    };
+
+    xhr.onerror = function () {
+      var text = xhr.responseText;
+      onError(text);
+    };
+    xhr.async = false;
+    xhr.send();
   }
+
+  /* = End of OAuth Login = */
+  /* =============================================<<<<< */
 
 };

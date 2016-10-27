@@ -19,9 +19,7 @@ Hktdc.Views = Hktdc.Views || {};
       /* create service collections */
       var serviceCatagoryCollections = new Hktdc.Collections.ServiceCatagory();
       serviceCatagoryCollections.fetch({
-        // headers: {
-        //   "Authorization": 'Bearer ' + Hktdc.Config.accessToken
-        // },
+        beforeSend: utils.setAuthHeader,
         success: function() {
           try {
             console.debug('[views/newRequest.js] - onLoadData');

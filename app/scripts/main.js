@@ -9,7 +9,12 @@ window.Hktdc = {
   Dispatcher: _.extend({}, Backbone.Events),
   Config: {
     apiURL: false,
-    accessToken: 'testing',
+    accessToken: '',
+    refreshToken: '',
+    OAuthLoginUrl: '',
+    OAuthGetTokenUrl: '',
+    projectPath: '',
+    SPAHomeUrl: '',
     userID: "aachen",
     RuleCode: "IT0008;IT0009",
     environments: {
@@ -18,7 +23,13 @@ window.Hktdc = {
           host: 'localhost',
           port: '84',
           base: '/api/request'
-        }
+        },
+        projectPath: '/',
+        SPADomain: 'https://workflowuat.tdc.org.hk',
+        OAuthLoginPath: '/workflow/oauth2/login',
+        OAuthGetTokenPath: '/workflow/oauth2/token',
+        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo',
+        SPAHomePath: '/vicosysspa/'
       },
       dev12: {
         api: {
@@ -36,44 +47,61 @@ window.Hktdc = {
       },
       uat: {
         api: {
+          protocol: 'https',
           host: 'api.uat.hktdc.org',
-          port: '84',
-          base: '/api/request'
-        }
+          base: '/workflow/api/request'
+        },
+        projectPath: '/vicosysspa',
+        SPADomain: 'https://workflowuat.tdc.org.hk',
+        OAuthLoginPath: '/workflow/oauth2/login',
+        OAuthGetTokenPath: '/workflow/oauth2/token',
+        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo',
+        SPAHomePath: '/vicosysspa/'
       }
     }
+
   },
 
   init: function (env) {
     'use strict';
-    window.utils.setApiURL(env);
     console.debug('[ main.js ] - Initiating HKTDC Workflow Applicaiton...');
+    try {
+      var self = this;
+      window.utils.setURL(env);
 
-    /* TODO: check auth */
+      if (env === 'uat') {
+        /* check auth */
+        window.utils.getAccessToken(function (accessToken) {
+          console.debug('[ main.js ] - setting up application...');
+          /* if auth ed */
+          window.Hktdc.Config.accessToken = accessToken;
+          /* get user id by access token */
+          window.utils.getLoginUserIdByToken(accessToken, function(userID){
+            /* initialize the application */
+            window.Hktdc.Config.userID = userID;
+            var mainRouter = new self.Routers.Main();
+            Backbone.history.start();
+          }, function (error) {
+            alert('Error on getting userID');
+          });
 
-      /* TODO: if auth ed */
-
-        /* TODO: then Get Menu items from remote */
-
-        /* then initialize the application */
-        console.debug('[ main.js ] - setting up application...');
-
-        /* - Router */
-        new this.Routers['Main']();
+        }, function(error){
+          /* else */
+          alert('OAuth Error');
+        });
+      } else {
+        var mainRouter = new self.Routers.Main();
         Backbone.history.start();
-
-
-      /* else */
-
-        /* TODO: redirect to auth page */
-
-
-
+      }
+    } catch (e) {
+      console.log('init application error!', e);
+    }
   }
 };
 
 $(document).ready(function () {
   'use strict';
   // Hktdc.init('dev');
+  // Hktdc.init('uat');
   Hktdc.init('localDev');
 });

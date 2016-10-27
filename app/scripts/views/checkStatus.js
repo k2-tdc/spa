@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -54,7 +54,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.statusDataTable = $("#statusTable").DataTable({
         ajax: {
           url: this.getAjaxURL(),
-          // data.statusApiURL
+          beforeSend: utils.setAuthHeader,
           dataSrc: function(data) {
             // console.log(JSON.stringify({ data: data }, null, 2));
             var modData = _.map(data, function(row) {

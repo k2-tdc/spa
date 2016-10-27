@@ -27,9 +27,7 @@ Hktdc.Collections = Hktdc.Collections || {};
       console.debug('[collections/applicant.js] - initialize');
       var that = this;
       this.fetch({
-        // headers: {
-        //   "Authorization": 'Bearer ' + Hktdc.Config.accessToken
-        // },
+        beforeSend: utils.setAuthHeader,
         success: function() {
           that.renderApplicantView();
         },

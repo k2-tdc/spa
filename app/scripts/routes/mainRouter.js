@@ -30,6 +30,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       // var menuView = new Hktdc.Views['Menu']();
       // menuModel.set('activeTab', '/#check_status');
       menuCollection.fetch({
+        beforeSend: utils.setAuthHeader,
         success: function(collection) {
           var menu = collection.toJSON()[0];
           var menuModel = new Hktdc.Models.Menu({

@@ -16,9 +16,7 @@ Hktdc.Models = Hktdc.Models || {};
       // console.log('init sttus coll');
       var that = this;
       this.fetch({
-        // headers: {
-        //   "Authorization": 'Bearer ' + accessToken
-        // },
+        beforeSend: utils.setAuthHeader,
         success: function() {
           // console.log('suee');
           that.renderStatusView();

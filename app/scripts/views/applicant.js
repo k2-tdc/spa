@@ -35,6 +35,7 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
       var applicantCollection = new Hktdc.Collections.Applicant();
       applicantCollection.fetch({
+        beforeSend: utils.setAuthHeader,
         success: function() {
           self.collection = applicantCollection;
           self.render();
