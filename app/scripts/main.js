@@ -13,50 +13,56 @@ window.Hktdc = {
     refreshToken: '',
     OAuthLoginUrl: '',
     OAuthGetTokenUrl: '',
+    needAuthHeader: false,
     projectPath: '',
     SPAHomeUrl: '',
     userID: "aachen",
     RuleCode: "IT0008;IT0009",
     environments: {
+      // local dev VM
       dev: {
         api: {
           host: 'localhost',
           port: '84',
           base: '/api/request'
         },
-        projectPath: '/',
+        needAuthHeader: false,
         SPADomain: 'https://workflowuat.tdc.org.hk',
         OAuthLoginPath: '/workflow/oauth2/login',
         OAuthGetTokenPath: '/workflow/oauth2/token',
         OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo',
+        projectPath: '/',
         SPAHomePath: '/vicosysspa/'
       },
-      dev12: {
-        api: {
-          host: 'hktdc.api.vicosys.com.hk',
-          port: '80',
-          base: '/api/request'
-        }
-      },
+      // local host
       localDev: {
         api: {
+          protocol: 'http',
           host: 'localhost',
           port: '9999',
+          // host: '192.168.100.238',
+          // port: '84',
           base: '/api/request'
-        }
+        },
+        needAuthHeader: false,
+        // needAuthHeader: true,
+        projectPath: '/',
+        SPAHomePath: '/'
       },
+      // REAL UAT VM
       uat: {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
           base: '/workflow/api/request'
         },
-        projectPath: '/vicosysspa',
+        needAuthHeader: true,
+        projectPath: '/vicosysspa/',
+        SPAHomePath: '/vicosysspa/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
         OAuthLoginPath: '/workflow/oauth2/login',
         OAuthGetTokenPath: '/workflow/oauth2/token',
-        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo',
-        SPAHomePath: '/vicosysspa/'
+        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo'
       }
     }
 
@@ -69,6 +75,7 @@ window.Hktdc = {
       var self = this;
       window.utils.setURL(env);
 
+      // if (true) {
       if (env === 'uat') {
         /* check auth */
         window.utils.getAccessToken(function (accessToken) {
@@ -94,6 +101,7 @@ window.Hktdc = {
         Backbone.history.start();
       }
     } catch (e) {
+      console.log(e);
       console.log('init application error!', e);
     }
   }

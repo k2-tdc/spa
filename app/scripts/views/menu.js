@@ -11,17 +11,17 @@ Hktdc.Views = Hktdc.Views || {};
 
     el : '#menu',
 
-    getLinkMap: function () {
-      return {
-        'NEW_REQUEST': Hktdc.Config.projectPath + '/#new_request',
-        'DRAFT_LIST': Hktdc.Config.projectPath + '/#draft',
-        'ALL_TASKS': Hktdc.Config.projectPath + '/#',
-        'APPROVAL_TASKS': Hktdc.Config.projectPath + '/#',
-        'CHECK_STATUS': Hktdc.Config.projectPath + '/#check_status',
-        'USAGE_REPORT': Hktdc.Config.projectPath + '/#',
-        'QUICK_USER_GUIDE': Hktdc.Config.projectPath + '/#'
-      };
-    },
+    // getLinkMap: function () {
+    //   return {
+    //     'NEW_REQUEST': Hktdc.Config.projectPath + '/#new_request',
+    //     'DRAFT_LIST': Hktdc.Config.projectPath + '/#draft',
+    //     'ALL_TASKS': Hktdc.Config.projectPath + '/#',
+    //     'APPROVAL_TASKS': Hktdc.Config.projectPath + '/#',
+    //     'CHECK_STATUS': Hktdc.Config.projectPath + '/#check_status',
+    //     'USAGE_REPORT': Hktdc.Config.projectPath + '/#usage_report',
+    //     'QUICK_USER_GUIDE': Hktdc.Config.projectPath + '/#'
+    //   };
+    // },
 
     initialize: function () {
       console.debug('Initiating side menu');
@@ -40,25 +40,22 @@ Hktdc.Views = Hktdc.Views || {};
       var rawMenu = this.model.toJSON();
       var menu = (_.isArray(rawMenu)) ? rawMenu[0].Menu : rawMenu.Menu;
       var self = this;
-      var linkMap = self.getLinkMap();
-      console.log(linkMap);
       /* map the name, the server should return the route later */
       _.each(menu, function(raw){
         if (raw.sumenu) {
           _.each(raw.sumenu, function(subMenuRaw){
-            var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ','_');
+            var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ', '_');
             // console.log(upperLodash);
-            subMenuRaw.Route = linkMap[upperLodash] || '#';
+            subMenuRaw.Route = Hktdc.Config.projectPath + subMenuRaw.Mlink || '/#';
             subMenuRaw.RouteName = upperLodash || 'HOME';
           });
         } else {
-          var upperLodash = raw.Name.trim().toUpperCase().replace(' ','_');
-          raw.Route = linkMap[upperLodash] || '#';
+          var upperLodash = raw.Name.trim().toUpperCase().replace(' ', '_');
+          raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
           raw.RouteName = upperLodash || 'HOME';
-
         }
         // console.log(upperLodash);
-        raw.Route = linkMap[upperLodash] || '#';
+        raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
         raw.RouteName = upperLodash || 'HOME';
       });
 

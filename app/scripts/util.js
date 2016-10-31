@@ -16,6 +16,7 @@ window.utils = {
     Hktdc.Config.OAuthGetTokenUrl = envConfig.SPADomain + envConfig.OAuthGetTokenPath;
     Hktdc.Config.SPAHomeUrl = envConfig.SPADomain + envConfig.SPAHomePath;
     Hktdc.Config.OAuthGetUserIDURL = envConfig.SPADomain + envConfig.OAuthGetUserIDPath;
+    Hktdc.Config.needAuthHeader = envConfig.needAuthHeader;
     console.log(Hktdc.Config);
     // console.log(Hktdc.Config.apiURL);
   },
@@ -44,7 +45,10 @@ window.utils = {
   },
 
   setAuthHeader: function (xhr) {
-    xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
+    if (Hktdc.Config.needAuthHeader) {
+      console.log('needAuthHeader: ', true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
+    }
   },
   // Asynchronously load templates located in separate .html files
 
@@ -144,7 +148,7 @@ window.utils = {
         // Response handlers.
         xhr.onload = function () {
           var text = xhr.responseText;
-          console.log('After AJAX, result:' + text + '   accessToken:' + accessToken);
+          console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
 
           accessToken = self.getCookie('ACCESS-TOKEN');
           onSuccess(accessToken);
