@@ -41,7 +41,10 @@ Hktdc.Views = Hktdc.Views || {};
 
 
       /* common component */
-      // $('.divApplicant', this.el).append(new Hktdc.Views.ApplicantList().el);
+      // console.log('this.model in new request', this.model.toJSON());
+      $('.divApplicant', this.el).append(new Hktdc.Views.ApplicantList({
+        parentModel: this.model
+      }).el);
 
     },
 

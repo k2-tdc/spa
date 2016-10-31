@@ -11,7 +11,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     queryParams: {
       RuleID: Hktdc.Config.RuleCode,
-      WorkId: '',
+      WorkId: Hktdc.Config.userID,
       UserId: Hktdc.Config.userID
     },
 
@@ -22,34 +22,6 @@ Hktdc.Collections = Hktdc.Collections || {};
 
       return Hktdc.Config.apiURL + '/GetEmployee?' + qsArr.join('&');
     },
-
-    initialize: function() {
-      console.debug('[collections/applicant.js] - initialize');
-      var that = this;
-      this.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          that.renderApplicantView();
-        },
-        error: function(model, response) {
-          console.log(JSON.stringify(response, null, 2));
-          // alert(JSON.stringify(response.responseJSON.Message));
-        }
-      });
-
-      this.on("reset", this.loadapplicantindex, this);
-    },
-
-    loadapplicantindex: function() {
-      this.renderApplicantView();
-    },
-
-    renderApplicantView: function() {
-      console.log(this);
-      var applicantView = new Hktdc.Views.Applicant({collection: this});
-      applicantView.render();
-
-    }
   });
 
 })();

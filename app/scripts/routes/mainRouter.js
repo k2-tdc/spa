@@ -11,8 +11,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'check_status': 'checkStatus',
       'check_status/:statusId': 'statusDetail',
       'new_request': 'newRequest',
-      'draft': 'draft',
-
+      'draft': 'draft'
     },
 
     initialize: function() {
@@ -74,8 +73,8 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-      var NewRequest = new Hktdc.Models.NewRequest();
-      var nrView = new Hktdc.Views.NewRequest();
+      var NewRequestModel = new Hktdc.Models.NewRequest();
+      var nrView = new Hktdc.Views.NewRequest({model: NewRequestModel});
     },
 
     statusDetail: function() {

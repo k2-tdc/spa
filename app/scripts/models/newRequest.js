@@ -8,13 +8,15 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.NewRequest = Backbone.Model.extend({
 
     initialize: function() {
+      this.on('change:selectedApplicant', function(model, value, options) {
+      })
     },
 
     defaults: {
       preparedBy: null,
       department: null,
       createDate: new Date,
-      applicant: null,
+      selectedApplicant: null,
       requestService: [],
       notes: null,
       deliveryDate: null,
