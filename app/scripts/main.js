@@ -128,7 +128,7 @@ window.Hktdc = {
       success: function(collection) {
         var menu = collection.toJSON()[0];
         Hktdc.Config.userName = menu.UserName;
-        console.log('menu.UserName', menu.UserName);
+        // console.log('menu.UserName', menu.UserName);
         var menuModel = new Hktdc.Models.Menu({
           Menu: menu.Menu
         });

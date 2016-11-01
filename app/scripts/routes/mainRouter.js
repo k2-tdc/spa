@@ -30,7 +30,6 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-      console.log('Hktdc.Config.userName', typeof Hktdc.Config.userName);
       var NewRequestModel = new Hktdc.Models.NewRequest({
         preparedBy: Hktdc.Config.userName,
         createDate: moment().format('DD MMM YYYY'),

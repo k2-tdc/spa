@@ -38,7 +38,12 @@
         <div class="row">
           <label for="applicant" class="col-sm-2 control-label">Applicant</label>
           <div class="col-xs-10 col-md-10 btn-group full-width applicant-container">
-            <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">--Select--</button>
+            <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">
+              <% if (selectedApplicantName){ %>
+                <%=selectedApplicantName%>
+              <%}else{%>
+                --Select--
+              <% } %></button>
             <button type="button" class="btn btn-default dropdown-toggle btnapplicant" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>

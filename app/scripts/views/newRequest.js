@@ -63,7 +63,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.initModelChange();
         },
         error: function(err) {
-
+          console.log(err);
         }
       })
 
@@ -105,7 +105,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      console.log(this.model.toJSON());
+      // console.log(this.model.toJSON().selectedApplicant.toJSON());
+      this.model.set({
+        selectedApplicantName: this.model.toJSON().selectedApplicant.toJSON().UserFullName
+      });
       this.$el.html(this.template(this.model.toJSON()));
     }
 
