@@ -1,12 +1,10 @@
-/*global hktdc, $*/
-
 
 window.Hktdc = {
   Models: {},
   Collections: {},
   Views: {},
   Routers: {},
-  Dispatcher: _.extend({}, Backbone.Events),
+  Dispatcher: window._.extend({}, window.Backbone.Events),
   Config: {
     apiURL: false,
     accessToken: '',
@@ -16,8 +14,9 @@ window.Hktdc = {
     needAuthHeader: false,
     projectPath: '',
     SPAHomeUrl: '',
-    userID: "aachen",
-    RuleCode: "IT0008;IT0009",
+    userID: '',
+    userName: '',
+    RuleCode: 'IT0008;IT0009',
     environments: {
       // local dev VM
       dev: {
@@ -68,48 +67,93 @@ window.Hktdc = {
 
   },
 
-  init: function (env) {
+  init: function(env) {
     'use strict';
     console.debug('[ main.js ] - Initiating HKTDC Workflow Applicaiton...');
+    var utils = window.utils;
+    var Backbone = window.Backbone;
+    var Hktdc = window.Hktdc;
     try {
       var self = this;
-      window.utils.setURL(env);
+      utils.setURL(env);
 
       // if (true) {
       if (env === 'uat') {
         /* check auth */
-        window.utils.getAccessToken(function (accessToken) {
+        utils.getAccessToken(function(accessToken) {
           console.debug('[ main.js ] - setting up application...');
           /* if auth ed */
-          window.Hktdc.Config.accessToken = accessToken;
+          Hktdc.Config.accessToken = accessToken;
           /* get user id by access token */
-          window.utils.getLoginUserIdByToken(accessToken, function(userID){
+          utils.getLoginUserIdByToken(accessToken, function(userID) {
             /* initialize the application */
-            window.Hktdc.Config.userID = userID;
-            var mainRouter = new self.Routers.Main();
-            Backbone.history.start();
-          }, function (error) {
-            alert('Error on getting userID');
-          });
+            Hktdc.Config.userID = userID;
 
-        }, function(error){
+            /* done user profile config */
+            self.setupMasterPageComponent(function() {
+              var mainRouter = new self.Routers.Main();
+              Backbone.history.start();
+            });
+          }, function(error) {
+            console.log('Error on getting userID', error);
+          });
+        }, function(error) {
           /* else */
-          alert('OAuth Error');
+          console.log('OAuth Error', error);
         });
       } else {
-        var mainRouter = new self.Routers.Main();
-        Backbone.history.start();
+        Hktdc.Config.userID = 'aachen';
+        // userName set in menu
+        // Hktdc.Config.userName = 'Aaron Chen (ITS - Testing account)';
+        self.setupMasterPageComponent(function() {
+          var mainRouter = new self.Routers.Main();
+          Backbone.history.start();
+        });
       }
     } catch (e) {
       console.log(e);
       console.log('init application error!', e);
     }
+  },
+
+  setupMasterPageComponent: function(onSuccess) {
+    var Hktdc = window.Hktdc;
+    var utils = window.utils;
+    var headerView = new Hktdc.Views.Header();
+
+    var menuCollection = new Hktdc.Collections.Menu();
+
+    menuCollection.fetch({
+      beforeSend: utils.setAuthHeader,
+      success: function(collection) {
+        var menu = collection.toJSON()[0];
+        Hktdc.Config.userName = menu.UserName;
+        console.log('menu.UserName', menu.UserName);
+        var menuModel = new Hktdc.Models.Menu({
+          Menu: menu.Menu
+        });
+        var menuView = new Hktdc.Views.Menu({
+          model: menuModel
+        });
+        var userView = new Hktdc.Views.User({
+          model: new Hktdc.Models.User({
+            UserName: menu.UserName,
+            UserID: menu.UserID
+          })
+        });
+        menuModel.set('activeTab', JSON.stringify(window.Backbone.history.getHash()));
+        onSuccess();
+      },
+      error: function() {
+        console.log('error on rendering menu');
+      }
+    });
   }
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
   'use strict';
   // Hktdc.init('dev');
   // Hktdc.init('uat');
-  Hktdc.init('localDev');
+  window.Hktdc.init('localDev');
 });

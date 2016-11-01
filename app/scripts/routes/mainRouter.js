@@ -14,50 +14,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'draft': 'draft'
     },
 
-    initialize: function() {
-      /* Set up the Views */
-      console.debug('[ routes/mainRouter.js ] - Initizing Router...');
-      var headerView = new Hktdc.Views.Header();
-      var self = this;
-
-      var menuCollection = new Hktdc.Collections.Menu();
-      // var menuModel = new Hktdc.Models.Menu();
-
-      // var user = new Hktdc.Models['User']({
-      //   UserName
-      // })
-      // var menuView = new Hktdc.Views['Menu']();
-      // menuModel.set('activeTab', '/#check_status');
-      menuCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function(collection) {
-          var menu = collection.toJSON()[0];
-          var menuModel = new Hktdc.Models.Menu({
-            Menu: menu.Menu
-          });
-          var menuView = new Hktdc.Views.Menu({
-            model: menuModel
-          });
-          var userView = new Hktdc.Views.User({
-            model: new Hktdc.Models.User({
-              UserName: menu.UserName,
-              UserID: menu.UserID
-            })
-          });
-          // var appShoutcutView = new Hktdc.Views.AppShoutcut({
-          //   model: new Hktdc.Models.AppShoutcut({
-          //     PList: menu.PList,
-          //     ActiveApp: menu.PList[0]
-          //   })
-          // });
-          // console.log(JSON.stringify(Backbone.history.getHash(), null, 2));
-          menuModel.set('activeTab', JSON.stringify(Backbone.history.getHash()));
-        },
-        error: function() {
-          console.log('error on rendering menu');
-        }
-      });
-    },
+    initialize: function() {},
 
     checkStatus: function() {
       console.debug('[ routes/mainRouter.js ] - checkStatus route handler');
@@ -73,7 +30,17 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-      var NewRequestModel = new Hktdc.Models.NewRequest();
+      console.log('Hktdc.Config.userName', typeof Hktdc.Config.userName);
+      var NewRequestModel = new Hktdc.Models.NewRequest({
+        preparedBy: Hktdc.Config.userName,
+        createDate: moment().format('DD MMM YYYY'),
+
+        /* set the default selected applicant is self */
+        selectedApplicant: new Hktdc.Models.Applicant({
+          UserId: Hktdc.Config.userID,
+          UserFullName: Hktdc.Config.userName
+        })
+      });
       var nrView = new Hktdc.Views.NewRequest({model: NewRequestModel});
     },
 
