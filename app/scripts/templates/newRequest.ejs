@@ -81,11 +81,11 @@
 
 
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title">Justification and Important Notes<span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
+            <div class="col-xs-12 col-md-12 newrequest-title">cation and Important Notes<span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
           </div>
           <div class="row">
             <div class="col-md-10">
-              <textarea class="form-control" rows="3" id="txtjustification"></textarea>
+              <textarea class="form-control" rows="3" field="justification" id="txtjustification"></textarea>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -95,7 +95,7 @@
           <div class="row">
             <div class="col-xs-10 col-sm-10">
               <div class="input-group date pick-date-start" data-provide="datepicker">
-                <input type="text" class="form-control" id="txtexpectedDD">
+                <input type="text" class="form-control" id="txtexpectedDD" field="deliveryDate" />
                 <div class="input-group-addon">
                   <span class="glyphicon glyphicon-th"></span>
                 </div>
@@ -108,7 +108,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtfrequency">
+              <input type="text" class="form-control" id="txtfrequency" field="frequency" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -117,7 +117,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtestimatedcost">
+              <input type="text" class="form-control" id="txtestimatedcost" field="cost" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -126,7 +126,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtbudgetprovided">
+              <input type="text" class="form-control" id="txtbudgetprovided" field="budget" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -135,21 +135,21 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtbudgetsum">
+              <input type="text" class="form-control" id="txtbudgetsum" field="budgetSum" />
             </div>
           </div>
           <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">Recommend By</div>
-            <div class="col-xs-8 col-md-8 btn-group full-width">
-              <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="divrecommend">--Select--</button>
+            <div class="col-xs-8 col-md-8 btn-group full-width recommend-container">
+              <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">--Select--</button>
               <button type="button" class="btn btn-default dropdown-toggle recommend" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <ul id="ulrecommend" style="height:250px;overflow-y:scroll" class="dropdown-menu">
+              <!-- <ul id="ulrecommend" style="height:250px;overflow-y:scroll" class="dropdown-menu">
+              </ul> -->
 
-              </ul>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -176,7 +176,7 @@
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">Remark</div>
             <div class="col-xs-8 col-md-8">
-              <textarea class="form-control" rows="3" id="txtremark"></textarea>
+              <textarea class="form-control" rows="3" id="txtremark" field="remark"></textarea>
             </div>
           </div>
           <div class="sep-space"></div>

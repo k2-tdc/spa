@@ -35,7 +35,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         createDate: moment().format('DD MMM YYYY'),
 
         /* set the default selected applicant is self */
-        selectedApplicant: new Hktdc.Models.Applicant({
+        selectedApplicantModel: new Hktdc.Models.Applicant({
           UserId: Hktdc.Config.userID,
           UserFullName: Hktdc.Config.userName
         })

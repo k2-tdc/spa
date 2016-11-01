@@ -12,9 +12,19 @@ Hktdc.Views = Hktdc.Views || {};
   Hktdc.Views.ServiceObjectText = Backbone.View.extend({
     template: JST['app/scripts/templates/serviceObjectText.ejs'],
     tagName: 'div',
-    events: {},
-    initialize: function () {
-      // this.listenTo(this.model, 'change', this.render);
+    events: {
+      'blur #lastnosub': 'editServiceHandler'
+    },
+    editServiceHandler: function(){
+      if ($('textarea', this.el).val().trim().length > 0) {
+        this.requestFormModel.selectedServiceCollection.add(this.model);
+      } else {
+        this.requestFormModel.selectedServiceCollection.remove(this.model);
+      }
+      // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
+    },
+    initialize: function (props) {
+      this.requestFormModel = props.requestFormModel;
     },
     render: function () {
       var tmpl = this.template({ serviceObject: this.model.toJSON()});
@@ -26,8 +36,23 @@ Hktdc.Views = Hktdc.Views || {};
   Hktdc.Views.ServiceObjectSelect = Backbone.View.extend({
     template: JST['app/scripts/templates/serviceObjectSelect.ejs'],
     tagName: 'li',
-    initialize: function () {},
-    render: function () {
+    events: {
+      'click .anclevel3': 'selectServiceHandler'
+    },
+    selectServiceHandler: function() {
+      /* save the selected request to the upper level so that can delete request form collection by selected model */
+      this.serviceRequestModel.set({selectedRequestModel: this.model});
+      this.requestFormModel.selectedServiceCollection.add(this.model);
+      // console.log(this.model.toJSON());
+      // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
+    },
+
+    initialize: function(props) {
+      this.serviceRequestModel = props.serviceRequestModel;
+      this.requestFormModel = props.requestFormModel;
+    },
+
+    render: function() {
       var tmpl = this.template({ serviceObject: this.model.toJSON()});
       this.$el.html(tmpl);
     }
@@ -45,16 +70,27 @@ Hktdc.Views = Hktdc.Views || {};
       return (col[0] && col[0].ControlFlag == 1) ? 'dropdown-menu' : 'text-request-object';
     },
 
-    initialize: function () {
+    initialize: function (props) {
+      this.requestFormModel = props.requestFormModel;
+      this.serviceRequestModel = props.serviceRequestModel;
+      // console.log(this.serviceRequestModel.toJSON());
       _.bindAll(this, 'renderServiceObjectItem');
     },
 
     renderServiceObjectItem: function(model){
       // console.log(model.toJSON());
       if (model.toJSON().ControlFlag == 1) {
-        var serviceObjectItemView = new Hktdc.Views.ServiceObjectSelect({ model: model });
+        var serviceObjectItemView = new Hktdc.Views.ServiceObjectSelect({
+          model: model,
+          requestFormModel: this.requestFormModel,
+          serviceRequestModel: this.serviceRequestModel
+        });
       } else {
-        var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({ model: model });
+        var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
+          model: model,
+          requestFormModel: this.requestFormModel,
+          serviceRequestModel: this.serviceRequestModel
+        });
       }
 
       serviceObjectItemView.render();

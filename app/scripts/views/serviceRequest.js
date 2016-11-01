@@ -17,24 +17,41 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click .btn-del': 'deleteRequestObject'
     },
-    deleteRequestObject: function(){
+    deleteRequestObject: function(ev) {
       var collection = this.model.get('parentCollection');
       collection.remove(this.model);
+
+      /* also delete the collection */
+      this.requestFormModel.selectedServiceCollection.remove(this.model.toJSON().selectedRequestModel);
+      // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
-    initialize: function () {
+
+    initialize: function (props) {
       try {
+        this.requestFormModel = props.requestFormModel;
         var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().serviceObjectData);
         var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
-          collection: serviceObjectCollection
+          collection: serviceObjectCollection,
+          serviceRequestModel: this.model,
+          requestFormModel: props.requestFormModel
         });
         // console.log(serviceObjectListView);
         serviceObjectListView.render();
         setTimeout(function() {
           $('.service-object-container', this.el).append(serviceObjectListView.el);
+          this.initModelChangeHandler();
         }.bind(this));
+
       } catch (e) {
         console.error('service request render error');
       }
+    },
+
+    initModelChangeHandler: function() {
+      var self = this;
+      this.model.on('change:selectedRequestModel', function(selectedReq, newModel) {
+        $('.selectleve2sub', self.el).text(newModel.toJSON().Name);
+      })
     },
 
     render: function () {
@@ -51,6 +68,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function (options) {
       _.bindAll(this, 'renderServiceRequest', 'addServiceRequest', 'removeServiceRequest');
       this.serviceObjectData = options.serviceObjectData;
+      this.requestFormModel = options.requestFormModel;
       this.listenTo(this.collection, 'add', this.addServiceRequest);
       this.listenTo(this.collection, 'remove', this.removeServiceRequest);
     },
@@ -75,7 +93,8 @@ Hktdc.Views = Hktdc.Views || {};
       model.set('serviceObjectData', this.serviceObjectData);
       model.set('parentCollection', this.collection);
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
-        model: model
+        model: model,
+        requestFormModel: this.requestFormModel
       });
       serviceRequestItemView.render();
       $(this.el).append(serviceRequestItemView.el);

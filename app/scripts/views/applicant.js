@@ -8,25 +8,24 @@ Hktdc.Views = Hktdc.Views || {};
   Hktdc.Views.Applicant = Backbone.View.extend({
 
     template: JST['app/scripts/templates/applicant.ejs'],
-
     tagName: 'li',
+    events: {
+      'click': 'clickApplcantHandler'
+    },
 
-    initialize: function(props) {
-      // console.log(props.parentModel.toJSON());
-      var self = this;
+    clickApplcantHandler: function() {
+      /* The new request model will handle the change */
 
-      this.parentModel = props.parentModel;
-
-      $(this.el).click(function() {
-        /* The new request model will handle the change */
-
-        self.parentModel.set({
-          selectedApplicant: self.model
-        });
+      this.parentModel.set({
+        selectedApplicantModel: this.model
       });
     },
 
-    render: function () {
+    initialize: function(props) {
+      this.parentModel = props.parentModel;
+    },
+
+    render: function() {
       this.$el.html(this.template({user: this.model.toJSON()}));
     }
 
@@ -38,7 +37,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     className: 'dropdown-menu applicant-list',
 
-    initialize: function (props) {
+    initialize: function(props) {
       this.parentModel = props.parentModel;
 
       _.bindAll(this, 'renderApplicantItem');
@@ -56,7 +55,7 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).append(applicantItemView.el);
     },
 
-    render: function () {
+    render: function() {
       // this.$el.html(this.template(this.model.toJSON()));
       this.collection.each(this.renderApplicantItem);
     }

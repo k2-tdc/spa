@@ -23,7 +23,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     defaultServiceRequestObject: {},
 
-    initialize: function() {
+    initialize: function(props) {
+      this.requestFormModel = props.requestFormModel;
       this.renderServiceObject();
     },
 
@@ -33,10 +34,10 @@ Hktdc.Views = Hktdc.Views || {};
         var serviceObjectData = this.model.toJSON().Level3;
         /* service request list in new request default is empty object of array */
         this.defaultServiceRequestObject = { ControlFlag: serviceObjectData[0].ControlFlag };
-        var serviceRequestList = [
-          // { ControlFlag: serviceObjectData[0].ControlFlag },
-          this.defaultServiceRequestObject
-        ];
+        var serviceRequestList = [];
+        if (serviceObjectData[0].ControlFlag == 2) {
+          serviceRequestList.push(this.defaultServiceRequestObject);
+        }
         this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(serviceRequestList);
 
         // childServiceRequestCollection.on('add', function(srModel) {
@@ -45,7 +46,8 @@ Hktdc.Views = Hktdc.Views || {};
 
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
           collection: this.childServiceRequestCollection,
-          serviceObjectData: serviceObjectData
+          serviceObjectData: serviceObjectData,
+          requestFormModel: this.requestFormModel
         });
         serviceRequestListView.render();
 
@@ -77,7 +79,9 @@ Hktdc.Views = Hktdc.Views || {};
 
   Hktdc.Views.ServiceTypeList = Backbone.View.extend({
 
-    initialize: function() {
+    initialize: function(props) {
+      /* requestFormModel is new request model */
+      this.requestFormModel = props.requestFormModel;
       /* important to use bindAll as directly use this.renderItem in render */
       _.bindAll(this, 'renderServiceTypeItem');
     },
@@ -86,7 +90,8 @@ Hktdc.Views = Hktdc.Views || {};
       var needAddBtn = (model.toJSON().Level3[0].ControlFlag == 1);
       model.set('needAddBtn', needAddBtn);
       var serviceTypeItemView = new Hktdc.Views.ServiceType({
-        model: model
+        model: model,
+        requestFormModel: this.requestFormModel
       });
       serviceTypeItemView.render();
       $(this.el).append(serviceTypeItemView.el);

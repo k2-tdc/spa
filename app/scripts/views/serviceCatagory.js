@@ -19,7 +19,9 @@
 
     tag: 'div',
 
-    initialize: function () {},
+    initialize: function (props) {
+      this.requestFormModel = props.requestFormModel;
+    },
 
     events: {
       'click .toplevelCheckBox': 'onCheckboxChange',
@@ -68,6 +70,7 @@
       try {
         var serviceTypeListView = new Hktdc.Views.ServiceTypeList({
           collection: serviceTypeCollection,
+          requestFormModel: this.requestFormModel
         });
         serviceTypeListView.render();
         setTimeout(function() {
@@ -95,15 +98,19 @@
   Hktdc.Views.ServiceCatagoryList = Backbone.View.extend({
     tagName: 'div',
 
-    initialize: function() {
-
+    initialize: function(props) {
+      // this.parent
+      this.requestFormModel = props.requestFormModel;
       /* important to use bindAll as directly use this.renderCatagoryItem in render */
       _.bindAll(this, "renderCatagoryItem");
 
     },
 
     renderCatagoryItem: function(model){
-      var serviceCatagoryItemView = new Hktdc.Views.ServiceCatagory({ model: model });
+      var serviceCatagoryItemView = new Hktdc.Views.ServiceCatagory({
+        model: model,
+        requestFormModel: this.requestFormModel
+      });
       serviceCatagoryItemView.render();
       $(this.el).append(serviceCatagoryItemView.el);
     },
