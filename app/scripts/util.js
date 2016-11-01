@@ -17,7 +17,7 @@ window.utils = {
     Hktdc.Config.SPAHomeUrl = envConfig.SPADomain + envConfig.SPAHomePath;
     Hktdc.Config.OAuthGetUserIDURL = envConfig.SPADomain + envConfig.OAuthGetUserIDPath;
     Hktdc.Config.needAuthHeader = envConfig.needAuthHeader;
-    console.log(Hktdc.Config);
+    // console.log(Hktdc.Config);
     // console.log(Hktdc.Config.apiURL);
   },
 
@@ -169,6 +169,7 @@ window.utils = {
   },
 
   getLoginUserIdByToken: function (accessToken, onSuccess, onError) {
+    console.log('getLoginUserIdByToken: ', accessToken);
     var Userid = '';
     var self = this;
     var url = window.Hktdc.Config.OAuthGetUserIDURL + '?access_token=' + accessToken;
@@ -183,6 +184,7 @@ window.utils = {
     xhr.onload = function () {
       var text = xhr.responseText;
       var objLoginUser = JSON.parse(text);
+      // console.log(JSON.stringify(objLoginUsers, null, 2));
       Userid = objLoginUser.user_id;
 
       onSuccess(Userid);

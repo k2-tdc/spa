@@ -39,17 +39,74 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
 
+      self.model.selectedCCCollection = new Hktdc.Collections.SelectedCC();
 
       /* common component */
-      // console.log('this.model in new request', this.model.toJSON());
-      $('.divApplicant', this.el).append(new Hktdc.Views.ApplicantList({
-        parentModel: this.model
-      }).el);
+      var employeeCollection = new Hktdc.Collections.Employee();
+      employeeCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          $('.applicant-container', self.el).append(new Hktdc.Views.ApplicantList({
+            collection: new Hktdc.Collections.Applicant(employeeCollection.toJSON()),
+            parentModel: self.model
+          }).el);
+
+          $('.cc-container', self.el).append(new Hktdc.Views.CCList({
+            collection: new Hktdc.Collections.CC(employeeCollection.toJSON()),
+            parentModel: self.model
+          }).el);
+
+          $('.contact-group', self.el).append(new Hktdc.Views.SelectedCCList({
+            collection: self.model.selectedCCCollection
+          }).el);
+
+          self.initModelChange();
+        },
+        error: function(err) {
+
+        }
+      })
 
     },
 
+    initModelChange: function() {
+      var self = this;
+      this.model.on('change:selectedApplicant', function(model, selectedApplicantModel, options) {
+        var selectedUserName = selectedApplicantModel.toJSON().UserFullName;
+        $('.selectedApplicant', self.el).text(selectedUserName);
+        selectedApplicantModel.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function(res) {
+            var selectedUserDepartment = res.toJSON().Depart;
+            $('#divdepartment', self.el).text(selectedUserDepartment);
+          },
+          error: function(e) {
+            console.log(e);
+          }
+        });
+        // $('.applicant-container').attr("eid", $(this).attr("eid"));
+        // var recommendCollection = new Hktdc.Collections.Recommend();
+      });
+
+      this.model.selectedCCCollection.on('add', function(addedCC, newCollection) {
+        // console.log(addedCC.toJSON());
+        var selectedUserName = addedCC.toJSON().UserFullName;
+        var selectedUserId = addedCC.toJSON().UserId;
+        $('.selectedCC', this.el).text(selectedUserName);
+
+        // $('.contact-group', this.el).append(
+        //   '<a type="button" eid=' +
+        //     selectedUserId +
+        //     ' style="text-decoration:none;margin-right:5px;margin-top:5px;" class="btn btn-default spncc"><span class="glyphicon glyphicon-remove spanremovecc"></span>' +
+        //     selectedUserName +
+        //   '</a>'
+        // );
+      });
+    },
+
     render: function() {
-      this.$el.html(this.template());
+      console.log(this.model.toJSON());
+      this.$el.html(this.template(this.model.toJSON()));
     }
 
   });

@@ -8,15 +8,18 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.NewRequest = Backbone.Model.extend({
 
     initialize: function() {
-      this.on('change:selectedApplicant', function(model, value, options) {
-      })
+      console.log(this.toJSON().selectedApplicant.toJSON());
+      // this.attributes.selectedApplicant = {}
+      // TODO: The change event should place in view??
     },
 
     defaults: {
       preparedBy: null,
       department: null,
-      createDate: new Date,
+      createDate: null,
       selectedApplicant: null,
+      selectedCCCollection: null,
+      currentCC: null,
       requestService: [],
       notes: null,
       deliveryDate: null,
@@ -25,7 +28,7 @@ Hktdc.Models = Hktdc.Models || {};
       budget: null,
       budgetSum: null,
       recommend: null,
-      remark: null,
+      remark: null
 
     },
 

@@ -226,6 +226,10 @@ div.newrequest-title {
   height:250px;
   overflow-y:scroll;
 }
+.cc-list{
+  height:250px;
+  overflow-y:scroll;
+}
 
 .select-applicant button:not(.dropdown-toggle) {
   width: calc(100% - 26px);
@@ -358,6 +362,14 @@ span.service-title-desp {
 
 .contact-group {
   text-align: left;
+  .seleced-cc-list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li{
+      display: inline;
+    }
+  }
 }
 
 div.dataTables_info,

@@ -5,9 +5,9 @@ Hktdc.Views = Hktdc.Views || {};
 (function () {
   'use strict';
 
-  Hktdc.Views.Applicant = Backbone.View.extend({
+  Hktdc.Views.CC = Backbone.View.extend({
 
-    template: JST['app/scripts/templates/applicant.ejs'],
+    template: JST['app/scripts/templates/cc.ejs'],
 
     tagName: 'li',
 
@@ -20,45 +20,52 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).click(function() {
         /* The new request model will handle the change */
 
+        /* Add selected CC collections to parents coll. */
+        self.parentModel.selectedCCCollection.add(self.model);
+
+        self.model.set({selected: true});
         self.parentModel.set({
-          selectedApplicant: self.model
+          // selectedCCCollection: newCCArray,
+          currentCC: self.model
         });
+        self.render();
       });
     },
 
     render: function () {
       this.$el.html(this.template({user: this.model.toJSON()}));
     }
-
   });
 
-  Hktdc.Views.ApplicantList = Backbone.View.extend({
+  Hktdc.Views.CCList = Backbone.View.extend({
 
     tagName: 'ul',
 
-    className: 'dropdown-menu applicant-list',
+    className: 'dropdown-menu cc-list',
 
     initialize: function (props) {
       this.parentModel = props.parentModel;
 
-      _.bindAll(this, 'renderApplicantItem');
+      _.bindAll(this, 'renderCCItem');
 
       this.render();
     },
 
-    renderApplicantItem: function(model) {
-      var applicantItemView = new Hktdc.Views.Applicant({
+    renderCCItem: function(model) {
+      var ccItemView = new Hktdc.Views.CC({
         model: model,
         parentModel: this.parentModel
       });
 
-      applicantItemView.render();
-      $(this.el).append(applicantItemView.el);
+      ccItemView.render();
+      $(this.el).append(ccItemView.el);
     },
 
     render: function () {
       // this.$el.html(this.template(this.model.toJSON()));
-      this.collection.each(this.renderApplicantItem);
+      this.collection.each(this.renderCCItem);
     }
   });
+
+
 })();

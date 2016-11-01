@@ -22,13 +22,13 @@
         <div class="col-xs-2 col-md-2 newrequest-title">Status</div>
         <div class="col-xs-10 col-md-4" id="divStatus">New</div>
         <div class="col-xs-2 col-md-2 newrequest-title">Prepared by</div>
-        <div class="col-xs-10 col-md-4" id="divPreparedby"></div>
+        <div class="col-xs-10 col-md-4" id="divPreparedby"><%= preparedBy %></div>
       </div>
       <div class="row">
         <div class="col-xs-2 col-md-2 newrequest-title">Ref ID</div>
         <div class="col-xs-10 col-md-4" id="divRefID"></div>
         <div class="col-xs-2 col-md-2 newrequest-title">Create Date</div>
-        <div class="col-xs-10 col-md-4" id="divCreateddate"></div>
+        <div class="col-xs-10 col-md-4" id="divCreateddate"><%= createDate %></div>
       </div>
     </div>
 
@@ -37,13 +37,13 @@
       <div class="panel-body">
         <div class="row">
           <label for="applicant" class="col-sm-2 control-label">Applicant</label>
-          <div class="col-xs-10 col-md-10 btn-group full-width divApplicant">
-
-            <button type="button" class="btn btn-default btnapplicant" data-toggle="dropdown" id="divapplicant">--Select--</button>
+          <div class="col-xs-10 col-md-10 btn-group full-width applicant-container">
+            <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">--Select--</button>
             <button type="button" class="btn btn-default dropdown-toggle btnapplicant" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
             </button>
+            <!-- applicant list here -->
 
           </div>
         </div>
@@ -57,7 +57,7 @@
         </div>
         <div class="row">
           <div class="col-xs-2 col-md-2 newrequest-title">Department</div>
-          <div class="col-xs-10 col-md-10" id="divdepartment"></div>
+          <div class="col-xs-10 col-md-10" id="divdepartment"><%= department %></div>
         </div>
       </div>
     </div>
@@ -157,18 +157,15 @@
           <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">&nbsp;</div>
-            <div class="col-xs-8 col-md-8 btn-group full-width">
-              <button type="button" class="btn btn-default btncc" data-toggle="dropdown" id="divcc">--Select--</button>
+            <div class="col-xs-8 col-md-8 btn-group full-width cc-container">
+              <button type="button" class="btn btn-default btncc selectedCC" data-toggle="dropdown">--Select--</button>
               <button type="button" class="btn btn-default dropdown-toggle btncc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
-              <ul id="ulcc" style="height:250px;overflow-y:scroll" class="dropdown-menu">
+              <!-- cc list here -->
 
-              </ul>
             </div>
-
-
           </div>
           <div class="sep-space"></div>
           <div class="row">
