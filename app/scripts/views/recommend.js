@@ -20,50 +20,6 @@ Hktdc.Views = Hktdc.Views || {};
       this.requestFormModel.set({
         selectedRecommentModel: this.model
       });
-
-      this.renderButton();
-    },
-
-    renderButton: function() {
-      var model = this.requestFormModel.toJSON();
-      var Preparer = model.preparedBy;
-      var Applicant = model.selectedApplicantModel.toJSON().UserFullName;
-      var Approver = model.selectedRecommentModel.toJSON().UserFullName;
-      var AppRuleCode = model.selectedRecommentModel.toJSON().RuleCode;
-      console.log('Preparer', Preparer);
-      console.log('Applicant', Applicant);
-      console.log('Approver', Approver);
-      console.log('AppRuleCode', AppRuleCode);
-      // for submitted to
-      // if (Preparer !== Applicant && Applicant !== Approver) {
-      //     SubmittedTo = "Applicant";
-      //     $("#btnapplicant").hide();
-      //     $("#btnapprover").text("Send to Applicant");
-      // }
-      // if (Preparer == Applicant && Applicant == Approver) {
-      //     SubmittedTo = "TaskActioner";
-      //     $("#btnapplicant").hide();
-      //     $("#btnapprover").text("Send to Task Actioner");
-      // }
-      // if (Preparer != Applicant && Applicant == Approver) {
-      //     SubmittedTo = "Approver";
-      //     $("#btnapplicant").hide();
-      //     $("#btnapprover").text("Send to Approver");
-      // }
-      // if (Preparer == Applicant && Applicant != Approver) {
-      //     SubmittedTo = "Approver";
-      //     $("#btnapplicant").hide();
-      //     $("#btnapprover").text("Send to Approver");
-      // }
-      // if (Preparer != Applicant && 'IT0009' != Apprulecode) {
-      //   $("#btnapplicant").show();
-      //   $("#btnapplicant").text("Send to Applicant");
-      //   $("#btnapprover").text("Send to Approver");
-      // }
-      // if (Preparer == Applicant && 'IT0009' != Apprulecode) {
-      //   $("#btnapplicant").hide();
-      //   $("#btnapprover").text("Send to Approver");
-      // }
     },
 
     render: function() {

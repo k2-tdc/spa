@@ -31,7 +31,8 @@ Hktdc.Routers = Hktdc.Routers || {};
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
       var NewRequestModel = new Hktdc.Models.NewRequest({
-        preparedBy: Hktdc.Config.userName,
+        preparedByUserName: Hktdc.Config.userName,
+        preparedByUserId: Hktdc.Config.userID,
         createDate: moment().format('DD MMM YYYY'),
 
         /* set the default selected applicant is self */

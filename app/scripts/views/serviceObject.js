@@ -32,7 +32,6 @@ Hktdc.Views = Hktdc.Views || {};
     }
   });
 
-
   Hktdc.Views.ServiceObjectSelect = Backbone.View.extend({
     template: JST['app/scripts/templates/serviceObjectSelect.ejs'],
     tagName: 'li',
@@ -41,15 +40,25 @@ Hktdc.Views = Hktdc.Views || {};
     },
     selectServiceHandler: function() {
       /* save the selected request to the upper level so that can delete request form collection by selected model */
-      this.serviceRequestModel.set({selectedRequestModel: this.model});
+      // this.serviceRequestModel.set();
+      this.serviceRequestModel.set({
+        selectedRequestModel: this.model,
+        selectedServiceObject: true
+      });
       this.requestFormModel.selectedServiceCollection.add(this.model);
       // console.log(this.model.toJSON());
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
 
     initialize: function(props) {
+      var self = this;
       this.serviceRequestModel = props.serviceRequestModel;
       this.requestFormModel = props.requestFormModel;
+      this.serviceRequestModel.on('change:Notes', function(a, newNotes) {
+
+        /* the requestFormModel.selectedServiceCollection will auto update */
+        self.model.set({ Notes: newNotes });
+      });
     },
 
     render: function() {
@@ -79,6 +88,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderServiceObjectItem: function(model){
       // console.log(model.toJSON());
+      model.set({
+        serviceTypeName: this.serviceRequestModel.toJSON().serviceTypeName
+      });
+
       if (model.toJSON().ControlFlag == 1) {
         var serviceObjectItemView = new Hktdc.Views.ServiceObjectSelect({
           model: model,

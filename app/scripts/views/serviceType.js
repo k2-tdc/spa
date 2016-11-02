@@ -1,6 +1,7 @@
 /*global Hktdc, Backbone, JST*/
 /**
  * This file contains:
+ * = level 2
  * ServiceTypeList
  * ServiceTypeItem
  */
@@ -47,7 +48,10 @@ Hktdc.Views = Hktdc.Views || {};
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
           collection: this.childServiceRequestCollection,
           serviceObjectData: serviceObjectData,
-          requestFormModel: this.requestFormModel
+          requestFormModel: this.requestFormModel,
+
+          /* the serviceTypeName is used to mapping the service object to it's service type when saving request */
+          serviceTypeName: this.model.toJSON().Name
         });
         serviceRequestListView.render();
 

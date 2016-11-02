@@ -73,6 +73,7 @@ window.Hktdc = {
     var utils = window.utils;
     var Backbone = window.Backbone;
     var Hktdc = window.Hktdc;
+    Hktdc.Config.environment = env;
     try {
       var self = this;
       utils.setURL(env);

@@ -5,17 +5,14 @@ Hktdc.Models = Hktdc.Models || {};
 (function () {
   'use strict';
 
-  Hktdc.Models.Button = Backbone.Model.extend({
+  Hktdc.Models.SendFile = Backbone.Model.extend({
 
+    url: '',
+
+    initialize: function() {
+    },
 
     defaults: {
-      showBack: true,
-      showSave: true,
-      showRecall: false,
-      showApplicant: false,
-      showApprover: false,
-      approverSendTo: 'Approver',
-      applicantSendTo: 'Applicant'
     },
 
     validate: function(attrs, options) {

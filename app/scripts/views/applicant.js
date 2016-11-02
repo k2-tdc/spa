@@ -16,13 +16,13 @@ Hktdc.Views = Hktdc.Views || {};
     clickApplcantHandler: function() {
       /* The new request model will handle the change */
 
-      this.parentModel.set({
+      this.requestFormModel.set({
         selectedApplicantModel: this.model
       });
     },
 
     initialize: function(props) {
-      this.parentModel = props.parentModel;
+      this.requestFormModel = props.requestFormModel;
     },
 
     render: function() {
@@ -38,7 +38,7 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'dropdown-menu applicant-list',
 
     initialize: function(props) {
-      this.parentModel = props.parentModel;
+      this.requestFormModel = props.requestFormModel;
 
       _.bindAll(this, 'renderApplicantItem');
 
@@ -48,7 +48,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderApplicantItem: function(model) {
       var applicantItemView = new Hktdc.Views.Applicant({
         model: model,
-        parentModel: this.parentModel
+        requestFormModel: this.requestFormModel
       });
 
       applicantItemView.render();

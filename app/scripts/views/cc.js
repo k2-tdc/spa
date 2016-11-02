@@ -12,19 +12,18 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'li',
 
     initialize: function(props) {
-      // console.log(props.parentModel.toJSON());
+      // console.log(props.requestFormModel.toJSON());
       var self = this;
 
-      this.parentModel = props.parentModel;
+      this.requestFormModel = props.requestFormModel;
 
       $(this.el).click(function() {
         /* The new request model will handle the change */
 
         /* Add selected CC collections to parents coll. */
-        self.parentModel.selectedCCCollection.add(self.model);
-
+        self.requestFormModel.selectedCCCollection.add(self.model);
         self.model.set({selected: true});
-        self.parentModel.set({
+        self.requestFormModel.set({
           // selectedCCCollection: newCCArray,
           currentCC: self.model
         });
@@ -44,7 +43,7 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'dropdown-menu cc-list',
 
     initialize: function (props) {
-      this.parentModel = props.parentModel;
+      this.requestFormModel = props.requestFormModel;
 
       _.bindAll(this, 'renderCCItem');
 
@@ -54,7 +53,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderCCItem: function(model) {
       var ccItemView = new Hktdc.Views.CC({
         model: model,
-        parentModel: this.parentModel
+        requestFormModel: this.requestFormModel
       });
 
       ccItemView.render();
