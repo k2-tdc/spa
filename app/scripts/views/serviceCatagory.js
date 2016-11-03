@@ -21,28 +21,40 @@
     tag: 'div',
 
     initialize: function (props) {
+      var self = this;
       this.requestFormModel = props.requestFormModel;
+      this.model.on('change:checked', function(model, newValue) {
+        $('input[type="checkbox"]', self.el).prop('checked', newValue);
+      });
+      this.model.on('change:open', function(model, newValue) {
+        if (newValue) {
+          self.open();
+        } else {
+          self.close();
+        }
+      });
     },
 
     events: {
-      'click .toplevelCheckBox': 'onCheckboxChange',
-      'click .group-header': 'onToggleCollapse'
+      'click input[type="checkbox"]': 'onCheckboxClick',
+      'click .toggleBtn': 'onToggleButtonClick'
     },
 
-    onCheckboxChange: function(ev){
-      ev.stopPropagation();
-      if ($(ev.currentTarget).is(":checked")) {
-        this.open();
-      } else {
-        this.close();
-      }
+    onCheckboxClick: function(ev){
+      console.log('onCheckboxClick');
+      this.model.set({
+        checked: $(ev.currentTarget).is(":checked"),
+        open: $(ev.currentTarget).is(":checked")
+      });
     },
 
-    onToggleCollapse: function(ev) {
+    onToggleButtonClick: function(ev) {
+      this.model.set({'checked': true});
       if (this.model.get('open')) {
-        this.close();
+        this.model.set({'open': false});
+        // this.close();
       } else {
-        this.open();
+        this.model.set({'open': true});
       }
     },
 
@@ -52,7 +64,7 @@
         .addClass('glyphicon-menu-down');
       $('div.group-details', this.el).hide();
       $('div.group-header', this.el).parent().removeClass('panel-active');
-      this.model.set('open', false);
+      // this.model.set('open', false);
     },
 
     open: function(){
@@ -61,7 +73,7 @@
         .addClass('glyphicon-menu-up');
       $('div.group-details', this.el).show();
       $('div.group-header', this.el).parent().addClass('panel-active');
-      this.model.set('open', true);
+      // this.model.set('open', true);
     },
 
     renderServiceTypeList: function(){

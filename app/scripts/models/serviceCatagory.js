@@ -8,7 +8,8 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.ServiceCatagory = Backbone.Model.extend({
     idAttribute: 'GUID',
     default: {
-      checked: false
+      checked: false,
+      open: false
     }
   });
 

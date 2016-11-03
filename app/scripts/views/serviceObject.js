@@ -17,6 +17,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
     editServiceHandler: function(){
       if ($('textarea', this.el).val().trim().length > 0) {
+        this.model.set({
+          Notes: $('textarea', this.el).val().trim()
+        });
         this.requestFormModel.selectedServiceCollection.add(this.model);
       } else {
         this.requestFormModel.selectedServiceCollection.remove(this.model);
@@ -52,8 +55,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       var self = this;
-      this.serviceRequestModel = props.serviceRequestModel;
       this.requestFormModel = props.requestFormModel;
+      this.serviceRequestModel = props.serviceRequestModel;
       this.serviceRequestModel.on('change:Notes', function(a, newNotes) {
 
         /* the requestFormModel.selectedServiceCollection will auto update */

@@ -2,7 +2,7 @@
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.Button = Backbone.View.extend({
@@ -34,13 +34,20 @@ Hktdc.Views = Hktdc.Views || {};
     saveAndApprover: function(status) {
 
       /* set the request object */
-      this.setRequestObject(status);
+      this.setRequestObject(status, function(sendRequestModel) {
+        /* send the request object */
+        this.sendXhrRequest(sendRequestModel, function(data) {
+          console.log('ended post data');
+          /* send file */
+          this.sendFile(data, function() {
 
-      /* send the request object */
-      // this.sendXhrRequest(this.requestFormModel.toJSON());
+          });
+        }.bind(this));
+      }.bind(this));
+
     },
 
-    setRequestObject: function(status) {
+    setRequestObject: function(status, callback) {
       var requestFormData = this.requestFormModel.toJSON();
       var sendRequestModel = new Hktdc.Models.SendRequest({
         Req_Status: status,
@@ -55,7 +62,7 @@ Hktdc.Views = Hktdc.Views || {};
         Department: requestFormData.department,
         Service_AcquireFor: this.getAcquireFor(this.requestFormModel)
       });
-      console.log(sendRequestModel.toJSON());
+      callback(sendRequestModel);
     },
 
     getAcquireFor: function(model) {
@@ -70,12 +77,12 @@ Hktdc.Views = Hktdc.Views || {};
         Estimated_Cost: requestFormData.cost,
         Budget_Provided: requestFormData.budget,
         Budgeted_Sum: requestFormData.budgetSum,
-        Recommend_By: (requestFormData.selectedRecommentModel)
-          ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
-          : null,
-        Recommend_By_ID: (requestFormData.selectedRecommentModel)
-          ? requestFormData.selectedRecommentModel.toJSON().WorkerId
-          : null,
+        Recommend_By: (requestFormData.selectedRecommentModel) ?
+          requestFormData.selectedRecommentModel.toJSON().WorkerFullName :
+          null,
+        Recommend_By_ID: (requestFormData.selectedRecommentModel) ?
+          requestFormData.selectedRecommentModel.toJSON().WorkerId :
+          null,
         cc: _.map(model.selectedCCCollection.toJSON(), function(ccData) {
           return {
             Name: ccData.UserFullName,
@@ -85,8 +92,8 @@ Hktdc.Views = Hktdc.Views || {};
         Remark: null,
         SubmittedTo: requestFormData.submittedTo,
         ActionTakerRuleCode: this.getActionTaker(model.selectedServiceCollection.toJSON())
-        // TODO:
-        // Attachments: this.getFileName(),
+          // TODO:
+          // Attachments: this.getFileName(),
       };
       var serviceData = this.getServiceData(model.selectedServiceCollection.toJSON());
 
@@ -97,98 +104,116 @@ Hktdc.Views = Hktdc.Views || {};
       /* serviceName and uatServiceName is the name from service type api call */
       /* This stupid mapping is beacause the server api is hardcoded the request service params */
       // console.log(selectedServiceCollectionArray);
-      var catagoryMapping = [
-        {
-          paramName: 'Hardware_Software_IT_Service',
-          serviceName: 'Acquire Hardware/Software/IT Services',
-          uatServiceName: 'Hardware/Software/IT Services'
-        },
-        {
-          paramName: 'General_Support_StandBy_Service',
-          serviceName: 'Acquire General Support/ Stand-by Services',
-          uatServiceName: 'General Support/ Stand-by Services'
-        },
-      ];
+      var catagoryMapping = [{
+        paramName: 'Hardware_Software_IT_Service',
+        serviceName: 'Acquire Hardware/Software/IT Services',
+        uatServiceName: 'Hardware/Software/IT Services'
+      }, {
+        paramName: 'General_Support_StandBy_Service',
+        serviceName: 'Acquire General Support/ Stand-by Services',
+        uatServiceName: 'General Support/ Stand-by Services'
+      }];
 
-      var serviceMapping = [
-        {
-          paramName: 'Software_Service',
-          serviceName: {
-            localDev: 'Request for Software',
-            uat: 'Software'
-          },
-          object: [
-            { param: 'SW_Name', name: 'Name'},
-            { param: 'SW_Notes', name: 'Notes'},
-            { param: 'SW_GUID', name: 'GUID'}
-          ],
-          parent: 'Hardware_Software_IT_Service'
+      var serviceMapping = [{
+        paramName: 'Software_Service',
+        serviceName: {
+          localDev: 'Request for Software',
+          uat: 'Software'
         },
-        {
-          paramName: 'Hardware_Service',
-          serviceName: {
-            localDev: 'Request for Hardware',
-            uat: 'Hardware'
-          },
-          object: [
-            {param: 'HW_Name', name: 'Name'},
-            {param: 'HW_Notes', name: 'Notes'},
-            {param: 'HW_GUID', name: 'GUID'}
-          ],
-          parent: 'Hardware_Software_IT_Service'
+        object: [{
+          param: 'SW_Name',
+          name: 'Name'
+        }, {
+          param: 'SW_Notes',
+          name: 'Notes'
+        }, {
+          param: 'SW_GUID',
+          name: 'GUID'
+        }],
+        parent: 'Hardware_Software_IT_Service'
+      }, {
+        paramName: 'Hardware_Service',
+        serviceName: {
+          localDev: 'Request for Hardware',
+          uat: 'Hardware'
         },
-        {
-          paramName: 'Maintenance_Service',
-          serviceName: {
-            localDev: 'Request for Maintenance Services',
-            uat: 'Maintenance Services'
-          },
-          object: [
-            {param: 'Main_Name', name: 'Name'},
-            {param: 'Main_Notes', name: 'Notes'},
-            {param: 'Main_GUID', name: 'GUID'}
-          ],
-          parent: 'Hardware_Software_IT_Service'
+        object: [{
+          param: 'HW_Name',
+          name: 'Name'
+        }, {
+          param: 'HW_Notes',
+          name: 'Notes'
+        }, {
+          param: 'HW_GUID',
+          name: 'GUID'
+        }],
+        parent: 'Hardware_Software_IT_Service'
+      }, {
+        paramName: 'Maintenance_Service',
+        serviceName: {
+          localDev: 'Request for Maintenance Services',
+          uat: 'Maintenance Services'
         },
-        {
-          paramName: 'IT_Service',
-          serviceName: {
-            localDev: 'Request for IT Services(for IT only)',
-            uat: 'IT Services(for IT only)'
-          },
-          object: [
-            {param: 'IT_Name', name: 'Name'},
-            {param: 'IT_Notes', name: 'Notes'},
-            {param: 'IT_GUID', name: 'GUID'}
-          ],
-          parent: 'Hardware_Software_IT_Service'
+        object: [{
+          param: 'Main_Name',
+          name: 'Name'
+        }, {
+          param: 'Main_Notes',
+          name: 'Notes'
+        }, {
+          param: 'Main_GUID',
+          name: 'GUID'
+        }],
+        parent: 'Hardware_Software_IT_Service'
+      }, {
+        paramName: 'IT_Service',
+        serviceName: {
+          localDev: 'Request for IT Services(for IT only)',
+          uat: 'IT Services(for IT only)'
         },
-        {
-          paramName: 'General_Support',
-          serviceName: {
-            localDev: 'Request for General Support',
-            uat: 'General Support'
-          },
-          object: [
-            {param: 'Request_Name', name: 'Name'},
-            {param: 'Request_Notes', name: 'Notes'},
-            {param: 'Request_GUID', name: 'GUID'}
-          ],
-          parent: 'General_Support_StandBy_Service'
+        object: [{
+          param: 'IT_Name',
+          name: 'Name'
+        }, {
+          param: 'IT_Notes',
+          name: 'Notes'
+        }, {
+          param: 'IT_GUID',
+          name: 'GUID'
+        }],
+        parent: 'Hardware_Software_IT_Service'
+      }, {
+        paramName: 'General_Support',
+        serviceName: {
+          localDev: 'Request for General Support',
+          uat: 'General Support'
         },
-        {
-          paramName: 'Onsite_StandBy_Service',
-          serviceName: {
-            localDev: 'Request for Onsite/Stand-by Services',
-            uat: 'Onsite/Stand-by Services'
-          },
-          object: [
-            {param: 'Onsite_Service_Notes', name: 'Notes'},
-            {param: 'Onsite_Service_GUID', name: 'GUID'}
-          ],
-          parent: 'General_Support_StandBy_Service'
-        }
-      ];
+        object: [{
+          param: 'Request_Name',
+          name: 'Name'
+        }, {
+          param: 'Request_Notes',
+          name: 'Notes'
+        }, {
+          param: 'Request_GUID',
+          name: 'GUID'
+        }],
+        parent: 'General_Support_StandBy_Service'
+      }, {
+        paramName: 'Onsite_StandBy_Service',
+        serviceName: {
+          localDev: 'Request for Onsite/Stand-by Services',
+          uat: 'Onsite/Stand-by Services'
+        },
+        object: [{
+          param: 'Onsite_Service_Notes',
+          name: 'Notes'
+        }, {
+          param: 'Onsite_Service_ID',
+          name: 'GUID'
+        }],
+        parent: 'General_Support_StandBy_Service'
+      }];
 
       var returnData = {};
 
@@ -199,7 +224,9 @@ Hktdc.Views = Hktdc.Views || {};
 
         var catService = {};
         _.each(serviceUnderThisCatagory, function(service) {
-          var relatedServices = _.where(selectedServiceCollectionArray, {serviceTypeName: service.serviceName[Hktdc.Config.environment]});
+          var relatedServices = _.where(selectedServiceCollectionArray, {
+            serviceTypeName: service.serviceName[Hktdc.Config.environment]
+          });
           relatedServices = _.map(relatedServices, function(relatedService) {
             var returnObj = {};
             _.each(service.object, function(obj) {
@@ -215,30 +242,106 @@ Hktdc.Views = Hktdc.Views || {};
       return returnData;
     },
 
-    getActionTaker: function(selectedServiceCollectionArray){
-      var actionTakerArray = _.map(selectedServiceCollectionArray, function(serviceData){
+    getActionTaker: function(selectedServiceCollectionArray) {
+      var actionTakerArray = _.map(selectedServiceCollectionArray, function(serviceData) {
         // console.log(serviceData);
         return serviceData.ActionTaker;
       });
       return _.uniq(actionTakerArray).join(';');
     },
 
-    sendXhrRequest: function(data) {
-      this.requestFormModel.url = this.requestFormModel.url('save');
-      this.requestFormModel.save({}, {
-        headers: {
-          Authorization: 'Bearer ' + Hktdc.Config.accessToken
+    sendXhrRequest: function(sendRequestModel, callback) {
+      Backbone.emulateHTTP = true;
+      Backbone.emulateJSON = true;
+
+      sendRequestModel.url = sendRequestModel.url('save');
+      sendRequestModel.save({}, {
+        beforeSend: utils.setAuthHeader,
+        success: function(mymodel, response) {
+          callback()
         },
+        error: function() {
+
+        }
       })
     },
 
-    initialize: function (props) {
+    sendFile: function() {
+      console.log('send file');
+      return false;
+
+
+
+
+      var filename = [];
+      $(".spnfilename").each(function() {
+        filename.push($(this).html());
+      });
+      var MyBackboneModel = Backbone.Model.extend({
+        url: function() {
+          return '' + Config.DomainName + '/api/request/SubmitFile?refid=' + $('#divRefID').text() + '&filename=' + filename + ''
+        },
+      });
+
+      var model = new MyBackboneModel();
+      var myData = filename;
+      var ajaxOptions = {};
+      var files = $("#Fileattach").get(0).files;
+
+      var data = new FormData();
+      if (files.length > 0) {
+        for (i = 0; i < files.length; i++) {
+          if (Sfiles.indexOf(files[i].name) != -1) {
+            data.append("file" + i, files[i]);
+          }
+        }
+      }
+
+      ajaxOptions = {
+        type: "POST",
+        data: data,
+        processData: false,
+        cache: false,
+        contentType: false
+      };
+
+      mymodel.set(myData);
+      model.save(null, $.extend({}, ajaxOptions, {
+        beforeSend: function() {
+          console.log('Message')
+        },
+        headers: {
+          "Authorization": 'Bearer ' + accessToken
+        },
+        success: function(model, response) {
+          alert("Record Saved Successfully \n Reference ID : " + $('#divRefID').text() + "");
+
+          if (status == "Submitted") {
+            window.location.href = "index.html";
+          } else if (status == "Draft") {
+            window.location.href = "draft.html";
+          }
+
+        },
+        error: function(model, response) {
+
+          var err = eval("(" + response.responseText + ")");
+          alert(err.Message);
+
+        }
+
+      }));
+
+
+    },
+
+    initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
       this.requestFormModel = props.requestFormModel;
       this.render();
     },
 
-    render: function () {
+    render: function() {
       this.$el.html(this.template(this.model.toJSON()));
     }
 
