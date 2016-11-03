@@ -30,18 +30,29 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-      var NewRequestModel = new Hktdc.Models.NewRequest({
-        preparedByUserName: Hktdc.Config.userName,
-        preparedByUserId: Hktdc.Config.userID,
-        createDate: moment().format('DD MMM YYYY'),
+      var referenceIdModel = new Hktdc.Models.ReferenceId();
+      referenceIdModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          var newRequestModel = new Hktdc.Models.NewRequest({
+            refId: referenceIdModel.toJSON().ReferenceID,
+            preparedByUserName: Hktdc.Config.userName,
+            preparedByUserId: Hktdc.Config.userID,
+            createDate: window.moment().format('DD MMM YYYY'),
 
-        /* set the default selected applicant is self */
-        selectedApplicantModel: new Hktdc.Models.Applicant({
-          UserId: Hktdc.Config.userID,
-          UserFullName: Hktdc.Config.userName
-        })
-      });
-      var nrView = new Hktdc.Views.NewRequest({model: NewRequestModel});
+            /* set the default selected applicant is self */
+            selectedApplicantModel: new Hktdc.Models.Applicant({
+              UserId: Hktdc.Config.userID,
+              UserFullName: Hktdc.Config.userName
+            })
+          });
+          var nrView = new Hktdc.Views.NewRequest({model: newRequestModel});
+
+        },
+        error: function(e) {
+          console.log('error on getting reference id');
+        }
+      })
     },
 
     statusDetail: function() {

@@ -9,14 +9,16 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     model: Hktdc.Models.Applicant,
 
-    queryParams: {
-      RuleID: Hktdc.Config.RuleCode,
-      WorkId: Hktdc.Config.userID,
-      UserId: Hktdc.Config.userID
+    getQueryParams: function() {
+      return {
+        RuleID: Hktdc.Config.RuleCode,
+        UserId: '',
+        WorkId: Hktdc.Config.userID
+      }
     },
 
     url: function() {
-      var qsArr = _.map(this.queryParams, function(val, key){
+      var qsArr = _.map(this.getQueryParams(), function(val, key){
         return key + '=' + val;
       });
 

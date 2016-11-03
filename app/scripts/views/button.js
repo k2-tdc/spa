@@ -48,6 +48,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     setRequestObject: function(status, callback) {
+      if (status === 'Draft') {
+        this.requestFormModel.set({ submittedTo: '' });
+      }
       var requestFormData = this.requestFormModel.toJSON();
       var sendRequestModel = new Hktdc.Models.SendRequest({
         Req_Status: status,
@@ -271,7 +274,7 @@ Hktdc.Views = Hktdc.Views || {};
       return false;
 
 
-
+      // TODO: convert following to backbone structure
 
       var filename = [];
       $(".spnfilename").each(function() {

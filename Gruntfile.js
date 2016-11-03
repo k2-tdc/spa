@@ -1,8 +1,10 @@
 'use strict';
 var LIVERELOAD_PORT = 35729;
 var SERVER_PORT = 9000;
-var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var mountFolder = function (connect, dir) {
+var lrSnippet = require('connect-livereload')({
+  port: LIVERELOAD_PORT
+});
+var mountFolder = function(connect, dir) {
   return connect.static(require('path').resolve(dir));
 };
 
@@ -13,7 +15,7 @@ var mountFolder = function (connect, dir) {
 // 'test/spec/**/*.js'
 // templateFramework: 'lodash'
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
   // show elapsed time at the end
   require('time-grunt')(grunt);
@@ -54,9 +56,9 @@ module.exports = function (grunt) {
         ]
       },
       bower: {
-				files: ['bower.json'],
-				tasks: ['wiredep']
-			},
+        files: ['bower.json'],
+        tasks: ['wiredep']
+      },
       jst: {
         files: [
           '<%= yeoman.app %>/scripts/templates/*.ejs'
@@ -76,7 +78,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          middleware: function (connect) {
+          middleware: function(connect) {
             return [
               lrSnippet,
               mountFolder(connect, '.tmp'),
@@ -88,7 +90,7 @@ module.exports = function (grunt) {
       test: {
         options: {
           port: 9001,
-          middleware: function (connect) {
+          middleware: function(connect) {
             return [
               mountFolder(connect, 'test'),
               lrSnippet,
@@ -100,7 +102,7 @@ module.exports = function (grunt) {
       },
       dist: {
         options: {
-          middleware: function (connect) {
+          middleware: function(connect) {
             return [
               mountFolder(connect, yeomanConfig.dist)
             ];
@@ -180,7 +182,19 @@ module.exports = function (grunt) {
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
       options: {
-        dest: '<%= yeoman.dist %>'
+        dest: '<%= yeoman.dist %>',
+
+        /* below change default to not uglify */
+        flow: {
+          steps: {
+            js: ['concat'],
+            // js: ['concat', 'uglify'],
+            css: ['concat', 'cssmin']
+          },
+          post: {}
+        }
+
+
       }
     },
     usemin: {
@@ -272,16 +286,16 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('createDefaultTemplate', function () {
+  grunt.registerTask('createDefaultTemplate', function() {
     grunt.file.write('.tmp/scripts/templates.js', 'this.JST = this.JST || {};');
   });
 
-  grunt.registerTask('server', function (target) {
+  grunt.registerTask('server', function(target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve' + (target ? ':' + target : '')]);
   });
 
-  grunt.registerTask('serve', function (target) {
+  grunt.registerTask('serve', function(target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'open:server', 'connect:dist:keepalive']);
       return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -311,18 +325,18 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', function (isConnected) {
+  grunt.registerTask('test', function(isConnected) {
     isConnected = Boolean(isConnected);
     var testTasks = [
-        'clean:server',
-        'createDefaultTemplate',
-        'jst',
-        'sass',
-        'connect:test',
-        'mocha'
-      ];
+      'clean:server',
+      'createDefaultTemplate',
+      'jst',
+      'sass',
+      'connect:test',
+      'mocha'
+    ];
 
-    if(!isConnected) {
+    if (!isConnected) {
       return grunt.task.run(testTasks);
     } else {
       // already connected so not going to connect again, remove the connect:test task
@@ -342,7 +356,7 @@ module.exports = function (grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    'uglify',
+    // 'uglify',
     'copy',
     'rev',
     'usemin'

@@ -15,40 +15,41 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     defaults: {
-      Req_Status: null,
-      Prepared_By: null,
-      Preparer_ID: null,
-      Ref_Id: null,
-      Created_Date: null,
-      Applicant: null,
-      Applicant_ID: null,
-      Title: null,
-      Office: null,
-      Department: null,
+      Req_Status: '',
+      Prepared_By: '',
+      Preparer_ID: '',
+      // TODO: refid
+      Ref_Id: '',
+      Created_Date: '',
+      Applicant: '',
+      Applicant_ID: '',
+      Title: '',
+      Office: '',
+      Department: '',
       Service_AcquireFor: {
         Hardware_Software_IT_Service: {
-          Software_Service: null,
-          Hardware_Service: null,
-          Maintenance_Service: null,
-          IT_Service: null
+          Software_Service: [],
+          Hardware_Service: [],
+          Maintenance_Service: [],
+          IT_Service: []
         },
         General_Support_StandBy_Service: {
-          General_Support: null,
-          Onsite_StandBy_Service: null
+          General_Support: [],
+          Onsite_StandBy_Service: []
         },
-        Justification_Importand_Notes: null,
-        Expected_Dalivery_Date: null,
-        Frequency_Duration_of_Use: null,
-        Estimated_Cost: null,
-        Budget_Provided: null,
-        Budgeted_Sum: null,
-        Recommend_By: null,
-        Recommend_By_ID: null,
-        cc: null,
-        Remark: null,
-        Attachments: null,
-        ActionTakerRuleCode: null,
-        SubmittedTo: null
+        Justification_Importand_Notes: '',
+        Expected_Dalivery_Date: '',
+        Frequency_Duration_of_Use: '',
+        Estimated_Cost: '',
+        Budget_Provided: '',
+        Budgeted_Sum: '',
+        Recommend_By: '',
+        Recommend_By_ID: '',
+        cc: [],
+        Remark: '',
+        Attachments: [],
+        ActionTakerRuleCode: '',
+        SubmittedTo: ''
       }
     },
 
