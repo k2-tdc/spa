@@ -27,6 +27,15 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       this.requestFormModel = props.requestFormModel;
       this.renderServiceObject();
+      this.model.on('change:needAddBtn', function(model, isNeed) {
+        // console.log($('.btn-add', this.el));
+        if (isNeed) {
+          $('.btn-add', this.el).show();
+        } else {
+          $('.btn-add', this.el).hide();
+        }
+        // console.log('need add btn chagne to: ', val);
+      }.bind(this));
     },
 
     renderServiceObject: function() {
@@ -36,9 +45,9 @@ Hktdc.Views = Hktdc.Views || {};
         /* service request list in new request default is empty object of array */
         this.defaultServiceRequestObject = { ControlFlag: serviceObjectData[0].ControlFlag };
         var serviceRequestList = [];
-        if (serviceObjectData[0].ControlFlag == 2) {
-          serviceRequestList.push(this.defaultServiceRequestObject);
-        }
+        // if (serviceObjectData[0].ControlFlag == 2) {
+        //   serviceRequestList.push(this.defaultServiceRequestObject);
+        // }
         this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(serviceRequestList);
 
         // childServiceRequestCollection.on('add', function(srModel) {
@@ -51,7 +60,7 @@ Hktdc.Views = Hktdc.Views || {};
           requestFormModel: this.requestFormModel,
 
           /* the serviceTypeName is used to mapping the service object to it's service type when saving request */
-          serviceTypeName: this.model.toJSON().Name
+          serviceTypeModel: this.model
         });
         serviceRequestListView.render();
 
@@ -91,8 +100,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderServiceTypeItem: function(model, index) {
-      var needAddBtn = (model.toJSON().Level3[0].ControlFlag == 1);
-      model.set('needAddBtn', needAddBtn);
+      // var needAddBtn = (model.toJSON().Level3[0].ControlFlag == 1);
+      model.set('needAddBtn', true);
       var serviceTypeItemView = new Hktdc.Views.ServiceType({
         model: model,
         requestFormModel: this.requestFormModel

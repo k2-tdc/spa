@@ -49,10 +49,18 @@
 %>
 
 <div class="row service-request-wrap">
-  <div class="col-xs-12 col-md-12 select-service-title">
+  <div class="col-xs-1 col-md-1">
+    <span class="select-applicant-step">
+      <%= request.index %>
+    </span>
+  </div>
+  <div class="col-xs-9 col-md-9 select-service-title">
     <!-- START: Repeat Unit of the level3: service object -->
     <div class="service-object-container"></div>
     <!-- END: Repeat Unit of the level3: service object -->
+  </div>
+  <div class="col-xs-2 col-md-2">
+    <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
   </div>
 </div>
 
