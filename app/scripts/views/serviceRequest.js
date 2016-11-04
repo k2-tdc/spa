@@ -119,7 +119,6 @@ Hktdc.Views = Hktdc.Views || {};
         model: model,
         requestFormModel: this.requestFormModel
       });
-
       serviceRequestItemView.render();
       $(this.el).append(serviceRequestItemView.el);
     },

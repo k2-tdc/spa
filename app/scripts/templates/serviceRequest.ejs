@@ -17,7 +17,11 @@
       </div>
       <div class="col-xs-9 col-md-9 btn-group full-width service-object-container">
         <button type="button" class="service-request btn btn-default selectleve2sub" data-toggle="dropdown" id="leve2sub">
-          -- Select --
+          <% if (request.SValue) { %>
+            <%= request.Name %>
+          <% } else { %>
+            -- Select --
+          <% }%>
         </button>
         <button type="button" class="service-request btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="caret"></span>
@@ -34,7 +38,7 @@
     <div class="row">
       <div class="col-xs-1 col-md-1">&nbsp;</div>
       <div class="col-md-9">
-        <textarea class="level3 form-control service-notes" rows="3" disabled=<%= request.selectedServiceObject %> ></textarea>
+        <textarea class="level3 form-control service-notes" rows="3" disabled=<%= request.selectedServiceObject %> ><%= request.SValue%></textarea>
       </div>
     </div>
     <div class="sep-space"></div>

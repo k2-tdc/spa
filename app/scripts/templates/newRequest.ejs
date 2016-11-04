@@ -20,15 +20,15 @@
     <div class="newrequest-basic-information">
       <div class="row">
         <div class="col-xs-2 col-md-2 newrequest-title">Status</div>
-        <div class="col-xs-10 col-md-4" id="divStatus">New</div>
+        <div class="col-xs-10 col-md-4" id="divStatus"><%= request.FormStatus %></div>
         <div class="col-xs-2 col-md-2 newrequest-title">Prepared by</div>
-        <div class="col-xs-10 col-md-4" id="divPreparedby"><%= preparedByUserName %></div>
+        <div class="col-xs-10 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
       </div>
       <div class="row">
         <div class="col-xs-2 col-md-2 newrequest-title">Ref ID</div>
-        <div class="col-xs-10 col-md-4" id="divRefID"></div>
+        <div class="col-xs-10 col-md-4" id="divRefID"><%= request.ReferenceID %></div>
         <div class="col-xs-2 col-md-2 newrequest-title">Create Date</div>
-        <div class="col-xs-10 col-md-4" id="divCreateddate"><%= createDate %></div>
+        <div class="col-xs-10 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
       </div>
     </div>
 
@@ -39,11 +39,12 @@
           <label for="applicant" class="col-sm-2 control-label">Applicant</label>
           <div class="col-xs-10 col-md-10 btn-group full-width applicant-container">
             <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">
-              <% if (selectedApplicantName){ %>
-                <%=selectedApplicantName%>
-              <%}else{%>
+              <% if (request.selectedApplicantName){ %>
+                <%= request.selectedApplicantName%>
+              <% } else { %>
                 --Select--
-              <% } %></button>
+              <% } %>
+            </button>
             <button type="button" class="btn btn-default dropdown-toggle btnapplicant" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
@@ -54,15 +55,15 @@
         </div>
         <div class="row" style="display:none">
           <div class="col-xs-2 col-md-2 newrequest-title">Title</div>
-          <div class="col-xs-10 col-md-10" id="divtitle"></div>
+          <div class="col-xs-10 col-md-10" id="divtitle"><%= request.Title %></div>
         </div>
         <div class="row" style="display:none">
           <div class="col-xs-2 col-md-2 newrequest-title">Office</div>
-          <div class="col-xs-10 col-md-10" id="divoffice"></div>
+          <div class="col-xs-10 col-md-10" id="divoffice"><%= request.Location %></div>
         </div>
         <div class="row">
           <div class="col-xs-2 col-md-2 newrequest-title">Department</div>
-          <div class="col-xs-10 col-md-10" id="divdepartment"><%= department %></div>
+          <div class="col-xs-10 col-md-10" id="divdepartment"><%= request.DEPT %></div>
         </div>
       </div>
     </div>
@@ -85,7 +86,7 @@
           </div>
           <div class="row">
             <div class="col-md-10">
-              <textarea class="form-control" rows="3" field="justification" id="txtjustification"></textarea>
+              <textarea class="form-control" rows="3" field="justification" id="txtjustification"><%= request.Justification %></textarea>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -95,7 +96,7 @@
           <div class="row">
             <div class="col-xs-10 col-sm-10">
               <div class="input-group date pick-date-start" data-provide="datepicker">
-                <input type="text" class="form-control" id="txtexpectedDD" field="deliveryDate" />
+                <input type="text" class="form-control" id="txtexpectedDD" field="deliveryDate" value="<%= request.EDeliveryDate %>" />
                 <div class="input-group-addon">
                   <span class="glyphicon glyphicon-th"></span>
                 </div>
@@ -108,7 +109,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtfrequency" field="frequency" />
+              <input type="text" class="form-control" id="txtfrequency" field="frequency" value="<%= request.DurationOfUse %>" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -117,7 +118,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtestimatedcost" field="cost" />
+              <input type="text" class="form-control" id="txtestimatedcost" field="cost" value="<%= request.EstimatedCost %>" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -126,7 +127,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtbudgetprovided" field="budget" />
+              <input type="text" class="form-control" id="txtbudgetprovided" field="budget" value="<%= request.BudgetProvided %>" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -135,14 +136,20 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtbudgetsum" field="budgetSum" />
+              <input type="text" class="form-control" id="txtbudgetsum" field="budgetSum" value="<%= request.BudgetSum %>"/>
             </div>
           </div>
           <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">Recommend By</div>
             <div class="col-xs-8 col-md-8 btn-group full-width recommend-container">
-              <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">--Select--</button>
+              <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
+                <% if (request.ApproverFNAME) { %>
+                  <%= request.ApproverFNAME %>
+                <% } else {%>
+                  --Select--
+                <% } %>
+              </button>
               <button type="button" class="btn btn-default dropdown-toggle recommend" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
@@ -176,21 +183,21 @@
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">Remark</div>
             <div class="col-xs-8 col-md-8">
-              <textarea class="form-control" rows="3" id="txtremark" field="remark"></textarea>
+              <textarea class="form-control" rows="3" id="txtremark" field="remark"><%= request.Remark %></textarea>
             </div>
           </div>
           <div class="sep-space"></div>
-          <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title">Attachment</div>
-            <div class="col-xs-4 col-md-3 btn-group">
-              <span class="btn btn-orange fileinput-button">
-                <i class="glyphicon glyphicon-plus"></i>
-                <span>Add files...</span>
-                <input type="file" name="files[]" id="Fileattach" multiple="multiple" />
-              </span>
-            </div>
 
+          <div class="rowrow" id="attachment-container">
+            <!-- attachment here -->
           </div>
+
+          <div class="rowrow" id="workflowlog-container">
+            <!-- workflow log here -->
+          </div>
+
+
+
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title"></div>
             <div class="col-xs-4 col-md-3 btn-group" style="text-align: left;" id="divfilename">
@@ -200,9 +207,11 @@
           <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-10 col-md-10 center available-buttons">
-              <!-- <button class="btn btn-primary" id="btnBack" style="display:none" type="button">Back</button>
-              <button class="btn btn-primary" id="btnsave" type="button">Save</button>
-              <button class="btn btn-primary" id="btnapprover" type="button">Send to Approver</button> -->
+              <!--
+                <button class="btn btn-primary" id="btnBack" style="display:none" type="button">Back</button>
+                <button class="btn btn-primary" id="btnsave" type="button">Save</button>
+                <button class="btn btn-primary" id="btnapprover" type="button">Send to Approver</button>
+              -->
             </div>
           </div>
 

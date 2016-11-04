@@ -25,8 +25,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function () {
       this.$el.html(this.template({
-        selectedUserId: this.model.toJSON().UserId,
-        selectedUserName: this.model.toJSON().UserFullName
+        selectedUserId: this.model.toJSON().USERID || this.model.toJSON().UserId,
+        selectedUserName: this.model.toJSON().FULLNAME || this.model.toJSON().UserFullName
       }));
     }
   });
@@ -53,6 +53,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderSelectedCCItem: function(model) {
+
       var selectedCCItemView = new Hktdc.Views.SelectedCC({
         model: model,
         collection: this.collection
@@ -63,6 +64,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function () {
       /* the collection share with new request selectedCCCollection */
+      // console.log(this.collection);
       this.collection.each(this.renderSelectedCCItem);
     }
 

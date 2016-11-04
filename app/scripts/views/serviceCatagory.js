@@ -23,6 +23,7 @@
     initialize: function (props) {
       var self = this;
       this.requestFormModel = props.requestFormModel;
+
       this.model.on('change:checked', function(model, newValue) {
         $('input[type="checkbox"]', self.el).prop('checked', newValue);
       });
@@ -98,11 +99,16 @@
     },
 
     render: function ($container) {
+      var self = this;
       var tmpl = this.template({
         serviceCatagory: this.model.toJSON()
       });
 
       $(this.el).append(tmpl);
+
+      if (this.requestFormModel.toJSON().mode === 'read') {
+        self.model.set({ open: true, checked: true });
+      }
       this.renderServiceTypeList();
     }
 

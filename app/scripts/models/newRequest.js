@@ -7,53 +7,69 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.NewRequest = Backbone.Model.extend({
 
-    // url: function(action) {
-    //   switch (action) {
-    //     case 'save':
-    //       return Hktdc.Config.apiURL + '/SubmitRequests';
-    //       break;
-    //     default:
-    //       return Hktdc.Config.apiURL + '/'
-    //   }
-    // },
+    url: function(refId) {
+      var qsArr = [
+        'UserId=' + Hktdc.Config.userID,
+        'ReferID=' + refId
+      ]
+      return Hktdc.Config.apiURL + '/GetRequestDetails?' + qsArr.join('&');
+    },
 
     initialize: function() {
-      console.log(this.toJSON().selectedApplicantModel.toJSON());
+      // console.log(this.toJSON().selectedApplicantModel.toJSON());
       // TODO: The change event should place in view??
     },
 
     defaults: {
-      preparedByUserName: null,
-      preparedByUserId: null,
-      refId: null,
-      createDate: null,
+      // preparedByUserName: null,
+      PreparerFNAME: null,
+      // preparedByUserId: null,
+      PreparerUserID: null,
+      // refId: null,
+      ReferenceID: null,
+      // createDate: null,
+      CreatedOn: null,
 
-      selectedApplicantModel: null,
       // applicant department
-      department: null,
+      // department: null,
+      DEPT: null,
 
       // applicant title
-      title: null,
+      // title: null,
+      Title: null,
 
       // applicant office
-      office: null,
+      // office: null,
+      Location: null,
 
+      // justification: null,
+      Justification: null,
+      // deliveryDate: null,
+      EDeliveryDate: null,
+      // frequency: null,
+      DurationOfUse: null,
+      // cost: null,
+      EstimatedCost: null,
+      // budget: null,
+      BudgetProvided: null,
+      // budgetSum: null,
+      BudgetSum: null,
+
+      Remark: null,
+
+      selectedApplicantModel: null,
       selectedServiceCollection: null,
       currentCC: null,
       requestService: [],
-
-      justification: null,
-      deliveryDate: null,
-      frequency: null,
-      cost: null,
-      budget: null,
-      budgetSum: null,
       recommend: null, // TODO: check this not in use?
       selectedRecommentModel: null,
       selectedCCCollection: null,
       remark: null,
-      submittedTo: null
+      submittedTo: null,
 
+      showLog: false,
+      showFileLog: false,
+      attachmentMode: 'read'
 
     },
 

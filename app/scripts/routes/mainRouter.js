@@ -9,8 +9,8 @@ Hktdc.Routers = Hktdc.Routers || {};
     routes: {
       '': 'checkStatus',
       'check_status': 'checkStatus',
-      'check_status/:statusId': 'statusDetail',
-      'new_request': 'newRequest',
+      'request': 'newRequest',
+      'request/:requestId': 'editRequest',
       'draft': 'draft'
     },
 
@@ -36,9 +36,9 @@ Hktdc.Routers = Hktdc.Routers || {};
         success: function() {
           var newRequestModel = new Hktdc.Models.NewRequest({
             refId: referenceIdModel.toJSON().ReferenceID,
-            preparedByUserName: Hktdc.Config.userName,
+            PreparerFNAME: Hktdc.Config.userName,
             preparedByUserId: Hktdc.Config.userID,
-            createDate: window.moment().format('DD MMM YYYY'),
+            CreatedOn: window.moment().format('DD MMM YYYY'),
 
             /* set the default selected applicant is self */
             selectedApplicantModel: new Hktdc.Models.Applicant({
@@ -46,7 +46,10 @@ Hktdc.Routers = Hktdc.Routers || {};
               UserFullName: Hktdc.Config.userName
             })
           });
-          var nrView = new Hktdc.Views.NewRequest({model: newRequestModel});
+          var nrView = new Hktdc.Views.NewRequest({
+            model: newRequestModel,
+            mode: 'new'
+          });
 
         },
         error: function(e) {
@@ -55,8 +58,33 @@ Hktdc.Routers = Hktdc.Routers || {};
       })
     },
 
-    statusDetail: function() {
-      console.debug('[ routes/mainRouter.js ] - statusList route handler');
+    editRequest: function(requestId) {
+      console.debug('[ routes/mainRouter.js ] - editRequest route handler');
+      var requestCollection = new Hktdc.Collections.NewRequest();
+      requestCollection.url = requestCollection.url(requestId);
+      requestCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function(result, response) {
+          var rawData = response[0];
+          var requestModel = new Hktdc.Models.NewRequest(rawData);
+          // console.log(rawData.RequestCC);
+          requestModel.set({
+            mode: 'read',
+            selectedApplicantModel: new Hktdc.Models.Applicant({
+              UserId: rawData.ApplicantUserID,
+              UserFullName: rawData.ApplicantFNAME
+            })
+          });
+          // console.log(requestModel.toJSON());
+          var requestView = new Hktdc.Views.NewRequest({
+            model: requestModel,
+            mode: 'read'
+          });
+        },
+        error: function(err) {
+          console.log(err);
+        }
+      });
     },
 
     draft: function() {

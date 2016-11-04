@@ -54,15 +54,15 @@ Hktdc.Views = Hktdc.Views || {};
       var requestFormData = this.requestFormModel.toJSON();
       var sendRequestModel = new Hktdc.Models.SendRequest({
         Req_Status: status,
-        Prepared_By: requestFormData.preparedByUserName,
-        Preparer_ID: requestFormData.preparedByUserId,
-        Ref_Id: requestFormData.refId,
-        Created_Date: requestFormData.createDate,
+        Prepared_By: requestFormData.PreparerFNAME,
+        Preparer_ID: requestFormData.PreparerUserID,
+        Ref_Id: requestFormData.ReferenceID,
+        Created_Date: requestFormData.CreatedOn,
         Applicant: requestFormData.selectedApplicantModel.toJSON().UserFullName,
         Applicant_ID: requestFormData.selectedApplicantModel.toJSON().UserId,
-        Title: requestFormData.title,
-        Office: requestFormData.office,
-        Department: requestFormData.department,
+        Title: requestFormData.Title,
+        Office: requestFormData.Location,
+        Department: requestFormData.DEPT,
         Service_AcquireFor: this.getAcquireFor(this.requestFormModel)
       });
       callback(sendRequestModel);
@@ -74,12 +74,12 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(model.selectedCCCollection);
       // console.log(model.selectedCCCollection.toJSON());
       var basicData = {
-        Justification_Importand_Notes: requestFormData.justification,
-        Expected_Dalivery_Date: requestFormData.deliveryDate,
-        Frequency_Duration_of_Use: requestFormData.frequency,
-        Estimated_Cost: requestFormData.cost,
-        Budget_Provided: requestFormData.budget,
-        Budgeted_Sum: requestFormData.budgetSum,
+        Justification_Importand_Notes: requestFormData.Justification,
+        Expected_Dalivery_Date: requestFormData.EDeliveryDate,
+        Frequency_Duration_of_Use: requestFormData.DurationOfUse,
+        Estimated_Cost: requestFormData.EstimatedCost,
+        Budget_Provided: requestFormData.BudgetProvided,
+        Budgeted_Sum: requestFormData.BudgetSum,
         Recommend_By: (requestFormData.selectedRecommentModel) ?
           requestFormData.selectedRecommentModel.toJSON().WorkerFullName :
           null,
@@ -92,7 +92,7 @@ Hktdc.Views = Hktdc.Views || {};
             UserID: ccData.UserId
           };
         }),
-        Remark: null,
+        Remark: requestFormData.Remark,
         SubmittedTo: requestFormData.submittedTo,
         ActionTakerRuleCode: this.getActionTaker(model.selectedServiceCollection.toJSON())
           // TODO:

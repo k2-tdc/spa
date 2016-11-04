@@ -5,10 +5,9 @@ Hktdc.Collections = Hktdc.Collections || {};
 (function () {
   'use strict';
 
-  Hktdc.Collections.SelectedCC = Backbone.Collection.extend({
+  Hktdc.Collections.WorkflowLog = Backbone.Collection.extend({
 
-    model: Hktdc.Models.CC
-
+    model: Hktdc.Models.WorkflowLog
 
   });
 

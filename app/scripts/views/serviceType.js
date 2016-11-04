@@ -28,13 +28,12 @@ Hktdc.Views = Hktdc.Views || {};
       this.requestFormModel = props.requestFormModel;
       this.renderServiceObject();
       this.model.on('change:needAddBtn', function(model, isNeed) {
-        // console.log($('.btn-add', this.el));
+        // console.log('change on needAddBtn');
         if (isNeed) {
           $('.btn-add', this.el).show();
         } else {
           $('.btn-add', this.el).hide();
         }
-        // console.log('need add btn chagne to: ', val);
       }.bind(this));
     },
 
@@ -44,7 +43,7 @@ Hktdc.Views = Hktdc.Views || {};
         var serviceObjectData = this.model.toJSON().Level3;
         /* service request list in new request default is empty object of array */
         this.defaultServiceRequestObject = { ControlFlag: serviceObjectData[0].ControlFlag };
-        var serviceRequestList = [];
+        var serviceRequestList = serviceObjectData || [];
         // if (serviceObjectData[0].ControlFlag == 2) {
         //   serviceRequestList.push(this.defaultServiceRequestObject);
         // }
@@ -101,7 +100,12 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderServiceTypeItem: function(model, index) {
       // var needAddBtn = (model.toJSON().Level3[0].ControlFlag == 1);
-      model.set('needAddBtn', true);
+      // console.log(this.requestFormModel.toJSON().mode);
+      if (this.requestFormModel.toJSON().mode === 'read') {
+        model.set('needAddBtn', false);
+      } else {
+        model.set('needAddBtn', true);
+      }
       var serviceTypeItemView = new Hktdc.Views.ServiceType({
         model: model,
         requestFormModel: this.requestFormModel

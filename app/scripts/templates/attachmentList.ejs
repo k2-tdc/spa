@@ -1,0 +1,59 @@
+<% if (insertMode) { %>
+  <div class="row" id="attachement1">
+
+    <div class="col-xs-2 col-sm-2 newrequest-title">Attachment</div>
+    <div class="col-xs-4 col-md-3 btn-group">
+      <span class="btn btn-orange fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>Add files...</span>
+        <input type="file" name="files[]" id="Fileattach" multiple="multiple"/>
+      </span>
+    </div>
+  </div>
+<% } else { %>
+  <div class="row" id="attachement2">
+    <div class="col-xs-2 col-sm-2 newrequest-title"></div>
+    <div class="col-xs-4 col-md-3 btn-group" style="text-align: left;" id="divfilename"></div>
+  </div>
+  <div class="row filelog-container">
+
+
+    <div class="panel panel-default filelogmain select-service-header" style="margin-left:17px;margin-right:17px;margin-top:10px;">
+      <div class="panel-body group-header">
+        <div class="row">
+
+          <div class="col-xs-10 col-md-10 checkbox-option" id="">Attachments</div>
+          <div class="col-xs-2 col-sm-2 checkbox-option-drop">
+            <span id="ancfilelog" arrow="glyphicon-menu-down" class="glyphicon glyphicon-menu-down"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="group-details headdivfilelog" style="padding: 15px; display: none;">
+        <div class="panel panel-default select-service ">
+          <div class="panel-body">
+
+            <div >
+              <div class="flog">
+                <table class="attachmentTable table table-striped table-bordered" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th>File Name</th>
+                      <th>Uploaded By</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- file log goes here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<% } %>

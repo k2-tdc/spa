@@ -19,7 +19,7 @@ Hktdc.Models = Hktdc.Models || {};
         {
           Name: 'NEW REQUEST',
           Scount: 1,
-          Mlink: '/#new_request',
+          Mlink: '/#request',
           sumenu: null
         },
         {

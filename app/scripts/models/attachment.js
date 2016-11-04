@@ -5,15 +5,14 @@ Hktdc.Models = Hktdc.Models || {};
 (function () {
   'use strict';
 
-  Hktdc.Models.CC = Backbone.Model.extend({
+  Hktdc.Models.Attachment = Backbone.Model.extend({
+
+    url: '',
 
     initialize: function() {
     },
 
     defaults: {
-      EMPLOYEEID: '',
-      FULLNAME: '',
-      USERID: ''
     },
 
     validate: function(attrs, options) {
