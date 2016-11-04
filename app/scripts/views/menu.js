@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.Menu = Backbone.View.extend({
@@ -11,7 +11,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     el : '#menu',
 
-    // getLinkMap: function () {
+    // getLinkMap: function() {
     //   return {
     //     'NEW_REQUEST': Hktdc.Config.projectPath + '/#new_request',
     //     'DRAFT_LIST': Hktdc.Config.projectPath + '/#draft',
@@ -23,7 +23,7 @@ Hktdc.Views = Hktdc.Views || {};
     //   };
     // },
 
-    initialize: function () {
+    initialize: function() {
       console.debug('Initiating side menu');
       this.render();
       // var this.model = new this.Models['Menu']();
@@ -35,7 +35,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
 
-    render: function () {
+    render: function() {
       // console.log(this.model.toJSON());
       var rawMenu = this.model.toJSON();
       var menu = (_.isArray(rawMenu)) ? rawMenu[0].Menu : rawMenu.Menu;

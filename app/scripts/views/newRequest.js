@@ -1,5 +1,4 @@
-/*global Hktdc, Backbone, JST*/
-
+/* global Hktdc, Backbone, JST, $, Q, utils, alert, _ */
 Hktdc.Views = Hktdc.Views || {};
 
 (function() {
@@ -23,7 +22,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     checkBudgetAndService: function() {
-      if (this.mode === 'read') {
+      if (this.model.mode === 'read') {
         return false;
       }
       var self = this;
@@ -34,7 +33,7 @@ Hktdc.Views = Hktdc.Views || {};
         return false;
       } else {
         var recommendCollection = new Hktdc.Collections.Recommend();
-        var ruleCodeArr = _.map(this.model.selectedServiceCollection.toJSON(), function(selectedService){
+        var ruleCodeArr = _.map(this.model.selectedServiceCollection.toJSON(), function(selectedService) {
           return selectedService.Approver;
         });
         var ruleCode = _.uniq(ruleCodeArr).join(';');
@@ -55,13 +54,13 @@ Hktdc.Views = Hktdc.Views || {};
           error: function() {
             console.log('error');
           }
-        })
+        });
       }
       // return (this.model.selectedServiceCollection.toJSON().length && this.model.toJSON().cost);
     },
 
     updateNewRequestModel: function(ev) {
-      if (this.mode === 'read') {
+      if (this.model.mode === 'read') {
         return false;
       }
       var targetField = $(ev.target).attr('field');
@@ -74,99 +73,49 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
       // Backbone.Validation.bind(this);
       var self = this;
-      this.mode = props.mode;
+
+      /* *** Some model data is pre-set in the main router *** */
 
       /* must render the parent content first */
       self.render();
 
       /* ----------- create new request ----------- */
-      if (props.mode === 'new') {
+      if (this.model.toJSON().mode === 'new') {
         console.log('this is << new >> mode');
 
-        /* create service collections */
-        // self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService();
-
-        /* Render the components below */
-        self.renderSelectedCCView();
-
-
-        var serviceCatagoryCollections = new Hktdc.Collections.ServiceCatagory();
-        serviceCatagoryCollections.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            try {
-              console.debug('[views/newRequest.js] - onLoadData');
-              var serviceCatagoryListView = new Hktdc.Views.ServiceCatagoryList({
-                collection: serviceCatagoryCollections,
-                requestFormModel: self.model
-              });
-              serviceCatagoryListView.render();
-              $('#service-container').html(serviceCatagoryListView.el);
-
-            } catch (e) {
-              console.error('error on rendering service level1::', e);
-            }
-          },
-
-          error: function(model, response) {
-            console.error(JSON.stringify(response, null, 2));
-          }
-        });
-
+        /* First load all remote data */
         Q.all([
           self.loadEmployee(),
           self.loadApplicantDetail(),
-          Q.fcall(self.loadButtons.bind(self))
+          self.loadServiceCatagory()
         ])
-          .then(function() {
+          .then(function(result) {
+            self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService();
+            /* Render the components below */
+            self.renderApplicantAndCCList(result[0]);
+            self.renderApplicantDetail(result[1]);
+            self.renderServiceCatagory(result[2]);
+            self.renderSelectedCCView();
+            self.renderButtons.bind(self);
+            /* init event listener last */
             self.initModelChange();
           })
           .fail(function(e) {
             console.error(e);
           });
-
-      } else if (props.mode === 'read') {
+      } else if (this.model.toJSON().mode === 'read') {
         console.debug('This is << EDIT >> mode');
-        var requestList = this.model.toJSON().RequestList;
-        var workflowLogList = this.model.toJSON().ProcessLog;
-        var attachmentList = this.model.toJSON().Attachments;
-        var serviceCatagoryCollections = new Hktdc.Collections.ServiceCatagory(requestList);
-        var workflowLogCollections = new Hktdc.Collections.WorkflowLog(workflowLogList);
-        var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
-
-        /* render the components below */
-
-        var serviceCatagoryListView = new Hktdc.Views.ServiceCatagoryList({
-          collection: serviceCatagoryCollections,
-          requestFormModel: self.model
-        });
-        var workflowLogListView = new Hktdc.Views.WorkflowLogList({
-          collection: workflowLogCollections,
-          requestFormModel: self.model
-        });
-        var attachmentListView = new Hktdc.Views.AttachmentList({
-          collection: attachmentCollections,
-          requestFormModel: self.model
-        });
-
-        serviceCatagoryListView.render();
-        $('#service-container').html(serviceCatagoryListView.el);
-
-        workflowLogListView.render();
-        $('#workflowlog-container').html(workflowLogListView.el);
-
-        attachmentListView.render();
-        $('#attachment-container').html(attachmentListView.el);
-
-        self.renderSelectedCCView(this.model.toJSON().RequestCC);
 
         Q.all([
-          self.loadEmployee(),
-          // self.loadApplicantDetail(),
-          Q.fcall(self.loadButtons.bind(self))
+          self.loadEmployee()
         ])
-          .then(function() {
+          .then(function(results) {
+            self.renderSelectedCCView(self.model.toJSON().RequestCC);
+            self.renderWorkflowLog(self.model.toJSON().ProcessLog);
+            self.renderAttachment(self.model.toJSON().Attachments);
+            self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
             $('input, textarea, button', self.el).prop('disabled', 'disabled');
+            self.renderButtons.bind(self);
           })
           .fail(function(e) {
             console.error(e);
@@ -181,7 +130,10 @@ Hktdc.Views = Hktdc.Views || {};
         console.log(self.model.toJSON().selectedApplicantModel.toJSON());
         var selectedUserName = selectedApplicantModel.toJSON().UserFullName;
         $('.selectedApplicant', self.el).text(selectedUserName);
-        self.loadApplicantDetail();
+        self.loadApplicantDetail()
+          .then(function(applicant) {
+            self.renderApplicantDetail(applicant);
+          });
 
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
@@ -273,22 +225,16 @@ Hktdc.Views = Hktdc.Views || {};
         console.log(showButtonOptions);
         console.groupEnd();
 
-        self.loadButtons(showButtonOptions);
+        self.renderButtons(showButtonOptions);
       });
 
       this.model.selectedCCCollection.on('add', function(addedCC, newCollection) {
         var selectedUserName = addedCC.toJSON().UserFullName;
-        var selectedUserId = addedCC.toJSON().UserId;
+        // var selectedUserId = addedCC.toJSON().UserId;
         $('.selectedCC', this.el).text(selectedUserName);
       });
 
-      this.model.selectedServiceCollection.on('change', function(addedService, newCollection){
-        console.log('changed service', addedService.toJSON());
-        /* clear the selectedRecommentModel */
-        self.model.set({ selectedRecommentModel: null });
-      });
-
-      this.model.selectedServiceCollection.on('add', function(addedService, newCollection){
+      this.model.selectedServiceCollection.on('add', function(addedService, newCollection) {
         console.log('added service', addedService.toJSON());
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
@@ -299,38 +245,52 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    loadButtons: function(showButtonOptions) {
+    loadServiceCatagory: function() {
+      var deferred = Q.defer();
+      // var self = this;
+      var serviceCatagoryCollections = new Hktdc.Collections.ServiceCatagory();
+      serviceCatagoryCollections.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          try {
+            console.debug('[views/newRequest.js] - onLoadData');
+            deferred.resolve(serviceCatagoryCollections);
+          } catch (e) {
+            console.error('error on rendering service level1::', e);
+            deferred.reject(e);
+          }
+        },
+        error: function(model, response) {
+          deferred.reject(response);
+          console.error(JSON.stringify(response, null, 2));
+        }
+      });
+      return deferred.promise;
+    },
 
+    renderButtons: function(showButtonOptions) {
       /* load available buttons */
       var buttonModel = new Hktdc.Models.Button(showButtonOptions);
       var buttonView = new Hktdc.Views.Button({
         model: buttonModel,
         requestFormModel: this.model
       });
+
       $('.available-buttons', this.el).html(buttonView.el);
     },
 
     loadEmployee: function() {
       /* employee component */
       var deferred = Q.defer();
-      var self = this;
+      // var self = this;
 
       var employeeCollection = new Hktdc.Collections.Employee();
       employeeCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          $('.applicant-container', self.el).append(new Hktdc.Views.ApplicantList({
-            collection: new Hktdc.Collections.Applicant(employeeCollection.toJSON()),
-            requestFormModel: self.model
-          }).el);
-
-          $('.cc-container', self.el).append(new Hktdc.Views.CCList({
-            collection: new Hktdc.Collections.CC(employeeCollection.toJSON()),
-            requestFormModel: self.model
-          }).el);
           // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
           // console.log('selectedCCCollection: ', self.model);
-          deferred.resolve();
+          deferred.resolve(employeeCollection.toJSON());
         },
         error: function(err) {
           deferred.reject(err);
@@ -338,37 +298,78 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       return deferred.promise;
+    },
 
+    renderApplicantAndCCList: function(employeeArray) {
+      $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
+        collection: new Hktdc.Collections.Applicant(employeeArray),
+        requestFormModel: this.model
+      }).el);
+
+      $('.cc-container', this.el).append(new Hktdc.Views.CCList({
+        collection: new Hktdc.Collections.CC(employeeArray),
+        requestFormModel: this.model
+      }).el);
     },
 
     loadApplicantDetail: function() {
-      var self = this;
+      // var self = this;
       var deferred = Q.defer();
       this.model.toJSON().selectedApplicantModel.fetch({
         beforeSend: utils.setAuthHeader,
         success: function(res) {
           var selectedUserDepartment = res.toJSON().Depart;
-          $('#divdepartment', self.el).text(selectedUserDepartment);
-          deferred.resolve();
+
+          deferred.resolve(selectedUserDepartment);
         },
         error: function(e) {
           deferred.reject(e);
         }
       });
       return deferred.promise;
+    },
 
+    renderApplicantDetail: function(selectedUserDepartment) {
+      $('#divdepartment', this.el).text(selectedUserDepartment);
     },
 
     renderSelectedCCView: function(input) {
-
       this.model.selectedCCCollection = new Hktdc.Collections.SelectedCC(input);
       $('.contact-group', this.el).append(new Hktdc.Views.SelectedCCList({
         collection: this.model.selectedCCCollection
       }).el);
     },
 
-    render: function() {
+    renderWorkflowLog: function(workflowLogList) {
+      var workflowLogCollections = new Hktdc.Collections.WorkflowLog(workflowLogList);
+      var workflowLogListView = new Hktdc.Views.WorkflowLogList({
+        collection: workflowLogCollections,
+        requestFormModel: this.model
+      });
+      workflowLogListView.render();
+      $('#workflowlog-container').html(workflowLogListView.el);
+    },
 
+    renderAttachment: function(attachmentList) {
+      var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
+      var attachmentListView = new Hktdc.Views.AttachmentList({
+        collection: attachmentCollections,
+        requestFormModel: this.model
+      });
+      attachmentListView.render();
+      $('#attachment-container').html(attachmentListView.el);
+    },
+
+    renderServiceCatagory: function(serviceCatagoryCollections) {
+      var serviceCatagoryListView = new Hktdc.Views.ServiceCatagoryList({
+        collection: serviceCatagoryCollections,
+        requestFormModel: this.model
+      });
+      serviceCatagoryListView.render();
+      $('#service-container').html(serviceCatagoryListView.el);
+    },
+
+    render: function() {
       /* selectedApplicantModel is from mainRouter */
       // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
       this.model.set({
@@ -379,5 +380,4 @@ Hktdc.Views = Hktdc.Views || {};
     }
 
   });
-
 })();

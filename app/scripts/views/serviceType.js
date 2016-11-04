@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 /**
  * This file contains:
  * = level 2
@@ -41,9 +41,12 @@ Hktdc.Views = Hktdc.Views || {};
       /* initialize level 3 service */
       try {
         var serviceObjectData = this.model.toJSON().Level3;
+        var serviceRequestList = [];
         /* service request list in new request default is empty object of array */
         this.defaultServiceRequestObject = { ControlFlag: serviceObjectData[0].ControlFlag };
-        var serviceRequestList = serviceObjectData || [];
+        if (this.requestFormModel.toJSON().mode !== 'new') {
+          var serviceRequestList = serviceObjectData;
+        }
         // if (serviceObjectData[0].ControlFlag == 2) {
         //   serviceRequestList.push(this.defaultServiceRequestObject);
         // }

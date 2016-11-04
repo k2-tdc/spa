@@ -2,7 +2,7 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.StutusOption = Backbone.Model.extend({

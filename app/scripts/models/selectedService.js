@@ -2,7 +2,7 @@
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Models.SelectedService = Backbone.Model.extend({

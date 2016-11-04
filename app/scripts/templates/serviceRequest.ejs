@@ -31,7 +31,9 @@
         <!-- level 3: service request contents append here -->
       </div>
       <div class="col-xs-2 col-md-2">
-        <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
+        <% if (needDelBtn) { %>
+          <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
+        <% } %>
       </div>
     </div>
     <div class="sep-space"></div>
@@ -64,7 +66,9 @@
     <!-- END: Repeat Unit of the level3: service object -->
   </div>
   <div class="col-xs-2 col-md-2">
-    <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
+    <% if (needDelBtn) { %>
+      <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
+    <% } %>
   </div>
 </div>
 

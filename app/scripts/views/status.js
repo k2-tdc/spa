@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.Status = Backbone.View.extend({
@@ -11,13 +11,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     el: '#ddindexstatus',
 
-    initialize: function () {
+    initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
       this.render();
 
     },
 
-    render: function () {
+    render: function() {
 
       this.$el.html(this.template({ data: this.model.toJSON() }));
     }

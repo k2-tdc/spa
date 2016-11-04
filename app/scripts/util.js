@@ -1,7 +1,7 @@
 /* all application level methods should be placed here */
 window.utils = {
 
-  setURL: function (env) {
+  setURL: function(env) {
     // console.log(env);
     var envConfig = window.Hktdc.Config.environments[env || 'localDev'];
     var host = envConfig.api.host;
@@ -21,7 +21,7 @@ window.utils = {
     // console.log(Hktdc.Config.apiURL);
   },
 
-  parseQueryString: function (queryString) {
+  parseQueryString: function(queryString) {
     var params = {};
     if (queryString) {
       _.each(
@@ -44,7 +44,7 @@ window.utils = {
     return params;
   },
 
-  setAuthHeader: function (xhr) {
+  setAuthHeader: function(xhr) {
     if (Hktdc.Config.needAuthHeader) {
       console.log('needAuthHeader: ', true);
       xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
@@ -146,7 +146,7 @@ window.utils = {
         xhr.setRequestHeader('X-REFRESH-TOKEN', refreshToken);
 
         // Response handlers.
-        xhr.onload = function () {
+        xhr.onload = function() {
           var text = xhr.responseText;
           console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
 
@@ -154,7 +154,7 @@ window.utils = {
           onSuccess(accessToken);
         };
 
-        xhr.onerror = function () {
+        xhr.onerror = function() {
           var text = xhr.responseText;
           onError(text);
           // alert(text);
@@ -168,7 +168,7 @@ window.utils = {
     }
   },
 
-  getLoginUserIdByToken: function (accessToken, onSuccess, onError) {
+  getLoginUserIdByToken: function(accessToken, onSuccess, onError) {
     console.log('getLoginUserIdByToken: ', accessToken);
     var Userid = '';
     var self = this;
@@ -181,7 +181,7 @@ window.utils = {
     // xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
 
     // Response handlers.
-    xhr.onload = function () {
+    xhr.onload = function() {
       var text = xhr.responseText;
       var objLoginUser = JSON.parse(text);
       // console.log(JSON.stringify(objLoginUsers, null, 2));
@@ -192,7 +192,7 @@ window.utils = {
       // return objLoginUser;
     };
 
-    xhr.onerror = function () {
+    xhr.onerror = function() {
       var text = xhr.responseText;
       onError(text);
     };

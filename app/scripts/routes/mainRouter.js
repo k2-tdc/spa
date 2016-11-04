@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone, utils */
 
 Hktdc.Routers = Hktdc.Routers || {};
 
@@ -39,6 +39,7 @@ Hktdc.Routers = Hktdc.Routers || {};
             PreparerFNAME: Hktdc.Config.userName,
             preparedByUserId: Hktdc.Config.userID,
             CreatedOn: window.moment().format('DD MMM YYYY'),
+            mode: 'new',
 
             /* set the default selected applicant is self */
             selectedApplicantModel: new Hktdc.Models.Applicant({
@@ -47,15 +48,13 @@ Hktdc.Routers = Hktdc.Routers || {};
             })
           });
           var nrView = new Hktdc.Views.NewRequest({
-            model: newRequestModel,
-            mode: 'new'
+            model: newRequestModel
           });
-
         },
         error: function(e) {
           console.log('error on getting reference id');
         }
-      })
+      });
     },
 
     editRequest: function(requestId) {
@@ -77,8 +76,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           });
           // console.log(requestModel.toJSON());
           var requestView = new Hktdc.Views.NewRequest({
-            model: requestModel,
-            mode: 'read'
+            model: requestModel
           });
         },
         error: function(err) {
@@ -91,7 +89,5 @@ Hktdc.Routers = Hktdc.Routers || {};
       console.debug('[ routes/mainRouter.js ] - draft route handler');
       var draftView = new Hktdc.Views.Draft();
     }
-
   });
-
 })();

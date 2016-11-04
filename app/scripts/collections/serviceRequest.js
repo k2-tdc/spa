@@ -2,7 +2,7 @@
 
 Hktdc.Collections = Hktdc.Collections || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Collections.ServiceRequest = Backbone.Collection.extend({

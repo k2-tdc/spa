@@ -1,9 +1,9 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('Menu View', function () {
+describe('Menu View', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
         this.MenuView = new Hktdc.Views.Menu();
     });
 

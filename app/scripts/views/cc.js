@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.CC = Backbone.View.extend({
@@ -31,7 +31,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    render: function () {
+    render: function() {
       this.$el.html(this.template({user: this.model.toJSON()}));
     }
   });
@@ -42,7 +42,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     className: 'dropdown-menu cc-list',
 
-    initialize: function (props) {
+    initialize: function(props) {
       this.requestFormModel = props.requestFormModel;
 
       _.bindAll(this, 'renderCCItem');
@@ -60,7 +60,7 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).append(ccItemView.el);
     },
 
-    render: function () {
+    render: function() {
       // this.$el.html(this.template(this.model.toJSON()));
       this.collection.each(this.renderCCItem);
     }

@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.StutusOption = Backbone.View.extend({
@@ -17,11 +17,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {},
 
-    initialize: function () {
+    initialize: function() {
       this.listenTo(this.model, 'change', this.render);
     },
 
-    render: function () {
+    render: function() {
       this.$el.html(this.template(this.model.toJSON()));
     }
 

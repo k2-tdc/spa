@@ -1,9 +1,9 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('User Model', function () {
+describe('User Model', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
         this.UserModel = new Hktdc.Models.User();
     });
 

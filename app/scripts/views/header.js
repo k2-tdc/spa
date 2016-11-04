@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.Header = Backbone.View.extend({
@@ -20,13 +20,13 @@ Hktdc.Views = Hktdc.Views || {};
     events: {},
     */
 
-    initialize: function () {
+    initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
       this.render();
 
     },
 
-    render: function () {
+    render: function() {
       // var data = this.model.toJSON() || ;
       this.$el.html(this.template());
     }

@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.Attachment = Backbone.View.extend({
@@ -13,11 +13,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {},
 
-    initialize: function () {
+    initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
     },
 
-    render: function () {
+    render: function() {
       console.log(this.model.toJSON());
       this.$el.html(this.template({file: this.model.toJSON()}));
     }
@@ -59,7 +59,7 @@ Hktdc.Views = Hktdc.Views || {};
         .attr('arrow', 'glyphicon-menu-up');
     },
 
-    close: function(){
+    close: function() {
       $('.headdivfilelog', this.el).hide();
       $('#ancfilelog')
         .attr('arrow', 'glyphicon-menu-down')
@@ -75,19 +75,16 @@ Hktdc.Views = Hktdc.Views || {};
       $('tbody', this.el).append(attachmentItemView.el);
     },
 
-    render: function () {
+    render: function() {
       var isInsert = false;
       this.$el.html(this.template({insertMode: isInsert}));
       // console.log(this.model);
-      this.collection.each(this.renderWrokflowLogItem)
+      this.collection.each(this.renderWrokflowLogItem);
       $('.attachmentTable', this.el).DataTable({
         paging: false,
         searching: false,
         pageLength: false
       });
-
     }
-
   });
-
 })();

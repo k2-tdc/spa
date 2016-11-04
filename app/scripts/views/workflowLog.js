@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.WorkflowLog = Backbone.View.extend({
@@ -17,11 +17,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {},
 
-    initialize: function () {
+    initialize: function() {
       this.listenTo(this.model, 'change', this.render);
     },
 
-    render: function () {
+    render: function() {
       // console.log(this.model.toJSON());
       // console.log(this.template({log: this.model.toJSON()}));
       this.$el.html(this.template({log: this.model.toJSON()}));
@@ -85,7 +85,7 @@ Hktdc.Views = Hktdc.Views || {};
       $('tbody', this.el).append(workflowLogItemView.el);
     },
 
-    render: function () {
+    render: function() {
       this.$el.html(this.template());
       // console.log(this.model);
       this.collection.each(this.renderWrokflowLogItem)

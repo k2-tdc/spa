@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.CheckStatus = Backbone.Model.extend({
 
     initialize: function() {
-      // url: function () { return '' + Config.DomainName + '/api/request/GetRequestDetails?CStat=' + $("#ddindexstatus").val() + '&ReferID=' + $('#txtindexrefid').val() + '&FDate=' + $('#txtIndexfromdate').val() + '&TDate=' + $('#txtIndextodate').val() + '&Appl=' + $('#ddIndexapplicant').val() + '&UserId=' + Userid; },
+      // url: function() { return '' + Config.DomainName + '/api/request/GetRequestDetails?CStat=' + $("#ddindexstatus").val() + '&ReferID=' + $('#txtindexrefid').val() + '&FDate=' + $('#txtIndexfromdate').val() + '&TDate=' + $('#txtIndextodate').val() + '&Appl=' + $('#ddIndexapplicant').val() + '&UserId=' + Userid; },
       // this.defaults.filters.UserId = 'Hktdc.Config.userID';
     },
 

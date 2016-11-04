@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 /**
  * This file contains:
  * ServiceObjectList
@@ -6,7 +6,7 @@
  */
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.ServiceObjectText = Backbone.View.extend({
@@ -26,10 +26,10 @@ Hktdc.Views = Hktdc.Views || {};
       }
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
-    initialize: function (props) {
+    initialize: function(props) {
       this.requestFormModel = props.requestFormModel;
     },
-    render: function () {
+    render: function() {
       var tmpl = this.template({ serviceObject: this.model.toJSON()});
       this.$el.html(tmpl);
     }
@@ -77,12 +77,12 @@ Hktdc.Views = Hktdc.Views || {};
       return (col[0] && col[0].ControlFlag == 1) ? 'ul' : 'div';
     },
 
-    className: function (){
+    className: function(){
       var col = this.collection.toJSON();
       return (col[0] && col[0].ControlFlag == 1) ? 'dropdown-menu' : 'text-request-object';
     },
 
-    initialize: function (props) {
+    initialize: function(props) {
       this.requestFormModel = props.requestFormModel;
       this.serviceRequestModel = props.serviceRequestModel;
       // console.log(this.serviceRequestModel.toJSON());

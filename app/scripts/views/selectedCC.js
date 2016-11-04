@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.SelectedCC = Backbone.View.extend({
@@ -15,7 +15,7 @@ Hktdc.Views = Hktdc.Views || {};
       'click .glyphicon': 'removeSelectedCCHandler'
     },
 
-    initialize: function () {
+    initialize: function() {
       // this.listenTo(this.model, 'change', this.render);
     },
 
@@ -23,7 +23,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.collection.remove(this.model);
     },
 
-    render: function () {
+    render: function() {
       this.$el.html(this.template({
         selectedUserId: this.model.toJSON().USERID || this.model.toJSON().UserId,
         selectedUserName: this.model.toJSON().FULLNAME || this.model.toJSON().UserFullName
@@ -37,7 +37,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     className: 'seleced-cc-list',
 
-    initialize: function () {
+    initialize: function() {
       var self = this;
       _.bindAll(this, 'renderSelectedCCItem');
       this.render();
@@ -62,7 +62,7 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).append(selectedCCItemView.el);
     },
 
-    render: function () {
+    render: function() {
       /* the collection share with new request selectedCCCollection */
       // console.log(this.collection);
       this.collection.each(this.renderSelectedCCItem);

@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $, _ */
 
 /**
  * This file contains:
@@ -9,7 +9,7 @@
 
  Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.ServiceCatagory = Backbone.View.extend({
@@ -20,7 +20,7 @@
 
     tag: 'div',
 
-    initialize: function (props) {
+    initialize: function(props) {
       var self = this;
       this.requestFormModel = props.requestFormModel;
 
@@ -98,7 +98,7 @@
       }
     },
 
-    render: function ($container) {
+    render: function($container) {
       var self = this;
       var tmpl = this.template({
         serviceCatagory: this.model.toJSON()

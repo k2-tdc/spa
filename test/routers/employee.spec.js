@@ -1,9 +1,9 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('Employee Router', function () {
+describe('Employee Router', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
         this.EmployeeRouter = new Hktdc.Routers.Employee();
     });
 

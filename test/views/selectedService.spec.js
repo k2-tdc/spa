@@ -1,9 +1,9 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('SelectedService View', function () {
+describe('SelectedService View', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
         this.SelectedServiceView = new Hktdc.Views.SelectedService();
     });
 

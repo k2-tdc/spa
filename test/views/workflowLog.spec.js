@@ -1,9 +1,9 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('WorkflowLog View', function () {
+describe('WorkflowLog View', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
         this.WorkflowLogView = new Hktdc.Views.WorkflowLog();
     });
 

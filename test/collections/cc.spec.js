@@ -1,9 +1,9 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('Cc Collection', function () {
+describe('Cc Collection', function() {
 
-    beforeEach(function () {
+    beforeEach(function() {
         this.CcCollection = new Hktdc.Collections.Cc();
     });
 
