@@ -389,6 +389,10 @@ div.dataTables_wrapper table {
   outline-color: rgb(244, 120, 32);
 }
 
+.filename-container{
+  position: relative;
+}
+
 /* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
 @media screen and (max-width: 767px) {
   #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {

@@ -1,10 +1,10 @@
 /*global beforeEach, describe, it, assert, expect  */
 'use strict';
 
-describe('SendFile Model', function() {
+describe('sendAttactment Model', function() {
 
     beforeEach(function() {
-        this.SendFileModel = new Hktdc.Models.SendFile();
+        this.sendAttactmentModel = new Hktdc.Models.sendAttactment();
     });
 
 });

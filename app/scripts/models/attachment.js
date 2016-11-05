@@ -7,7 +7,7 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.Attachment = Backbone.Model.extend({
 
-    url: '',
+    idAttribute: 'name',
 
     initialize: function() {
     },

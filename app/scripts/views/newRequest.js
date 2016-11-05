@@ -27,7 +27,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var self = this;
       var haveSelectService = !!this.model.selectedServiceCollection.toJSON().length;
-      var haveFilledCost = !!this.model.toJSON().cost;
+      var haveFilledCost = !!this.model.toJSON().EstimatedCost;
       if (!(haveSelectService && haveFilledCost)) {
         alert('please select service and filled the cost field');
         return false;
@@ -39,7 +39,7 @@ Hktdc.Views = Hktdc.Views || {};
         var ruleCode = _.uniq(ruleCodeArr).join(';');
         // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
         var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
-        var cost = this.model.toJSON().cost;
+        var cost = this.model.toJSON().EstimatedCost;
         recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
         recommendCollection.fetch({
           beforeSend: utils.setAuthHeader,
@@ -90,13 +90,19 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadServiceCatagory()
         ])
           .then(function(result) {
+            console.log('load ed resource');
+
             self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService();
+            self.model.selectedAttachmentCollection = new Hktdc.Collections.SelectedAttachment();
+
             /* Render the components below */
             self.renderApplicantAndCCList(result[0]);
             self.renderApplicantDetail(result[1]);
             self.renderServiceCatagory(result[2]);
+            self.renderAttachment();
             self.renderSelectedCCView();
-            self.renderButtons.bind(self);
+            self.renderButtons();
+
             /* init event listener last */
             self.initModelChange();
           })
@@ -108,6 +114,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         Q.all([
           self.loadEmployee()
+          // ... load other remote resource
         ])
           .then(function(results) {
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
@@ -115,7 +122,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderAttachment(self.model.toJSON().Attachments);
             self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
             $('input, textarea, button', self.el).prop('disabled', 'disabled');
-            self.renderButtons.bind(self);
+            self.renderButtons();
           })
           .fail(function(e) {
             console.error(e);
@@ -269,13 +276,15 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderButtons: function(showButtonOptions) {
+      console.log('crash');
       /* load available buttons */
       var buttonModel = new Hktdc.Models.Button(showButtonOptions);
+      // console.debug(buttonModel.toJSON());
       var buttonView = new Hktdc.Views.Button({
         model: buttonModel,
         requestFormModel: this.model
       });
-
+      // console.log(buttonView.el);
       $('.available-buttons', this.el).html(buttonView.el);
     },
 
@@ -318,9 +327,9 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.toJSON().selectedApplicantModel.fetch({
         beforeSend: utils.setAuthHeader,
         success: function(res) {
-          var selectedUserDepartment = res.toJSON().Depart;
+          var selectedApplicantModel = res;
 
-          deferred.resolve(selectedUserDepartment);
+          deferred.resolve(selectedApplicantModel);
         },
         error: function(e) {
           deferred.reject(e);
@@ -329,8 +338,14 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    renderApplicantDetail: function(selectedUserDepartment) {
-      $('#divdepartment', this.el).text(selectedUserDepartment);
+    renderApplicantDetail: function(selectedApplicantModel) {
+      var applicant = selectedApplicantModel.toJSON();
+      this.model.set({
+        DEPT: applicant.Depart,
+        Title: applicant.Title,
+        Location: applicant.Office
+      });
+      $('#divdepartment', this.el).text(applicant.Depart);
     },
 
     renderSelectedCCView: function(input) {

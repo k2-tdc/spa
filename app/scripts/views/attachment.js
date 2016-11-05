@@ -10,16 +10,40 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/attachment.ejs'],
 
     tagName: 'tr',
+    // tagName: function(mode) {
+    //   console.log('tagname', mode);
+    //   if (mode === 'new') {
+    //     return 'div';
+    //   } else {
+    //     return 'tr';
+    //   }
+    // },
+    className: 'filename-container',
 
-    events: {},
+    events: {
+      'click .deletefile': 'clickDeleteFileBtn'
+    },
 
-    initialize: function() {
+    clickDeleteFileBtn: function(e) {
+      // console.log(this.parentCollection.toJSON());
+      // console.log(this.model.toJSON().name);
+      // console.log(this.parentCollection.get(this.model.toJSON().name));
+      this.parentCollection.remove(this.model);
+    },
+
+    initialize: function(props) {
+      this.requestFormModel = props.requestFormModel;
+      this.parentCollection = props.parentCollection;
+      // console.log('initi', props.requestFormModel);
       // this.listenTo(this.model, 'change', this.render);
     },
 
     render: function() {
-      console.log(this.model.toJSON());
-      this.$el.html(this.template({file: this.model.toJSON()}));
+      // console.log(this.model.toJSON());
+      this.$el.html(this.template({
+        file: this.model.toJSON(),
+        insertMode: this.requestFormModel.toJSON().mode === 'new'
+      }));
     }
   });
 
@@ -30,7 +54,8 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
 
     events: {
-      'click #ancfilelog': 'clickToggleButton'
+      'click #ancfilelog': 'clickToggleButton',
+      'change input[type="file"]': 'onFileChange'
     },
 
     initialize: function(props) {
@@ -43,6 +68,11 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           self.close();
         }
+      });
+      this.collection.on('remove', function() {
+        $('#divfilename', this.el).empty();
+        self.collection.each(self.renderWrokflowLogItem);
+        self.requestFormModel.selectedAttachmentCollection = self.collection;
       });
     },
 
@@ -67,24 +97,55 @@ Hktdc.Views = Hktdc.Views || {};
         .addClass('glyphicon glyphicon-menu-down');
     },
 
-    renderWrokflowLogItem: function(model) {
-      var attachmentItemView = new Hktdc.Views.Attachment({
-        model: model
+    onFileChange: function(ev) {
+      var newFiles = ev.target.files;
+      // console.group('file change: ', newFiles);
+      var modelArray = _.map(newFiles, function(file) {
+        return new Hktdc.Models.Attachment(file);
       });
+      // console.debug('this collection before: ', this.collection.toJSON());
+      this.collection.set(modelArray);
+      $('#divfilename', this.el).empty();
+      this.collection.each(this.renderWrokflowLogItem);
+      // console.debug('this collection after: ', this.collection.toJSON());
+      // console.debug('requestFormModel collection before: ', this.requestFormModel.selectedAttachmentCollection.toJSON());
+      this.requestFormModel.selectedAttachmentCollection.set(this.collection.toJSON());
+      // console.debug('requestFormModel collection after: ', this.requestFormModel.selectedAttachmentCollection.toJSON());
+      // console.groupEnd();
+    },
+
+    renderWrokflowLogItem: function(model) {
+      var tagName = (this.requestFormModel.toJSON().mode === 'new') ? 'div' : 'tr';
+      var attachmentItemView = new Hktdc.Views.Attachment({
+        tagName: tagName,
+        model: model,
+        parentCollection: this.collection,
+        requestFormModel: this.requestFormModel
+      });
+      // console.log(attachmentItemView.tagName);
       attachmentItemView.render();
-      $('tbody', this.el).append(attachmentItemView.el);
+      var isInsert = (this.requestFormModel.toJSON().mode === 'new');
+      if (isInsert) {
+        $('#divfilename', this.el).append(attachmentItemView.el);
+      } else {
+        $('tbody', this.el).append(attachmentItemView.el);
+      }
     },
 
     render: function() {
-      var isInsert = false;
+      var isInsert = (this.requestFormModel.toJSON().mode === 'new');
       this.$el.html(this.template({insertMode: isInsert}));
       // console.log(this.model);
-      this.collection.each(this.renderWrokflowLogItem);
-      $('.attachmentTable', this.el).DataTable({
-        paging: false,
-        searching: false,
-        pageLength: false
-      });
+      if (!isInsert) {
+      //   this.bindFileChangeEvent();
+      // } else {
+        this.collection.each(this.renderWrokflowLogItem);
+        $('.attachmentTable', this.el).DataTable({
+          paging: false,
+          searching: false,
+          pageLength: false
+        });
+      }
     }
   });
 })();

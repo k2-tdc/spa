@@ -9,7 +9,7 @@ Hktdc.Models = Hktdc.Models || {};
 
 
     defaults: {
-      showBack: true,
+      showBack: false,
       showSave: true,
       showRecall: false,
       showApplicant: false,

@@ -35,9 +35,9 @@ Hktdc.Routers = Hktdc.Routers || {};
         beforeSend: utils.setAuthHeader,
         success: function() {
           var newRequestModel = new Hktdc.Models.NewRequest({
-            refId: referenceIdModel.toJSON().ReferenceID,
+            ReferenceID: referenceIdModel.toJSON().ReferenceID,
             PreparerFNAME: Hktdc.Config.userName,
-            preparedByUserId: Hktdc.Config.userID,
+            PreparerUserID: Hktdc.Config.userID,
             CreatedOn: window.moment().format('DD MMM YYYY'),
             mode: 'new',
 

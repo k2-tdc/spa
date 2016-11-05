@@ -20,7 +20,9 @@
     <div class="newrequest-basic-information">
       <div class="row">
         <div class="col-xs-2 col-md-2 newrequest-title">Status</div>
-        <div class="col-xs-10 col-md-4" id="divStatus"><%= request.FormStatus %></div>
+        <div class="col-xs-10 col-md-4" id="divStatus">
+          <%= request.FormStatus %>
+        </div>
         <div class="col-xs-2 col-md-2 newrequest-title">Prepared by</div>
         <div class="col-xs-10 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
       </div>
@@ -86,7 +88,7 @@
           </div>
           <div class="row">
             <div class="col-md-10">
-              <textarea class="form-control" rows="3" field="justification" id="txtjustification"><%= request.Justification %></textarea>
+              <textarea class="form-control" rows="3" field="Justification" id="txtjustification"><%= request.Justification %></textarea>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -96,7 +98,7 @@
           <div class="row">
             <div class="col-xs-10 col-sm-10">
               <div class="input-group date pick-date-start" data-provide="datepicker">
-                <input type="text" class="form-control" id="txtexpectedDD" field="deliveryDate" value="<%= request.EDeliveryDate %>" />
+                <input type="text" class="form-control" id="txtexpectedDD" field="EDeliveryDate" value="<%= request.EDeliveryDate %>" />
                 <div class="input-group-addon">
                   <span class="glyphicon glyphicon-th"></span>
                 </div>
@@ -109,7 +111,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtfrequency" field="frequency" value="<%= request.DurationOfUse %>" />
+              <input type="text" class="form-control" id="txtfrequency" field="DurationOfUse" value="<%= request.DurationOfUse %>" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -118,7 +120,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtestimatedcost" field="cost" value="<%= request.EstimatedCost %>" />
+              <input type="text" class="form-control" id="txtestimatedcost" field="EstimatedCost" value="<%= request.EstimatedCost %>" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -127,7 +129,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtbudgetprovided" field="budget" value="<%= request.BudgetProvided %>" />
+              <input type="text" class="form-control" id="txtbudgetprovided" field="BudgetProvided" value="<%= request.BudgetProvided %>" />
             </div>
           </div>
           <div class="sep-space"></div>
@@ -136,7 +138,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <input type="text" class="form-control" id="txtbudgetsum" field="budgetSum" value="<%= request.BudgetSum %>"/>
+              <input type="text" class="form-control" id="txtbudgetsum" field="BudgetSum" value="<%= request.BudgetSum %>"/>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -183,7 +185,7 @@
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">Remark</div>
             <div class="col-xs-8 col-md-8">
-              <textarea class="form-control" rows="3" id="txtremark" field="remark"><%= request.Remark %></textarea>
+              <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
             </div>
           </div>
           <div class="sep-space"></div>

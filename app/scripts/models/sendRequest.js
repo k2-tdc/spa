@@ -18,7 +18,6 @@ Hktdc.Models = Hktdc.Models || {};
       Req_Status: '',
       Prepared_By: '',
       Preparer_ID: '',
-      // TODO: refid
       Ref_Id: '',
       Created_Date: '',
       Applicant: '',

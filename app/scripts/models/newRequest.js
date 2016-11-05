@@ -58,12 +58,12 @@ Hktdc.Models = Hktdc.Models || {};
       Remark: null,
 
       selectedApplicantModel: null,
-      selectedServiceCollection: null,
-      currentCC: null,
-      requestService: [],
-      recommend: null, // TODO: check this not in use?
       selectedRecommentModel: null,
       selectedCCCollection: null,
+      selectedServiceCollection: null,
+      selectedAttachmentCollection: null,
+      currentCC: null,
+      requestService: [],
       remark: null,
       submittedTo: null,
 
