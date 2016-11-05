@@ -81,7 +81,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* ----------- create new request ----------- */
       if (this.model.toJSON().mode === 'new') {
-        console.log('this is << new >> mode');
+        console.log('this is << NEW >> mode');
 
         /* First load all remote data */
         Q.all([
@@ -110,8 +110,7 @@ Hktdc.Views = Hktdc.Views || {};
             console.error(e);
           });
       } else if (this.model.toJSON().mode === 'read') {
-        console.debug('This is << EDIT >> mode');
-
+        console.debug('This is << READ >> mode');
         Q.all([
           self.loadEmployee()
           // ... load other remote resource
@@ -121,14 +120,43 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             self.renderAttachment(self.model.toJSON().Attachments);
             self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
-            $('input, textarea, button', self.el).prop('disabled', 'disabled');
+            if (self.model.toJSON().mode === 'read') {
+              $('input, textarea, button', self.el).prop('disabled', 'disabled');
+            }
             var options = self.getShowButtonOptionsByFormStatus(self.model.toJSON().FormStatus);
             self.renderButtons(options);
-            self.renderButtons();
           })
           .fail(function(e) {
             console.error(e);
           });
+      } else if (this.model.toJSON().mode === 'edit') {
+        console.debug('This is << EDIT >> mode');
+        Q.all([
+          self.loadEmployee(),
+          self.loadServiceCatagory()
+        ])
+          .then(function(result) {
+            console.log('loaded resource');
+
+            self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService(self.model.toJSON().RequestList);
+            self.model.selectedAttachmentCollection = new Hktdc.Collections.SelectedAttachment();
+
+            /* Render the components below */
+            self.renderApplicantAndCCList(result[0]);
+            self.renderServiceCatagory(result[1]);
+            // self.renderServiceCatagory(self.mergeServiceCollection(result[1].toJSON(), self.model.toJSON().RequestList));
+            self.renderAttachment();
+            self.renderSelectedCCView();
+            self.renderButtons();
+
+            /* init event listener last */
+            self.initModelChange();
+          })
+          .fail(function(e) {
+            console.error(e);
+          });
+      } else {
+        console.error('no available request mode');
       }
     },
 
@@ -269,6 +297,55 @@ Hktdc.Views = Hktdc.Views || {};
           return {};
       }
     },
+
+    mergeServiceCollection: function(rawData, editedData) {
+      // console.group('merge');
+      // console.log('rawData: ', rawData);
+      // console.log('editedData: ', editedData);
+      var mergedData = _.map(rawData, function(rawServiceCatagory) {
+        var matchedServiceCatagory = _.find(editedData, function(editedServiceCatagory) {
+          // console.log('editedServiceCatagory: ', editedServiceCatagory);
+          // console.log('rawServiceCatagory: ', rawServiceCatagory);
+          return editedServiceCatagory.GUID === rawServiceCatagory.GUID;
+        });
+        // console.log('matchedServiceCatagory', matchedServiceCatagory);
+        if (matchedServiceCatagory) {
+          // if edited collection present, extend Level2
+          rawServiceCatagory.Level2 = _.map(rawServiceCatagory.Level2, function(rawServiceType) {
+            var matchedServiceType = _.find(matchedServiceCatagory.Level2, function(editedServiceType) {
+              // TODO: use GUID if api fixed
+              // return editedServiceType.GUID === rawServiceType.GUID;
+              // console.group('check servicetype match');
+              // console.log(editedServiceType.Name);
+              // console.log(rawServiceType.Name);
+              // console.groupEnd();
+              return editedServiceType.Name === rawServiceType.Name;
+            });
+            // console.log('matchedServiceType: ', matchedServiceType);
+            // if edited collection present, extend Level3
+            if (matchedServiceType) {
+              rawServiceType.Level3 = _.map(rawServiceType.Level3, function(rawServiceRequest) {
+                var matchedServiceRequest = _.find(matchedServiceType.Level3, function(editedServiceRequest) {
+                  return editedServiceRequest.GUID === rawServiceRequest.GUID;
+                });
+                if (matchedServiceRequest) {
+                  return matchedServiceRequest;
+                } else {
+                  return rawServiceRequest;
+                }
+              });
+            }
+            return rawServiceType;
+          });
+        }
+        return rawServiceCatagory;
+      });
+      // console.log(JSON.stringify(mergedData, null, 2));
+      // console.groupEnd();
+
+      return new Hktdc.Collections.ServiceCatagory(mergedData);
+    },
+
     loadServiceCatagory: function() {
       var deferred = Q.defer();
       // var self = this;

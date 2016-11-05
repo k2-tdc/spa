@@ -69,16 +69,22 @@ Hktdc.Models = Hktdc.Models || {};
 
       showLog: false,
       showFileLog: false,
-      attachmentMode: 'read'
 
+      /**
+       * 'mode' options: ['read', 'new', 'edit']
+       *   'new': create new request
+       *   'edit': edit old request
+       *   'read': readonly, for reading old request
+       */
+      mode: 'read',
+      attachmentMode: 'read'
     },
 
     validate: function(attrs, options) {
     },
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });
-
 })();

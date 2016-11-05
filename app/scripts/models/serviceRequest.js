@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.ServiceRequest = Backbone.Model.extend({
     idAttribute: 'index',
     defaults: {
-
+      selectedServiceObject: true
     }
   });
 

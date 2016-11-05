@@ -68,9 +68,25 @@ Hktdc.Routers = Hktdc.Routers || {};
         success: function(result, response) {
           var rawData = response[0];
           var requestModel = new Hktdc.Models.NewRequest(rawData);
-          // console.log(rawData.RequestCC);
+
+          /* ----------- IMPORTANT: pre-set the request mode  ----------- */
+          var modeMapping = [
+            {
+              name: 'read',
+              status: ['Review', 'Complete', '']
+            },
+            {
+              name: 'edit',
+              status: ['Draft']
+            }
+          ];
+          var mode = _.find(modeMapping, function(modeObj) {
+            // console.log(_.contains(modeObj.status, requestModel.toJSON().FormStatus));
+            return _.contains(modeObj.status, requestModel.toJSON().FormStatus);
+          }).name || 'read';
+          // console.log(mode);
           requestModel.set({
-            mode: 'read',
+            mode: mode,
             selectedApplicantModel: new Hktdc.Models.Applicant({
               UserId: rawData.ApplicantUserID,
               UserFullName: rawData.ApplicantFNAME
