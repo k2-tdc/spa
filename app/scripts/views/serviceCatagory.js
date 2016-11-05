@@ -7,7 +7,7 @@
  * ServiceCatagoryItem
  */
 
- Hktdc.Views = Hktdc.Views || {};
+Hktdc.Views = Hktdc.Views || {};
 
 (function() {
   'use strict';
@@ -41,11 +41,11 @@
       'click .toggleBtn': 'onToggleButtonClick'
     },
 
-    onCheckboxClick: function(ev){
+    onCheckboxClick: function(ev) {
       console.log('onCheckboxClick');
       this.model.set({
-        checked: $(ev.currentTarget).is(":checked"),
-        open: $(ev.currentTarget).is(":checked")
+        checked: $(ev.currentTarget).is(':checked'),
+        open: $(ev.currentTarget).is(':checked')
       });
     },
 
@@ -59,7 +59,7 @@
       }
     },
 
-    close: function(){
+    close: function() {
       $('div.group-header .glyphicon', this.el)
         .removeClass('glyphicon-menu-up')
         .addClass('glyphicon-menu-down');
@@ -68,7 +68,7 @@
       // this.model.set('open', false);
     },
 
-    open: function(){
+    open: function() {
       $('div.group-header .glyphicon', this.el)
         .removeClass('glyphicon-menu-down')
         .addClass('glyphicon-menu-up');
@@ -77,7 +77,7 @@
       // this.model.set('open', true);
     },
 
-    renderServiceTypeList: function(){
+    renderServiceTypeList: function() {
       /* initialize level2 service type */
       var Catagory = this.model.toJSON();
       var serviceTypeCollection = new Hktdc.Collections.ServiceType(Catagory.Level2);
@@ -91,7 +91,6 @@
           /* quick hack to let parent render on the window DOM first */
           $('.service-type-container', this.el).html(serviceTypeListView.el);
         }.bind(this));
-
       } catch (e) {
         // TODO: pop up alert dialog
         console.error('render level 2 error', e);
@@ -121,11 +120,10 @@
       // this.parent
       this.requestFormModel = props.requestFormModel;
       /* important to use bindAll as directly use this.renderCatagoryItem in render */
-      _.bindAll(this, "renderCatagoryItem");
-
+      _.bindAll(this, 'renderCatagoryItem');
     },
 
-    renderCatagoryItem: function(model){
+    renderCatagoryItem: function(model) {
       var serviceCatagoryItemView = new Hktdc.Views.ServiceCatagory({
         model: model,
         requestFormModel: this.requestFormModel
@@ -140,8 +138,7 @@
       //   self.renderCatagoryItem(model);
       // });
       this.collection.each(this.renderCatagoryItem);
+    }
 
-    },
-  })
-
+  });
 })();

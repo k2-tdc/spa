@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils */
+/* global Hktdc, Backbone, utils, _ */
 
 Hktdc.Routers = Hktdc.Routers || {};
 
@@ -18,16 +18,17 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     checkStatus: function() {
       console.debug('[ routes/mainRouter.js ] - checkStatus route handler');
-      var checkStatus = new Hktdc.Models.CheckStatus({
+      var checkStatusModel = new Hktdc.Models.CheckStatus({
         UserId: Hktdc.Config.userID
       });
 
       // TODO: get filter params from query string
       var csView = new Hktdc.Views.CheckStatus({
-        model: checkStatus
+        model: checkStatusModel
       });
     },
 
+    /* this handling insert new */
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
       var referenceIdModel = new Hktdc.Models.ReferenceId();
@@ -57,6 +58,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       });
     },
 
+    /* this handling edit old request OR reading old request */
     editRequest: function(requestId) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
       var requestCollection = new Hktdc.Collections.NewRequest();
@@ -87,7 +89,15 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     draft: function() {
       console.debug('[ routes/mainRouter.js ] - draft route handler');
-      var draftView = new Hktdc.Views.Draft();
+      var checkStatusModel = new Hktdc.Models.CheckStatus({
+        UserId: Hktdc.Config.userID
+      });
+
+      // TODO: get filter params from query string
+      checkStatusModel.set({ mode: 'draft' });
+      var csView = new Hktdc.Views.CheckStatus({
+        model: checkStatusModel
+      });
     }
   });
 })();

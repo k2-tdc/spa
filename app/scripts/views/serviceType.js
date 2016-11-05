@@ -66,7 +66,6 @@ Hktdc.Views = Hktdc.Views || {};
         });
         serviceRequestListView.render();
 
-
         setTimeout(function() {
           $('.service-request-container', this.el).html(serviceRequestListView.el);
         }.bind(this));
@@ -114,8 +113,8 @@ Hktdc.Views = Hktdc.Views || {};
         requestFormModel: this.requestFormModel
       });
       serviceTypeItemView.render();
-      $(this.el).append(serviceTypeItemView.el);
 
+      $(this.el).append(serviceTypeItemView.el);
     },
 
     render: function() {

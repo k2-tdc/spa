@@ -15,7 +15,7 @@ Hktdc.Views = Hktdc.Views || {};
       'click #btnSearchCheckStatus': 'doSearch'
     },
 
-    initialize: function() {
+    initialize: function(props) {
       console.debug('[ views/checkStatus.js ] - Initizing check status views');
       // this.listenTo(this.model, 'change', this.render);
       this.render();
@@ -39,8 +39,15 @@ Hktdc.Views = Hktdc.Views || {};
       var filterArr = _.map(this.model.toJSON(), function(val, filter) {
         return filter + '=' + val;
       });
-      var statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
-
+      var statusApiURL;
+      // console.log(this.model.);
+      switch (this.model.toJSON().mode) {
+        case 'draft':
+          statusApiURL = Hktdc.Config.apiURL + '/GetDraftDetails?' + filterArr.join('&');
+          break;
+        default:
+          statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
+      }
       return statusApiURL;
     },
 
@@ -61,8 +68,9 @@ Hktdc.Views = Hktdc.Views || {};
               return {
                 lastActionDate: row.SubmittedOn,
                 applicant: row.ApplicantFNAME,
-                summary: self.getSummaryFromRow(row.FormID, row.RequestList),
-                status: self.getStatusFrowRow(row.FormStatus, row.ApproverFNAME)
+                summary: self.getSummaryFromRow(row.ReferenceID, row.RequestList),
+                status: self.getStatusFrowRow(row.FormStatus, row.ApproverFNAME),
+                refId: row.ReferenceID
               }
             });
             return modData;
@@ -79,6 +87,11 @@ Hktdc.Views = Hktdc.Views || {};
           data: "status"
         }],
         bRetrieve: true
+      });
+
+      $('#statusTable tbody', this.el).on('click', 'tr', function() {
+        var rowData = self.statusDataTable.row(this).data();
+        Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
       });
     },
 

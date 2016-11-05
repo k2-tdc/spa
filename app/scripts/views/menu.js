@@ -9,7 +9,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/menu.ejs'],
 
-    el : '#menu',
+    el: '#menu',
 
     // getLinkMap: function() {
     //   return {
@@ -31,19 +31,17 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(JSON.stringify(this.model, null, 2));
 
       this.model.on('change:activeTab', this.setActiveMenu.bind(this));
-
     },
-
 
     render: function() {
       // console.log(this.model.toJSON());
       var rawMenu = this.model.toJSON();
       var menu = (_.isArray(rawMenu)) ? rawMenu[0].Menu : rawMenu.Menu;
-      var self = this;
+      // var self = this;
       /* map the name, the server should return the route later */
-      _.each(menu, function(raw){
+      _.each(menu, function(raw) {
         if (raw.sumenu) {
-          _.each(raw.sumenu, function(subMenuRaw){
+          _.each(raw.sumenu, function(subMenuRaw) {
             var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ', '_');
             // console.log(upperLodash);
             subMenuRaw.Route = Hktdc.Config.projectPath + subMenuRaw.Mlink || '/#';
@@ -66,26 +64,23 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('nav#menu').mmenu({
         // options
-        "slidingSubmenus": false,
-         //offCanvas: false
+        slidingSubmenus: false
+        // offCanvas: false
       });
       // console.log($('nav#menu'));
-      $('nav#menu').data("mmenu").open();
+      $('nav#menu').data('mmenu').open();
       // console.log('rendered menu.js');
     },
 
     setActiveMenu: function(currentRoute) {
-
       try {
         var routename = this.model.toJSON().activeTab.toUpperCase();
-        $('nav#menu').data("mmenu").setSelected($('li[routename='+routename+']'));
+        $('nav#menu').data('mmenu').setSelected($('li[routename=' + routename + ']'));
       } catch (e) {
         // TODO: pop the error box
-
+        console.log(e);
       }
-      // console.log(Backbone.history.getFragment());
     }
 
   });
-
 })();

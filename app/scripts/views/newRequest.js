@@ -122,6 +122,8 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderAttachment(self.model.toJSON().Attachments);
             self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
             $('input, textarea, button', self.el).prop('disabled', 'disabled');
+            var options = self.getShowButtonOptionsByFormStatus(self.model.toJSON().FormStatus);
+            self.renderButtons(options);
             self.renderButtons();
           })
           .fail(function(e) {
@@ -252,6 +254,21 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
+    getShowButtonOptionsByFormStatus: function(formStatus) {
+      switch (formStatus) {
+        case 'Draft':
+          return {
+            showBack: false,
+            showSave: true,
+            showRecall: false,
+            showApplicant: false,
+            showApprover: true
+          };
+        default:
+          /* retrun empty to use the model default */
+          return {};
+      }
+    },
     loadServiceCatagory: function() {
       var deferred = Q.defer();
       // var self = this;
@@ -275,19 +292,6 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    renderButtons: function(showButtonOptions) {
-      console.log('crash');
-      /* load available buttons */
-      var buttonModel = new Hktdc.Models.Button(showButtonOptions);
-      // console.debug(buttonModel.toJSON());
-      var buttonView = new Hktdc.Views.Button({
-        model: buttonModel,
-        requestFormModel: this.model
-      });
-      // console.log(buttonView.el);
-      $('.available-buttons', this.el).html(buttonView.el);
-    },
-
     loadEmployee: function() {
       /* employee component */
       var deferred = Q.defer();
@@ -309,18 +313,6 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    renderApplicantAndCCList: function(employeeArray) {
-      $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
-        collection: new Hktdc.Collections.Applicant(employeeArray),
-        requestFormModel: this.model
-      }).el);
-
-      $('.cc-container', this.el).append(new Hktdc.Views.CCList({
-        collection: new Hktdc.Collections.CC(employeeArray),
-        requestFormModel: this.model
-      }).el);
-    },
-
     loadApplicantDetail: function() {
       // var self = this;
       var deferred = Q.defer();
@@ -336,6 +328,30 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
       return deferred.promise;
+    },
+
+    renderApplicantAndCCList: function(employeeArray) {
+      $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
+        collection: new Hktdc.Collections.Applicant(employeeArray),
+        requestFormModel: this.model
+      }).el);
+
+      $('.cc-container', this.el).append(new Hktdc.Views.CCList({
+        collection: new Hktdc.Collections.CC(employeeArray),
+        requestFormModel: this.model
+      }).el);
+    },
+
+    renderButtons: function(showButtonOptions) {
+      /* load available buttons */
+      var buttonModel = new Hktdc.Models.Button(showButtonOptions);
+      // console.debug(buttonModel.toJSON());
+      var buttonView = new Hktdc.Views.Button({
+        model: buttonModel,
+        requestFormModel: this.model
+      });
+      // console.log(buttonView.el);
+      $('.available-buttons', this.el).html(buttonView.el);
     },
 
     renderApplicantDetail: function(selectedApplicantModel) {
