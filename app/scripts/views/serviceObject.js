@@ -15,7 +15,7 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'blur #lastnosub': 'editServiceHandler'
     },
-    editServiceHandler: function(){
+    editServiceHandler: function() {
       if ($('textarea', this.el).val().trim().length > 0) {
         this.model.set({
           Notes: $('textarea', this.el).val().trim()
@@ -58,7 +58,6 @@ Hktdc.Views = Hktdc.Views || {};
       this.requestFormModel = props.requestFormModel;
       this.serviceRequestModel = props.serviceRequestModel;
       this.serviceRequestModel.on('change:Notes', function(a, newNotes) {
-
         /* the requestFormModel.selectedServiceCollection will auto update */
         self.model.set({ Notes: newNotes });
       });
@@ -70,14 +69,14 @@ Hktdc.Views = Hktdc.Views || {};
     }
   });
 
-  Hktdc.Views.ServiceObjectList= Backbone.View.extend({
+  Hktdc.Views.ServiceObjectList = Backbone.View.extend({
 
-    tagName: function(){
+    tagName: function() {
       var col = this.collection.toJSON();
       return (col[0] && col[0].ControlFlag == 1) ? 'ul' : 'div';
     },
 
-    className: function(){
+    className: function() {
       var col = this.collection.toJSON();
       return (col[0] && col[0].ControlFlag == 1) ? 'dropdown-menu' : 'text-request-object';
     },
@@ -89,13 +88,13 @@ Hktdc.Views = Hktdc.Views || {};
       _.bindAll(this, 'renderServiceObjectItem');
     },
 
-    renderServiceObjectItem: function(model){
+    renderServiceObjectItem: function(model) {
       // console.log(model.toJSON());
       model.set({
         serviceTypeName: this.serviceRequestModel.toJSON().serviceTypeName
       });
 
-      if (model.toJSON().ControlFlag == 1) {
+      if (String(model.toJSON().ControlFlag) === '1') {
         var serviceObjectItemView = new Hktdc.Views.ServiceObjectSelect({
           model: model,
           requestFormModel: this.requestFormModel,
@@ -113,10 +112,9 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).append(serviceObjectItemView.el);
     },
 
-    render: function(){
+    render: function() {
       this.collection.each(this.renderServiceObjectItem);
     }
 
   });
-
 })();

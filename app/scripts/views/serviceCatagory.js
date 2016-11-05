@@ -81,9 +81,16 @@ Hktdc.Views = Hktdc.Views || {};
       /* initialize level2 service type */
       var Catagory = this.model.toJSON();
       var serviceTypeCollection = new Hktdc.Collections.ServiceType(Catagory.Level2);
+      // console.log('Catagory.GUID: ', Catagory.GUID);
       try {
+        var selectedServiceCatagoryTree = _.find(this.requestFormModel.toJSON().selectedServiceTree, function(selectedCat) {
+          // console.log('selectedCat.GUID: ', selectedCat.GUID);
+          return Catagory.GUID === selectedCat.GUID;
+        });
+        // console.log('selectedServiceCatTree', selectedServiceCatagoryTree);
         var serviceTypeListView = new Hktdc.Views.ServiceTypeList({
           collection: serviceTypeCollection,
+          selectedServiceCatagoryTree: selectedServiceCatagoryTree,
           requestFormModel: this.requestFormModel
         });
         serviceTypeListView.render();

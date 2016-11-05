@@ -119,6 +119,8 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             self.renderAttachment(self.model.toJSON().Attachments);
+
+            /* direct put the Request list to collection because no need to change selection */
             self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
             if (self.model.toJSON().mode === 'read') {
               $('input, textarea, button', self.el).prop('disabled', 'disabled');
@@ -137,8 +139,13 @@ Hktdc.Views = Hktdc.Views || {};
         ])
           .then(function(result) {
             console.log('loaded resource');
+            self.model.set({ selectedServiceTree: self.model.toJSON().RequestList });
 
-            self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService(self.model.toJSON().RequestList);
+            /* must sync RequestList to selectedServiceCollection for updating */
+            self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService(
+              self.getAllRequestArray(self.model.toJSON().RequestList)
+            );
+            // console.log(self.model.selectedServiceCollection.toJSON());
             self.model.selectedAttachmentCollection = new Hktdc.Collections.SelectedAttachment();
 
             /* Render the components below */
@@ -272,7 +279,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.selectedServiceCollection.on('add', function(addedService, newCollection) {
-        console.log('added service', addedService.toJSON());
+        console.log('added service', newCollection.toJSON());
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
       });
@@ -299,6 +306,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     mergeServiceCollection: function(rawData, editedData) {
+      /* =================== Dreprecated method =================== */
+
       // console.group('merge');
       // console.log('rawData: ', rawData);
       // console.log('editedData: ', editedData);
@@ -344,6 +353,19 @@ Hktdc.Views = Hktdc.Views || {};
       // console.groupEnd();
 
       return new Hktdc.Collections.ServiceCatagory(mergedData);
+    },
+
+    getAllRequestArray: function(requestTree) {
+      var requestArr = [];
+      _.each(requestTree, function(serviceCatagory) {
+        // console.log(serviceCatagory);
+        _.each(serviceCatagory.Level2, function(serviceType) {
+          _.each(serviceType.Level3, function(serviceRequest) {
+            requestArr.push(serviceRequest);
+          });
+        });
+      });
+      return requestArr;
     },
 
     loadServiceCatagory: function() {

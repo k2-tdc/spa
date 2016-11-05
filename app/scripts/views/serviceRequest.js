@@ -36,7 +36,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       try {
         this.requestFormModel = props.requestFormModel;
-        var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().serviceObjectData);
+        var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
         var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
           collection: serviceObjectCollection,
           serviceRequestModel: this.model,
@@ -70,7 +70,7 @@ Hktdc.Views = Hktdc.Views || {};
         request: request,
 
         /* only 'edit' request mode will have delete button */
-        needDelBtn: (this.requestFormModel.toJSON().mode === 'edit')
+        needDelBtn: (this.requestFormModel.toJSON().mode !== 'read')
       });
       this.$el.html(tmpl);
     }
@@ -82,7 +82,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(options) {
       _.bindAll(this, 'renderServiceRequest', 'addServiceRequest', 'removeServiceRequest');
-      this.serviceObjectData = options.serviceObjectData;
+      this.availableServiceObjectArray = options.availableServiceObjectArray;
       this.requestFormModel = options.requestFormModel;
       this.serviceTypeName = options.serviceTypeModel.toJSON().Name;
       this.serviceTypeModel = options.serviceTypeModel;
@@ -111,11 +111,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderServiceRequest: function(model, index) {
-      // console.log(this.serviceObjectData.toJSON());
+      // console.log(this.availableServiceObjectArray.toJSON());
       // var that = this;
 
       model.set('index', index + 1);
-      model.set('serviceObjectData', this.serviceObjectData);
+      model.set('availableServiceObjectArray', this.availableServiceObjectArray);
       model.set('parentCollection', this.collection);
       model.set('serviceTypeName', this.serviceTypeName);
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
