@@ -68,7 +68,9 @@ Hktdc.Views = Hktdc.Views || {};
       var request = this.model.toJSON();
       var tmpl = this.template({
         request: request,
-        needDelBtn: (this.requestFormModel.mode === 'new')
+
+        /* only 'edit' request mode will have delete button */
+        needDelBtn: (this.requestFormModel.toJSON().mode === 'edit')
       });
       this.$el.html(tmpl);
     }

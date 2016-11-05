@@ -105,7 +105,8 @@ Hktdc.Views = Hktdc.Views || {};
 
       $(this.el).append(tmpl);
 
-      if (this.requestFormModel.toJSON().mode === 'read') {
+      /* only 'edit' and 'read' will open by default */
+      if (this.requestFormModel.toJSON().mode !== 'new') {
         self.model.set({ open: true, checked: true });
       }
       this.renderServiceTypeList();
