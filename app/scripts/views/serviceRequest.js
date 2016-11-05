@@ -36,6 +36,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       try {
         this.requestFormModel = props.requestFormModel;
+        // var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.collection.toJSON());
         var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
         var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
           collection: serviceObjectCollection,
@@ -118,6 +119,7 @@ Hktdc.Views = Hktdc.Views || {};
       model.set('availableServiceObjectArray', this.availableServiceObjectArray);
       model.set('parentCollection', this.collection);
       model.set('serviceTypeName', this.serviceTypeName);
+      console.log(model.toJSON());
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
         model: model,
         requestFormModel: this.requestFormModel
@@ -128,6 +130,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       // console.log(this.collection.toJSON());
+      // console.log(this.availableServiceObjectArray);
       this.collection.each(this.renderServiceRequest);
     }
 

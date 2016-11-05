@@ -40,7 +40,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderServiceObject: function() {
       /* initialize level 3 service */
-      console.group('group');
+      // console.group('group');
       // console.log(this.model.toJSON());
       try {
         var selectedServiceRequestList = null;
@@ -48,25 +48,34 @@ Hktdc.Views = Hktdc.Views || {};
         this.defaultServiceRequestObject = { ControlFlag: availableServiceObjectArray[0].ControlFlag };
 
         switch (this.requestFormModel.toJSON().mode) {
-          case 'read':
-            /* service request list in 'read' request mode default is only from RequestDetail data */
-            selectedServiceRequestList = availableServiceObjectArray;
-            break;
           case 'new':
             // console.log('new');
             /* service request list in 'new' request mode default is empty array */
             selectedServiceRequestList = [];
             break;
+          case 'read':
+            /* service request list in 'read' request mode default is only from RequestDetail data */
+            /* because read mode availableServiceObjectArray direct use the RequestList from API call */
+            // console.log('this.selectedServiceCatagoryTree.Level2', this.selectedServiceCatagoryTree.Level2);
+            var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
+              // TODO: change to GUID
+              return selectedType.Name === this.model.toJSON().Name;
+            }.bind(this));
+            // console.log('selectedServiceTypeTree: ', selectedServiceTypeTree);
+
+            selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
+
+            break;
           case 'edit':
             /* service request list in 'new' request mode default is empty array */
             // console.log(this.model.toJSON().Name);
             // console.log(this.selectedServiceCatagoryTree);
-            var selectedServiceTyepTree = _.find(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
+            var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
               // TODO: change to GUID
               return selectedType.Name === this.model.toJSON().Name;
             }.bind(this));
-            // console.log(selectedServiceTyepTree);
-            selectedServiceRequestList = (selectedServiceTyepTree) ? selectedServiceTyepTree.Level3 : [];
+            // console.log(selectedServiceTypeTree);
+            selectedServiceRequestList = (selectedServiceTypeTree) ? selectedServiceTypeTree.Level3 : [];
             // console.log(selectedServiceRequestList);
             // serviceRequestList = this.requestFormModel.selectedServiceCollection.toJSON();
             break;
@@ -75,9 +84,8 @@ Hktdc.Views = Hktdc.Views || {};
             selectedServiceRequestList = [];
 
         }
-
+        console.log(selectedServiceRequestList);
         this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
-
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
           collection: this.childServiceRequestCollection,
           availableServiceObjectArray: availableServiceObjectArray,
@@ -95,7 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
         // TODO: pop up alert dialog
         console.error('render level 3 - service request error');
       }
-      console.groupEnd();
+      // console.groupEnd();
     },
 
     addServiceRequest: function() {

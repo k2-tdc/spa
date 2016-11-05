@@ -112,18 +112,26 @@ Hktdc.Views = Hktdc.Views || {};
       } else if (this.model.toJSON().mode === 'read') {
         console.debug('This is << READ >> mode');
         Q.all([
-          self.loadEmployee()
+          // self.loadEmployee(),
+          self.loadServiceCatagory()
           // ... load other remote resource
         ])
           .then(function(results) {
+            /* must sync RequestList to selectedServiceCollection for updating */
+            self.model.set({ selectedServiceTree: self.model.toJSON().RequestList });
+
+
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             self.renderAttachment(self.model.toJSON().Attachments);
 
             /* direct put the Request list to collection because no need to change selection */
-            self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
+            self.renderServiceCatagory(results[0]);
             if (self.model.toJSON().mode === 'read') {
-              $('input, textarea, button', self.el).prop('disabled', 'disabled');
+              // quick hack to do after render
+              setTimeout(function() {
+                $('input, textarea, button', self.el).prop('disabled', 'disabled');
+              });
             }
             var options = self.getShowButtonOptionsByFormStatus(self.model.toJSON().FormStatus);
             self.renderButtons(options);
@@ -137,7 +145,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadEmployee(),
           self.loadServiceCatagory()
         ])
-          .then(function(result) {
+          .then(function(results) {
             console.log('loaded resource');
             self.model.set({ selectedServiceTree: self.model.toJSON().RequestList });
 
@@ -149,9 +157,9 @@ Hktdc.Views = Hktdc.Views || {};
             self.model.selectedAttachmentCollection = new Hktdc.Collections.SelectedAttachment();
 
             /* Render the components below */
-            self.renderApplicantAndCCList(result[0]);
-            self.renderServiceCatagory(result[1]);
-            // self.renderServiceCatagory(self.mergeServiceCollection(result[1].toJSON(), self.model.toJSON().RequestList));
+            self.renderApplicantAndCCList(results[0]);
+            self.renderServiceCatagory(results[1]);
+            // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
             self.renderAttachment();
             self.renderSelectedCCView();
             self.renderButtons();
@@ -353,6 +361,13 @@ Hktdc.Views = Hktdc.Views || {};
       // console.groupEnd();
 
       return new Hktdc.Collections.ServiceCatagory(mergedData);
+    },
+
+    getGroupedRequestList: function(RequestList) {
+      var groupedRequestList = _.each(RequestList, function(serviceObj){
+        // TODO: change to GUID
+        return serviceObj.Name;
+      });
     },
 
     getAllRequestArray: function(requestTree) {

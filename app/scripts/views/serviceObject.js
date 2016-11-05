@@ -101,6 +101,7 @@ Hktdc.Views = Hktdc.Views || {};
           serviceRequestModel: this.serviceRequestModel
         });
       } else {
+        console.log(model.toJSON());
         var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
           model: model,
           requestFormModel: this.requestFormModel,
