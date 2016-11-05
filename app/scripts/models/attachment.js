@@ -13,6 +13,7 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     defaults: {
+      file: null
     },
 
     validate: function(attrs, options) {

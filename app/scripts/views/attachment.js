@@ -41,7 +41,7 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       // console.log(this.model.toJSON());
       this.$el.html(this.template({
-        file: this.model.toJSON(),
+        file: this.model.toJSON().file || this.model.toJSON(),
         insertMode: this.requestFormModel.toJSON().mode === 'new'
       }));
     }
@@ -60,7 +60,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       var self = this;
-      _.bindAll(this, 'renderWrokflowLogItem', 'clickToggleButton');
+      _.bindAll(this, 'renderAttachmentItem', 'clickToggleButton');
       this.requestFormModel = props.requestFormModel;
       this.requestFormModel.on('change:showFileLog', function(model, isShow) {
         if (isShow) {
@@ -71,7 +71,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
       this.collection.on('remove', function() {
         $('#divfilename', this.el).empty();
-        self.collection.each(self.renderWrokflowLogItem);
+        self.collection.each(self.renderAttachmentItem);
         self.requestFormModel.selectedAttachmentCollection = self.collection;
       });
     },
@@ -101,12 +101,12 @@ Hktdc.Views = Hktdc.Views || {};
       var newFiles = ev.target.files;
       // console.group('file change: ', newFiles);
       var modelArray = _.map(newFiles, function(file) {
-        return new Hktdc.Models.Attachment(file);
+        return new Hktdc.Models.Attachment({file: file});
       });
       // console.debug('this collection before: ', this.collection.toJSON());
       this.collection.set(modelArray);
       $('#divfilename', this.el).empty();
-      this.collection.each(this.renderWrokflowLogItem);
+      this.collection.each(this.renderAttachmentItem);
       // console.debug('this collection after: ', this.collection.toJSON());
       // console.debug('requestFormModel collection before: ', this.requestFormModel.selectedAttachmentCollection.toJSON());
       this.requestFormModel.selectedAttachmentCollection.set(this.collection.toJSON());
@@ -114,8 +114,16 @@ Hktdc.Views = Hktdc.Views || {};
       // console.groupEnd();
     },
 
-    renderWrokflowLogItem: function(model) {
-      var tagName = (this.requestFormModel.toJSON().mode === 'new') ? 'div' : 'tr';
+    renderAttachmentItem: function(model) {
+      var tagName;
+      var appendTarget;
+      if (this.requestFormModel.toJSON().mode === 'new'){
+        tagName = 'div';
+        appendTarget = '#divfilename';
+      } else {
+        tagName = 'tr';
+        appendTarget = 'tbody';
+      }
       var attachmentItemView = new Hktdc.Views.Attachment({
         tagName: tagName,
         model: model,
@@ -124,12 +132,8 @@ Hktdc.Views = Hktdc.Views || {};
       });
       // console.log(attachmentItemView.tagName);
       attachmentItemView.render();
-      var isInsert = (this.requestFormModel.toJSON().mode === 'new');
-      if (isInsert) {
-        $('#divfilename', this.el).append(attachmentItemView.el);
-      } else {
-        $('tbody', this.el).append(attachmentItemView.el);
-      }
+
+      $(appendTarget, this.el).append(attachmentItemView.el);
     },
 
     render: function() {
@@ -139,7 +143,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (!isInsert) {
       //   this.bindFileChangeEvent();
       // } else {
-        this.collection.each(this.renderWrokflowLogItem);
+        this.collection.each(this.renderAttachmentItem);
         $('.attachmentTable', this.el).DataTable({
           paging: false,
           searching: false,

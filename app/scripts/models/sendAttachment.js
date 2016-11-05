@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -8,9 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.SendAttachment = Backbone.Model.extend({
     idAttribute: 'name',
     url: function(refId, filename) {
-      return 'SubmitFile?refid=' + refId + '&filename=' + filename
+      return Hktdc.Config.apiURL + '/SubmitFile?refid=' + refId + '&filename=' + filename;
     }
-
   });
-
 })();

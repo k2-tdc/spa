@@ -294,9 +294,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     sendAttactment: function(refId, attachmentCollection) {
-      console.log(attachmentCollection.toJSON());
-      var attachmentArray = attachmentCollection.toJSON();
-      if (attachmentArray.length <= 0) {
+      // console.group('files');
+      // var attachmentCollection = attachmentCollection.toJSON();
+      // var attachmentCollection = $('#Fileattach').get(0).files;
+      // console.log('attchCollection', attachmentCollection);
+      if (attachmentCollection.length <= 0) {
         return false;
       }
       var ajaxOptions = {
@@ -306,22 +308,23 @@ Hktdc.Views = Hktdc.Views || {};
         contentType: false
       };
       var deferred = Q.defer();
-      var files = attachmentArray;
+      var files = attachmentCollection;
+      // var files = $('#Fileattach').get(0).files;
       var data = new FormData();
       var sendAttachmentModel = new Hktdc.Models.SendAttachment();
-      var filename = _.map(attachmentArray, function(file) {
-        return file.name;
+      var filename = attachmentCollection.map(function(fileModel) {
+        return fileModel.toJSON().file.name;
       });
+      // console.log(filename);
       sendAttachmentModel.url = sendAttachmentModel.url(refId, filename);
 
-      if (files.length > 0) {
-        for (var i = 0; i < files.length; i++) {
-          data.append('file' + i, files[i]);
-          // if (Sfiles.indexOf(files[i].name) !== -1) {
-          // }
-        }
-      }
+      attachmentCollection.each(function(fileModel, i) {
+        // console.log(fileModel.toJSON());
+        data.append('file' + i, fileModel.toJSON().file);
+      });
 
+      // console.log('final data: ', data);
+      // console.groupEnd();
       ajaxOptions.data = data;
 
       // mymodel = sendRequest model

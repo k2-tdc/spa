@@ -51,7 +51,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable funciton */
-      this.statusDataTable = $("#statusTable").DataTable({
+      this.statusDataTable = $('#statusTable', this.el).DataTable({
         ajax: {
           url: this.getAjaxURL(),
           beforeSend: utils.setAuthHeader,

@@ -21,7 +21,11 @@
       <div class="row">
         <div class="col-xs-2 col-md-2 newrequest-title">Status</div>
         <div class="col-xs-10 col-md-4" id="divStatus">
-          <%= request.FormStatus %>
+          <% if (request.FormStatus) { %>
+            <%= request.FormStatus %>
+          <% } else { %>
+            New
+          <% } %>
         </div>
         <div class="col-xs-2 col-md-2 newrequest-title">Prepared by</div>
         <div class="col-xs-10 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
