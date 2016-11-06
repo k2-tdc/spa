@@ -323,7 +323,7 @@ Hktdc.Views = Hktdc.Views || {};
         var matchedServiceCatagory = _.find(editedData, function(editedServiceCatagory) {
           // console.log('editedServiceCatagory: ', editedServiceCatagory);
           // console.log('rawServiceCatagory: ', rawServiceCatagory);
-          return editedServiceCatagory.GUID === rawServiceCatagory.GUID;
+          return editedServiceCatagory.Name === rawServiceCatagory.Name;
         });
         // console.log('matchedServiceCatagory', matchedServiceCatagory);
         if (matchedServiceCatagory) {
@@ -331,7 +331,7 @@ Hktdc.Views = Hktdc.Views || {};
           rawServiceCatagory.Level2 = _.map(rawServiceCatagory.Level2, function(rawServiceType) {
             var matchedServiceType = _.find(matchedServiceCatagory.Level2, function(editedServiceType) {
               // TODO: use GUID if api fixed
-              // return editedServiceType.GUID === rawServiceType.GUID;
+              // return editedServiceType.Name === rawServiceType.Name;
               // console.group('check servicetype match');
               // console.log(editedServiceType.Name);
               // console.log(rawServiceType.Name);
@@ -343,7 +343,7 @@ Hktdc.Views = Hktdc.Views || {};
             if (matchedServiceType) {
               rawServiceType.Level3 = _.map(rawServiceType.Level3, function(rawServiceRequest) {
                 var matchedServiceRequest = _.find(matchedServiceType.Level3, function(editedServiceRequest) {
-                  return editedServiceRequest.GUID === rawServiceRequest.GUID;
+                  return editedServiceRequest.Name === rawServiceRequest.Name;
                 });
                 if (matchedServiceRequest) {
                   return matchedServiceRequest;

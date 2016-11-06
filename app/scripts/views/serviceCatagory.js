@@ -81,7 +81,7 @@ Hktdc.Views = Hktdc.Views || {};
       /* initialize level2 service type */
       var Catagory = this.model.toJSON();
       var serviceTypeCollection = new Hktdc.Collections.ServiceType(Catagory.Level2);
-      // console.log('Catagory.GUID: ', Catagory.GUID);
+      // console.log('Catagory.Name: ', Catagory.Name);
       try {
         // console.log('selectedServiceCatTree', selectedServiceCatagoryTree);
         var serviceTypeListView = new Hktdc.Views.ServiceTypeList({
@@ -110,8 +110,8 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).append(tmpl);
 
       this.selectedServiceCatagoryTree = _.find(this.requestFormModel.toJSON().selectedServiceTree, function(selectedCat) {
-        // console.log('selectedCat.GUID: ', selectedCat.GUID);
-        return Catagory.GUID === selectedCat.GUID;
+        // console.log('selectedCat.Name: ', selectedCat.Name);
+        return Catagory.Name === selectedCat.Name;
       });
 
       /* only 'edit' and 'read' will open by default */
