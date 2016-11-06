@@ -145,7 +145,11 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.requestFormModel.toJSON().mode);
 
       /* only 'edit' and 'read' will have add btn by default */
-      if (this.requestFormModel.toJSON().mode === 'read' || String(model.toJSON().Level3[0].ControlFlag) === '2') {
+      // console.log(this.selectedServiceCatagoryTree);
+      if (
+        this.requestFormModel.toJSON().mode === 'read' ||
+        String(model.toJSON().Level3[0].ControlFlag) === '2' && this.selectedServiceCatagoryTree
+      ) {
         model.set('needAddBtn', false);
       } else {
         model.set('needAddBtn', true);
