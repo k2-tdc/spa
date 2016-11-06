@@ -142,7 +142,7 @@ window.Hktdc = {
             UserID: menu.UserID
           })
         });
-        menuModel.set('activeTab', JSON.stringify(window.Backbone.history.getHash()));
+        menuModel.set('activeTab', window.Backbone.history.getHash());
         onSuccess();
       },
       error: function() {

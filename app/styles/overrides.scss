@@ -389,9 +389,18 @@ div.dataTables_wrapper table {
   outline-color: rgb(244, 120, 32);
 }
 
+
+// viocsys
+
 .filename-container{
   position: relative;
 }
+
+.filedownload{
+  cursor: pointer;
+  color: blue;
+}
+
 
 /* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
 @media screen and (max-width: 767px) {

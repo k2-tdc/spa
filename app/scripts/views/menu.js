@@ -42,13 +42,15 @@ Hktdc.Views = Hktdc.Views || {};
       _.each(menu, function(raw) {
         if (raw.sumenu) {
           _.each(raw.sumenu, function(subMenuRaw) {
-            var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ', '_');
+            var upperLodash = subMenuRaw.Mlink.trim().toUpperCase().replace('#', '');
+            // var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ', '_');
             // console.log(upperLodash);
             subMenuRaw.Route = Hktdc.Config.projectPath + subMenuRaw.Mlink || '/#';
             subMenuRaw.RouteName = upperLodash || 'HOME';
           });
         } else {
-          var upperLodash = raw.Name.trim().toUpperCase().replace(' ', '_');
+          var upperLodash = raw.Mlink.trim().toUpperCase().replace('#', '');
+          // var upperLodash = raw.Name.trim().toUpperCase().replace(' ', '_');
           raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
           raw.RouteName = upperLodash || 'HOME';
         }
@@ -73,9 +75,16 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     setActiveMenu: function(currentRoute) {
+      // console.log(currentRoute.toJSON().activeTab);
+      // console.log(this.model.toJSON().activeTab);
       try {
-        var routename = this.model.toJSON().activeTab.toUpperCase();
-        $('nav#menu').data('mmenu').setSelected($('li[routename=' + routename + ']'));
+        // var routename = currentRoute.toJSON().activeTab;
+        var routename = currentRoute.toJSON().activeTab.toUpperCase();
+        setTimeout(function(){
+          console.log($('li[routename=' + routename + ']'));
+          $('nav#menu').data('mmenu').setSelected($('li[routename=' + routename + ']'));
+
+        });
       } catch (e) {
         // TODO: pop the error box
         console.log(e);

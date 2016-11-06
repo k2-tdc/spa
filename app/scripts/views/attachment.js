@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _ */
+/* global Hktdc, Backbone, JST, $, _, Blob, XMLHttpRequest, BlobBuilder */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -21,7 +21,8 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'filename-container',
 
     events: {
-      'click .deletefile': 'clickDeleteFileBtn'
+      'click .deletefile': 'clickDeleteFileBtn',
+      'click .filedownload': 'clickDownloadFile'
     },
 
     clickDeleteFileBtn: function(e) {
@@ -31,6 +32,19 @@ Hktdc.Views = Hktdc.Views || {};
       this.parentCollection.remove(this.model);
     },
 
+    clickDownloadFile: function() {
+      // console.log(this.model.toJSON());
+      if (this.requestFormModel.toJSON().mode === 'new') {
+        return false;
+      }
+      var filename = this.model.toJSON().FileName;
+      var fGID = this.model.toJSON().AttachmentGUID;
+      var fID = this.requestFormModel.toJSON().ReferenceID;
+      var url = Hktdc.Config.apiURL + '/DownloadFile?fileName=' + filename + '&FormID=' + fID + '&AttachmentGUID=' + fGID;
+      // console.log(url);
+      this.downloadFile(url, filename);
+    },
+
     initialize: function(props) {
       this.requestFormModel = props.requestFormModel;
       this.parentCollection = props.parentCollection;
@@ -38,11 +52,60 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
     },
 
+    downloadFile: function(url, filename) {
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('GET', url, true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
+      xhr.responseType = 'blob';
+      xhr.onreadystatechange = function() {
+        var anchorLink;
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          if (typeof window.navigator.msSaveBlob !== 'undefined') {
+            var blob;
+            try {
+              blob = new Blob([xhr.response], {
+                type: 'application/octet-stream'
+              });
+            } catch (e) {
+              // Old browser, need to use blob builder
+              window.BlobBuilder = window.BlobBuilder ||
+                                   window.WebKitBlobBuilder ||
+                                   window.MozBlobBuilder ||
+                                   window.MSBlobBuilder;
+              if (window.BlobBuilder) {
+                var bb = new BlobBuilder();
+                bb.append(xhr.response);
+                blob = bb.getBlob('application/octet-stream');
+              }
+            }
+            if (blob) {
+              window.navigator.msSaveBlob(blob, filename);
+              // saveAs(blob, filename);
+            }
+            // if (typeof cb === 'function') {
+            //   cb();
+            // }
+          } else {
+            // Trick for making downloadable link
+            anchorLink = document.createElement('a');
+            anchorLink.href = window.URL.createObjectURL(xhr.response);
+            // Give filename you wish to download
+            anchorLink.download = filename;
+            anchorLink.style.display = 'none';
+            document.body.appendChild(anchorLink);
+            anchorLink.click();
+          }
+        }
+      };
+      xhr.send(null);
+    },
+
     render: function() {
-      // console.log(this.model.toJSON());
+      console.log(this.model.toJSON());
       this.$el.html(this.template({
         file: this.model.toJSON().file || this.model.toJSON(),
-        insertMode: this.requestFormModel.toJSON().mode === 'new'
+        insertMode: this.requestFormModel.toJSON().mode !== 'read'
       }));
     }
   });
@@ -117,7 +180,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderAttachmentItem: function(model) {
       var tagName;
       var appendTarget;
-      if (this.requestFormModel.toJSON().mode === 'new'){
+      if (this.requestFormModel.toJSON().mode !== 'read') {
         tagName = 'div';
         appendTarget = '#divfilename';
       } else {
@@ -137,13 +200,13 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      var isInsert = (this.requestFormModel.toJSON().mode === 'new');
-      this.$el.html(this.template({insertMode: isInsert}));
-      // console.log(this.model);
+      var isInsert = (this.requestFormModel.toJSON().mode !== 'read');
+      this.$el.html(this.template({ insertMode: isInsert }));
+      // console.log(this.collection.toJSON());
+      this.collection.each(this.renderAttachmentItem);
       if (!isInsert) {
       //   this.bindFileChangeEvent();
       // } else {
-        this.collection.each(this.renderAttachmentItem);
         $('.attachmentTable', this.el).DataTable({
           paging: false,
           searching: false,

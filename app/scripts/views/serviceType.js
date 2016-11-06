@@ -57,34 +57,42 @@ Hktdc.Views = Hktdc.Views || {};
             /* service request list in 'read' request mode default is only from RequestDetail data */
             /* because read mode availableServiceObjectArray direct use the RequestList from API call */
             // console.log('this.selectedServiceCatagoryTree.Level2', this.selectedServiceCatagoryTree.Level2);
-            var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
-              // TODO: change to GUID
-              return selectedType.Name === this.model.toJSON().Name;
-            }.bind(this));
-            // console.log('selectedServiceTypeTree: ', selectedServiceTypeTree);
+            if (!this.selectedServiceCatagoryTree) {
+              selectedServiceRequestList = [];
+            } else {
+              var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
+                // TODO: change to GUID
+                return selectedType.Name === this.model.toJSON().Name;
+              }.bind(this));
+              // console.log('selectedServiceTypeTree: ', selectedServiceTypeTree);
 
-            selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
+              selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
+            }
 
             break;
           case 'edit':
-            /* service request list in 'new' request mode default is empty array */
+            /* service request list in 'edit' request mode same as 'read' mode */
             // console.log(this.model.toJSON().Name);
             // console.log(this.selectedServiceCatagoryTree);
-            var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
-              // TODO: change to GUID
-              return selectedType.Name === this.model.toJSON().Name;
-            }.bind(this));
-            // console.log(selectedServiceTypeTree);
-            selectedServiceRequestList = (selectedServiceTypeTree) ? selectedServiceTypeTree.Level3 : [];
-            // console.log(selectedServiceRequestList);
-            // serviceRequestList = this.requestFormModel.selectedServiceCollection.toJSON();
+            if (!this.selectedServiceCatagoryTree) {
+              selectedServiceRequestList = [];
+            } else {
+              var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
+                // TODO: change to GUID
+                return selectedType.Name === this.model.toJSON().Name;
+              }.bind(this));
+              // console.log(selectedServiceTypeTree);
+              selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
+              // console.log(selectedServiceRequestList);
+              // serviceRequestList = this.requestFormModel.selectedServiceCollection.toJSON();
+            }
             break;
 
           default:
             selectedServiceRequestList = [];
 
         }
-        console.log(selectedServiceRequestList);
+        // console.log(selectedServiceRequestList);
         this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
           collection: this.childServiceRequestCollection,
@@ -102,6 +110,7 @@ Hktdc.Views = Hktdc.Views || {};
       } catch (e) {
         // TODO: pop up alert dialog
         console.error('render level 3 - service request error');
+        console.error(e);
       }
       // console.groupEnd();
     },
@@ -136,7 +145,7 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.requestFormModel.toJSON().mode);
 
       /* only 'edit' and 'read' will have add btn by default */
-      if (this.requestFormModel.toJSON().mode === 'read') {
+      if (this.requestFormModel.toJSON().mode === 'read' || String(model.toJSON().Level3[0].ControlFlag) === '2') {
         model.set('needAddBtn', false);
       } else {
         model.set('needAddBtn', true);

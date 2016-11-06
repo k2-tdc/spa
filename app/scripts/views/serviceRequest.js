@@ -37,6 +37,29 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         this.requestFormModel = props.requestFormModel;
         // var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.collection.toJSON());
+        // console.log(this.requestFormModel.toJSON().mode);
+        // if (String(this.model.toJSON().ControlFlag) === '2' && this.requestFormModel.toJSON().mode !== 'new') {
+        //   var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
+        //     model: this.model,
+        //     requestFormModel: this.requestFormModel,
+        //     serviceRequestModel: this.model
+        //   });
+        //   serviceObjectItemView.render();
+        //   setTimeout(function() {
+        //     $('.service-object-container', this.el).append(serviceObjectItemView.el);
+        //     this.initModelChangeHandler();
+        //   }.bind(this));
+          // var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
+          //   model: this.model,
+          //   requestFormModel: this.requestFormModel,
+          //   serviceRequestModel: this.model
+          // });
+          // serviceObjectItemView.render();
+          // setTimeout(function() {
+          //   $('.service-object-container', this.el).append(serviceObjectItemView.el);
+          //   this.initModelChangeHandler();
+          // }.bind(this));
+        // } else {
         var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
         var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
           collection: serviceObjectCollection,
@@ -45,12 +68,15 @@ Hktdc.Views = Hktdc.Views || {};
         });
         // console.log(serviceObjectListView);
         serviceObjectListView.render();
+
         setTimeout(function() {
           $('.service-object-container', this.el).append(serviceObjectListView.el);
           this.initModelChangeHandler();
         }.bind(this));
+        // }
       } catch (e) {
         console.error('service request render error');
+        console.log(e);
       }
     },
 
@@ -80,6 +106,7 @@ Hktdc.Views = Hktdc.Views || {};
 
   Hktdc.Views.ServiceRequestList = Backbone.View.extend({
     tagName: 'div',
+    // template: JST['app/scripts/templates/serviceRequest.ejs'],
 
     initialize: function(options) {
       _.bindAll(this, 'renderServiceRequest', 'addServiceRequest', 'removeServiceRequest');
@@ -119,7 +146,7 @@ Hktdc.Views = Hktdc.Views || {};
       model.set('availableServiceObjectArray', this.availableServiceObjectArray);
       model.set('parentCollection', this.collection);
       model.set('serviceTypeName', this.serviceTypeName);
-      console.log(model.toJSON());
+
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
         model: model,
         requestFormModel: this.requestFormModel
@@ -128,10 +155,64 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).append(serviceRequestItemView.el);
     },
 
+    renderTextServiceRequest: function() {
+      // console.log(this.availableServiceObjectArray.toJSON());
+      var model = new Hktdc.Models.ServiceRequest({
+        'index': 1,
+        'availableServiceObjectArray': _.extend(this.availableServiceObjectArray, this.collection.toJSON()),
+        'parentCollection': this.collection,
+        'serviceTypeName': this.serviceTypeName
+      });
+
+      var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
+        model: model,
+        requestFormModel: this.requestFormModel
+      });
+      serviceRequestItemView.render();
+      $(this.el).append(serviceRequestItemView.el);
+    },
+
+    renderTextServiceObjectList: function(collection) {
+      var serviceObjectCollection = new Hktdc.Collections.ServiceObject(
+        _.extend(this.availableServiceObjectArray, this.collection.toJSON())
+      );
+      // console.log('crash', serviceObjectCollection.toJSON());
+      // console.log('crash', );
+      var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
+        collection: serviceObjectCollection,
+        requestFormModel: this.requestFormModel
+      });
+      // console.log(serviceObjectListView);
+      serviceObjectListView.render();
+
+      // setTimeout(function() {
+      $(this.el).append(serviceObjectListView.el);
+        // console.log(serviceObjectListView.el);
+        // this.initModelChangeHandler();
+      // }.bind(this));
+    },
+
     render: function() {
-      // console.log(this.collection.toJSON());
+      if (this.collection.toJSON().length>0){
+        if (String(this.collection.toJSON()[0].ControlFlag) === '2') {
+          // method 1
+          // this.renderTextServiceObjectList(this.collection);
+
+          // method 2
+          this.renderTextServiceRequest();
+
+          // var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
+          //   model: model,
+          //   requestFormModel: this.requestFormModel
+          // });
+          // serviceRequestItemView.render();
+          // $(this.el).append(serviceRequestItemView.el);
+        } else {
+          console.log(this.collection.toJSON());
+          this.collection.each(this.renderServiceRequest);
+        }
+      }
       // console.log(this.availableServiceObjectArray);
-      this.collection.each(this.renderServiceRequest);
     }
 
   });

@@ -83,14 +83,10 @@ Hktdc.Views = Hktdc.Views || {};
       var serviceTypeCollection = new Hktdc.Collections.ServiceType(Catagory.Level2);
       // console.log('Catagory.GUID: ', Catagory.GUID);
       try {
-        var selectedServiceCatagoryTree = _.find(this.requestFormModel.toJSON().selectedServiceTree, function(selectedCat) {
-          // console.log('selectedCat.GUID: ', selectedCat.GUID);
-          return Catagory.GUID === selectedCat.GUID;
-        });
         // console.log('selectedServiceCatTree', selectedServiceCatagoryTree);
         var serviceTypeListView = new Hktdc.Views.ServiceTypeList({
           collection: serviceTypeCollection,
-          selectedServiceCatagoryTree: selectedServiceCatagoryTree,
+          selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
           requestFormModel: this.requestFormModel
         });
         serviceTypeListView.render();
@@ -109,12 +105,24 @@ Hktdc.Views = Hktdc.Views || {};
       var tmpl = this.template({
         serviceCatagory: this.model.toJSON()
       });
+      var Catagory = this.model.toJSON();
 
       $(this.el).append(tmpl);
 
+      this.selectedServiceCatagoryTree = _.find(this.requestFormModel.toJSON().selectedServiceTree, function(selectedCat) {
+        // console.log('selectedCat.GUID: ', selectedCat.GUID);
+        return Catagory.GUID === selectedCat.GUID;
+      });
+
       /* only 'edit' and 'read' will open by default */
-      if (this.requestFormModel.toJSON().mode !== 'new') {
-        self.model.set({ open: true, checked: true });
+      if (this.requestFormModel.toJSON().mode === 'new') {
+        self.model.set({ open: false, checked: false });
+      } else {
+        if (this.selectedServiceCatagoryTree) {
+          self.model.set({ open: true, checked: true });
+        } else {
+          self.model.set({ open: false, checked: false });
+        }
       }
       this.renderServiceTypeList();
     }

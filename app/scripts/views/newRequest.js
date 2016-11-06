@@ -119,7 +119,7 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function(results) {
             /* must sync RequestList to selectedServiceCollection for updating */
             self.model.set({ selectedServiceTree: self.model.toJSON().RequestList });
-
+            console.log(self.model.toJSON().RequestList);
 
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
@@ -148,7 +148,7 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function(results) {
             console.log('loaded resource');
             self.model.set({ selectedServiceTree: self.model.toJSON().RequestList });
-
+            console.log(self.model.toJSON().RequestList);
             /* must sync RequestList to selectedServiceCollection for updating */
             self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService(
               self.getAllRequestArray(self.model.toJSON().RequestList)
@@ -160,8 +160,8 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderApplicantAndCCList(results[0]);
             self.renderServiceCatagory(results[1]);
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
-            self.renderAttachment();
-            self.renderSelectedCCView();
+            self.renderAttachment(self.model.toJSON().Attachments);
+            self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderButtons();
 
             /* init event listener last */

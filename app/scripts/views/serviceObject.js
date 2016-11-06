@@ -30,6 +30,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.requestFormModel = props.requestFormModel;
     },
     render: function() {
+      // console.log(this.model.toJSON());
       var tmpl = this.template({ serviceObject: this.model.toJSON()});
       this.$el.html(tmpl);
     }
@@ -83,29 +84,33 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       this.requestFormModel = props.requestFormModel;
+
+      /* for select type */
       this.serviceRequestModel = props.serviceRequestModel;
+
+      /* for text type */
+      this.serviceRequestCollection = props.serviceRequestCollection;
       // console.log(this.serviceRequestModel.toJSON());
       _.bindAll(this, 'renderServiceObjectItem');
     },
 
     renderServiceObjectItem: function(model) {
       // console.log(model.toJSON());
-      model.set({
-        serviceTypeName: this.serviceRequestModel.toJSON().serviceTypeName
-      });
 
       if (String(model.toJSON().ControlFlag) === '1') {
+        model.set({
+          serviceTypeName: this.serviceRequestModel.toJSON().serviceTypeName
+        });
         var serviceObjectItemView = new Hktdc.Views.ServiceObjectSelect({
           model: model,
           requestFormModel: this.requestFormModel,
           serviceRequestModel: this.serviceRequestModel
         });
       } else {
-        console.log(model.toJSON());
         var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
           model: model,
           requestFormModel: this.requestFormModel,
-          serviceRequestModel: this.serviceRequestModel
+          serviceRequestCollection: this.serviceRequestCollection
         });
       }
 
@@ -114,6 +119,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
+
       this.collection.each(this.renderServiceObjectItem);
     }
 
