@@ -10,7 +10,7 @@ Hktdc.Collections = Hktdc.Collections || {};
     model: Hktdc.Models.ServiceCatagory,
 
     url: function() {
-      return Hktdc.Config.apiURL + '/GetServieType';
+      return Hktdc.Config.apiURL + '/GetServiceType';
     },
 
     initialize: function() {}

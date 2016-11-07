@@ -7,9 +7,9 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.Menu = Backbone.Model.extend({
 
-    // url: function() {
-    //   return Hktdc.Config.apiURL + '/GetMenuItems?UserId=' + Hktdc.Config.userID + '&ProcessId='
-    // },
+    url: function() {
+      return Hktdc.Config.apiURL + '/GetMenuItems?UserId=' + Hktdc.Config.userID + '&ProcessId='
+    },
 
     initialize: function() {
     },

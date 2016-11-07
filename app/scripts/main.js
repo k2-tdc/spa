@@ -53,7 +53,7 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflow/api/request'
+          base: '/workflowdev/api/request'
         },
         needAuthHeader: true,
         projectPath: '/vicosysspa/',
@@ -122,19 +122,22 @@ window.Hktdc = {
     var utils = window.utils;
     var headerView = new Hktdc.Views.Header();
 
-    var menuCollection = new Hktdc.Collections.Menu();
+    var menuMModel = new Hktdc.Models.Menu();
 
-    menuCollection.fetch({
+    menuMModel.fetch({
       beforeSend: utils.setAuthHeader,
-      success: function(collection) {
-        var menu = collection.toJSON()[0];
+      success: function(menuModel) {
+        var menu = menuModel.toJSON();
         Hktdc.Config.userName = menu.UserName;
         // console.log('menu.UserName', menu.UserName);
-        var menuModel = new Hktdc.Models.Menu({
+        menuMModel.set({
           Menu: menu.Menu
         });
+
+        //  = new Hktdc.Models.Menu({
+        // });
         var menuView = new Hktdc.Views.Menu({
-          model: menuModel
+          model: menuMModel
         });
         var userView = new Hktdc.Views.User({
           model: new Hktdc.Models.User({
@@ -142,7 +145,7 @@ window.Hktdc = {
             UserID: menu.UserID
           })
         });
-        menuModel.set('activeTab', window.Backbone.history.getHash());
+        menuMModel.set('activeTab', window.Backbone.history.getHash());
         onSuccess();
       },
       error: function() {

@@ -82,7 +82,7 @@ Hktdc.Views = Hktdc.Views || {};
           /* send file */
           return this.sendAttactment(
             this.requestFormModel.toJSON().ReferenceID,
-            this.requestFormModel.selectedAttachmentCollection
+            this.requestFormModel.toJSON().selectedAttachmentCollection
           );
         }.bind(this))
 
@@ -116,17 +116,43 @@ Hktdc.Views = Hktdc.Views || {};
         Title: requestFormData.Title,
         Office: requestFormData.Location,
         Department: requestFormData.DEPT,
-        Service_AcquireFor: this.getAcquireFor(this.requestFormModel)
+
+        Justification_Importand_Notes: requestFormData.Justification,
+        Expected_Dalivery_Date: requestFormData.EDeliveryDate,
+        Frequency_Duration_of_Use: requestFormData.DurationOfUse,
+        Estimated_Cost: requestFormData.EstimatedCost,
+        Budget_Provided: requestFormData.BudgetProvided,
+        Budgeted_Sum: requestFormData.BudgetSum,
+        Recommend_By: (requestFormData.selectedRecommentModel)
+          ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
+          : null,
+        Recommend_By_ID: (requestFormData.selectedRecommentModel)
+          ? requestFormData.selectedRecommentModel.toJSON().WorkerId
+          : null,
+        cc: _.map(this.requestFormModel.toJSON().selectedCCCollection.toJSON(), function(ccData) {
+          return {
+            Name: ccData.UserFullName,
+            UserID: ccData.UserId
+          };
+        }),
+        Remark: requestFormData.Remark,
+        SubmittedTo: requestFormData.submittedTo,
+        ActionTakerRuleCode: this.getActionTaker(this.requestFormModel.toJSON().selectedServiceCollection.toJSON()),
+
+        Service_AcquireFor: this.requestFormModel.toJSON().selectedServiceCollection.toJSON()
+        // Service_AcquireFor: this.getAcquireFor(this.requestFormModel)
       });
       console.log('final return:', sendRequestModel.toJSON());
       return sendRequestModel;
     },
 
     getAcquireFor: function(model) {
+      /* !!!Dreprecated!!! */
+
       var requestFormData = model.toJSON();
       console.log('requestFormData: ', requestFormData);
-      // console.log(model.selectedCCCollection);
-      console.log(model.selectedCCCollection.toJSON());
+      // console.log(model.toJSON().selectedCCCollection);
+      // console.log(model.toJSON().selectedCCCollection.toJSON());
       var basicData = {
         Justification_Importand_Notes: requestFormData.Justification,
         Expected_Dalivery_Date: requestFormData.EDeliveryDate,
@@ -140,7 +166,7 @@ Hktdc.Views = Hktdc.Views || {};
         Recommend_By_ID: (requestFormData.selectedRecommentModel)
           ? requestFormData.selectedRecommentModel.toJSON().WorkerId
           : null,
-        cc: _.map(model.selectedCCCollection.toJSON(), function(ccData) {
+        cc: _.map(model.toJSON().selectedCCCollection.toJSON(), function(ccData) {
           return {
             Name: ccData.UserFullName,
             UserID: ccData.UserId
@@ -148,12 +174,12 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         Remark: requestFormData.Remark,
         SubmittedTo: requestFormData.submittedTo,
-        ActionTakerRuleCode: this.getActionTaker(model.selectedServiceCollection.toJSON())
+        ActionTakerRuleCode: this.getActionTaker(model.toJSON().selectedServiceCollection.toJSON())
           // TODO:
           // Attachments: this.getFileName(),
       };
-      var serviceData = this.getServiceData(model.selectedServiceCollection.toJSON());
-      console.log('selectedServiceCollection', model.selectedServiceCollection.toJSON());
+      console.log('selectedServiceCollection', model.toJSON().selectedServiceCollection.toJSON());
+      var serviceData = this.getServiceData(model.toJSON().selectedServiceCollection.toJSON());
       console.log('serviceData', serviceData);
       _.extend(basicData, serviceData);
       // console.log('final send output: ', basicData);
@@ -161,6 +187,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getServiceData: function(selectedServiceCollectionArray) {
+      /* !!!Dreprecated!!! */
+      
       /* serviceName and uatServiceName is the name from service type api call */
       /* This stupid mapping is beacause the server api is hardcoded the request service params */
       // console.log(selectedServiceCollectionArray);
