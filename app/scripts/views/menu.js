@@ -79,10 +79,12 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.toJSON().activeTab);
       try {
         // var routename = currentRoute.toJSON().activeTab;
-        var routename = currentRoute.toJSON().activeTab.toUpperCase();
+        var routeName = currentRoute.toJSON().activeTab.toUpperCase();
+        var routeBase = routeName.split('/')[0]
+        // console.log('routeBase', routeBase);
         setTimeout(function(){
-          console.log($('li[routename=' + routename + ']'));
-          $('nav#menu').data('mmenu').setSelected($('li[routename=' + routename + ']'));
+          // console.log($('li[routename="' + routeBase + '"]'));
+          $('nav#menu').data('mmenu').setSelected($('li[routename=' + routeBase + ']'));
 
         });
       } catch (e) {
