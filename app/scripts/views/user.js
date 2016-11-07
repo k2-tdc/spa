@@ -12,8 +12,6 @@ Hktdc.Views = Hktdc.Views || {};
     el: '#user-profile-menu',
 
     initialize: function() {
-      // console.log(this.model);
-      // this.listenTo(this.model, 'change', this.render);
       this.render();
     },
 

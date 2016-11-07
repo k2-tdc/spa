@@ -147,6 +147,7 @@ Hktdc.Views = Hktdc.Views || {};
         Q.all([
           self.loadEmployee(),
           self.loadServiceCatagory()
+          // self.loadApplicantDetail()
         ])
           .then(function(results) {
             console.log('loaded resource');
@@ -165,6 +166,7 @@ Hktdc.Views = Hktdc.Views || {};
             /* Render the components below */
             self.renderApplicantAndCCList(results[0]);
             self.renderServiceCatagory(results[1]);
+            // self.renderApplicantDetail(results[2]);
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
             self.renderAttachment(self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);

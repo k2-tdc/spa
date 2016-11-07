@@ -91,8 +91,11 @@ window.Hktdc = {
             Hktdc.Config.userID = userID;
 
             /* done user profile config */
-            self.setupMasterPageComponent(function() {
+            self.setupMasterPageComponent(function(menuModel) {
               var mainRouter = new self.Routers.Main();
+              mainRouter.on('route', function(route, params) {
+                console.log(route);
+              });
               Backbone.history.start();
             });
           }, function(error) {
@@ -106,8 +109,14 @@ window.Hktdc = {
         Hktdc.Config.userID = 'aachen';
         // userName set in menu
         // Hktdc.Config.userName = 'Aaron Chen (ITS - Testing account)';
-        self.setupMasterPageComponent(function() {
+        self.setupMasterPageComponent(function(menuModel) {
           var mainRouter = new self.Routers.Main();
+          mainRouter.on('route', function(route, params) {
+            // console.log('route: ', route);
+            // console.log('params: ', params);
+            menuModel.set('activeTab', Backbone.history.getHash());
+          });
+
           Backbone.history.start();
         });
       }
@@ -120,10 +129,11 @@ window.Hktdc = {
   setupMasterPageComponent: function(onSuccess) {
     var Hktdc = window.Hktdc;
     var utils = window.utils;
-    var headerView = new Hktdc.Views.Header();
-
     var menuMModel = new Hktdc.Models.Menu();
-
+    var headerModel = new Hktdc.Models.Header();
+    var headerView = new Hktdc.Views.Header({
+      model: headerModel
+    });
     menuMModel.fetch({
       beforeSend: utils.setAuthHeader,
       success: function(menuModel) {
@@ -134,8 +144,9 @@ window.Hktdc = {
           Menu: menu.Menu
         });
 
-        //  = new Hktdc.Models.Menu({
-        // });
+        headerModel.set({
+          processList: menu.PList
+        })
         var menuView = new Hktdc.Views.Menu({
           model: menuMModel
         });
@@ -145,8 +156,10 @@ window.Hktdc = {
             UserID: menu.UserID
           })
         });
-        menuMModel.set('activeTab', window.Backbone.history.getHash());
-        onSuccess();
+
+
+        // menuMModel.set('activeTab', window.Backbone.history.getHash());
+        onSuccess(menuMModel);
       },
       error: function() {
         console.log('error on rendering menu');
