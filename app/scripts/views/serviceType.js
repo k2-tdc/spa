@@ -154,11 +154,12 @@ Hktdc.Views = Hktdc.Views || {};
       // }));
       // console.log('ControlFlag = 2: ', String(model.toJSON().Level3[0].ControlFlag) === '2');
       // console.groupEnd();
+      var hasTree = this.selectedServiceCatagoryTree && _.find(this.selectedServiceCatagoryTree.Level2, function(lv2Service) {
+        return lv2Service.Name === model.toJSON().Name;
+      });
       if (
         this.requestFormModel.toJSON().mode === 'read' ||
-        String(model.toJSON().Level3[0].ControlFlag) === '2' && _.find(this.selectedServiceCatagoryTree.Level2, function(lv2Service) {
-          return lv2Service.Name === model.toJSON().Name;
-        })
+        (String(model.toJSON().Level3[0].ControlFlag) === '2' && hasTree)
       ) {
         model.set('needAddBtn', false);
       } else {

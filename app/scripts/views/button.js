@@ -11,12 +11,49 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: 'div',
 
-    className: 'btn-group',
+    // className: 'btn-group',
 
     events: {
       'click #btnsave': 'clickSaveHandler',
       'click #btnapplicant': 'clickApplcantHandler',
-      'click #btnapprover': 'clickApproverHandler'
+      'click #btnapprover': 'clickApproverHandler',
+      'click .alltaskbtn': 'doApproveHandler'
+    },
+
+    doApproveHandler: function() {
+      var Alltask = {
+        UserId: Userid,
+        SN: getParameterByName('SN'),
+        ActionName: $(this).attr("id"),
+        Comment: $("#txtcomment").val()
+
+      }
+      // alert(JSON.stringify(Alltask));
+      var Con = confirm("Are you sure want to " + $(this).attr("id") + "?");
+      if (Con == true) {
+        Backbone.emulateHTTP = true;
+        Backbone.emulateJSON = true;
+        var ActionModel = Backbone.Model.extend({
+          urlRoot: '' + Config.DomainName + '/api/request/WorklistAction'
+        });
+        var action = new ActionModel();
+        action.set(Alltask);
+        action.save({}, {
+          headers: {
+            "Authorization": 'Bearer ' + accessToken
+          },
+          success: function(action, response) {
+            window.location.href = "alltask.html";
+          },
+          error: function(action, response) {
+
+          }
+        });
+
+
+      } else {
+        return false;
+      }
     },
 
     clickSaveHandler: function() {
@@ -81,6 +118,7 @@ Hktdc.Views = Hktdc.Views || {};
         Department: requestFormData.DEPT,
         Service_AcquireFor: this.getAcquireFor(this.requestFormModel)
       });
+      console.log('final return:', sendRequestModel.toJSON());
       return sendRequestModel;
     },
 
@@ -88,7 +126,7 @@ Hktdc.Views = Hktdc.Views || {};
       var requestFormData = model.toJSON();
       console.log('requestFormData: ', requestFormData);
       // console.log(model.selectedCCCollection);
-      // console.log(model.selectedCCCollection.toJSON());
+      console.log(model.selectedCCCollection.toJSON());
       var basicData = {
         Justification_Importand_Notes: requestFormData.Justification,
         Expected_Dalivery_Date: requestFormData.EDeliveryDate,
@@ -334,7 +372,7 @@ Hktdc.Views = Hktdc.Views || {};
       sendAttachmentModel.url = sendAttachmentModel.url(refId, filename);
 
       attachmentCollection.each(function(fileModel, i) {
-        // console.log(fileModel.toJSON());
+        console.log(fileModel.toJSON().file);
         data.append('file' + i, fileModel.toJSON().file);
       });
 

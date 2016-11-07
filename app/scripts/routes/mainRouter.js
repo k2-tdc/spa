@@ -73,7 +73,15 @@ Hktdc.Routers = Hktdc.Routers || {};
           var modeMapping = [
             {
               name: 'read',
-              status: ['Review', 'Complete', '']
+              status: [
+                'Review',
+                'Rework',
+                'ReCall',
+                'Complete',
+                'Approval',
+                'Submitted',
+                'ProcessTasks'
+              ]
             },
             {
               name: 'edit',

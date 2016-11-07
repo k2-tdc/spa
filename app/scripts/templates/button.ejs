@@ -10,10 +10,22 @@
   <button class="btn btn-primary" id="btnsave" type="button">Save</button>
 <% } %>
 
-<% if (showApplicant) {%>
+<% if (showSendToApplicant) {%>
   <button class="btn btn-primary" id="btnapplicant" type="button">Send to <%= applicantSendTo %></button>
 <% } %>
 
-<% if (showApprover) {%>
+<% if (showSendToApprover) {%>
   <button class="btn btn-primary" id="btnapprover" type="button">Send to <%= approverSendTo %></button>
+<% } %>
+
+<% if (showApprove) {%>
+  <button class="btn btn-primary alltaskbtn" id="Approve" type="button">Approve</button>
+<% } %>
+
+<% if (showReject) {%>
+  <button class="btn btn-primary alltaskbtn" id="Reject" type="button">Reject</button>
+<% } %>
+
+<% if (showReturn) {%>
+  <button class="btn btn-primary alltaskbtn" id="Return" type="button">Return</button>
 <% } %>

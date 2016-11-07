@@ -10,10 +10,13 @@ Hktdc.Models = Hktdc.Models || {};
 
     defaults: {
       showBack: false,
-      showSave: true,
+      showSave: false,
       showRecall: false,
-      showApplicant: false,
-      showApprover: false,
+      showSendToApplicant: false,
+      showSendToApprover: false,
+      showApprove: false,
+      showReject: false,
+      showReturn: false,
       approverSendTo: 'Approver',
       applicantSendTo: 'Applicant'
     },
