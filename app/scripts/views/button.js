@@ -239,6 +239,9 @@ Hktdc.Views = Hktdc.Views || {};
             param: 'Onsite_Service_Notes',
             name: 'Notes'
           }, {
+            param: 'Onsite_Service_Name',
+            name: 'Name'
+          }, {
             param: 'Onsite_Service_ID',
             name: 'GUID'
           }],

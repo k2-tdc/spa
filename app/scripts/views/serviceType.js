@@ -145,10 +145,20 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.requestFormModel.toJSON().mode);
 
       /* only 'edit' and 'read' will have add btn by default */
-      // console.log(this.selectedServiceCatagoryTree);
+      // console.group('');
+      // console.log(this.requestFormModel.toJSON().mode === 'read');
+      // console.log('level2: ', this.selectedServiceCatagoryTree.Level2);
+      // console.log('', model.toJSON().Name);
+      // console.log('found: ', _.find(this.selectedServiceCatagoryTree.Level2, function(lv2Service) {
+        // return lv2Service.Name === model.toJSON().Name;
+      // }));
+      // console.log('ControlFlag = 2: ', String(model.toJSON().Level3[0].ControlFlag) === '2');
+      // console.groupEnd();
       if (
         this.requestFormModel.toJSON().mode === 'read' ||
-        String(model.toJSON().Level3[0].ControlFlag) === '2' && this.selectedServiceCatagoryTree
+        String(model.toJSON().Level3[0].ControlFlag) === '2' && _.find(this.selectedServiceCatagoryTree.Level2, function(lv2Service) {
+          return lv2Service.Name === model.toJSON().Name;
+        })
       ) {
         model.set('needAddBtn', false);
       } else {
