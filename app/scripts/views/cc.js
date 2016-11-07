@@ -12,10 +12,8 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'li',
 
     initialize: function(props) {
-      // console.log(props.requestFormModel.toJSON());
       var self = this;
-
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
 
       $(this.el).click(function() {
         /* The new request model will handle the change */
@@ -43,7 +41,7 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'dropdown-menu cc-list',
 
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
 
       _.bindAll(this, 'renderCCItem');
 

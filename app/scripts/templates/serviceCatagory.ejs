@@ -1,11 +1,16 @@
 <div class="panel panel-default select-service-header">
   <div class="panel-body group-header">
     <div class="row">
-      <div class="col-xs-1 col-md-1">
+      <div class="col-xs-10 col-md-10">
         <input class="toplevelCheckBox" type="checkbox"></input>
-      </div>
-      <div class="col-xs-9 col-md-9 checkbox-option" id="divHSITservice">
-        <%= serviceCatagory.Name %>
+        <div class="checkbox-option" id="divHSITservice">
+          <span>
+            <%= serviceCatagory.Name %>
+          </span>
+          <span class="selectedServiceCount">
+            (<%= serviceCatagory.selectedServiceCount %>)
+          </span>
+        </div>
       </div>
       <div class="col-xs-2 col-sm-2 checkbox-option-drop">
         <span class="glyphicon glyphicon-menu-down toggleBtn"></span>

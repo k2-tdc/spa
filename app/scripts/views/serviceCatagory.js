@@ -22,8 +22,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       var self = this;
-      this.requestFormModel = props.requestFormModel;
-
+      _.extend(this, props);
       this.model.on('change:checked', function(model, newValue) {
         $('input[type="checkbox"]', self.el).prop('checked', newValue);
       });
@@ -33,6 +32,9 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           self.close();
         }
+      });
+      this.model.on('change:selectedServiceCount', function(model, newCount) {
+        $('.selectedServiceCount', this.el).html('(' + newCount + ')');
       });
     },
 
@@ -87,7 +89,8 @@ Hktdc.Views = Hktdc.Views || {};
         var serviceTypeListView = new Hktdc.Views.ServiceTypeList({
           collection: serviceTypeCollection,
           selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
-          requestFormModel: this.requestFormModel
+          requestFormModel: this.requestFormModel,
+          serverviceCatagoryModel: this.model
         });
         serviceTypeListView.render();
         setTimeout(function() {
@@ -102,17 +105,30 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function($container) {
       var self = this;
-      var tmpl = this.template({
-        serviceCatagory: this.model.toJSON()
-      });
       var Catagory = this.model.toJSON();
+      var selectedServiceCount = 0;
 
-      $(this.el).append(tmpl);
+      /* Tree only present when edit/read mode */
 
       this.selectedServiceCatagoryTree = _.find(this.requestFormModel.toJSON().selectedServiceTree, function(selectedCat) {
         // console.log('selectedCat.Name: ', selectedCat.Name);
         return Catagory.Name === selectedCat.Name;
       });
+
+      if (this.selectedServiceCatagoryTree) {
+        selectedServiceCount = _.reduce(this.selectedServiceCatagoryTree.Level2, function(memo, level2Obj) {
+          return memo + level2Obj.Level3.length;
+        }, 0);
+      }
+
+      this.model.set({selectedServiceCount: selectedServiceCount});
+
+      // this.model.set({selectedServiceCount: this.selectedServiceCatagoryTree.toJSON().selectedServiceCollection.toJSON().length})
+      var tmpl = this.template({
+        serviceCatagory: this.model.toJSON()
+      });
+
+      $(this.el).append(tmpl);
 
       /* only 'edit' and 'read' will open by default */
       if (this.requestFormModel.toJSON().mode === 'new') {
@@ -134,8 +150,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       // this.parent
-      this.requestFormModel = props.requestFormModel;
       /* important to use bindAll as directly use this.renderCatagoryItem in render */
+      _.extend(this, props);
       _.bindAll(this, 'renderCatagoryItem');
     },
 

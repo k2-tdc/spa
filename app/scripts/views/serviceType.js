@@ -25,8 +25,7 @@ Hktdc.Views = Hktdc.Views || {};
     defaultServiceRequestObject: {},
 
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
-      this.selectedServiceCatagoryTree = props.selectedServiceCatagoryTree;
+      _.extend(this, props);
       this.renderServiceObject();
       this.model.on('change:needAddBtn', function(model, isNeed) {
         // console.log('change on needAddBtn');
@@ -98,7 +97,7 @@ Hktdc.Views = Hktdc.Views || {};
           collection: this.childServiceRequestCollection,
           availableServiceObjectArray: availableServiceObjectArray,
           requestFormModel: this.requestFormModel,
-
+          serverviceCatagoryModel: this.serverviceCatagoryModel,
           /* the serviceTypeName is used to mapping the service object to it's service type when saving request */
           serviceTypeModel: this.model
         });
@@ -134,8 +133,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       /* requestFormModel is new request model */
-      this.requestFormModel = props.requestFormModel;
-      this.selectedServiceCatagoryTree = props.selectedServiceCatagoryTree;
+
+      /* selectedServiceCatagoryTree, requestFormModel, serverviceCatagoryModel */
+      _.extend(this, props);
       /* important to use bindAll as directly use this.renderItem in render */
       _.bindAll(this, 'renderServiceTypeItem');
     },
@@ -168,7 +168,8 @@ Hktdc.Views = Hktdc.Views || {};
       var serviceTypeItemView = new Hktdc.Views.ServiceType({
         model: model,
         requestFormModel: this.requestFormModel,
-        selectedServiceCatagoryTree: this.selectedServiceCatagoryTree
+        selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
+        serverviceCatagoryModel: this.serverviceCatagoryModel
       });
       serviceTypeItemView.render();
 

@@ -35,7 +35,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
     initialize: function(props) {
       try {
-        this.requestFormModel = props.requestFormModel;
+        _.extend(this, props);
         // var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.collection.toJSON());
         // console.log(this.requestFormModel.toJSON().mode);
         // if (String(this.model.toJSON().ControlFlag) === '2' && this.requestFormModel.toJSON().mode !== 'new') {
@@ -64,7 +64,7 @@ Hktdc.Views = Hktdc.Views || {};
         var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
           collection: serviceObjectCollection,
           serviceRequestModel: this.model,
-          requestFormModel: props.requestFormModel
+          requestFormModel: this.requestFormModel
         });
         // console.log(serviceObjectListView);
         serviceObjectListView.render();
@@ -108,28 +108,31 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
     // template: JST['app/scripts/templates/serviceRequest.ejs'],
 
-    initialize: function(options) {
+    initialize: function(props) {
+      _.extend(this, props);
       _.bindAll(this, 'renderServiceRequest', 'addServiceRequest', 'removeServiceRequest');
-      this.availableServiceObjectArray = options.availableServiceObjectArray;
-      this.requestFormModel = options.requestFormModel;
-      this.serviceTypeName = options.serviceTypeModel.toJSON().Name;
-      this.serviceTypeModel = options.serviceTypeModel;
+      this.serviceTypeName = props.serviceTypeModel.toJSON().Name;
       this.listenTo(this.collection, 'add', this.addServiceRequest);
       this.listenTo(this.collection, 'remove', this.removeServiceRequest);
     },
 
     addServiceRequest: function(model) {
-      // console.log('add service request');
+      console.log('add service request');
       if (model.toJSON().ControlFlag === 2) {
         // hide add button
         this.serviceTypeModel.set({ needAddBtn: false });
       }
+      this.serverviceCatagoryModel.set({
+        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount+1
+      });
       this.renderServiceRequest(model, this.collection.length - 1);
     },
 
     removeServiceRequest: function(model) {
       // console.log('removeServiceRequest in ServiceRequestList view');
-      // console.log(this.collection.toJSON());
+      this.serverviceCatagoryModel.set({
+        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount-1
+      });
       if (model.toJSON().ControlFlag === 2) {
         // hide add button
         this.serviceTypeModel.set({ needAddBtn: true });
@@ -142,14 +145,17 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.availableServiceObjectArray.toJSON());
       // var that = this;
 
-      model.set('index', index + 1);
-      model.set('availableServiceObjectArray', this.availableServiceObjectArray);
-      model.set('parentCollection', this.collection);
-      model.set('serviceTypeName', this.serviceTypeName);
+      model.set({
+        index: index + 1,
+        availableServiceObjectArray: this.availableServiceObjectArray,
+        parentCollection: this.collection,
+        serviceTypeName: this.serviceTypeName
+      });
 
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
         model: model,
-        requestFormModel: this.requestFormModel
+        requestFormModel: this.requestFormModel,
+        serverviceCatagoryModel: this.serverviceCatagoryModel
       });
       serviceRequestItemView.render();
       $(this.el).append(serviceRequestItemView.el);
@@ -193,7 +199,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      if (this.collection.toJSON().length>0){
+      if (this.collection.toJSON().length > 0){
         if (String(this.collection.toJSON()[0].ControlFlag) === '2') {
           // method 1
           // this.renderTextServiceObjectList(this.collection);

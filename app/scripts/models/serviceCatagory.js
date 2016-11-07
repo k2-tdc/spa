@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone, Hktdc */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -9,8 +9,8 @@ Hktdc.Models = Hktdc.Models || {};
     idAttribute: 'GUID',
     default: {
       checked: false,
-      open: false
+      open: false,
+      selectedServiceCount: 0
     }
   });
-
 })();

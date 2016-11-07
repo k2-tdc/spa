@@ -401,6 +401,16 @@ div.dataTables_wrapper table {
   color: blue;
 }
 
+.selectedServiceCount{
+  padding-left: 12px;
+  color: #0055ff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.service-catagory-item{
+  margin-top: 4px;
+}
 
 /* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
 @media screen and (max-width: 767px) {

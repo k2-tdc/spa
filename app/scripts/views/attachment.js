@@ -46,9 +46,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
-      this.parentCollection = props.parentCollection;
-      // console.log('initi', props.requestFormModel);
+      _.extend(this, props);
       // this.listenTo(this.model, 'change', this.render);
     },
 
@@ -124,7 +122,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       var self = this;
       _.bindAll(this, 'renderAttachmentItem', 'clickToggleButton');
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
       this.requestFormModel.on('change:showFileLog', function(model, isShow) {
         if (isShow) {
           self.open();

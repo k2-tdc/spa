@@ -29,7 +29,7 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
     },
     render: function() {
       // console.log(this.model.toJSON());
@@ -58,8 +58,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       var self = this;
-      this.requestFormModel = props.requestFormModel;
-      this.serviceRequestModel = props.serviceRequestModel;
+      _.extend(this, props);
       this.serviceRequestModel.on('change:Notes', function(a, newNotes) {
         /* the requestFormModel.selectedServiceCollection will auto update */
         self.model.set({ Notes: newNotes });
@@ -85,14 +84,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
-
-      /* for select type */
-      this.serviceRequestModel = props.serviceRequestModel;
-
-      /* for text type */
-      this.serviceRequestCollection = props.serviceRequestCollection;
-      // console.log(this.serviceRequestModel.toJSON());
+      _.extend(this, props);
       _.bindAll(this, 'renderServiceObjectItem');
     },
 

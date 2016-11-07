@@ -70,6 +70,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     saveAndApprover: function(status) {
       /* set the request object */
+      var insertServiceResponse;
       Q.fcall(this.setRequestObject.bind(this, status))
         .then(function(sendRequestModel) {
           console.log('ended set data', sendRequestModel.toJSON());
@@ -78,6 +79,7 @@ Hktdc.Views = Hktdc.Views || {};
         }.bind(this))
 
         .then(function(data) {
+          insertServiceResponse = data;
           console.log('ended post data');
           /* send file */
           return this.sendAttactment(
@@ -87,16 +89,19 @@ Hktdc.Views = Hktdc.Views || {};
         }.bind(this))
 
         .then(function(status) {
-          console.log('end send attachment');
-          if (status === 'Submitted') {
-            window.location.href = '/';
-          } else if (status === 'Draft') {
-            window.location.href = '/#draft';
+          // console.log('end send attachment');
+          // if (status === 'Submitted') {
+          //   window.location.href = '/';
+          // } else if (status === 'Draft') {
+          //   window.location.href = '/#draft';
+          // }
+          if (insertServiceResponse.FormID) {
+            window.location.href = Hktdc.Config.projectPath + '#draft';
           }
         })
 
         .fail(function(err) {
-          console.log(err);
+          alert('Error on saving record\n\r', err);
         });
     },
 
@@ -188,7 +193,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     getServiceData: function(selectedServiceCollectionArray) {
       /* !!!Dreprecated!!! */
-      
+
       /* serviceName and uatServiceName is the name from service type api call */
       /* This stupid mapping is beacause the server api is hardcoded the request service params */
       // console.log(selectedServiceCollectionArray);
@@ -365,10 +370,10 @@ Hktdc.Views = Hktdc.Views || {};
       sendRequestModel.save({}, {
         beforeSend: utils.setAuthHeader,
         success: function(mymodel, response) {
-          deferred.resolve();
+          deferred.resolve(response);
         },
-        error: function() {
-          deferred.reject();
+        error: function(e) {
+          deferred.reject(e);
         }
       });
       return deferred.promise;
@@ -427,7 +432,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
       this.render();
     },
 

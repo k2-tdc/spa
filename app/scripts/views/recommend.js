@@ -13,7 +13,7 @@ Hktdc.Views = Hktdc.Views || {};
       'click': 'clickRecommendHandler'
     },
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
     },
     clickRecommendHandler: function() {
       /* if select the  */
@@ -34,7 +34,7 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'dropdown-menu recommend-list',
 
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
       _.bindAll(this, 'renderRecommendItem');
       this.render();
     },

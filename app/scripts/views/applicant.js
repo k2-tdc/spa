@@ -22,7 +22,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
     },
 
     render: function() {
@@ -38,7 +38,7 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'dropdown-menu applicant-list',
 
     initialize: function(props) {
-      this.requestFormModel = props.requestFormModel;
+      _.extend(this, props);
 
       _.bindAll(this, 'renderApplicantItem');
 
