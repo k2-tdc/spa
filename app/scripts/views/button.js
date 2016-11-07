@@ -96,12 +96,12 @@ Hktdc.Views = Hktdc.Views || {};
         Estimated_Cost: requestFormData.EstimatedCost,
         Budget_Provided: requestFormData.BudgetProvided,
         Budgeted_Sum: requestFormData.BudgetSum,
-        Recommend_By: (requestFormData.selectedRecommentModel) ?
-          requestFormData.selectedRecommentModel.toJSON().WorkerFullName :
-          null,
-        Recommend_By_ID: (requestFormData.selectedRecommentModel) ?
-          requestFormData.selectedRecommentModel.toJSON().WorkerId :
-          null,
+        Recommend_By: (requestFormData.selectedRecommentModel)
+          ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
+          : null,
+        Recommend_By_ID: (requestFormData.selectedRecommentModel)
+          ? requestFormData.selectedRecommentModel.toJSON().WorkerId
+          : null,
         cc: _.map(model.selectedCCCollection.toJSON(), function(ccData) {
           return {
             Name: ccData.UserFullName,
@@ -115,9 +115,10 @@ Hktdc.Views = Hktdc.Views || {};
           // Attachments: this.getFileName(),
       };
       var serviceData = this.getServiceData(model.selectedServiceCollection.toJSON());
-
+      console.log('selectedServiceCollection', model.selectedServiceCollection.toJSON());
+      console.log('serviceData', serviceData);
       _.extend(basicData, serviceData);
-      console.log('final send output: ', basicData);
+      // console.log('final send output: ', basicData);
       return basicData;
     },
 
@@ -206,7 +207,10 @@ Hktdc.Views = Hktdc.Views || {};
             name: 'GUID'
           }],
           parent: 'Hardware_Software_IT_Service'
-        }, {
+        },
+
+
+        {
           paramName: 'General_Support',
           serviceName: {
             localDev: 'Request for General Support',
@@ -223,7 +227,9 @@ Hktdc.Views = Hktdc.Views || {};
             name: 'GUID'
           }],
           parent: 'General_Support_StandBy_Service'
-        }, {
+        },
+
+        {
           paramName: 'Onsite_StandBy_Service',
           serviceName: {
             localDev: 'Request for Onsite/Stand-by Services',
@@ -246,12 +252,18 @@ Hktdc.Views = Hktdc.Views || {};
         var serviceUnderThisCatagory = _.filter(serviceMapping, function(service) {
           return service.parent === catagory.paramName;
         });
-
+        // console.log('serviceUnderThisCatagory', serviceUnderThisCatagory);
         var catService = {};
         _.each(serviceUnderThisCatagory, function(service) {
+          // console.group();
+          // console.log('selectedServiceCollectionArray', selectedServiceCollectionArray);
+          // console.log('service.serviceName.uat', service.serviceName.uat);
           var relatedServices = _.where(selectedServiceCollectionArray, {
-            serviceTypeName: service.serviceName[Hktdc.Config.environment]
+            serviceTypeName: service.serviceName.uat
+            // serviceTypeName: service.serviceName[Hktdc.Config.environment]
           });
+          // console.log('relatedServices', relatedServices);
+          // console.groupEnd();
           relatedServices = _.map(relatedServices, function(relatedService) {
             var returnObj = {};
             _.each(service.object, function(obj) {

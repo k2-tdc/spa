@@ -291,6 +291,13 @@ Hktdc.Views = Hktdc.Views || {};
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
       });
+      this.model.selectedServiceCollection.on('change', function(changedModel) {
+        console.log('changed service', newCollection.toJSON());
+        // console.log(addedService);
+        // console.log(newCollection);
+        /* clear the selectedRecommentModel */
+        self.model.set({ selectedRecommentModel: null });
+      });
 
       this.model.on('change:showLog', function(model, isShow) {
         console.log('showLog: ', isShow);

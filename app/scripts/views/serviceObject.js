@@ -15,8 +15,10 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'blur #lastnosub': 'editServiceHandler'
     },
-    editServiceHandler: function() {
-      if ($('textarea', this.el).val().trim().length > 0) {
+    editServiceHandler: function(ev) {
+      // console.log('#lastnosub blur; ', );
+      console.log($(ev.target).val().trim());
+      if ($(ev.target).val().trim().length > 0) {
         this.model.set({
           Notes: $('textarea', this.el).val().trim()
         });
@@ -97,10 +99,10 @@ Hktdc.Views = Hktdc.Views || {};
     renderServiceObjectItem: function(model) {
       // console.log(model.toJSON());
 
+      model.set({
+        serviceTypeName: this.serviceRequestModel.toJSON().serviceTypeName
+      });
       if (String(model.toJSON().ControlFlag) === '1') {
-        model.set({
-          serviceTypeName: this.serviceRequestModel.toJSON().serviceTypeName
-        });
         var serviceObjectItemView = new Hktdc.Views.ServiceObjectSelect({
           model: model,
           requestFormModel: this.requestFormModel,
