@@ -84,7 +84,7 @@ Hktdc.Views = Hktdc.Views || {};
               // console.log(selectedServiceTypeTree);
               selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
               // console.log(selectedServiceRequestList);
-              // serviceRequestList = this.requestFormModel.selectedServiceCollection.toJSON();
+              // serviceRequestList = this.requestFormModel.toJSON().selectedServiceCollection.toJSON();
             }
             break;
 

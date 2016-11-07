@@ -22,9 +22,9 @@ Hktdc.Views = Hktdc.Views || {};
         this.model.set({
           Notes: $('textarea', this.el).val().trim()
         });
-        this.requestFormModel.selectedServiceCollection.add(this.model);
+        this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
       } else {
-        this.requestFormModel.selectedServiceCollection.remove(this.model);
+        this.requestFormModel.toJSON().selectedServiceCollection.remove(this.model);
       }
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
@@ -51,7 +51,7 @@ Hktdc.Views = Hktdc.Views || {};
         selectedRequestModel: this.model,
         selectedServiceObject: true
       });
-      this.requestFormModel.selectedServiceCollection.add(this.model);
+      this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
       // console.log(this.model.toJSON());
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },

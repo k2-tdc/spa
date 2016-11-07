@@ -135,7 +135,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.collection.on('remove', function() {
         $('#divfilename', this.el).empty();
         self.collection.each(self.renderAttachmentItem);
-        self.requestFormModel.selectedAttachmentCollection = self.collection;
+        self.requestFormModel.set({selectedAttachmentCollection: self.collection});
       });
     },
 
@@ -171,9 +171,9 @@ Hktdc.Views = Hktdc.Views || {};
       $('#divfilename', this.el).empty();
       this.collection.each(this.renderAttachmentItem);
       // console.debug('this collection after: ', this.collection.toJSON());
-      // console.debug('requestFormModel collection before: ', this.requestFormModel.selectedAttachmentCollection.toJSON());
-      this.requestFormModel.selectedAttachmentCollection.set(this.collection.toJSON());
-      // console.debug('requestFormModel collection after: ', this.requestFormModel.selectedAttachmentCollection.toJSON());
+      // console.debug('requestFormModel collection before: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());
+      this.requestFormModel.toJSON().selectedAttachmentCollection.set(this.collection.toJSON());
+      // console.debug('requestFormModel collection after: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());
       // console.groupEnd();
     },
 

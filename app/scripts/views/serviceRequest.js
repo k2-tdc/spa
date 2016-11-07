@@ -24,8 +24,8 @@ Hktdc.Views = Hktdc.Views || {};
       collection.remove(this.model);
 
       /* also delete the collection */
-      this.requestFormModel.selectedServiceCollection.remove(this.model.toJSON().selectedRequestModel);
-      // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
+      this.requestFormModel.toJSON().selectedServiceCollection.remove(this.model.toJSON().selectedRequestModel);
+      // console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
     addNotesToServiceObject: function(ev) {
       // console.log($(ev.target).val());

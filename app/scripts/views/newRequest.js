@@ -22,18 +22,18 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     checkBudgetAndService: function() {
-      if (this.model.mode === 'read') {
+      if (this.model.toJSON().mode === 'read') {
         return false;
       }
       var self = this;
-      var haveSelectService = !!this.model.selectedServiceCollection.toJSON().length;
+      var haveSelectService = !!this.model.toJSON().selectedServiceCollection.toJSON().length;
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
       if (!(haveSelectService && haveFilledCost)) {
         alert('please select service and filled the cost field');
         return false;
       } else {
         var recommendCollection = new Hktdc.Collections.Recommend();
-        var ruleCodeArr = _.map(this.model.selectedServiceCollection.toJSON(), function(selectedService) {
+        var ruleCodeArr = _.map(this.model.toJSON().selectedServiceCollection.toJSON(), function(selectedService) {
           return selectedService.Approver;
         });
         var ruleCode = _.uniq(ruleCodeArr).join(';');
@@ -56,11 +56,11 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       }
-      // return (this.model.selectedServiceCollection.toJSON().length && this.model.toJSON().cost);
+      // return (this.model.toJSON().selectedServiceCollection.toJSON().length && this.model.toJSON().cost);
     },
 
     updateNewRequestModel: function(ev) {
-      if (this.model.mode === 'read') {
+      if (this.model.toJSON().mode === 'read') {
         return false;
       }
       var targetField = $(ev.target).attr('field');
@@ -92,8 +92,10 @@ Hktdc.Views = Hktdc.Views || {};
           .then(function(result) {
             console.log('load ed resource');
 
-            self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService();
-            self.model.selectedAttachmentCollection = new Hktdc.Collections.SelectedAttachment();
+            self.model.set({
+              selectedServiceCollection: new Hktdc.Collections.SelectedService(),
+              selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment()
+            });
 
             /* Render the components below */
             self.renderApplicantAndCCList(result[0]);
@@ -148,14 +150,17 @@ Hktdc.Views = Hktdc.Views || {};
         ])
           .then(function(results) {
             console.log('loaded resource');
-            self.model.set({ selectedServiceTree: self.model.toJSON().RequestList });
-            console.log(self.model.toJSON().RequestList);
-            /* must sync RequestList to selectedServiceCollection for updating */
-            self.model.selectedServiceCollection = new Hktdc.Collections.SelectedService(
-              self.getAllRequestArray(self.model.toJSON().RequestList)
-            );
-            // console.log(self.model.selectedServiceCollection.toJSON());
-            self.model.selectedAttachmentCollection = new Hktdc.Collections.SelectedAttachment();
+            self.model.set({
+              selectedServiceTree: self.model.toJSON().RequestList,
+              /* must sync RequestList to selectedServiceCollection for updating */
+              selectedServiceCollection: new Hktdc.Collections.SelectedService(
+                self.getAllRequestArray(self.model.toJSON().RequestList)
+              ),
+              selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
+              selectedCCCollection: new Hktdc.Collections.SelectedCC()
+
+            });
+            console.log(self.model.toJSON().selectedServiceCollection.toJSON());
 
             /* Render the components below */
             self.renderApplicantAndCCList(results[0]);
@@ -283,19 +288,19 @@ Hktdc.Views = Hktdc.Views || {};
         self.renderButtons(showButtonOptions);
       });
 
-      this.model.selectedCCCollection.on('add', function(addedCC, newCollection) {
+      this.model.toJSON().selectedCCCollection.on('add', function(addedCC, newCollection) {
         var selectedUserName = addedCC.toJSON().UserFullName;
         // var selectedUserId = addedCC.toJSON().UserId;
         $('.selectedCC', this.el).text(selectedUserName);
       });
 
-      this.model.selectedServiceCollection.on('add', function(addedService, newCollection) {
+      this.model.toJSON().selectedServiceCollection.on('add', function(addedService, newCollection) {
         console.log('added service', newCollection.toJSON());
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
       });
-      this.model.selectedServiceCollection.on('change', function(changedModel) {
-        console.log('changed service', newCollection.toJSON());
+      this.model.toJSON().selectedServiceCollection.on('change', function(changedModel) {
+        // console.log('changed service', newCollection.toJSON());
         // console.log(addedService);
         // console.log(newCollection);
         /* clear the selectedRecommentModel */
@@ -489,12 +494,12 @@ Hktdc.Views = Hktdc.Views || {};
     renderButtons: function(showButtonOptions) {
       /* load available buttons */
       var buttonModel = new Hktdc.Models.Button(showButtonOptions);
-      // console.debug(buttonModel.toJSON());
+      console.debug(buttonModel.toJSON());
       var buttonView = new Hktdc.Views.Button({
         model: buttonModel,
         requestFormModel: this.model
       });
-      // console.log(buttonView.el);
+      console.log(buttonView.el);
       $('.available-buttons', this.el).html(buttonView.el);
     },
 
@@ -509,9 +514,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderSelectedCCView: function(input) {
-      this.model.selectedCCCollection = new Hktdc.Collections.SelectedCC(input);
+      this.model.set({selectedCCCollection: new Hktdc.Collections.SelectedCC(input)});
       $('.contact-group', this.el).append(new Hktdc.Views.SelectedCCList({
-        collection: this.model.selectedCCCollection
+        collection: this.model.toJSON().selectedCCCollection
       }).el);
     },
 

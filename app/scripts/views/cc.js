@@ -21,7 +21,7 @@ Hktdc.Views = Hktdc.Views || {};
         /* The new request model will handle the change */
 
         /* Add selected CC collections to parents coll. */
-        self.requestFormModel.selectedCCCollection.add(self.model);
+        self.requestFormModel.toJSON().selectedCCCollection.add(self.model);
         self.model.set({selected: true});
         self.requestFormModel.set({
           // selectedCCCollection: newCCArray,
