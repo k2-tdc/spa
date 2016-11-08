@@ -1,19 +1,9 @@
 <div class="panel panel-default">
   <div class="panel-heading" role="tab" id="headingOne">
-    <h3 class="panel-title">
+    <div class="panel-title subheader-menu-container">
       <!-- Single button -->
-      <div class="btn-group check-status">
-        <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          New Request
-        </button>
-        <!-- <span class="glyphicon glyphicon-menu-down"></span>
-        <ul class="dropdown-menu">
-          <li><a href="index.html">Check Status</a></li>
-          <li><a href="#">Another Status</a></li>
-          <li><a href="#">Approval Status</a></li>
-        </ul> -->
-      </div>
-    </h3>
+
+    </div>
   </div>
   <div id="newRequest">
 
@@ -181,11 +171,12 @@
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">&nbsp;</div>
             <div class="col-xs-8 col-md-8 btn-group full-width cc-container">
-              <button type="button" class="btn btn-default btncc selectedCC" data-toggle="dropdown">--Select--</button>
+              <input type="text" class="cc-picker form-control" data-provide="typeahead" autocomplete="off"/>
+              <!-- <button type="button" class="btn btn-default btncc selectedCC" data-toggle="dropdown">--Select--</button>
               <button type="button" class="btn btn-default dropdown-toggle btncc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
-              </button>
+              </button> -->
               <!-- cc list here -->
 
             </div>

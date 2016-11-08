@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _ */
+/* global Hktdc, Backbone, utils, _, $ */
 
 Hktdc.Routers = Hktdc.Routers || {};
 
@@ -11,10 +11,24 @@ Hktdc.Routers = Hktdc.Routers || {};
       'check_status': 'checkStatus',
       'request': 'newRequest',
       'request/:requestId': 'editRequest',
-      'draft': 'draft'
+      'draft': 'draft',
+      'alltask': 'allTask',
+      'approvaltask': 'approvalTask'
     },
 
-    initialize: function() {},
+    initialize: function() {
+      /*this.on('route', function(route, params) {
+        var currentRoute = Backbone.history.getHash();
+        // console.log(currentRoute);
+        // var routeName = currentRoute.toJSON().activeTab.toUpperCase();
+        var routeBase = currentRoute.split('/')[0].toUpperCase();
+        // console.log('routeName: ', routeName);
+        // console.log('routeBase: ', routeBase);
+        // console.log('params: ', params);
+        var currentPageName = $('nav#menu').find('li[routename=' + routeBase + ']').text().trim();
+        // menuModel.set('activeTab', Backbone.history.getHash());
+      });*/
+    },
 
     checkStatus: function() {
       console.debug('[ routes/mainRouter.js ] - checkStatus route handler');
@@ -26,6 +40,85 @@ Hktdc.Routers = Hktdc.Routers || {};
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
+
+
+      var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+      var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+        collection: subheaderMenuListCollection,
+        currentPageName: 'Check Status'
+      });
+      subheaderMenuListView.render();
+
+      $('.subheader-menu-container').html(subheaderMenuListView.el);
+    },
+
+    draft: function() {
+      console.debug('[ routes/mainRouter.js ] - draft route handler');
+      var checkStatusModel = new Hktdc.Models.CheckStatus({
+        UserId: Hktdc.Config.userID
+      });
+
+      // TODO: get filter params from query string
+      checkStatusModel.set({ mode: 'draft' });
+      var csView = new Hktdc.Views.CheckStatus({
+        model: checkStatusModel
+      });
+
+
+      var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+      var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+        collection: subheaderMenuListCollection,
+        currentPageName: 'Draft list'
+      });
+      subheaderMenuListView.render();
+
+      $('.subheader-menu-container').html(subheaderMenuListView.el);
+    },
+
+    allTask: function() {
+      console.debug('[ routes/mainRouter.js ] - draft route handler');
+      var checkStatusModel = new Hktdc.Models.CheckStatus({
+        UserId: Hktdc.Config.userID
+      });
+
+      // TODO: get filter params from query string
+      checkStatusModel.set({ mode: 'draft' });
+      var csView = new Hktdc.Views.CheckStatus({
+        model: checkStatusModel
+      });
+
+
+      var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+      var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+        collection: subheaderMenuListCollection,
+        currentPageName: 'all tasks'
+      });
+      subheaderMenuListView.render();
+
+      $('.subheader-menu-container').html(subheaderMenuListView.el);
+    },
+
+    approvalTask: function() {
+      console.debug('[ routes/mainRouter.js ] - draft route handler');
+      var checkStatusModel = new Hktdc.Models.CheckStatus({
+        UserId: Hktdc.Config.userID
+      });
+
+      // TODO: get filter params from query string
+      checkStatusModel.set({ mode: 'draft' });
+      var csView = new Hktdc.Views.CheckStatus({
+        model: checkStatusModel
+      });
+
+
+      var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+      var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+        collection: subheaderMenuListCollection,
+        currentPageName: 'Approval tasks'
+      });
+      subheaderMenuListView.render();
+
+      $('.subheader-menu-container').html(subheaderMenuListView.el);
     },
 
     /* this handling insert new */
@@ -47,6 +140,16 @@ Hktdc.Routers = Hktdc.Routers || {};
       var nrView = new Hktdc.Views.NewRequest({
         model: newRequestModel
       });
+
+      var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+      var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+        collection: subheaderMenuListCollection,
+        currentPageName: 'New Request'
+      });
+      subheaderMenuListView.render();
+
+      $('.subheader-menu-container').html(subheaderMenuListView.el);
+
       /* var referenceIdModel = new Hktdc.Models.ReferenceId();
       referenceIdModel.fetch({
         beforeSend: utils.setAuthHeader,
@@ -111,17 +214,6 @@ Hktdc.Routers = Hktdc.Routers || {};
       });
     },
 
-    draft: function() {
-      console.debug('[ routes/mainRouter.js ] - draft route handler');
-      var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID
-      });
 
-      // TODO: get filter params from query string
-      checkStatusModel.set({ mode: 'draft' });
-      var csView = new Hktdc.Views.CheckStatus({
-        model: checkStatusModel
-      });
-    }
   });
 })();

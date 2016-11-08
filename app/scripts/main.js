@@ -94,7 +94,8 @@ window.Hktdc = {
             self.setupMasterPageComponent(function(menuModel) {
               var mainRouter = new self.Routers.Main();
               mainRouter.on('route', function(route, params) {
-                console.log(route);
+                // console.log(route);
+                menuModel.set('activeTab', Backbone.history.getHash());
               });
               Backbone.history.start();
             });
@@ -112,8 +113,6 @@ window.Hktdc = {
         self.setupMasterPageComponent(function(menuModel) {
           var mainRouter = new self.Routers.Main();
           mainRouter.on('route', function(route, params) {
-            // console.log('route: ', route);
-            // console.log('params: ', params);
             menuModel.set('activeTab', Backbone.history.getHash());
           });
 

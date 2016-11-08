@@ -131,7 +131,7 @@ textarea {
   width: 100%;
 }
 
-div.check-status > button.btn.btn-default.dropdown-toggle.btn-block {
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block {
   border: 0;
   text-transform: uppercase;
   font-weight: 600;
@@ -139,13 +139,13 @@ div.check-status > button.btn.btn-default.dropdown-toggle.btn-block {
   text-align: left;
 }
 
-div.check-status > button.btn.btn-default.dropdown-toggle.btn-block:active,
-div.check-status > button.btn.btn-default.dropdown-toggle.btn-block:focus,
-div.check-status > button.btn.btn-default.dropdown-toggle.btn-block:hover {
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block:active,
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block:focus,
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block:hover {
   background: initial;
 }
 
-div.check-status > button.btn.btn-default.dropdown-toggle > span.glyphicon {
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle > span.glyphicon {
   font-size: 14px;
 }
 
@@ -157,7 +157,7 @@ ul.dropdown-menu > li > a:hover {
   color: #f47820;
 }
 
-div.check-status > ul.dropdown-menu {
+div.subheader-menu-container > ul.dropdown-menu {
   width: 100%;
   margin-left: 0;
 }
@@ -419,6 +419,11 @@ div.dataTables_wrapper table {
   }
 }
 
+.subheader-menu{
+  margin: 0;
+  padding:0 14px;
+  text-transform: uppercase;
+}
 
 // end vidosys
 

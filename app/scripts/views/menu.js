@@ -80,8 +80,8 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         // var routename = currentRoute.toJSON().activeTab;
         var routeName = currentRoute.toJSON().activeTab.toUpperCase();
-        var routeBase = routeName.split('/')[0]
-        // console.log('routeBase', routeBase);
+        var routeBase = routeName.split('/')[0];
+        console.log('routeBase', routeBase);
         setTimeout(function(){
           // console.log($('li[routename="' + routeBase + '"]'));
           $('nav#menu').data('mmenu').setSelected($('li[routename=' + routeBase + ']'));

@@ -63,6 +63,4 @@ Hktdc.Views = Hktdc.Views || {};
       this.collection.each(this.renderCCItem);
     }
   });
-
-
 })();

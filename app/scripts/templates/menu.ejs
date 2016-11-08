@@ -9,7 +9,7 @@
           if (items.sumenu === null) {
           %>
 
-          <li routename='<%= items.RouteName%>'>
+          <li routename='<%= items.RouteName %>'>
             <a href='<%= items.Route %>'>
               <%= items.Name %>
               <% if (items.Scount) { %>
@@ -33,7 +33,7 @@
           _.each(items.sumenu, function(submenu, sindex) {
           %>
 
-          <li>
+          <li routename='<%= submenu.RouteName %>'>
             <a href='<%=submenu.Route%>'>
               <%= submenu.Name %>
               <% if(submenu.Scount) { %>

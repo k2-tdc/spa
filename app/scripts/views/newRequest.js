@@ -482,15 +482,40 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderApplicantAndCCList: function(employeeArray) {
+      var self = this;
       $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
         collection: new Hktdc.Collections.Applicant(employeeArray),
         requestFormModel: this.model
       }).el);
 
-      $('.cc-container', this.el).append(new Hktdc.Views.CCList({
-        collection: new Hktdc.Collections.CC(employeeArray),
-        requestFormModel: this.model
-      }).el);
+      // $('.cc-container', this.el).append(new Hktdc.Views.CCList({
+      //   collection: new Hktdc.Collections.CC(employeeArray),
+      //   requestFormModel: this.model
+      // }).el);
+
+      // console.log($('.cc-picker', this.el));
+      // console.log(employeeArray);
+      var $input = $('.cc-picker', this.el);
+      // console.log($input);
+      var newEmployeeArray = _.map(employeeArray, function(employee) {
+        employee.label = employee.UserFullName;
+        return employee;
+      });
+      $input.autocomplete({
+        source: newEmployeeArray,
+        select: function(ev, ui) {
+          var existing = _.find(self.model.toJSON().selectedCCCollection.toJSON(), function(cc){
+            return cc.UserId === ui.item.UserId;
+          });
+          if (!existing) {
+            self.model.toJSON().selectedCCCollection.add(new Hktdc.Models.CC(ui.item));
+          }
+        },
+        close: function(ev, ui) {
+          console.log($(ev.target).val());
+          $(ev.target).val('');
+        }
+      });
     },
 
     renderButtons: function(showButtonOptions) {
