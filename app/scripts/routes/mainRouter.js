@@ -31,31 +31,31 @@ Hktdc.Routers = Hktdc.Routers || {};
     /* this handling insert new */
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-      var referenceIdModel = new Hktdc.Models.ReferenceId();
+      var newRequestModel = new Hktdc.Models.NewRequest({
+        // ReferenceID: referenceIdModel.toJSON().ReferenceID,
+        PreparerFNAME: Hktdc.Config.userName,
+        PreparerUserID: Hktdc.Config.userID,
+        CreatedOn: window.moment().format('DD MMM YYYY'),
+        mode: 'new',
+
+        /* set the default selected applicant is self */
+        selectedApplicantModel: new Hktdc.Models.Applicant({
+          UserId: Hktdc.Config.userID,
+          UserFullName: Hktdc.Config.userName
+        })
+      });
+      var nrView = new Hktdc.Views.NewRequest({
+        model: newRequestModel
+      });
+      /* var referenceIdModel = new Hktdc.Models.ReferenceId();
       referenceIdModel.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          var newRequestModel = new Hktdc.Models.NewRequest({
-            ReferenceID: referenceIdModel.toJSON().ReferenceID,
-            PreparerFNAME: Hktdc.Config.userName,
-            PreparerUserID: Hktdc.Config.userID,
-            CreatedOn: window.moment().format('DD MMM YYYY'),
-            mode: 'new',
-
-            /* set the default selected applicant is self */
-            selectedApplicantModel: new Hktdc.Models.Applicant({
-              UserId: Hktdc.Config.userID,
-              UserFullName: Hktdc.Config.userName
-            })
-          });
-          var nrView = new Hktdc.Views.NewRequest({
-            model: newRequestModel
-          });
         },
         error: function(e) {
           console.log('error on getting reference id');
         }
-      });
+      }); */
     },
 
     /* this handling edit old request OR reading old request */
