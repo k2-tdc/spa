@@ -55,15 +55,39 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     clickSaveHandler: function() {
-      this.saveAndApprover('Draft', '');
+      if (this.checkIsValid()) {
+        this.saveAndApprover('Draft', '');
+      }
     },
 
     clickApplicantHandler: function() {
-      this.saveAndApprover('Submitted', 'applicant');
+      if (this.checkIsValid()) {
+        this.saveAndApprover('Submitted', 'applicant');
+      }
     },
 
     clickApproverHandler: function() {
-      this.saveAndApprover('Submitted', 'approver');
+      if (this.checkIsValid()) {
+        this.saveAndApprover('Submitted', 'approver');
+      }
+    },
+
+    checkIsValid: function() {
+      var isValid = true;
+      console.log(this.requestFormModel.toJSON());
+      if (!(this.requestFormModel.toJSON().EstimatedCost && this.requestFormModel.toJSON().EstimatedCost.trim())) {
+        isValid = false;
+        alert('Please fill the Estimated Cost');
+      }
+      if (!this.requestFormModel.toJSON().selectedApplicantModel) {
+        isValid = false;
+        alert('Please select a Applicant');
+      }
+      if (!this.requestFormModel.toJSON().selectedRecommentModel) {
+        isValid = false;
+        alert('Please select a Recommend By');
+      }
+      return isValid;
     },
 
     saveAndApprover: function(status, submitTo) {
