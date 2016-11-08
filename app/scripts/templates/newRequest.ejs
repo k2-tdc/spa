@@ -19,7 +19,7 @@
 
     <div class="newrequest-basic-information">
       <div class="row">
-        <div class="col-xs-2 col-md-2 newrequest-title">Status</div>
+        <div class="col-xs-2 col-md-2 newrequest-title text-left">Status</div>
         <div class="col-xs-10 col-md-4" id="divStatus">
           <% if (request.FormStatus) { %>
             <%= request.FormStatus %>
@@ -27,13 +27,13 @@
             New
           <% } %>
         </div>
-        <div class="col-xs-2 col-md-2 newrequest-title">Prepared by</div>
+        <div class="col-xs-2 col-md-2 newrequest-title text-left">Prepared by</div>
         <div class="col-xs-10 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
       </div>
       <div class="row">
-        <div class="col-xs-2 col-md-2 newrequest-title">Ref ID</div>
+        <div class="col-xs-2 col-md-2 newrequest-title text-left">Ref ID</div>
         <div class="col-xs-10 col-md-4" id="divRefID"><%= request.ReferenceID %></div>
-        <div class="col-xs-2 col-md-2 newrequest-title">Create Date</div>
+        <div class="col-xs-2 col-md-2 newrequest-title text-left">Create Date</div>
         <div class="col-xs-10 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
       </div>
     </div>
@@ -60,15 +60,15 @@
           </div>
         </div>
         <div class="row" style="display:none">
-          <div class="col-xs-2 col-md-2 newrequest-title">Title</div>
+          <div class="col-xs-2 col-md-2 newrequest-title text-left">Title</div>
           <div class="col-xs-10 col-md-10" id="divtitle"><%= request.Title %></div>
         </div>
         <div class="row" style="display:none">
-          <div class="col-xs-2 col-md-2 newrequest-title">Office</div>
+          <div class="col-xs-2 col-md-2 newrequest-title text-left">Office</div>
           <div class="col-xs-10 col-md-10" id="divoffice"><%= request.Location %></div>
         </div>
         <div class="row">
-          <div class="col-xs-2 col-md-2 newrequest-title">Department</div>
+          <div class="col-xs-2 col-md-2 newrequest-title text-left">Department</div>
           <div class="col-xs-10 col-md-10" id="divdepartment"><%= request.DEPT %></div>
         </div>
       </div>
@@ -76,7 +76,7 @@
 
     <div class="request-application">
       <div class="row">
-        <div class="col-xs-10 col-md-10 newrequest-title">Service Acquired for</div>
+        <div class="col-xs-10 col-md-10 newrequest-title text-left">Service Acquired for</div>
       </div>
       <div class="select-service-header" style="border: none;">
         <div class="">
@@ -88,7 +88,7 @@
 
 
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title">Justification and Important Notes<span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Justification and Important Notes<span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
           </div>
           <div class="row">
             <div class="col-md-10">
@@ -97,7 +97,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title">Expected Delivery Date</div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Expected Delivery Date</div>
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
@@ -111,7 +111,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title">Frequency/Duration of Use</div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Frequency/Duration of Use</div>
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
@@ -120,7 +120,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title">Estimated Cost (HK$)</div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Estimated Cost (HK$)</div>
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
@@ -129,7 +129,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title">Budget Provided</div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Budget Provided</div>
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
@@ -138,7 +138,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title">Budgeted Sum</div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Budgeted Sum</div>
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
@@ -147,7 +147,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title">Recommend By</div>
+            <div class="col-xs-2 col-sm-2 newrequest-title text-right">Recommend By</div>
             <div class="col-xs-8 col-md-8 btn-group full-width recommend-container">
               <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>
@@ -167,7 +167,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title">CC</div>
+            <div class="col-xs-2 col-sm-2 newrequest-title text-right">CC</div>
             <div class="col-xs-9 col-md-9 contact-group">
 
             </div>
@@ -187,7 +187,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title">Remark</div>
+            <div class="col-xs-2 col-sm-2 newrequest-title text-right">Remark</div>
             <div class="col-xs-8 col-md-8">
               <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
             </div>
@@ -212,7 +212,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-10 col-md-10 center buttons-container">
+            <div class="col-xs-12 col-md-12 buttons-container">
               <!--
                 <button class="btn btn-primary" id="btnBack" style="display:none" type="button">Back</button>
                 <button class="btn btn-primary" id="btnsave" type="button">Save</button>

@@ -17,8 +17,8 @@
       </div>
       <div class="col-xs-9 col-md-9 btn-group full-width service-object-container">
         <button type="button" class="service-request btn btn-default selectleve2sub" data-toggle="dropdown" id="leve2sub">
-          <% if (request.SValue) { %>
-            <%= request.Name %>
+          <% if (request.selectedRequestModel) { %>
+            <%= request.selectedRequestModel.toJSON().Name %>
           <% } else { %>
             -- Select --
           <% }%>
@@ -41,7 +41,7 @@
       <div class="col-xs-1 col-md-1">&nbsp;</div>
       <div class="col-md-9">
         <!-- <textarea class="level3 form-control service-notes" rows="3" disabled=<%= request.selectedServiceObject %> ><%= request.SValue%></textarea> -->
-        <textarea class="level3 form-control service-notes" rows="3" ><%= request.SValue%></textarea>
+        <textarea class="level3 form-control service-notes" rows="3" ><% if (request.selectedRequestModel) { %><%= request.selectedRequestModel.toJSON().Notes %><% } %></textarea>
       </div>
     </div>
     <div class="sep-space"></div>

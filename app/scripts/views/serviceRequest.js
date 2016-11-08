@@ -24,12 +24,15 @@ Hktdc.Views = Hktdc.Views || {};
       collection.remove(this.model);
 
       /* also delete the collection */
-      this.requestFormModel.toJSON().selectedServiceCollection.remove(this.model.toJSON().selectedRequestModel);
+      this.requestFormModel.toJSON().selectedServiceCollection.remove(
+        this.model.toJSON().selectedRequestModel
+      );
       // console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
     addNotesToServiceObject: function(ev) {
       // console.log($(ev.target).val());
       this.model.set({
+        // sl
         Notes: $(ev.target).val().trim()
       });
     },
@@ -93,6 +96,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var request = this.model.toJSON();
+      console.log(request);
       var tmpl = this.template({
         request: request,
 
@@ -123,7 +127,7 @@ Hktdc.Views = Hktdc.Views || {};
         this.serviceTypeModel.set({ needAddBtn: false });
       }
       this.serverviceCatagoryModel.set({
-        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount+1
+        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount + 1
       });
       this.renderServiceRequest(model, this.collection.length - 1);
     },
@@ -131,12 +135,13 @@ Hktdc.Views = Hktdc.Views || {};
     removeServiceRequest: function(model) {
       // console.log('removeServiceRequest in ServiceRequestList view');
       this.serverviceCatagoryModel.set({
-        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount-1
+        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount - 1
       });
       if (model.toJSON().ControlFlag === 2) {
         // hide add button
         this.serviceTypeModel.set({ needAddBtn: true });
       }
+      // console.log(model.toJSON().selectedRequestModel.toJSON());
       $(this.el).empty();
       this.render();
     },
@@ -199,7 +204,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      if (this.collection.toJSON().length > 0){
+      if (this.collection.toJSON().length > 0) {
         if (String(this.collection.toJSON()[0].ControlFlag) === '2') {
           // method 1
           // this.renderTextServiceObjectList(this.collection);

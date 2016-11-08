@@ -11,7 +11,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: 'div',
 
-    className: 'available-buttons',
+    className: 'available-buttons text-center',
 
     events: {
       'click #btnsave': 'clickSaveHandler',
