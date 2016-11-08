@@ -219,7 +219,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* click recommend will trigger change of the selectedRecommentModel */
       this.model.on('change:selectedRecommentModel', function(model, selectedRecommentModel, options) {
-        console.log('selectedRecommentModel:', selectedRecommentModel);
+        console.log('selectedRecommentModel:', selectedRecommentModel.toJSON());
         if (!selectedRecommentModel) {
           $('#recommend-btn', self.el).text('--Select--');
           return false;
@@ -233,7 +233,7 @@ Hktdc.Views = Hktdc.Views || {};
         var Preparer = self.model.toJSON().PreparerUserID;
         var Applicant = self.model.toJSON().selectedApplicantModel.toJSON().UserId;
         var ApplicantRuleCode = self.model.toJSON().selectedApplicantModel.toJSON().RuleCode;
-        var Approver = self.model.toJSON().selectedRecommentModel.toJSON().UserId;
+        var Approver = self.model.toJSON().selectedRecommentModel.toJSON().WorkerId;
 
         // var ApproverRuleCode = self.model.toJSON().selectedRecommentModel.toJSON().RuleCode;
         console.log('Preparer: ', Preparer);
@@ -274,7 +274,7 @@ Hktdc.Views = Hktdc.Views || {};
               approverSubmittedTo: 'Approver'
             });
           } else {
-            alert('RuleCode IT0009, rule code error');
+            alert('RuleCode IT0009, rule code error, Preparer: ' + Preparer + ', Applicant: ' + Applicant + ', Approver: ' + Approver);
           }
         } else if (ApplicantRuleCode === 'IT0008') {
           if (Preparer === Applicant && Approver !== Applicant) {
