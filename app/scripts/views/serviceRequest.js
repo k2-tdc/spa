@@ -20,13 +20,27 @@ Hktdc.Views = Hktdc.Views || {};
       'blur .service-notes': 'addNotesToServiceObject'
     },
     deleteRequestObject: function(ev) {
-      var collection = this.model.get('parentCollection');
-      collection.remove(this.model);
+      var collection = this.model.toJSON().parentCollection;
+      var self = this;
+      // console.log('parent collection', collection.toJSON());
+      // console.log('model', this.model.toJSON());
+      if (this.model.toJSON().GUID) {
+        /* have GUID = (ControlFlag = 1) */
+        collection.remove(this.model);
+        /* also delete the collection */
+        this.requestFormModel.toJSON().selectedServiceCollection.remove(
+          this.model.toJSON().selectedRequestModel
+        );
+      } else {
+        /* have GUID = (ControlFlag = 1) */
 
-      /* also delete the collection */
-      this.requestFormModel.toJSON().selectedServiceCollection.remove(
-        this.model.toJSON().selectedRequestModel
-      );
+        collection.each(function(model) {
+          self.requestFormModel.toJSON().selectedServiceCollection.remove(model);
+        });
+
+        collection.reset();
+        // console.log(collection.toJSON());
+      }
       // console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
     addNotesToServiceObject: function(ev) {
@@ -96,7 +110,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var request = this.model.toJSON();
-      console.log(request);
+      // console.log(request);
       var tmpl = this.template({
         request: request,
 
@@ -118,6 +132,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.serviceTypeName = props.serviceTypeModel.toJSON().Name;
       this.listenTo(this.collection, 'add', this.addServiceRequest);
       this.listenTo(this.collection, 'remove', this.removeServiceRequest);
+      this.listenTo(this.collection, 'reset', this.resetServiceRequest);
     },
 
     addServiceRequest: function(model) {
@@ -133,6 +148,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     removeServiceRequest: function(model) {
+      console.log('remove');
       // console.log('removeServiceRequest in ServiceRequestList view');
       this.serverviceCatagoryModel.set({
         selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount - 1
@@ -142,6 +158,14 @@ Hktdc.Views = Hktdc.Views || {};
         this.serviceTypeModel.set({ needAddBtn: true });
       }
       // console.log(model.toJSON().selectedRequestModel.toJSON());
+      $(this.el).empty();
+      this.render();
+    },
+
+    resetServiceRequest: function() {
+      /* should be from ControlFlag = 2 source */
+
+      this.serviceTypeModel.set({ needAddBtn: true });
       $(this.el).empty();
       this.render();
     },
@@ -169,10 +193,10 @@ Hktdc.Views = Hktdc.Views || {};
     renderTextServiceRequest: function() {
       // console.log(this.availableServiceObjectArray.toJSON());
       var model = new Hktdc.Models.ServiceRequest({
-        'index': 1,
-        'availableServiceObjectArray': _.extend(this.availableServiceObjectArray, this.collection.toJSON()),
-        'parentCollection': this.collection,
-        'serviceTypeName': this.serviceTypeName
+        index: 1,
+        availableServiceObjectArray: _.extend(this.availableServiceObjectArray, this.collection.toJSON()),
+        parentCollection: this.collection,
+        serviceTypeName: this.serviceTypeName
       });
 
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
@@ -219,7 +243,7 @@ Hktdc.Views = Hktdc.Views || {};
           // serviceRequestItemView.render();
           // $(this.el).append(serviceRequestItemView.el);
         } else {
-          console.log(this.collection.toJSON());
+          // console.log(this.collection.toJSON());
           this.collection.each(this.renderServiceRequest);
         }
       }

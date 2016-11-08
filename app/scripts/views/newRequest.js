@@ -161,7 +161,7 @@ Hktdc.Views = Hktdc.Views || {};
               selectedCCCollection: new Hktdc.Collections.SelectedCC()
 
             });
-            console.log(self.model.toJSON().selectedServiceCollection.toJSON());
+            // console.log(self.model.toJSON().selectedServiceCollection.toJSON());
 
             /* Render the components below */
             self.renderApplicantAndCCList(results[0]);
@@ -297,12 +297,12 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.toJSON().selectedServiceCollection.on('add', function(addedService, newCollection) {
-        console.log('added service', newCollection.toJSON());
+        // console.log('added service', newCollection.toJSON());
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
       });
       this.model.toJSON().selectedServiceCollection.on('change', function(changedModel) {
-        // console.log('changed service', newCollection.toJSON());
+        console.log('changed service', newCollection.toJSON());
         // console.log(addedService);
         // console.log(newCollection);
         /* clear the selectedRecommentModel */

@@ -6,7 +6,7 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.ServiceRequest = Backbone.Model.extend({
-    idAttribute: 'index',
+    idAttribute: 'GUID',
     defaults: {
       selectedServiceObject: true
     }

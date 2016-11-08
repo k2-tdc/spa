@@ -11,10 +11,8 @@
     </div>
 
     <!-- Add Button: click to add a row to level 3 -->
-    <%
-    if (serviceType.needAddBtn) {
-    %>
-    <div class="row">
+
+    <div class="row" style="<% if (!serviceType.needAddBtn) { %> display:block <% }  %>">
       <div class="col-xs-4 col-md-3 btn-group">
         <button type="button" class="btn btn-orange btn-add">
           <span class="glyphicon glyphicon-plus"></span>
@@ -22,9 +20,7 @@
         </button>
       </div>
     </div>
-    <%
-    }
-    %>
+
 
   </div>
 </div>
