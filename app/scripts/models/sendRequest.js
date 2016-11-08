@@ -48,6 +48,7 @@ Hktdc.Models = Hktdc.Models || {};
         Remark: '',
         Attachments: [],
         ActionTakerRuleCode: '',
+        // run time use applicant submittedTo or approver submittedTo
         SubmittedTo: ''
       }
     },

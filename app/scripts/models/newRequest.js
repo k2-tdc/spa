@@ -68,7 +68,8 @@ Hktdc.Models = Hktdc.Models || {};
       currentCC: null,
       requestService: [],
       remark: null,
-      submittedTo: null,
+      applicantSubmittedTo: null,
+      approverSubmittedTo: null,
 
       showLog: false,
       showFileLog: false,

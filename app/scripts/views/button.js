@@ -15,7 +15,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click #btnsave': 'clickSaveHandler',
-      'click #btnapplicant': 'clickApplcantHandler',
+      'click #btnapplicant': 'clickApplicantHandler',
       'click #btnapprover': 'clickApproverHandler',
       'click .alltaskbtn': 'doApproveHandler'
     },
@@ -49,29 +49,32 @@ Hktdc.Views = Hktdc.Views || {};
 
           }
         });
-
-
       } else {
         return false;
       }
     },
 
     clickSaveHandler: function() {
-      this.saveAndApprover('Draft');
+      this.saveAndApprover('Draft', '');
     },
 
-    clickApplcantHandler: function() {
-      this.saveAndApprover('Submitted');
+    clickApplicantHandler: function() {
+      this.saveAndApprover('Submitted', 'applicant');
     },
 
     clickApproverHandler: function() {
-      this.saveAndApprover('Submitted');
+      this.saveAndApprover('Submitted', 'approver');
     },
 
-    saveAndApprover: function(status) {
+    saveAndApprover: function(status, submitTo) {
       /* set the request object */
+      var realSubmitTo = this.requestFormModel.toJSON().applicantSubmittedTo;
+      if (submitTo) {
+        realSubmitTo = this.requestFormModel.toJSON()[submitTo + 'SubmittedTo'];
+      }
+      console.log(realSubmitTo);
       var insertServiceResponse;
-      Q.fcall(this.setRequestObject.bind(this, status))
+      Q.fcall(this.setRequestObject.bind(this, status, realSubmitTo))
         .then(function(sendRequestModel) {
           console.log('ended set data', sendRequestModel.toJSON());
           /* send the request object */
@@ -105,10 +108,7 @@ Hktdc.Views = Hktdc.Views || {};
         });
     },
 
-    setRequestObject: function(status, callback) {
-      if (status === 'Draft') {
-        this.requestFormModel.set({ submittedTo: '' });
-      }
+    setRequestObject: function(status, realSubmitTo) {
       var requestFormData = this.requestFormModel.toJSON();
       var sendRequestModel = new Hktdc.Models.SendRequest({
         Req_Status: status,
@@ -141,7 +141,8 @@ Hktdc.Views = Hktdc.Views || {};
           };
         }),
         Remark: requestFormData.Remark,
-        SubmittedTo: requestFormData.submittedTo,
+        // TODO: use applicant or approver submittedTo
+        SubmittedTo: realSubmitTo,
         ActionTakerRuleCode: this.getActionTaker(this.requestFormModel.toJSON().selectedServiceCollection.toJSON()),
 
         Service_AcquireFor: this.requestFormModel.toJSON().selectedServiceCollection.toJSON()
