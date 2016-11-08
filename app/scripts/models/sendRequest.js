@@ -41,7 +41,7 @@ Hktdc.Models = Hktdc.Models || {};
         Frequency_Duration_of_Use: '',
         Estimated_Cost: '',
         Budget_Provided: '',
-        Budgeted_Sum: '',
+        // Budgeted_Sum: '',
         Recommend_By: '',
         Recommend_By_ID: '',
         cc: [],

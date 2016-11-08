@@ -72,7 +72,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (submitTo) {
         realSubmitTo = this.requestFormModel.toJSON()[submitTo + 'SubmittedTo'];
       }
-      console.log(realSubmitTo);
+      // console.log(realSubmitTo);
       var insertServiceResponse;
       Q.fcall(this.setRequestObject.bind(this, status, realSubmitTo))
         .then(function(sendRequestModel) {
@@ -91,20 +91,25 @@ Hktdc.Views = Hktdc.Views || {};
           );
         }.bind(this))
 
-        .then(function(status) {
+        .then(function() {
           // console.log('end send attachment');
-          // if (status === 'Submitted') {
-          //   window.location.href = '/';
-          // } else if (status === 'Draft') {
-          //   window.location.href = '/#draft';
-          // }
+          // FormID = ReferenceID and FormID
           if (insertServiceResponse.FormID) {
-            window.location.href = Hktdc.Config.projectPath + '#draft';
+            // window.location.href = Hktdc.Config.projectPath + '#draft';
+            alert("Record Saved Successfully \n Reference ID : " + insertServiceResponse.FormID);
+
+            if (status === 'Submitted') {
+              window.location.href = '/';
+            } else if (status === 'Draft') {
+              window.location.href = Hktdc.Config.projectPath + '/#draft';
+            }
+          } else {
+            alert('error on saving the ')
           }
         })
 
         .fail(function(err) {
-          alert('Error on saving record\n\r', err);
+          alert('Error on saving record\n', err);
         });
     },
 
@@ -127,7 +132,7 @@ Hktdc.Views = Hktdc.Views || {};
         Frequency_Duration_of_Use: requestFormData.DurationOfUse,
         Estimated_Cost: requestFormData.EstimatedCost,
         Budget_Provided: requestFormData.BudgetProvided,
-        Budgeted_Sum: requestFormData.BudgetSum,
+        // Budgeted_Sum: requestFormData.BudgetSum,
         Recommend_By: (requestFormData.selectedRecommentModel)
           ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
           : null,
@@ -165,7 +170,7 @@ Hktdc.Views = Hktdc.Views || {};
         Frequency_Duration_of_Use: requestFormData.DurationOfUse,
         Estimated_Cost: requestFormData.EstimatedCost,
         Budget_Provided: requestFormData.BudgetProvided,
-        Budgeted_Sum: requestFormData.BudgetSum,
+        // Budgeted_Sum: requestFormData.BudgetSum,
         Recommend_By: (requestFormData.selectedRecommentModel)
           ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
           : null,

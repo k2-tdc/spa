@@ -70,7 +70,12 @@ Hktdc.Views = Hktdc.Views || {};
         // offCanvas: false
       });
       // console.log($('nav#menu'));
-      $('nav#menu').data('mmenu').open();
+      if ($(window).width() <= 767) {
+        $('nav#menu').data('mmenu').close();
+      } else {
+        $('nav#menu').data('mmenu').open();
+      }
+
       // console.log('rendered menu.js');
     },
 

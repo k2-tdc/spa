@@ -17,17 +17,7 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     initialize: function() {
-      /*this.on('route', function(route, params) {
-        var currentRoute = Backbone.history.getHash();
-        // console.log(currentRoute);
-        // var routeName = currentRoute.toJSON().activeTab.toUpperCase();
-        var routeBase = currentRoute.split('/')[0].toUpperCase();
-        // console.log('routeName: ', routeName);
-        // console.log('routeBase: ', routeBase);
-        // console.log('params: ', params);
-        var currentPageName = $('nav#menu').find('li[routename=' + routeBase + ']').text().trim();
-        // menuModel.set('activeTab', Backbone.history.getHash());
-      });*/
+      var footerView = new Hktdc.Views.Footer();
     },
 
     checkStatus: function() {

@@ -17,7 +17,7 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtfrequency': 'updateNewRequestModel',
       'blur #txtestimatedcost': 'updateNewRequestModel',
       'blur #txtbudgetprovided': 'updateNewRequestModel',
-      'blur #txtbudgetsum': 'updateNewRequestModel',
+      // 'blur #txtbudgetsum': 'updateNewRequestModel',
       'blur #txtremark': 'updateNewRequestModel'
     },
 

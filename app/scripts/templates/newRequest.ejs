@@ -37,7 +37,7 @@
     <div class="panel panel-default select-applicant">
       <div class="panel-body">
         <div class="row">
-          <label for="applicant" class="col-sm-2 control-label">Applicant</label>
+          <label for="applicant" class="col-sm-2 control-label">Applicant *</label>
           <div class="col-xs-10 col-md-10 btn-group full-width applicant-container">
             <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">
               <% if (request.selectedApplicantName){ %>
@@ -115,7 +115,7 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title text-left">Estimated Cost (HK$)</div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Estimated Cost (HK$) *</div>
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
@@ -132,7 +132,7 @@
             </div>
           </div>
           <div class="sep-space"></div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Budget Sum</div>
           </div>
           <div class="row">
@@ -140,9 +140,9 @@
               <input type="text" class="form-control" id="txtbudgetsum" field="BudgetSum" value="<%= request.BudgetSum %>"/>
             </div>
           </div>
-          <div class="sep-space"></div>
+          <div class="sep-space"></div> -->
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title text-right">Recommend By</div>
+            <div class="col-xs-2 col-sm-2 newrequest-title text-right">Recommend By *</div>
             <div class="col-xs-8 col-md-8 btn-group full-width recommend-container">
               <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>

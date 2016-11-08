@@ -53,7 +53,7 @@ Hktdc.Models = Hktdc.Models || {};
       // budget: null,
       BudgetProvided: null,
       // budgetSum: null,
-      BudgetSum: null,
+      // BudgetSum: null,
 
       Remark: null,
 
@@ -65,6 +65,7 @@ Hktdc.Models = Hktdc.Models || {};
       selectedApplicantModel: null,
       selectedRecommentModel: null,
 
+      employeeList: null,
       currentCC: null,
       requestService: [],
       remark: null,
