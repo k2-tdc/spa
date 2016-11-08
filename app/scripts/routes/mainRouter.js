@@ -38,7 +38,6 @@ Hktdc.Routers = Hktdc.Routers || {};
         currentPageName: 'Check Status'
       });
       subheaderMenuListView.render();
-
       $('.subheader-menu-container').html(subheaderMenuListView.el);
     },
 
@@ -137,6 +136,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         currentPageName: 'New Request'
       });
       subheaderMenuListView.render();
+      console.log($('.subheader-menu-container'));
 
       $('.subheader-menu-container').html(subheaderMenuListView.el);
 

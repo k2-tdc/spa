@@ -36,8 +36,52 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       // console.log(this.model.toJSON());
       var rawMenu = this.model.toJSON();
-      var menu = (_.isArray(rawMenu)) ? rawMenu[0].Menu : rawMenu.Menu;
+      var menu = rawMenu.Menu;
       // var self = this;
+      /* add PList and User into menu for mobile version */
+      var PListMenu = {
+        Mlink: '#',
+        Name: 'PROCESS LIST',
+        Route: '/#',
+        RouteName: 'Process List',
+        Scount: null,
+        onlyMobile: true,
+        sumenu: _.map(rawMenu.PList, function(Process) {
+          return {
+            Mlink: '#',
+            Name: Process.ProcessDisplayName,
+            onlyMobile: true,
+            Route: '/#',
+            Scount: null,
+            RouteName: Process.ProcessName
+          };
+        })
+      };
+      var UserMenu = {
+        Mlink: '#',
+        Name: rawMenu.User.UserName,
+        Route: '/#',
+        RouteName: rawMenu.User.UserID,
+        Scount: null,
+        onlyMobile: true,
+        sumenu: [{
+          Mlink: '#',
+          Name: 'Delegation',
+          onlyMobile: true,
+          Route: '/#',
+          Scount: null,
+          RouteName: 'delegation'
+        }, {
+          Mlink: '#',
+          onlyMobile: true,
+          Name: 'Logout',
+          Route: '/#',
+          Scount: null,
+          RouteName: 'logout'
+        }]
+      };
+      menu.push(PListMenu, UserMenu);
+      console.log(menu);
       /* map the name, the server should return the route later */
       _.each(menu, function(raw) {
         if (raw.sumenu) {
@@ -59,7 +103,8 @@ Hktdc.Views = Hktdc.Views || {};
         raw.RouteName = upperLodash || 'HOME';
       });
 
-      // console.log(JSON.stringify(menu, null, 2));
+      // console.log(menu);
+
       this.$el.html(this.template({
         data: menu
       }));

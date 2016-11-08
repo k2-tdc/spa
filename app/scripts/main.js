@@ -140,12 +140,14 @@ window.Hktdc = {
         Hktdc.Config.userName = menu.UserName;
         // console.log('menu.UserName', menu.UserName);
         menuMModel.set({
-          Menu: menu.Menu
+          Menu: menu.Menu,
+          PList: menu.PList,
+          User: { UserName: menu.UserName, UserID: menu.UserID }
         });
 
         headerModel.set({
           processList: menu.PList
-        })
+        });
         var menuView = new Hktdc.Views.Menu({
           model: menuMModel
         });
