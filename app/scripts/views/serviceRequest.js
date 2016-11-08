@@ -15,68 +15,9 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/serviceRequest.ejs'],
     tagName: 'div',
     className: 'Headleve2sub',
-    events: {
-      'click .btn-del': 'deleteRequestObject',
-      'blur .service-notes': 'addNotesToServiceObject'
-    },
-    deleteRequestObject: function(ev) {
-      var collection = this.model.toJSON().parentCollection;
-      var self = this;
-      // console.log('parent collection', collection.toJSON());
-      // console.log('model', this.model.toJSON());
-      if (this.model.toJSON().GUID) {
-        /* have GUID = (ControlFlag = 1) */
-        collection.remove(this.model);
-        /* also delete the collection */
-        this.requestFormModel.toJSON().selectedServiceCollection.remove(
-          this.model.toJSON().selectedRequestModel
-        );
-      } else {
-        /* have GUID = (ControlFlag = 1) */
-
-        collection.each(function(model) {
-          self.requestFormModel.toJSON().selectedServiceCollection.remove(model);
-        });
-
-        collection.reset();
-        // console.log(collection.toJSON());
-      }
-      // console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
-    },
-    addNotesToServiceObject: function(ev) {
-      // console.log($(ev.target).val());
-      this.model.set({
-        // sl
-        Notes: $(ev.target).val().trim()
-      });
-    },
     initialize: function(props) {
       try {
         _.extend(this, props);
-        // var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.collection.toJSON());
-        // console.log(this.requestFormModel.toJSON().mode);
-        // if (String(this.model.toJSON().ControlFlag) === '2' && this.requestFormModel.toJSON().mode !== 'new') {
-        //   var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
-        //     model: this.model,
-        //     requestFormModel: this.requestFormModel,
-        //     serviceRequestModel: this.model
-        //   });
-        //   serviceObjectItemView.render();
-        //   setTimeout(function() {
-        //     $('.service-object-container', this.el).append(serviceObjectItemView.el);
-        //     this.initModelChangeHandler();
-        //   }.bind(this));
-          // var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
-          //   model: this.model,
-          //   requestFormModel: this.requestFormModel,
-          //   serviceRequestModel: this.model
-          // });
-          // serviceObjectItemView.render();
-          // setTimeout(function() {
-          //   $('.service-object-container', this.el).append(serviceObjectItemView.el);
-          //   this.initModelChangeHandler();
-          // }.bind(this));
-        // } else {
         var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
         var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
           collection: serviceObjectCollection,
@@ -97,6 +38,42 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
+    events: {
+      'click .btn-del': 'deleteRequestObject',
+      'blur .service-notes': 'addNotesToServiceObject'
+    },
+    deleteRequestObject: function(ev) {
+      var collection = this.model.toJSON().parentCollection;
+      var self = this;
+      // console.log('parent collection', collection.toJSON());
+      // console.log('model', this.model.toJSON());
+
+      /* have GUID = (ControlFlag = 1) */
+      if (this.model.toJSON().GUID) {
+        collection.remove(this.model);
+        /* also delete the collection */
+        this.requestFormModel.toJSON().selectedServiceCollection.remove(
+          this.model.toJSON().selectedRequestModel
+        );
+
+      /* not have GUID = (ControlFlag = 2) */
+      } else {
+        collection.each(function(model) {
+          self.requestFormModel.toJSON().selectedServiceCollection.remove(model);
+        });
+
+        collection.reset();
+        // console.log(collection.toJSON());
+      }
+      // console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+    },
+    addNotesToServiceObject: function(ev) {
+      // console.log($(ev.target).val());
+      this.model.set({
+        // sl
+        Notes: $(ev.target).val().trim()
+      });
+    },
     initModelChangeHandler: function() {
       var self = this;
       this.model.on('change:selectedRequestModel', function(selectedReq, newModel) {
@@ -162,8 +139,12 @@ Hktdc.Views = Hktdc.Views || {};
       this.render();
     },
 
-    resetServiceRequest: function() {
+    resetServiceRequest: function(col, prevCol) {
       /* should be from ControlFlag = 2 source */
+      // console.log('reset:', col);
+      this.serverviceCatagoryModel.set({
+        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount - prevCol.previousModels.length
+      });
 
       this.serviceTypeModel.set({ needAddBtn: true });
       $(this.el).empty();
@@ -178,6 +159,7 @@ Hktdc.Views = Hktdc.Views || {};
         index: index + 1,
         availableServiceObjectArray: this.availableServiceObjectArray,
         parentCollection: this.collection,
+        serverviceCatagoryModel: this.serverviceCatagoryModel,
         serviceTypeName: this.serviceTypeName
       });
 
@@ -196,7 +178,8 @@ Hktdc.Views = Hktdc.Views || {};
         index: 1,
         availableServiceObjectArray: _.extend(this.availableServiceObjectArray, this.collection.toJSON()),
         parentCollection: this.collection,
-        serviceTypeName: this.serviceTypeName
+        serviceTypeName: this.serviceTypeName,
+        serverviceCatagoryModel: this.serverviceCatagoryModel
       });
 
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({

@@ -302,7 +302,6 @@ Hktdc.Views = Hktdc.Views || {};
         self.model.set({ selectedRecommentModel: null });
       });
       this.model.toJSON().selectedServiceCollection.on('change', function(changedModel) {
-        console.log('changed service', newCollection.toJSON());
         // console.log(addedService);
         // console.log(newCollection);
         /* clear the selectedRecommentModel */
