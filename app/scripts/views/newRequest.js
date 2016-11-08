@@ -502,7 +502,7 @@ Hktdc.Views = Hktdc.Views || {};
         requestFormModel: this.model
       });
       console.log(buttonView.el);
-      $('.available-buttons', this.el).html(buttonView.el);
+      $('.buttons-container', this.el).html(buttonView.el);
     },
 
     renderApplicantDetail: function(selectedApplicantModel) {

@@ -412,6 +412,18 @@ div.dataTables_wrapper table {
   margin-top: 4px;
 }
 
+.buttons-container{
+  .available-buttons{
+    border: 1px #CCC solid;
+    border-radius: 4px;
+    padding: 11px;
+    text-align: center;
+  }
+}
+
+
+// end vidosys
+
 /* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
 @media screen and (max-width: 767px) {
   #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
