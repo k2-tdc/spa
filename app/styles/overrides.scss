@@ -205,6 +205,10 @@ div.newrequest-title {
   margin-bottom: 0;
 }
 
+.service-catagory-item > .select-service-header:hover {
+  box-shadow: 0 0 10px #f57921;
+}
+
 .select-applicant > .panel-body {
   padding: 15px;
 }
@@ -419,8 +423,15 @@ div.dataTables_wrapper table {
   }
 }
 
+#footer {
+  background-color: white;
+  color: #333;
+}
 
-// end vidosys
+#statusTable thead tr th {
+  background-color: rgb(232, 232, 232);
+}
+// end vicosys
 
 /* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
 @media screen and (max-width: 767px) {
@@ -469,6 +480,13 @@ div.dataTables_wrapper table {
   .table-responsive {
     border: 0;
   }
+
+  // vicosys
+  #user-profile-menu {
+    display: none;
+  }
+  // end vicosys
+
   @media screen and (min-width: 520px) {
     #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
       font-size: 16px;
@@ -521,7 +539,8 @@ div.dataTables_wrapper table {
   }
 
   html.mm-opening #header_main > span.sep-space {
-    width: 90px;
+    /*width: 90px;*/
+    width: 20px;
   }
 
   html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
@@ -545,5 +564,41 @@ div.dataTables_wrapper table {
     html.mm-opening #header_main > span.sep-space {
       width: 250px;
     }
+  }
+}
+
+// vicosys
+@media screen and (max-width: 768px) {
+  .newrequest-basic-information div[class^="col-xs-"] {
+    padding:0;
+  }
+  .service-catagory-item > .select-service-header {
+    background-color:#e8e8e8;
+  }
+  .buttons-container > .available-buttons {
+    background-color:#e8e8e8;
+  }
+  .service-catagory-item > .select-service-header:hover {
+    box-shadow: none;
+  }
+  .service-catagory-item > .select-service-header.panel-active {
+    box-shadow: none;
+  }
+  .footer {
+    padding:0;
+    line-height: inherit;
+  }
+  .mobile-text-align-left {
+    text-align: left;
+  }
+  #header_main > .nav-icon, #header_main > .sep-space, #header_main .btn-group.nav-header-main {
+    table-layout: fixed;
+  }
+
+  #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+    width: 100px;
+    overflow: hidden;
+    text-overflow : ellipsis;
+    white-space : nowrap;
   }
 }

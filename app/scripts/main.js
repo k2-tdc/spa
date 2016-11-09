@@ -134,6 +134,10 @@ window.Hktdc = {
     var headerView = new Hktdc.Views.Header({
       model: headerModel
     });
+    var footerModel = new Hktdc.Models.Footer();
+    var footerView = new Hktdc.Views.Footer({
+      model: footerModel
+    });
     menuMModel.fetch({
       beforeSend: utils.setAuthHeader,
       success: function(menuModel) {

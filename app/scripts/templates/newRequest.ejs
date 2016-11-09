@@ -19,27 +19,27 @@
 
     <div class="newrequest-basic-information">
       <div class="row">
-        <div class="col-xs-2 col-md-2 newrequest-title text-left">Status</div>
-        <div class="col-xs-10 col-md-4" id="divStatus">
-          <% if (request.FormStatus) { %>
-            <%= request.FormStatus %>
-          <% } else { %>
-            New
-          <% } %>
-        </div>
-        <div class="col-xs-2 col-md-2 newrequest-title text-left">Prepared by</div>
-        <div class="col-xs-10 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
+        <% if (request.ReferenceID) { %>
+          <div class="col-xs-3 col-md-2 newrequest-title text-left">Ref ID</div>
+          <div class="col-xs-3 col-md-4" id="divRefID"><%= request.ReferenceID %></div>
+        <% } else { %>
+          <div class="col-xs-3 col-md-2 newrequest-title text-left"></div>
+          <div class="col-xs-3 col-md-4" id="divRefID"></div>
+        <% } %>
+        <div class="col-xs-3 col-md-2 newrequest-title text-left">Create Date</div>
+        <div class="col-xs-3 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
       </div>
       <div class="row">
-        <% if (request.ReferenceID) { %>
-          <div class="col-xs-2 col-md-2 newrequest-title text-left">Ref ID</div>
-          <div class="col-xs-10 col-md-4" id="divRefID"><%= request.ReferenceID %></div>
-        <% } else { %>
-          <div class="col-xs-2 col-md-2 newrequest-title text-left"></div>
-          <div class="col-xs-10 col-md-4" id="divRefID"></div>
-        <% } %>
-        <div class="col-xs-2 col-md-2 newrequest-title text-left">Create Date</div>
-        <div class="col-xs-10 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
+        <div class="col-xs-3 col-md-2 newrequest-title text-left">Status</div>
+         <div class="col-xs-9 col-md-4" id="divStatus">
+           <% if (request.FormStatus) { %>
+             <%= request.FormStatus %>
+           <% } else { %>
+             New
+           <% } %>
+         </div>
+         <div class="col-xs-3 col-md-2 newrequest-title text-left">Prepared by</div>
+         <div class="col-xs-9 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
       </div>
     </div>
 
@@ -106,7 +106,7 @@
           </div>
           <div class="row">
             <div class="col-xs-10 col-sm-10">
-              <div class="input-group date pick-date-start" data-provide="datepicker">
+              <div class="input-group date pick-date-start" data-provide="datepicker" data-date-autoclose="true">
                 <input type="text" class="form-control" id="txtexpectedDD" field="EDeliveryDate" value="<%= request.EDeliveryDate %>" />
                 <div class="input-group-addon">
                   <span class="glyphicon glyphicon-th"></span>
@@ -152,8 +152,8 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title text-right">Recommend By</div>
-            <div class="col-xs-8 col-md-8 btn-group full-width recommend-container">
+            <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left">Recommend By</div>
+            <div class="col-xs-10 col-md-8 btn-group full-width recommend-container">
               <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>
                   <%= request.ApproverFNAME %>
@@ -172,15 +172,15 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title text-right">CC</div>
-            <div class="col-xs-9 col-md-9 contact-group">
+            <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left">CC</div>
+            <div class="col-xs-10 col-md-9 contact-group">
 
             </div>
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title">&nbsp;</div>
-            <div class="col-xs-8 col-md-8 btn-group full-width cc-container">
+            <div class="col-xs-10 col-sm-2 newrequest-title">&nbsp;</div>
+            <div class="col-xs-10 col-md-8 btn-group full-width cc-container">
               <button type="button" class="btn btn-default btncc selectedCC" data-toggle="dropdown">--Select--</button>
               <button type="button" class="btn btn-default dropdown-toggle btncc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
@@ -192,8 +192,8 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title text-right">Remark</div>
-            <div class="col-xs-8 col-md-8">
+            <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left">Remark</div>
+            <div class="col-xs-10 col-md-8">
               <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
             </div>
           </div>
@@ -210,8 +210,8 @@
 
 
           <div class="row">
-            <div class="col-xs-2 col-sm-2 newrequest-title"></div>
-            <div class="col-xs-4 col-md-3 btn-group" style="text-align: left;" id="divfilename">
+            <div class="col-xs-10 col-sm-2 newrequest-title"></div>
+            <div class="col-xs-10 col-md-3 btn-group" style="text-align: left;" id="divfilename">
             </div>
 
           </div>
