@@ -6,7 +6,7 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.Recommend = Backbone.Model.extend({
-    idAttribute: 'UserId',
+    idAttribute: 'WorkerId',
 
     defaults: {
     },

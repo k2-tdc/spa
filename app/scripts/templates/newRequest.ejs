@@ -57,12 +57,12 @@
           <div class="col-xs-10 col-md-10" id="divtitle"><%= request.Title %></div>
         </div>
         <div class="row" style="display:none">
-          <div class="col-xs-2 col-md-2 newrequest-title text-left">Office</div>
-          <div class="col-xs-10 col-md-10" id="divoffice"><%= request.Location %></div>
+          <div class="col-xs-12 col-md-2 newrequest-title text-left">Office</div>
+          <div class="col-xs-12 col-md-10" id="divoffice"><%= request.Location %></div>
         </div>
         <div class="row">
-          <div class="col-xs-2 col-md-2 newrequest-title text-left">Department</div>
-          <div class="col-xs-10 col-md-10" id="divdepartment"><%= request.DEPT %></div>
+          <div class="col-xs-12 col-md-2 newrequest-title text-left">Department</div>
+          <div class="col-xs-12 col-md-10" id="divdepartment"><%= request.DEPT %></div>
         </div>
       </div>
     </div>
@@ -93,7 +93,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Expected Delivery Date</div>
           </div>
           <div class="row">
-            <div class="col-xs-10 col-sm-10">
+            <div class="col-xs-12 col-sm-10">
               <div class="input-group date pick-date-start" data-provide="datepicker" data-date-autoclose="true">
                 <input type="text" class="form-control" id="txtexpectedDD" field="EDeliveryDate" value="<%= request.EDeliveryDate %>" />
                 <div class="input-group-addon">
@@ -107,7 +107,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Frequency/Duration of Use</div>
           </div>
           <div class="row">
-            <div class="col-xs-10 col-sm-10">
+            <div class="col-xs-12 col-sm-10">
               <input type="text" class="form-control" id="txtfrequency" field="DurationOfUse" value="<%= request.DurationOfUse %>" />
             </div>
           </div>
@@ -116,7 +116,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Estimated Cost (HK$) *</div>
           </div>
           <div class="row">
-            <div class="col-xs-10 col-sm-10">
+            <div class="col-xs-12 col-sm-10">
               <input type="text" class="form-control" id="txtestimatedcost" field="EstimatedCost" value="<%= request.EstimatedCost %>" />
             </div>
           </div>
@@ -125,7 +125,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Budget Provided</div>
           </div>
           <div class="row">
-            <div class="col-xs-10 col-sm-10">
+            <div class="col-xs-12 col-sm-10">
               <input type="text" class="form-control" id="txtbudgetprovided" field="BudgetProvided" value="<%= request.BudgetProvided %>" />
             </div>
           </div>
@@ -140,8 +140,8 @@
           </div>
           <div class="sep-space"></div> -->
           <div class="row">
-            <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left">Recommend By *</div>
-            <div class="col-xs-10 col-md-8 btn-group full-width recommend-container">
+            <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left">Recommend By *</div>
+            <div class="col-xs-12 col-md-8 btn-group full-width recommend-container">
               <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>
                   <%= request.ApproverFNAME %>
@@ -160,15 +160,15 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left">CC</div>
-            <div class="col-xs-10 col-md-9 contact-group">
+            <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left">CC</div>
+            <div class="col-xs-12 col-md-9 contact-group">
 
             </div>
           </div>
           <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-2 col-sm-2 newrequest-title">&nbsp;</div>
-            <div class="col-xs-8 col-md-8 btn-group full-width cc-container">
+            <div class="col-xs-10 col-md-8 btn-group full-width cc-container">
               <input type="text" class="cc-picker form-control" data-provide="typeahead" autocomplete="off"/>
               <!-- <button type="button" class="btn btn-default btncc selectedCC" data-toggle="dropdown">--Select--</button>
               <button type="button" class="btn btn-default dropdown-toggle btncc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -182,7 +182,7 @@
           <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left">Remark</div>
-            <div class="col-xs-10 col-md-8">
+            <div class="col-xs-12 col-md-8">
               <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
             </div>
           </div>
@@ -200,7 +200,7 @@
 
           <div class="row">
             <div class="col-xs-10 col-sm-2 newrequest-title"></div>
-            <div class="col-xs-10 col-md-3 btn-group" style="text-align: left;" id="divfilename">
+            <div class="col-xs-12 col-md-3 btn-group" style="text-align: left;" id="divfilename">
             </div>
 
           </div>

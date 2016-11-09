@@ -134,8 +134,9 @@ Hktdc.Views = Hktdc.Views || {};
         console.log('routeBase', routeBase);
         setTimeout(function(){
           // console.log($('li[routename="' + routeBase + '"]'));
-          $('nav#menu').data('mmenu').setSelected($('li[routename=' + routeBase + ']'));
-
+          if ($('li[routename="' + routeBase + '"]')) {
+            $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
+          }
         });
       } catch (e) {
         // TODO: pop the error box

@@ -8,27 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.Status = Backbone.Model.extend({
     idAttribute: 'id',
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/GetStatus'
-    },
-
-    initialize: function() {
-      // console.log('init sttus coll');
-      var that = this;
-      this.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          // console.log('suee');
-          that.renderStatusView();
-        },
-        error: function(model, response) {
-          console.error(response);
-          // alert(JSON.stringify(response.responseJSON.Message));
-        }
-      });
-
-      // this.on("reset", this.loadStatusindex, this);
-    },
+    initialize: function() {},
 
     loadStatusindex: function() {
       this.renderStatusView();

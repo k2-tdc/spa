@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST */
+/* global Hktdc, Backbone, JST, utils, _,  $, Q */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -12,26 +12,76 @@ Hktdc.Views = Hktdc.Views || {};
     el: '#mainContent',
 
     events: {
-      'click #btnSearchCheckStatus': 'doSearch'
+      'click #btnSearchCheckStatus': 'doSearch',
+      'change .applicant-select': 'updateModelByEvent',
+      'change .status-select': 'updateModelByEvent',
+      'blur .search-field': 'updateModelByEvent'
     },
 
     initialize: function(props) {
       console.debug('[ views/checkStatus.js ] - Initizing check status views');
       // this.listenTo(this.model, 'change', this.render);
+      var self = this;
+      // _.extend(this, props);
       this.render();
 
-      var statusModel = new Hktdc.Models.Status();
-      $('.date').datepicker();
+      $('.date')
+        .datepicker({
+          autoclose: true
+        })
+        .on('changeDate', function(ev, a) {
+          var $input = $(ev.target).find('input');
+          var fieldName = $input.attr('name');
+          var val = $input.val();
+          self.updateModel(fieldName, val);
+        });
 
+      Q.all([
+        this.loadEmployee(),
+        this.loadStatus()
+      ])
+        .then(function(results) {
+          var employeeCollection = results[0];
+          var statusCollection = results[1];
+          var applicantListView = new Hktdc.Views.ApplicantList({
+            tagName: 'select',
+            className: 'form-control applicant-select',
+            attributes: {name: 'Appl'},
+            collection: employeeCollection,
+            selectedApplicant: self.model.toJSON().Appl
+          });
+
+          var statusListView = new Hktdc.Views.StatusList({
+            collection: statusCollection,
+            selectedStatus: self.model.toJSON().CStat
+          });
+
+          $('.applicant-container', self.el).html(applicantListView.el);
+          console.log(statusListView.el);
+          $('.status-container', self.el).html(statusListView.el);
+        });
+    },
+
+    updateModel: function(field, value) {
+      var newObject = {};
+      newObject[field] = value;
+      console.log(newObject);
+      this.model.set(newObject);
+    },
+
+    updateModelByEvent: function(ev, fieldName) {
+      var field = $(ev.target).attr('name');
+      // console.log(field);
+      var newObject = {};
+      newObject[field] = $(ev.target).val();
+      console.log(newObject);
+      this.model.set(newObject);
     },
 
     doSearch: function() {
-      this.model.set('CStat', $('#ddindexstatus :selected', this.el).val());
-      this.model.set('ReferID', $('#txtindexrefid', this.el).val());
-      this.model.set('FDate', $('#txtIndexfromdate', this.el).val());
-      this.model.set('TDate', $('#txtIndextodate', this.el).val());
-      // this.model.set('Appl', $('#ddIndexapplicant :selected', this.el).val());
-      // this.model.set('UserId', $('#ddIndexapplicant :selected', this.el).val());
+      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode');
+      console.log(queryParams);
+      Backbone.history.navigate('draft' + utils.getQueryString(queryParams));
       this.statusDataTable.ajax.url(this.getAjaxURL()).load();
     },
 
@@ -54,7 +104,7 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       // this.$el.html(this.template(this.model.toJSON()));
       var self = this;
-      this.$el.html(this.template());
+      this.$el.html(this.template(this.model.toJSON()));
 
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable funciton */
@@ -78,21 +128,83 @@ Hktdc.Views = Hktdc.Views || {};
           }
         },
         columns: [{
-          data: "lastActionDate"
+          data: 'lastActionDate'
         }, {
-          data: "applicant"
+          data: 'applicant'
         }, {
-          data: "summary"
+          data: 'summary'
         }, {
-          data: "status"
+          data: 'status'
         }],
         bRetrieve: true
       });
 
-      $('#statusTable tbody', this.el).on('click', 'tr', function() {
+      $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.statusDataTable.row(this).data();
         Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
       });
+
+      $('#statusTable tbody', this.el).on('click', '.btn-del', function(ev) {
+        Backbone.emulateHTTP = true;
+        Backbone.emulateJSON = true;
+        ev.stopPropagation();
+        var rowData = self.statusDataTable.row($(this).parents('tr')).data();
+        var refId = rowData.refId;
+        var DeleteRequestModel = Backbone.Model.extend({
+          url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
+        });
+        var DeleteRequestModelInstance = new DeleteRequestModel();
+        DeleteRequestModelInstance.save(null, {
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            // console.log('success: ', a);
+            // console.log(b);
+            self.statusDataTable.ajax.reload();
+          },
+          error: function(err) {
+            console.log(err);
+            // console.log(b);
+          }
+        })
+        // var rowData = self.statusDataTable.row(this).data();
+        // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
+      });
+    },
+
+    loadEmployee: function() {
+      /* employee component */
+      var deferred = Q.defer();
+      // var self = this;
+
+      var employeeCollection = new Hktdc.Collections.Employee();
+      employeeCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
+          // console.log('selectedCCCollection: ', self.model);
+          deferred.resolve(employeeCollection);
+        },
+        error: function(err) {
+          deferred.reject(err);
+        }
+      });
+
+      return deferred.promise;
+    },
+
+    loadStatus: function() {
+      var deferred = Q.defer();
+      var statusCollection = new Hktdc.Collections.Status();
+      statusCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(statusCollection);
+        },
+        error: function(err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
     },
 
     getSummaryFromRow: function(formID, requestList) {
@@ -113,6 +225,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getStatusFrowRow: function(status, approver) {
+      if (status === 'Draft') {
+        return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>'
+      }
       return status + '<br />Recommend by: <br />' + approver;
     }
 

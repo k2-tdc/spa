@@ -10,23 +10,26 @@
     <div class="panel-body">
 
       <form class="form-horizontal">
-        <div class="form-group row">
-          <label for="status" class="col-sm-2 control-label">Status</label>
-          <div class="col-sm-6">
-            <select id="ddindexstatus" class="form-control"></select>
+        <% if (canChooseStatus) { %>
+          <div class="form-group row">
+            <label for="status" class="col-sm-2 control-label">Status</label>
+            <div class="col-sm-6 status-container">
+              <!-- status Select list here -->
+            </div>
           </div>
-        </div>
+        <% } %>
+
         <div class="form-group">
           <label for="ref_id" class="col-sm-2 control-label">Ref. ID</label>
           <div class="col-sm-6">
-            <input type="text" id="txtindexrefid" class="form-control" placeholder="">
+            <input type="text" id="txtindexrefid" name="ReferID" class="search-field form-control" placeholder="" value="<%= ReferID %>">
           </div>
         </div>
         <div class="form-group">
           <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
           <div class="col-xs-6 col-sm-3">
             <div class="input-group date pick-date-start" data-provide="datepicker">
-              <input type="text" id="txtIndexfromdate" class="form-control">
+              <input type="text" id="txtIndexfromdate" name="FDate" class="form-control" value="<%= FDate %>">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-th"></span>
               </div>
@@ -34,7 +37,7 @@
           </div>
           <div class="col-xs-3 col-sm-3">
             <div class="input-group date pick-date-end" data-provide="datepicker" data-date-autoclose="true">
-              <input type="text" id="txtIndextodate" class="form-control">
+              <input type="text" id="txtIndextodate" name="TDate" class="form-control" value="<%= TDate %>">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-th"></span>
               </div>
@@ -43,8 +46,8 @@
         </div>
         <div class="form-group">
           <label for="status" class="col-sm-2 control-label">Applicant</label>
-          <div class="col-sm-6">
-            <select id="ddIndexapplicant" class="form-control"></select>
+          <div class="col-sm-6 applicant-container">
+
           </div>
         </div>
 

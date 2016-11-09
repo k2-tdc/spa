@@ -1,4 +1,6 @@
+/* global Hktdc, Backbone, _ */
 /* all application level methods should be placed here */
+
 window.utils = {
 
   setURL: function(env) {
@@ -19,6 +21,16 @@ window.utils = {
     Hktdc.Config.needAuthHeader = envConfig.needAuthHeader;
     // console.log(Hktdc.Config);
     // console.log(Hktdc.Config.apiURL);
+  },
+
+  getParameterByName: function(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    var results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
   },
 
   parseQueryString: function(queryString) {
@@ -42,6 +54,16 @@ window.utils = {
       );
     }
     return params;
+  },
+
+  getQueryString: function(obj) {
+    var queryPart = _.map(obj, function(value, key) {
+      return key + '=' + value;
+    });
+    if (queryPart.length) {
+      return '?' + queryPart.join('&');
+    }
+    return '';
   },
 
   setAuthHeader: function(xhr) {

@@ -44,7 +44,13 @@ Hktdc.Routers = Hktdc.Routers || {};
     draft: function() {
       console.debug('[ routes/mainRouter.js ] - draft route handler');
       var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID
+        UserId: Hktdc.Config.userID,
+        canChooseStatus: false,
+        CStat: utils.getParameterByName('CStat'),
+        ReferID: utils.getParameterByName('ReferID'),
+        FDate: utils.getParameterByName('FDate'),
+        TDate: utils.getParameterByName('TDate'),
+        Appl: utils.getParameterByName('Appl')
       });
 
       // TODO: get filter params from query string

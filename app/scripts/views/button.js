@@ -118,14 +118,16 @@ Hktdc.Views = Hktdc.Views || {};
         .then(function() {
           // console.log('end send attachment');
           // FormID = ReferenceID and FormID
+          // if (true) {
           if (insertServiceResponse.FormID) {
             // window.location.href = Hktdc.Config.projectPath + '#draft';
             alert("Record Saved Successfully \n Reference ID : " + insertServiceResponse.FormID);
 
+            // if (true) {
             if (status === 'Submitted') {
-              window.location.href = '/';
+              Backbone.history.navigate('', {trigger: true});
             } else if (status === 'Draft') {
-              window.location.href = Hktdc.Config.projectPath + '/#draft';
+              Backbone.history.navigate('draft', {trigger: true});
             }
           } else {
             alert('error on saving the ')

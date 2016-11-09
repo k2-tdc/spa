@@ -13,6 +13,7 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     defaults: {
+      canChooseStatus: true,
       CStat: '',
       ReferID: '',
       FDate: '',
