@@ -49,6 +49,7 @@ Hktdc.Views = Hktdc.Views || {};
               requestFormModel: self.model
             });
 
+            $('.recommend-list', self.el).remove('.recommend-list');
             $('.recommend-container', self.el).append(recommendListView.el);
           },
           error: function() {
@@ -239,11 +240,11 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* click recommend will trigger change of the selectedRecommentModel */
       this.model.on('change:selectedRecommentModel', function(model, selectedRecommentModel, options) {
-        console.log('selectedRecommentModel:', selectedRecommentModel.toJSON());
         if (!selectedRecommentModel) {
           $('#recommend-btn', self.el).text('--Select--');
           return false;
         }
+        console.log('selectedRecommentModel:', selectedRecommentModel.toJSON());
         var selectedUserName = selectedRecommentModel.toJSON().WorkerFullName;
         // console.log(selectedUserName);
         $('#recommend-btn', self.el).text(selectedUserName);
