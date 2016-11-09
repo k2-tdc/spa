@@ -2,15 +2,23 @@
   <div class="panel-body group-header">
     <div class="row">
       <div class="col-xs-10 col-md-10">
-        <input class="toplevelCheckBox" type="checkbox"></input>
-        <div class="checkbox-option" id="divHSITservice">
-          <span>
-            <%= serviceCatagory.Name %>
-          </span>
-          <span class="selectedServiceCount">
-            (<%= serviceCatagory.selectedServiceCount %>)
-          </span>
-        </div>
+        <table style='border:none;'>
+          <tr>
+            <td><input class="toplevelCheckBox" type="checkbox" style="margin-top:0" /></td>
+            <td>
+              <div class="checkbox-option" id="divHSITservice">
+                <span>
+                  <%= serviceCatagory.Name %>
+                </span>
+                <span class="selectedServiceCount">
+                  (<%= serviceCatagory.selectedServiceCount %>)
+                </span>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+
       </div>
       <div class="col-xs-2 col-sm-2 checkbox-option-drop">
         <span class="glyphicon glyphicon-menu-down toggleBtn"></span>

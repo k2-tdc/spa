@@ -9,25 +9,25 @@
       <div class="row">
         <% if (request.ReferenceID) { %>
           <div class="col-xs-3 col-md-2 newrequest-title text-left">Ref ID</div>
-          <div class="col-xs-3 col-md-4" id="divRefID"><%= request.ReferenceID %></div>
+          <div class="col-xs-9 col-md-4" id="divRefID"><%= request.ReferenceID %></div>
         <% } else { %>
           <div class="col-xs-3 col-md-2 newrequest-title text-left"></div>
-          <div class="col-xs-3 col-md-4" id="divRefID"></div>
+          <div class="col-xs-9 col-md-4" id="divRefID"></div>
         <% } %>
         <div class="col-xs-3 col-md-2 newrequest-title text-left">Create Date</div>
-        <div class="col-xs-3 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
+        <div class="col-xs-9 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
       </div>
       <div class="row">
         <div class="col-xs-3 col-md-2 newrequest-title text-left">Status</div>
-         <div class="col-xs-9 col-md-4" id="divStatus">
-           <% if (request.FormStatus) { %>
-             <%= request.FormStatus %>
-           <% } else { %>
-             New
-           <% } %>
-         </div>
-         <div class="col-xs-3 col-md-2 newrequest-title text-left">Prepared by</div>
-         <div class="col-xs-9 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
+        <div class="col-xs-9 col-md-4" id="divStatus">
+          <% if (request.FormStatus) { %>
+            <%= request.FormStatus %>
+          <% } else { %>
+            New
+          <% } %>
+        </div>
+        <div class="col-xs-3 col-md-2 newrequest-title text-left">Prepared by</div>
+        <div class="col-xs-9 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
       </div>
     </div>
 
@@ -36,7 +36,7 @@
       <div class="panel-body">
         <div class="row">
           <label for="applicant" class="col-sm-2 control-label">Applicant *</label>
-          <div class="col-xs-10 col-md-10 btn-group full-width applicant-container">
+          <div class="col-xs-12 col-md-10 btn-group full-width applicant-container">
             <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">
               <% if (request.selectedApplicantName){ %>
                 <%= request.selectedApplicantName%>

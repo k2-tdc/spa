@@ -436,6 +436,15 @@ div.dataTables_wrapper table {
 #statusTable thead tr th {
   background-color: rgb(232, 232, 232);
 }
+
+.ui-autocomplete {
+  max-height: 400px;
+  overflow-y: auto;   /* prevent horizontal scrollbar */
+  overflow-x: hidden; /* add padding to account for vertical scrollbar */
+  z-index:1000 !important;
+}
+
+
 // end vicosys
 
 /* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
