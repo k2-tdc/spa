@@ -22,15 +22,20 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     checkStatus: function() {
       console.debug('[ routes/mainRouter.js ] - checkStatus route handler');
-      var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID
-      });
 
-      // TODO: get filter params from query string
+      var checkStatusModel = new Hktdc.Models.CheckStatus({
+        UserId: Hktdc.Config.userID,
+        canChooseStatus: true,
+        CStat: utils.getParameterByName('CStat'),
+        ReferID: utils.getParameterByName('ReferID'),
+        FDate: utils.getParameterByName('FDate'),
+        TDate: utils.getParameterByName('TDate'),
+        Appl: utils.getParameterByName('Appl')
+      });
+      checkStatusModel.set({ mode: 'checkStatus' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
-
 
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
@@ -43,6 +48,7 @@ Hktdc.Routers = Hktdc.Routers || {};
 
     draft: function() {
       console.debug('[ routes/mainRouter.js ] - draft route handler');
+
       var checkStatusModel = new Hktdc.Models.CheckStatus({
         UserId: Hktdc.Config.userID,
         canChooseStatus: false,
@@ -52,13 +58,10 @@ Hktdc.Routers = Hktdc.Routers || {};
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-
-      // TODO: get filter params from query string
       checkStatusModel.set({ mode: 'draft' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
-
 
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
@@ -73,20 +76,23 @@ Hktdc.Routers = Hktdc.Routers || {};
     allTask: function() {
       console.debug('[ routes/mainRouter.js ] - draft route handler');
       var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID
+        UserId: Hktdc.Config.userID,
+        canChooseStatus: true,
+        CStat: utils.getParameterByName('CStat'),
+        ReferID: utils.getParameterByName('ReferID'),
+        FDate: utils.getParameterByName('FDate'),
+        TDate: utils.getParameterByName('TDate'),
+        Appl: utils.getParameterByName('Appl')
       });
-
-      // TODO: get filter params from query string
-      checkStatusModel.set({ mode: 'draft' });
+      checkStatusModel.set({ mode: 'allTask' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
 
-
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
         collection: subheaderMenuListCollection,
-        currentPageName: 'all tasks'
+        currentPageName: 'Draft list'
       });
       subheaderMenuListView.render();
 
@@ -96,20 +102,23 @@ Hktdc.Routers = Hktdc.Routers || {};
     approvalTask: function() {
       console.debug('[ routes/mainRouter.js ] - draft route handler');
       var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID
+        UserId: Hktdc.Config.userID,
+        canChooseStatus: true,
+        CStat: utils.getParameterByName('CStat'),
+        ReferID: utils.getParameterByName('ReferID'),
+        FDate: utils.getParameterByName('FDate'),
+        TDate: utils.getParameterByName('TDate'),
+        Appl: utils.getParameterByName('Appl')
       });
-
-      // TODO: get filter params from query string
-      checkStatusModel.set({ mode: 'draft' });
+      checkStatusModel.set({ mode: 'approval' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
 
-
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
         collection: subheaderMenuListCollection,
-        currentPageName: 'Approval tasks'
+        currentPageName: 'Draft list'
       });
       subheaderMenuListView.render();
 
@@ -209,7 +218,6 @@ Hktdc.Routers = Hktdc.Routers || {};
         }
       });
     },
-
 
   });
 })();

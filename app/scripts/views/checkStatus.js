@@ -86,14 +86,21 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var filterArr = _.map(this.model.toJSON(), function(val, filter) {
-        return filter + '=' + val;
+      var usefulData = _.pick(this.model.toJSON(), 'CStat', 'ReferID', 'FDate', 'TDate', 'Appl', 'UserId');
+      var filterArr = _.map(usefulData, function(val, filter) {
+        return filter + '=' + (_.isNull(val)) ? '' : val;
       });
       var statusApiURL;
       // console.log(this.model.);
       switch (this.model.toJSON().mode) {
         case 'draft':
           statusApiURL = Hktdc.Config.apiURL + '/GetDraftDetails?' + filterArr.join('&');
+          break;
+        case 'alltak':
+          statusApiURL = Hktdc.Config.apiURL + '/GetWorklistDetails?' + filterArr.join('&');
+          break;
+        case 'approval':
+          statusApiURL = Hktdc.Config.apiURL + '/GetApproveListDetails?' + filterArr.join('&');
           break;
         default:
           statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
