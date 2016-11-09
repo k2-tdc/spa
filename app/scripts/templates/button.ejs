@@ -2,10 +2,6 @@
   <button class="btn btn-primary btn-lg" id="btnBack" type="button">Back</button>
 <% } %>
 
-<% if (showRecall) {%>
-  <button class="btn btn-primary btn-lg" id="Recall" type="button">Recall</button>
-<% } %>
-
 <% if (showSave) {%>
   <button class="btn btn-primary btn-lg" id="btnsave" type="button">Save</button>
 <% } %>
@@ -18,14 +14,38 @@
   <button class="btn btn-primary btn-lg" id="btnapprover" type="button">Send to <%= approverSendTo %></button>
 <% } %>
 
-<% if (showApprove) {%>
-  <button class="btn btn-primary btn-lg alltaskbtn" id="Approve" type="button">Approve</button>
-<% } %>
-
-<% if (showReject) {%>
-  <button class="btn btn-primary btn-lg alltaskbtn" id="Reject" type="button">Reject</button>
+<% if (showDelete) {%>
+  <button class="btn btn-primary btn-lg" id="btndelete" type="button">Delete</button>
 <% } %>
 
 <% if (showReturn) {%>
-  <button class="btn btn-primary btn-lg alltaskbtn" id="Return" type="button">Return</button>
+  <button class="btn btn-primary btn-lg" id="btnreturn" type="button">Return to Preparer <%= returnTo %></button>
+<% } %>
+
+<% if (showApprove) {%>
+  <button class="btn btn-primary btn-lg" id="btnapprove" type="button">Approve</button>
+<% } %>
+
+<% if (showReject) {%>
+  <button class="btn btn-primary btn-lg" id="btnreject" type="button">Reject</button>
+<% } %>
+
+<% if (showRecall) {%>
+  <button class="btn btn-primary btn-lg" id="btnrecall" type="button">Recall</button>
+<% } %>
+
+<% if (showSendEmail) {%>
+  <button class="btn btn-primary btn-lg" id="btnsendemail" type="button">Resend Email Notification</button>
+<% } %>
+
+<% if (showComplete) {%>
+  <button class="btn btn-primary btn-lg" id="btmcomplete" type="button">Complete</button>
+<% } %>
+
+<% if (showForward) {%>
+  <button class="btn btn-primary btn-lg" id="btnforward" type="button">Forward</button>
+<% } %>
+
+<% if (showCancel) {%>
+  <button class="btn btn-primary btn-lg" id="btncancel" type="button">Cancel</button>
 <% } %>

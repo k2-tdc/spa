@@ -21,13 +21,21 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     defaults: {
-      // preparedByUserName: null,
+      FormStatus: null,
+
       PreparerFNAME: null,
-      // preparedByUserId: null,
       PreparerUserID: null,
+      ApplicantFNAME: null,
+      ApplicantUserID: null,
+      ApproverFNAME: null,
+      ApproverUserID: null,
+      ActionTakerFNAME: null,
+      ActionTakerUserID: null,
+      ITSApproverFNAME: null,
+      ITSApproverUserID: null,
+
       // refId: null,
       ReferenceID: null,
-      // createDate: null,
       CreatedOn: null,
 
       // applicant department

@@ -9,24 +9,29 @@ Hktdc.Models = Hktdc.Models || {};
 
 
     defaults: {
-      showBack: false,
+      showBack: false, // TODO: need?
       showSave: false,
-      showRecall: false,
       showSendToApplicant: false,
       showSendToApprover: false,
+      showDelete: false,
+      showReturn: false,
       showApprove: false,
       showReject: false,
-      showReturn: false,
-      approverSendTo: 'Approver',
-      applicantSendTo: 'Applicant'
+      showRecall: false,
+      showSendEmail: false,
+      showComplete: false,
+      showFoward: false,
+      showCancel: false,
+      approverSendTo: 'Approver', // [Approver, ITS Approval]
+      applicantSendTo: 'Applicant',
+      returnTo: 'Preparer'
     },
 
     validate: function(attrs, options) {
     },
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });
-
 })();
