@@ -7,13 +7,13 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.Status = Backbone.Collection.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/GetStatus'
+    url: function(task) {
+      return Hktdc.Config.apiURL + '/GetStatus?task=' + task;
     },
 
     model: Hktdc.Models.Status
 
-    
+
 
   });
 

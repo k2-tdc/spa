@@ -20,7 +20,13 @@ Hktdc.Views = Hktdc.Views || {};
       'click .alltaskbtn': 'doApproveHandler'
     },
 
-    doApproveHandler: function() {
+    initialize: function(props) {
+      // this.listenTo(this.model, 'change', this.render);
+      _.extend(this, props);
+      this.render();
+    },
+
+    doApproveHandler: function(ev) {
       var Alltask = {
         UserId: Userid,
         SN: getParameterByName('SN'),
@@ -50,6 +56,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       } else {
+        ev.stopPropagation();
         return false;
       }
     },
@@ -129,6 +136,9 @@ Hktdc.Views = Hktdc.Views || {};
             } else if (status === 'Draft') {
               Backbone.history.navigate('draft', {trigger: true});
             }
+
+            /* reload the menu for new counts */
+            Hktdc.Dispatcher.trigger('reloadMenu');
           } else {
             alert('error on saving the ')
           }
@@ -460,12 +470,6 @@ Hktdc.Views = Hktdc.Views || {};
         }
       }));
       return deferred.promise;
-    },
-
-    initialize: function(props) {
-      // this.listenTo(this.model, 'change', this.render);
-      _.extend(this, props);
-      this.render();
     },
 
     render: function() {

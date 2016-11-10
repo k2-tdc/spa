@@ -57,7 +57,8 @@ window.utils = {
   },
 
   getQueryString: function(obj) {
-    var queryPart = _.map(obj, function(value, key) {
+    var queryPart = _.map(obj, function(val, key) {
+      var value = (_.isNull(val)) ? '' : val;
       return key + '=' + value;
     });
     if (queryPart.length) {

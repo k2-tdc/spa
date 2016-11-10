@@ -14,12 +14,17 @@ Hktdc.Models = Hktdc.Models || {};
 
     defaults: {
       canChooseStatus: true,
+      searchUserType: '',
+
       CStat: '',
       ReferID: '',
       FDate: '',
       TDate: '',
       Appl: '',
-      UserId: ''
+      UserId: '',
+      SUser: '',
+      // for detail
+      ProsIncId: ''
     },
 
     validate: function(attrs, options) {},

@@ -1,10 +1,11 @@
+/* global Hktdc, Backbone, utils, _, $, Q */
 
 window.Hktdc = {
   Models: {},
   Collections: {},
   Views: {},
   Routers: {},
-  Dispatcher: window._.extend({}, window.Backbone.Events),
+  Dispatcher: _.extend({}, Backbone.Events),
   Config: {
     apiURL: false,
     accessToken: '',
@@ -71,7 +72,6 @@ window.Hktdc = {
     'use strict';
     console.debug('[ main.js ] - Initiating HKTDC Workflow Applicaiton...');
     var utils = window.utils;
-    var Backbone = window.Backbone;
     var Hktdc = window.Hktdc;
     Hktdc.Config.environment = env;
     try {
@@ -128,32 +128,33 @@ window.Hktdc = {
   setupMasterPageComponent: function(onSuccess) {
     var Hktdc = window.Hktdc;
     var utils = window.utils;
-    var menuMModel = new Hktdc.Models.Menu();
+    var self = this;
     var headerModel = new Hktdc.Models.Header();
+    var footerModel = new Hktdc.Models.Footer();
+
     var headerView = new Hktdc.Views.Header({
       model: headerModel
     });
-    var footerModel = new Hktdc.Models.Footer();
     var footerView = new Hktdc.Views.Footer({
       model: footerModel
     });
-    menuMModel.fetch({
-      beforeSend: utils.setAuthHeader,
-      success: function(menuModel) {
+
+    this.loadMenu()
+      .then(function(menuModel) {
         var menu = menuModel.toJSON();
         Hktdc.Config.userName = menu.UserName;
         // console.log('menu.UserName', menu.UserName);
-        menuMModel.set({
+        menuModel.set({
           Menu: menu.Menu,
           PList: menu.PList,
           User: { UserName: menu.UserName, UserID: menu.UserID }
         });
 
-        headerModel.set({
-          processList: menu.PList
-        });
         var menuView = new Hktdc.Views.Menu({
-          model: menuMModel
+          model: menuModel
+        });
+        menuView.listenTo(window.Hktdc.Dispatcher, 'reloadMenu', function() {
+          self.loadMenu();
         });
         var userView = new Hktdc.Views.User({
           model: new Hktdc.Models.User({
@@ -162,20 +163,36 @@ window.Hktdc = {
           })
         });
 
+        headerModel.set({
+          processList: menuModel.toJSON().PList
+        });
 
-        // menuMModel.set('activeTab', window.Backbone.history.getHash());
-        onSuccess(menuMModel);
+        onSuccess(menuModel);
+      });
+  },
+
+  loadMenu: function() {
+    var deferred = Q.defer();
+    var menuModel = new Hktdc.Models.Menu();
+    menuModel.fetch({
+      beforeSend: utils.setAuthHeader,
+      success: function(menuModel) {
+        // menuModel.set('activeTab', Backbone.history.getHash());
+        // onSuccess(menuModel);
+        deferred.resolve(menuModel);
       },
-      error: function() {
+      error: function(error) {
         console.log('error on rendering menu');
+        deferred.reject(error);
       }
     });
+    return deferred.promise;
   }
 };
 
 $(document).ready(function() {
   'use strict';
   // Hktdc.init('dev');
-  // window.Hktdc.init('uat');
-  window.Hktdc.init('localDev');
+  // Hktdc.init('uat');
+  Hktdc.init('localDev');
 });

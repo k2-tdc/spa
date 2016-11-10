@@ -548,7 +548,7 @@ Hktdc.Views = Hktdc.Views || {};
         showRecall: false,
         showSendEmail: false,
         showComplete: false,
-        showFoward: false,
+        showForward: false,
         showCancel: false,
         approverSendTo: 'Approver', // [Approver, ITS Approval]
         applicantSendTo: 'Applicant',
@@ -585,7 +585,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderDraftButton: function(Preparer, Applicant, Approver, ApplicantRuleCode) {
       var self = this;
-      var showButtonOptions = { showSave: true, showDelete: true };
+      var showButtonOptions = { showSave: true };
+      if (self.model.toJSON().FormStatus) {
+        showButtonOptions.showDelete = true;
+      }
       // console.group('check condition');
       // for submitted to
 
@@ -650,6 +653,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderRequestFormButton: function(FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover) {
+
       var self = this;
       var me = Hktdc.Config.userID;
       var showButtonOptions = {};
@@ -660,7 +664,19 @@ Hktdc.Views = Hktdc.Views || {};
             showButtonOptions.showSendToApprover = true;
             showButtonOptions.showDelete = true;
           } else {
-            alert(FormStatus + ': exception condition of render button.');
+            var ApplicantRuleCode = self.model.toJSON().selectedApplicantModel.toJSON().RuleCode;
+            if (ApplicantRuleCode === 'IT0008') {
+              showButtonOptions.showSave = true;
+              showButtonOptions.showSendToApplicant = true;
+              showButtonOptions.showDelete = true;
+            } else if (ApplicantRuleCode === 'IT0009') {
+              showButtonOptions.showSave = true;
+              showButtonOptions.showSendToApplicant = true;
+              showButtonOptions.showSendToApprover = true;
+              showButtonOptions.showDelete = true;
+            } else {
+              alert(FormStatus + ': exception condition of render button.');
+            };
           }
           break;
         case 'Review':
@@ -752,7 +768,7 @@ Hktdc.Views = Hktdc.Views || {};
         default:
           alert('wrong Form status:\n' + FormStatus);
       }
-
+      console.log(showButtonOptions);
       self.doRenderButtons(showButtonOptions);
     },
 

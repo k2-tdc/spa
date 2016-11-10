@@ -13,7 +13,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click #btnSearchCheckStatus': 'doSearch',
-      'change .applicant-select': 'updateModelByEvent',
+      'change .user-select': 'updateModelByEvent',
       'change .status-select': 'updateModelByEvent',
       'blur .search-field': 'updateModelByEvent'
     },
@@ -37,27 +37,39 @@ Hktdc.Views = Hktdc.Views || {};
         });
 
       Q.all([
-        this.loadEmployee(),
+        this.loadSelectUserList(),
         this.loadStatus()
       ])
         .then(function(results) {
-          var employeeCollection = results[0];
+          var userCollection = results[0];
           var statusCollection = results[1];
-          var applicantListView = new Hktdc.Views.ApplicantList({
-            tagName: 'select',
-            className: 'form-control applicant-select',
-            attributes: {name: 'Appl'},
-            collection: employeeCollection,
-            selectedApplicant: self.model.toJSON().Appl
-          });
+          // console.log(self.model.toJSON().mode);
+          if (self.model.toJSON().mode === 'APPROVAL TASKS' || self.model.toJSON().mode === 'ALL TASKS') {
+            var userListView = new Hktdc.Views.DelegationList({
+              tagName: 'select',
+              className: 'form-control user-select',
+              attributes: {name: 'SUser'},
+              collection: userCollection,
+              selectedDelegation: self.model.toJSON().SUser
+            });
+          } else {
+            var userListView = new Hktdc.Views.ApplicantList({
+              tagName: 'select',
+              className: 'form-control user-select',
+              attributes: {name: 'Appl'},
+              collection: userCollection,
+              selectedApplicant: self.model.toJSON().Appl
+            });
+          }
 
           var statusListView = new Hktdc.Views.StatusList({
             collection: statusCollection,
             selectedStatus: self.model.toJSON().CStat
           });
 
-          $('.applicant-container', self.el).html(applicantListView.el);
-          console.log(statusListView.el);
+          console.log(userListView.el);
+          $('.user-container', self.el).html(userListView.el);
+          // console.log(statusListView.el);
           $('.status-container', self.el).html(statusListView.el);
         });
     },
@@ -79,31 +91,36 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     doSearch: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode');
-      console.log(queryParams);
+      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode', 'searchUserType');
+      // console.log(queryParams);
       Backbone.history.navigate('draft' + utils.getQueryString(queryParams));
       this.statusDataTable.ajax.url(this.getAjaxURL()).load();
     },
 
     getAjaxURL: function() {
-      var usefulData = _.pick(this.model.toJSON(), 'CStat', 'ReferID', 'FDate', 'TDate', 'Appl', 'UserId');
+      var usefulData = _.pick(this.model.toJSON(), 'CStat', 'ReferID', 'FDate', 'TDate', 'Appl', 'UserId', 'SUser', 'ProsIncId');
       var filterArr = _.map(usefulData, function(val, filter) {
-        return filter + '=' + (_.isNull(val)) ? '' : val;
+        var value = (_.isNull(val)) ? '' : val;
+        return filter + '=' + value;
       });
       var statusApiURL;
       // console.log(this.model.);
       switch (this.model.toJSON().mode) {
-        case 'draft':
+        case 'DRAFT':
           statusApiURL = Hktdc.Config.apiURL + '/GetDraftDetails?' + filterArr.join('&');
           break;
-        case 'alltak':
+        case 'ALL TASKS':
           statusApiURL = Hktdc.Config.apiURL + '/GetWorklistDetails?' + filterArr.join('&');
           break;
-        case 'approval':
+        case 'APPROVAL TASKS':
           statusApiURL = Hktdc.Config.apiURL + '/GetApproveListDetails?' + filterArr.join('&');
           break;
-        default:
+        case 'CHECK STATUS':
           statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
+          break;
+        default:
+          console.log('mode error');
+          // statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
       }
       return statusApiURL;
     },
@@ -122,17 +139,30 @@ Hktdc.Views = Hktdc.Views || {};
           dataSrc: function(data) {
             // console.log(JSON.stringify({ data: data }, null, 2));
             var modData = _.map(data, function(row) {
+              var formStatusDisplay = row.ActionTakerStatus || row.ITSApprover || 'Recommend';
               return {
                 lastActionDate: row.SubmittedOn,
                 applicant: row.ApplicantFNAME,
                 summary: self.getSummaryFromRow(row.ReferenceID, row.RequestList),
-                status: self.getStatusFrowRow(row.FormStatus, row.ApproverFNAME),
-                refId: row.ReferenceID
+                status: self.getStatusFrowRow(row.FormStatus, row.ApproverFNAME, formStatusDisplay),
+                refId: row.ReferenceID,
+                ProcInstID: row.ProcInstID
               }
             });
             return modData;
             // return { data: modData, recordsTotal: modData.length };
           }
+        },
+        createdRow: function(row, data, index) {
+          $(row).css({cursor: 'pointer'});
+          $(row).hover(function() {
+            $(this).addClass('highlight');
+          }, function() {
+            $(this).removeClass('highlight');
+
+          });
+          // if (data.condition) {
+          // }
         },
         columns: [{
           data: 'lastActionDate'
@@ -148,53 +178,75 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.statusDataTable.row(this).data();
-        Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
+        var procIdPath = (rowData.ProcInstID) ? '/' + rowData.ProcInstID : '';
+        Backbone.history.navigate('request/' + rowData.refId + procIdPath, {trigger: true});
       });
 
       $('#statusTable tbody', this.el).on('click', '.btn-del', function(ev) {
-        Backbone.emulateHTTP = true;
-        Backbone.emulateJSON = true;
-        ev.stopPropagation();
-        var rowData = self.statusDataTable.row($(this).parents('tr')).data();
-        var refId = rowData.refId;
-        var DeleteRequestModel = Backbone.Model.extend({
-          url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
-        });
-        var DeleteRequestModelInstance = new DeleteRequestModel();
-        DeleteRequestModelInstance.save(null, {
-          beforeSend: utils.setAuthHeader,
-          success: function(model, response) {
-            // console.log('success: ', a);
-            // console.log(b);
-            self.statusDataTable.ajax.reload();
-          },
-          error: function(err) {
-            console.log(err);
-            // console.log(b);
-          }
-        })
+        var isConfirm = confirm("Are you sure to delete draft?");
+        if (isConfirm) {
+          Backbone.emulateHTTP = true;
+          Backbone.emulateJSON = true;
+          ev.stopPropagation();
+          var rowData = self.statusDataTable.row($(this).parents('tr')).data();
+          var refId = rowData.refId;
+          var DeleteRequestModel = Backbone.Model.extend({
+            url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
+          });
+          var DeleteRequestModelInstance = new DeleteRequestModel();
+          DeleteRequestModelInstance.save(null, {
+            beforeSend: utils.setAuthHeader,
+            success: function(model, response) {
+              // console.log('success: ', a);
+              // console.log(b);
+              self.statusDataTable.ajax.reload();
+            },
+            error: function(err) {
+              console.log(err);
+              // console.log(b);
+            }
+          });
+        } else {
+          ev.stopPropagation();
+          return false;
+        }
         // var rowData = self.statusDataTable.row(this).data();
         // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
       });
     },
 
-    loadEmployee: function() {
+    loadSelectUserList: function() {
       /* employee component */
       var deferred = Q.defer();
       // var self = this;
+      if (this.model.toJSON().mode === 'ALL TASKS' || this.model.toJSON().mode === 'APPROVAL TASKS') {
+        var delegationCollection = new Hktdc.Collections.Delegation();
+        delegationCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
+            // console.log('selectedCCCollection: ', self.model);
+            deferred.resolve(delegationCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      } else {
 
-      var employeeCollection = new Hktdc.Collections.Employee();
-      employeeCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
-          // console.log('selectedCCCollection: ', self.model);
-          deferred.resolve(employeeCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+        var employeeCollection = new Hktdc.Collections.Employee();
+        employeeCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
+            // console.log('selectedCCCollection: ', self.model);
+            deferred.resolve(employeeCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      }
 
       return deferred.promise;
     },
@@ -202,6 +254,8 @@ Hktdc.Views = Hktdc.Views || {};
     loadStatus: function() {
       var deferred = Q.defer();
       var statusCollection = new Hktdc.Collections.Status();
+      var task = this.model.toJSON().mode;
+      statusCollection.url = statusCollection.url(task);
       statusCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
@@ -231,11 +285,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     },
 
-    getStatusFrowRow: function(status, approver) {
+    getStatusFrowRow: function(status, approver, formStatusDisplay) {
       if (status === 'Draft') {
         return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>'
       }
-      return status + '<br />Recommend by: <br />' + approver;
+      return status + '<br />' + formStatusDisplay + ' by: <br />' + approver;
     }
 
   });

@@ -11,6 +11,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'check_status': 'checkStatus',
       'request': 'newRequest',
       'request/:requestId': 'editRequest',
+      'request/:requestId/:procId': 'editRequest',
       'draft': 'draft',
       'alltask': 'allTask',
       'approvaltask': 'approvalTask'
@@ -24,15 +25,17 @@ Hktdc.Routers = Hktdc.Routers || {};
       console.debug('[ routes/mainRouter.js ] - checkStatus route handler');
 
       var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID,
         canChooseStatus: true,
+        searchUserType: 'Applicant',
+        UserId: Hktdc.Config.userID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-      checkStatusModel.set({ mode: 'checkStatus' });
+
+      checkStatusModel.set({ mode: 'CHECK STATUS' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -40,7 +43,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
         collection: subheaderMenuListCollection,
-        currentPageName: 'Check Status'
+        currentPageName: 'CHECK STATUS'
       });
       subheaderMenuListView.render();
       $('.subheader-menu-container').html(subheaderMenuListView.el);
@@ -50,15 +53,16 @@ Hktdc.Routers = Hktdc.Routers || {};
       console.debug('[ routes/mainRouter.js ] - draft route handler');
 
       var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID,
         canChooseStatus: false,
+        searchUserType: 'Applicant',
+        UserId: Hktdc.Config.userID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-      checkStatusModel.set({ mode: 'draft' });
+      checkStatusModel.set({ mode: 'DRAFT' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -76,15 +80,17 @@ Hktdc.Routers = Hktdc.Routers || {};
     allTask: function() {
       console.debug('[ routes/mainRouter.js ] - draft route handler');
       var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID,
+        searchUserType: 'Sharing User',
         canChooseStatus: true,
+
+        UserId: Hktdc.Config.userID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-      checkStatusModel.set({ mode: 'allTask' });
+      checkStatusModel.set({ mode: 'ALL TASKS' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -102,15 +108,17 @@ Hktdc.Routers = Hktdc.Routers || {};
     approvalTask: function() {
       console.debug('[ routes/mainRouter.js ] - draft route handler');
       var checkStatusModel = new Hktdc.Models.CheckStatus({
-        UserId: Hktdc.Config.userID,
         canChooseStatus: true,
+        searchUserType: 'Sharing User',
+
+        UserId: Hktdc.Config.userID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-      checkStatusModel.set({ mode: 'approval' });
+      checkStatusModel.set({ mode: 'APPROVAL TASKS' });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -167,10 +175,10 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     /* this handling edit old request OR reading old request */
-    editRequest: function(requestId) {
+    editRequest: function(requestId, procId) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
       var requestCollection = new Hktdc.Collections.NewRequest();
-      requestCollection.url = requestCollection.url(requestId);
+      requestCollection.url = requestCollection.url(requestId, procId);
       requestCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function(result, response) {
