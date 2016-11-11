@@ -130,9 +130,9 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         // var routename = currentRoute.toJSON().activeTab;
         var routeName = currentRoute.toJSON().activeTab.toUpperCase();
-        var routeBase = routeName.split('/')[0];
+        var routeBase = routeName.split('/')[0] || 'HOME';
         console.log('routeBase', routeBase);
-        setTimeout(function(){
+        setTimeout(function() {
           // console.log($('li[routename="' + routeBase + '"]'));
           if ($('li[routename="' + routeBase + '"]')) {
             $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
