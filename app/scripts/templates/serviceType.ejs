@@ -1,5 +1,5 @@
 <div class="panel panel-default select-service">
-  <div class="panel-body">
+  <div class="panel-body"  >
     <div class="row">
       <div id="<%= serviceType.GUID%>" class="col-xs-12 col-md-12 select-service-title">
         <%= serviceType.Name%>
@@ -13,6 +13,7 @@
     <!-- Add Button: click to add a row to level 3 -->
 
     <div class="row" style="<% if (!serviceType.needAddBtn) { %> display:block <% }  %>">
+     <div class="sep-space"></div>
       <div class="col-xs-4 col-md-3 btn-group">
         <button type="button" class="btn btn-orange btn-add">
           <span class="glyphicon glyphicon-plus"></span>
