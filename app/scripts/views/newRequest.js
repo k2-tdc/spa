@@ -447,6 +447,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderApplicantAndCCList: function(employeeArray) {
       var self = this;
       $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
+        // TODO: may not use Applicant Collection here
         collection: new Hktdc.Collections.Applicant(employeeArray),
         requestFormModel: this.model
       }).el);

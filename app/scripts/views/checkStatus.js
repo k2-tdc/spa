@@ -238,13 +238,14 @@ Hktdc.Views = Hktdc.Views || {};
         });
       } else {
 
-        var employeeCollection = new Hktdc.Collections.Employee();
-        employeeCollection.fetch({
+        var applicantCollection = new Hktdc.Collections.Applicant();
+        applicantCollection.url = applicantCollection.url(this.model.toJSON().mode);
+        applicantCollection.fetch({
           beforeSend: utils.setAuthHeader,
           success: function() {
             // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
             // console.log('selectedCCCollection: ', self.model);
-            deferred.resolve(employeeCollection);
+            deferred.resolve(applicantCollection);
           },
           error: function(err) {
             deferred.reject(err);

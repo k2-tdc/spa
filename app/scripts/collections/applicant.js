@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone, _ */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
@@ -9,21 +9,31 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     model: Hktdc.Models.Applicant,
 
-    getQueryParams: function() {
+    getQueryParams: function(type) {
       return {
         RuleID: Hktdc.Config.RuleCode,
         UserId: '',
-        WorkId: Hktdc.Config.userID
+        WorkId: Hktdc.Config.userID,
+        Type: type || null
       }
     },
 
-    url: function() {
-      var qsArr = _.map(this.getQueryParams(), function(val, key){
+    url: function(type) {
+      /* type is the listing page mode */
+      var validProperties = _.omit(this.getQueryParams(type), function(val, key) {
+        // console.log(key, val);
+        return _.isNull(val);
+      });
+      // console.log(validProperties);
+      var qsArr = _.map(validProperties, function(val, key) {
         return key + '=' + val;
       });
 
-      return Hktdc.Config.apiURL + '/GetEmployee?' + qsArr.join('&');
-    },
+      if (type) {
+        return Hktdc.Config.apiURL + '/GetApplicantList?' + qsArr.join('&');
+      } else {
+        return Hktdc.Config.apiURL + '/GetEmployee?' + qsArr.join('&');
+      }
+    }
   });
-
 })();
