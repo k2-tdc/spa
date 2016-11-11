@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, _,  $, Q */
+/* global Hktdc, Backbone, JST, utils, _,  $, Q, moment */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -153,6 +153,7 @@ Hktdc.Views = Hktdc.Views || {};
             // return { data: modData, recordsTotal: modData.length };
           }
         },
+        order: [0, 'desc'],
         createdRow: function(row, data, index) {
           $(row).css({cursor: 'pointer'});
           $(row).hover(function() {
@@ -165,7 +166,10 @@ Hktdc.Views = Hktdc.Views || {};
           // }
         },
         columns: [{
-          data: 'lastActionDate'
+          data: 'lastActionDate',
+          render: function(a, b, c) {
+            return moment(a).format('DD MMM YYYY');
+          }
         }, {
           data: 'applicant'
         }, {
@@ -286,10 +290,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getStatusFrowRow: function(status, approver, formStatusDisplay) {
+      console.log(formStatusDisplay);
       if (status === 'Draft') {
         return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>'
       }
-      return status + '<br />' + formStatusDisplay + ' by: <br />' + approver;
+      return status + '<br />' + formStatusDisplay + '<br /> by: ' + approver;
     }
 
   });
