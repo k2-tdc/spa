@@ -18,6 +18,7 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtestimatedcost': 'updateNewRequestModel',
       'blur #txtbudgetprovided': 'updateNewRequestModel',
       // 'blur #txtbudgetsum': 'updateNewRequestModel',
+      'blur #txtcomment': 'updateNewRequestModel',
       'blur #txtremark': 'updateNewRequestModel'
     },
 
@@ -74,7 +75,11 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
       // Backbone.Validation.bind(this);
       var self = this;
-
+      if (self.model.toJSON().FormStatus && self.model.toJSON().FormStatus !== 'Draft') {
+        self.model.set({
+          showComment: true
+        });
+      }
       /* *** Some model data is pre-set in the main router *** */
 
       /* must render the parent content first */
@@ -136,15 +141,14 @@ Hktdc.Views = Hktdc.Views || {};
 
             // quick hack to do after render
             setTimeout(function() {
-              if (self.model.toJSON().mode === 'read') {
-                $('input, textarea, button', self.el).prop('disabled', 'disabled');
-              }
+              $('input, textarea:not(.keepEdit), button', self.el).prop('disabled', 'disabled');
               var FormStatus = self.model.toJSON().FormStatus;
               var Preparer = self.model.toJSON().PreparerUserID;
               var Applicant = self.model.toJSON().ApplicantUserID;
               var Approver = self.model.toJSON().ApproverUserID;
               var ActionTaker = self.model.toJSON().ActionTakerUserID;
               var ITSApprover = self.model.toJSON().ITSApproverUserID;
+
               self.renderRequestFormButton(
                 FormStatus,
                 Preparer,
@@ -194,6 +198,7 @@ Hktdc.Views = Hktdc.Views || {};
             var Approver = self.model.toJSON().ApproverUserID;
             var ActionTaker = self.model.toJSON().ActionTakerUserID;
             var ITSApprover = self.model.toJSON().ITSApproverUserID;
+
             self.renderRequestFormButton(
               FormStatus,
               Preparer,
@@ -524,6 +529,7 @@ Hktdc.Views = Hktdc.Views || {};
         var Approver = self.model.toJSON().ApproverUserID;
         var ActionTaker = self.model.toJSON().ActionTakerUserID;
         var ITSApprover = self.model.toJSON().ITSApproverUserID;
+
         self.renderRequestFormButton(
           FormStatus,
           Preparer,
@@ -577,7 +583,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.set({
         DEPT: applicant.Depart,
         Title: applicant.Title,
-        Location: applicant.Office,
+        Location: applicant.Office
         // RuleCode: target.RuleCode
       });
       console.log(this.model.toJSON());

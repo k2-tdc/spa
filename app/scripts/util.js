@@ -69,7 +69,7 @@ window.utils = {
 
   setAuthHeader: function(xhr) {
     if (Hktdc.Config.needAuthHeader) {
-      console.log('needAuthHeader: ', true);
+      // console.log('needAuthHeader: ', true);
       xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
     }
   },
@@ -160,7 +160,7 @@ window.utils = {
 
       if (accessToken !== '') {
         // Send GET request to token endpoint for getting access token through AJAX
-        console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
+        // console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
         var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
         if (!xhr) {
           onError('CORS not supported');
@@ -171,7 +171,7 @@ window.utils = {
         // Response handlers.
         xhr.onload = function() {
           var text = xhr.responseText;
-          console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
+          // console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
 
           accessToken = self.getCookie('ACCESS-TOKEN');
           onSuccess(accessToken);

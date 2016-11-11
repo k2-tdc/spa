@@ -81,7 +81,7 @@
 
 
           <div class="row">
-            <div class="col-xs-12 col-md-12 newrequest-title text-left">Justification and Important Notes<span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left">Justification and Important Notes * <span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
           </div>
           <div class="row">
             <div class="col-md-10">
@@ -196,7 +196,19 @@
             <!-- workflow log here -->
           </div>
 
+          <% if (request.showComment) { %>
 
+          <div id="comment-wrap">
+            <div class="sep-space"></div>
+            <div class="row">
+              <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left">Comment</div>
+              <div class="col-xs-12 col-md-8">
+                <textarea class="form-control keepEdit" rows="3" id="txtcomment" field="Comment"><%= request.Comment %></textarea>
+              </div>
+            </div>
+          </div>
+
+          <% } %>
 
           <div class="row">
             <div class="col-xs-10 col-sm-2 newrequest-title"></div>

@@ -190,18 +190,21 @@ Hktdc.Routers = Hktdc.Routers || {};
             {
               name: 'read',
               status: [
-                'Review',
-                'Rework',
-                'ReCall',
-                'Complete',
                 'Approval',
-                'Submitted',
-                'ProcessTasks'
+                'Process Task',
+                'ITS Approval',
+                'Approved by ITS',
+                'Rejected by ITS',
+                'Reject',
+                'Completed',
+                'Cancelled',
+                'Deleted',
+                'Recall'
               ]
             },
             {
               name: 'edit',
-              status: ['Draft']
+              status: ['Draft', 'Review', 'Return']
             }
           ];
           var mode = _.find(modeMapping, function(modeObj) {
@@ -220,7 +223,18 @@ Hktdc.Routers = Hktdc.Routers || {};
           var requestView = new Hktdc.Views.NewRequest({
             model: requestModel
           });
+
+          var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+          var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+            collection: subheaderMenuListCollection,
+            currentPageName: 'Edit Request'
+          });
+          subheaderMenuListView.render();
+          // console.log($('.subheader-menu-container'));
+
+          $('.subheader-menu-container').html(subheaderMenuListView.el);
         },
+        
         error: function(err) {
           console.log(err);
         }

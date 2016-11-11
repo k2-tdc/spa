@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -9,13 +9,13 @@ Hktdc.Models = Hktdc.Models || {};
     // idAttribute: "Id",
     defaults: {
       UserId: '',
-      UserFullName: ''
+      UserFullName: '',
+      Applicant: ''
     },
-    
+
     url: function() {
-      return Hktdc.Config.apiURL + '/GetApplicant?UserId=' + this.attributes.UserId;
+      return Hktdc.Config.apiURL + '/GetApplicant?UserId=' + Hktdc.Config.userID + '&Applicant=' + this.attributes.UserId;
     }
 
   });
-
 })();

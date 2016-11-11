@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone, _ */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
@@ -12,13 +12,13 @@ Hktdc.Collections = Hktdc.Collections || {};
     getQueryParams: function() {
       return {
         RuleID: Hktdc.Config.RuleCode,
-        UserId: '',
+        UserId: Hktdc.Config.userID,
         WorkId: Hktdc.Config.userID
       };
     },
 
     url: function() {
-      var qsArr = _.map(this.getQueryParams(), function(val, key){
+      var qsArr = _.map(this.getQueryParams(), function(val, key) {
         return key + '=' + val;
       });
 

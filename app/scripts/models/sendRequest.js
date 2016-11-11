@@ -25,6 +25,7 @@ Hktdc.Models = Hktdc.Models || {};
       Title: '',
       Office: '',
       Department: '',
+      Comment: '',
       Service_AcquireFor: {
         Hardware_Software_IT_Service: {
           Software_Service: [],

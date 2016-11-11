@@ -82,6 +82,10 @@ Hktdc.Views = Hktdc.Views || {};
     checkIsValid: function() {
       var isValid = true;
       console.log(this.requestFormModel.toJSON());
+      if (!(this.requestFormModel.toJSON().Justification && this.requestFormModel.toJSON().Justification.trim())) {
+        isValid = false;
+        alert('Please fill the Justification and Important Notes');
+      }
       if (!(this.requestFormModel.toJSON().EstimatedCost && this.requestFormModel.toJSON().EstimatedCost.trim())) {
         isValid = false;
         alert('Please fill the Estimated Cost');
@@ -116,8 +120,8 @@ Hktdc.Views = Hktdc.Views || {};
           insertServiceResponse = data;
           console.log('ended post data');
           /* send file */
-          return this.sendAttactment(
-            this.requestFormModel.toJSON().ReferenceID,
+          return this.sendAttachment(
+            insertServiceResponse.FormID,
             this.requestFormModel.toJSON().selectedAttachmentCollection
           );
         }.bind(this))
@@ -421,7 +425,7 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    sendAttactment: function(refId, attachmentCollection) {
+    sendAttachment: function(refId, attachmentCollection) {
       // console.group('files');
       // var attachmentCollection = attachmentCollection.toJSON();
       // var attachmentCollection = $('#Fileattach').get(0).files;
