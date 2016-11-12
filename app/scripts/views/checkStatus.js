@@ -92,8 +92,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     doSearch: function() {
       var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode', 'searchUserType');
-      // console.log(queryParams);
-      Backbone.history.navigate('draft' + utils.getQueryString(queryParams));
+      // console.log(Backbone.history.getHash().split('?')[0]);
+      var currentBase = Backbone.history.getHash().split('?')[0];
+      Backbone.history.navigate(currentBase + utils.getQueryString(queryParams));
       this.statusDataTable.ajax.url(this.getAjaxURL()).load();
     },
 
@@ -139,14 +140,15 @@ Hktdc.Views = Hktdc.Views || {};
           dataSrc: function(data) {
             // console.log(JSON.stringify({ data: data }, null, 2));
             var modData = _.map(data, function(row) {
-              var formStatusDisplay = row.ActionTakerStatus || row.ITSApprover || 'Recommend';
+              var formStatusDisplay = row.DisplayStatus;
               return {
                 lastActionDate: row.SubmittedOn,
                 applicant: row.ApplicantFNAME,
                 summary: self.getSummaryFromRow(row.ReferenceID, row.RequestList),
-                status: self.getStatusFrowRow(row.FormStatus, row.ApproverFNAME, formStatusDisplay),
+                status: self.getStatusFrowRow(row.FormStatus, formStatusDisplay, row.LastUser || row.ApplicantFNAME),
                 refId: row.ReferenceID,
-                ProcInstID: row.ProcInstID
+                ProcInstID: row.ProcInstID,
+                SN: row.SN
               }
             });
             return modData;
@@ -160,15 +162,14 @@ Hktdc.Views = Hktdc.Views || {};
             $(this).addClass('highlight');
           }, function() {
             $(this).removeClass('highlight');
-
           });
           // if (data.condition) {
           // }
         },
         columns: [{
           data: 'lastActionDate',
-          render: function(a, b, c) {
-            return moment(a).format('DD MMM YYYY');
+          render: function(data) {
+            return moment(data).format('DD MMM YYYY');
           }
         }, {
           data: 'applicant'
@@ -182,8 +183,8 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.statusDataTable.row(this).data();
-        var procIdPath = (rowData.ProcInstID) ? '/' + rowData.ProcInstID : '';
-        Backbone.history.navigate('request/' + rowData.refId + procIdPath, {trigger: true});
+        var SNPath = (rowData.SN) ? '/' + rowData.SN : '';
+        Backbone.history.navigate('request/' + rowData.refId + SNPath, {trigger: true});
       });
 
       $('#statusTable tbody', this.el).on('click', '.btn-del', function(ev) {
@@ -290,12 +291,14 @@ Hktdc.Views = Hktdc.Views || {};
 
     },
 
-    getStatusFrowRow: function(status, approver, formStatusDisplay) {
-      console.log(formStatusDisplay);
+    getStatusFrowRow: function(status, formStatusDisplay, by) {
       if (status === 'Draft') {
         return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>'
+      } else {
+        return formStatusDisplay + '<br /> by: ' + by;
       }
-      return status + '<br />' + formStatusDisplay + '<br /> by: ' + approver;
+
+      // return status + '<br />' + formStatusDisplay + '<br /> by: ' + approver;
     }
 
   });

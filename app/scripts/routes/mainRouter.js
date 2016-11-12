@@ -11,7 +11,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'check_status': 'checkStatus',
       'request': 'newRequest',
       'request/:requestId': 'editRequest',
-      'request/:requestId/:procId': 'editRequest',
+      'request/:requestId/:sn': 'editRequest',
       'draft': 'draft',
       'alltask': 'allTask',
       'approvaltask': 'approvalTask'
@@ -174,10 +174,11 @@ Hktdc.Routers = Hktdc.Routers || {};
       }); */
     },
 
-    /* this handling edit old request OR reading old request */
-    editRequest: function(requestId, procId) {
+    /* this handling 'edit' old request OR 'read' old request */
+    editRequest: function(requestId, sn) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
       var requestCollection = new Hktdc.Collections.NewRequest();
+      var procId = sn.split('_')[0]; // SN = '123_456'
       requestCollection.url = requestCollection.url(requestId, procId);
       requestCollection.fetch({
         beforeSend: utils.setAuthHeader,
@@ -234,7 +235,7 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           $('.subheader-menu-container').html(subheaderMenuListView.el);
         },
-        
+
         error: function(err) {
           console.log(err);
         }

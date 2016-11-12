@@ -8,6 +8,8 @@ window.Hktdc = {
   Dispatcher: _.extend({}, Backbone.Events),
   Config: {
     apiURL: false,
+    refreshTokenInterval: 2,  // in minutes
+    gettingToken: false,
     accessToken: '',
     refreshToken: '',
     OAuthLoginUrl: '',
@@ -80,6 +82,13 @@ window.Hktdc = {
 
       // if (true) {
       if (env === 'uat') {
+        // TODO: prevent user make request when getting token
+        /* $.ajax({
+          beforeSend: function() {
+
+          }
+        }) */
+
         /* check auth */
         utils.getAccessToken(function(accessToken) {
           console.debug('[ main.js ] - setting up application...');
@@ -99,6 +108,15 @@ window.Hktdc = {
               });
               Backbone.history.start();
             });
+
+            /* to prevent token expiry when using the SPA */
+            setInterval(function() {
+              window.Hktdc.Config.gettingToken = true;
+              utils.getAccessToken(function(accessToken) {
+                window.Hktdc.Config.gettingToken = false;
+                Hktdc.Config.accessToken = accessToken;
+              });
+            }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
             console.log('Error on getting userID', error);
           });
