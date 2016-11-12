@@ -30,6 +30,8 @@ Hktdc.Views = Hktdc.Views || {};
       var haveSelectService = !!this.model.toJSON().selectedServiceCollection.toJSON().length;
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
       if (!(haveSelectService && haveFilledCost)) {
+        console.log(this.model.toJSON().selectedServiceCollection.toJSON().length);
+        console.log(this.model.toJSON().EstimatedCost);
         alert('please select service and filled the cost field');
         return false;
       } else {
@@ -85,7 +87,7 @@ Hktdc.Views = Hktdc.Views || {};
       /* must render the parent content first */
       self.render();
 
-      /* ----------- create new request ----------- */
+      /* mode === new */
       if (this.model.toJSON().mode === 'new') {
         console.log('this is << NEW >> mode');
 
@@ -111,15 +113,17 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderAttachment();
             self.renderSelectedCCView();
 
-            /* default render the save button only, after change the approver(recommend by), render details */
-            self.doRenderButtons({showSave: true});
-
+            /* default render the save button only,
+             after change the approver(recommend by), render other button */
+            self.renderButtonHandler();
             /* init event listener last */
             self.initModelChange();
           })
           .fail(function(e) {
             console.error(e);
           });
+
+      /* mode === read */
       } else if (this.model.toJSON().mode === 'read') {
         console.debug('This is << READ >> mode');
         Q.all([
@@ -142,6 +146,7 @@ Hktdc.Views = Hktdc.Views || {};
             // quick hack to do after render
             setTimeout(function() {
               $('input, textarea:not(.keepEdit), button', self.el).prop('disabled', 'disabled');
+              /*
               var FormStatus = self.model.toJSON().FormStatus;
               var Preparer = self.model.toJSON().PreparerUserID;
               var Applicant = self.model.toJSON().ApplicantUserID;
@@ -157,12 +162,16 @@ Hktdc.Views = Hktdc.Views || {};
                 ActionTaker,
                 ITSApprover
               );
+              */
+              self.renderButtonHandler();
 
             });
           })
           .fail(function(e) {
             console.error(e);
           });
+
+      /* mode === edit */
       } else if (this.model.toJSON().mode === 'edit') {
         console.debug('This is << EDIT >> mode');
         Q.all([
@@ -214,6 +223,8 @@ Hktdc.Views = Hktdc.Views || {};
           .fail(function(e) {
             console.error(e);
           });
+
+      /* else no matched mode */
       } else {
         console.error('no available request mode');
       }
@@ -223,7 +234,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       this.model.on('change:selectedApplicantModel', function(model, selectedApplicantModel, options) {
         // console.log('on change selectedApplicantModel');
-        console.log('change:selectedApplicantModel: ', self.model.toJSON().selectedApplicantModel.toJSON());
+        // console.log('change:selectedApplicantModel: ', self.model.toJSON().selectedApplicantModel.toJSON());
         var selectedUserName = selectedApplicantModel.toJSON().UserFullName;
         $('.selectedApplicant', self.el).text(selectedUserName);
         self.loadApplicantDetail()
@@ -233,14 +244,14 @@ Hktdc.Views = Hktdc.Views || {};
 
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
-        self.doRenderButtons({ showSave: true });
+        self.renderButtonHandler();
       });
 
       this.model.on('change:EstimatedCost', function(model, newCost, options) {
-        console.log('change cost');
+        // console.log('change cost');
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
-        self.doRenderButtons({ showSave: true });
+        self.renderButtonHandler();
       });
 
       /* click recommend will trigger change of the selectedRecommentModel */
@@ -254,7 +265,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(selectedUserName);
         $('#recommend-btn', self.el).text(selectedUserName);
 
-        self.checkAndRenderButton();
+        self.renderButtonHandler();
       });
 
       this.model.toJSON().selectedCCCollection.on('add', function(addedCC, newCollection) {
@@ -267,105 +278,19 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log('added service', newCollection.toJSON());
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
-        self.doRenderButtons({ showSave: true });
+        self.renderButtonHandler();
       });
 
       this.model.toJSON().selectedServiceCollection.on('change', function(changedModel) {
         // console.log(addedService);
         /* clear the selectedRecommentModel */
         self.model.set({ selectedRecommentModel: null });
-        self.doRenderButtons({ showSave: true });
+        self.renderButtonHandler();
       });
 
       this.model.on('change:showLog', function(model, isShow) {
         console.log('showLog: ', isShow);
       });
-    },
-
-    getShowButtonOptionsByFormStatus: function(data) {
-      var formStatus = data.FormStatus;
-      var actions = data.actions;
-      console.log(formStatus);
-      console.log(actions);
-      switch (formStatus) {
-        case 'Draft':
-          return {
-            showSave: true,
-            showSendToApprover: true
-          };
-        case 'Approval':
-          var result = {};
-          // TODO: check self is approver
-          // var iAmApprover = true;
-          if (actions) {
-            result = {
-              showApprove: _.contains(actions, 'Approve'),
-              showReject: _.contains(actions, 'Reject'),
-              showReturn: _.contains(actions, 'Return')
-            };
-          } else {
-            result = {
-              showBack: true,
-              showRecall: true
-            }
-          }
-          return result;
-        default:
-          // default = [Submitted, ProcessTasks, Rework, Review]
-          return {
-            showBack: true
-          };
-      }
-    },
-
-    mergeServiceCollection: function(rawData, editedData) {
-      /* =================== Dreprecated method =================== */
-
-      // console.group('merge');
-      // console.log('rawData: ', rawData);
-      // console.log('editedData: ', editedData);
-      var mergedData = _.map(rawData, function(rawServiceCatagory) {
-        var matchedServiceCatagory = _.find(editedData, function(editedServiceCatagory) {
-          // console.log('editedServiceCatagory: ', editedServiceCatagory);
-          // console.log('rawServiceCatagory: ', rawServiceCatagory);
-          return editedServiceCatagory.Name === rawServiceCatagory.Name;
-        });
-        // console.log('matchedServiceCatagory', matchedServiceCatagory);
-        if (matchedServiceCatagory) {
-          // if edited collection present, extend Level2
-          rawServiceCatagory.Level2 = _.map(rawServiceCatagory.Level2, function(rawServiceType) {
-            var matchedServiceType = _.find(matchedServiceCatagory.Level2, function(editedServiceType) {
-              // TODO: use GUID if api fixed
-              // return editedServiceType.Name === rawServiceType.Name;
-              // console.group('check servicetype match');
-              // console.log(editedServiceType.Name);
-              // console.log(rawServiceType.Name);
-              // console.groupEnd();
-              return editedServiceType.Name === rawServiceType.Name;
-            });
-            // console.log('matchedServiceType: ', matchedServiceType);
-            // if edited collection present, extend Level3
-            if (matchedServiceType) {
-              rawServiceType.Level3 = _.map(rawServiceType.Level3, function(rawServiceRequest) {
-                var matchedServiceRequest = _.find(matchedServiceType.Level3, function(editedServiceRequest) {
-                  return editedServiceRequest.Name === rawServiceRequest.Name;
-                });
-                if (matchedServiceRequest) {
-                  return matchedServiceRequest;
-                } else {
-                  return rawServiceRequest;
-                }
-              });
-            }
-            return rawServiceType;
-          });
-        }
-        return rawServiceCatagory;
-      });
-      // console.log(JSON.stringify(mergedData, null, 2));
-      // console.groupEnd();
-
-      return new Hktdc.Collections.ServiceCatagory(mergedData);
     },
 
     getGroupedRequestList: function(RequestList) {
@@ -492,17 +417,19 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    checkAndRenderButton: function() {
+    renderButtonHandler: function() {
       var self = this;
       /* From list || from choose applicant */
       var Applicant = self.model.toJSON().ApplicantUserID || self.model.toJSON().selectedApplicantModel.toJSON().UserId;
+      var FormStatus = self.model.toJSON().FormStatus;
       if (
-        !self.model.toJSON().FormStatus ||
-        (self.model.toJSON().FormStatus === 'Draft' && Applicant !== Hktdc.Config.userID) // && Preparer === Hktdc.Config.userID
+        !FormStatus ||
+        FormStatus === 'Draft' ||
+        FormStatus === 'Review' ||
+        FormStatus === 'Return'
       ) {
         console.debug('NEED Check APPLICANT_RULECODE');
         /* load related button set */
-        var acceptedRuleCodes = ['IT0008', 'IT0009'];
         var Preparer = self.model.toJSON().PreparerUserID;
         var ApplicantRuleCode = self.model.toJSON().selectedApplicantModel.toJSON().RuleCode;
         var Approver = self.model.toJSON().selectedRecommentModel.toJSON().WorkerId;
@@ -512,86 +439,39 @@ Hktdc.Views = Hktdc.Views || {};
         console.log('Applicant: ', Applicant);
         console.log('ApplicantRuleCode: ', ApplicantRuleCode);
         console.log('Approver: ', Approver);
-
-        if (!_.contains(acceptedRuleCodes, ApplicantRuleCode)) {
-          alert('rule code error');
-          self.doRenderButtons({});
-          return false;
+        if (!Preparer || !Applicant || !Approver || !ApplicantRuleCode) {
+          self.doRenderButtons({showSave: true});
+        } else {
+          self.renderNewAndEditModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
         }
-
-        self.renderDraftButton(Preparer, Applicant, Approver, ApplicantRuleCode);
       } else {
         console.debug('BY FORMSTATUS');
-        // alert('Approval and beyond ');
-        var FormStatus = self.model.toJSON().FormStatus;
-        var Preparer = self.model.toJSON().PreparerUserID;
-        // var Applicant = self.model.toJSON().ApplicantUserID;
-        var Approver = self.model.toJSON().ApproverUserID;
-        var ActionTaker = self.model.toJSON().ActionTakerUserID;
-        var ITSApprover = self.model.toJSON().ITSApproverUserID;
-
-        self.renderRequestFormButton(
-          FormStatus,
-          Preparer,
-          Applicant,
-          Approver,
-          ActionTaker,
-          ITSApprover
-        );
+        alert('Approval and beyond ');
+        // var FormStatus = self.model.toJSON().FormStatus;
+        // var Preparer = self.model.toJSON().PreparerUserID;
+        // // var Applicant = self.model.toJSON().ApplicantUserID;
+        // var Approver = self.model.toJSON().ApproverUserID;
+        // var ActionTaker = self.model.toJSON().ActionTakerUserID;
+        // var ITSApprover = self.model.toJSON().ITSApproverUserID;
+        // self.renderRequestFormButton(
+        //   FormStatus,
+        //   Preparer,
+        //   Applicant,
+        //   Approver,
+        //   ActionTaker,
+        //   ITSApprover
+        // );
+        if (self.model.toJSON().actions) {
+          self.renderRequestFormButtonByActions(self.model.toJSON().actions);
+        } else {
+          alert('no actions button');
+        }
       }
     },
 
-    doRenderButtons: function(showButtonOptions) {
-      /* load available buttons */
-      var defaultOptions = {
-        showBack: false, // TODO: need?
-        showSave: false,
-        showSendToApplicant: false,
-        showSendToApprover: false,
-        showDelete: false,
-        showReturn: false,
-        showApprove: false,
-        showReject: false,
-        showRecall: false,
-        showSendEmail: false,
-        showComplete: false,
-        showForward: false,
-        showCancel: false,
-        approverSendTo: 'Approver', // [Approver, ITS Approval]
-        applicantSendTo: 'Applicant',
-        returnTo: 'Preparer'
-      };
-
-      var buttonModel = new Hktdc.Models.Button(_.extend(defaultOptions, showButtonOptions));
-      console.debug(buttonModel.toJSON());
-      var buttonView = new Hktdc.Views.Button({
-        model: buttonModel,
-        requestFormModel: this.model
-      });
-      console.log(buttonView.el);
-      $('.buttons-container', this.el).html(buttonView.el);
-    },
-
-    renderApplicantDetail: function(selectedApplicantModel, employeeList) {
-      var applicant = selectedApplicantModel.toJSON();
-      var target = _.find(employeeList, function(employee) {
-        return employee.UserId === applicant.UserId
-      });
-      selectedApplicantModel.set({
-        RuleCode: target.RuleCode
-      })
-      this.model.set({
-        DEPT: applicant.Depart,
-        Title: applicant.Title,
-        Location: applicant.Office
-        // RuleCode: target.RuleCode
-      });
-      console.log(this.model.toJSON());
-      $('#divdepartment', this.el).text(applicant.Depart);
-    },
-
-    renderDraftButton: function(Preparer, Applicant, Approver, ApplicantRuleCode) {
+    renderNewAndEditModeButton: function(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode) {
       var self = this;
+      var me = Hktdc.Config.userID;
       var showButtonOptions = { showSave: true };
       if (self.model.toJSON().FormStatus) {
         showButtonOptions.showDelete = true;
@@ -599,8 +479,9 @@ Hktdc.Views = Hktdc.Views || {};
       // console.group('check condition');
       // for submitted to
 
-      // 1) Preparer !== Applicant && ApproverRuleCode !== IT0009 && ApproverRuleCode !== 'IT0008'
+      // ApproverRuleCode !== 'IT0009'
       if (ApplicantRuleCode === 'IT0009') {
+        // 1) Preparer !== Applicant && Approver !== Applicant
         if (Preparer !== Applicant && Approver !== Applicant) {
           console.log('condition 1 (IT0009): Preparer !== Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApplicant = true;
@@ -611,6 +492,8 @@ Hktdc.Views = Hktdc.Views || {};
             applicantSubmittedTo: 'Applicant',
             approverSubmittedTo: 'Approver'
           });
+
+        // 2) Preparer === Applicant && Approver !== Applicant
         } else if (Preparer === Applicant && Approver !== Applicant) {
           console.log('condition 2 (IT0009): Preparer === Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApprover = true;
@@ -618,10 +501,15 @@ Hktdc.Views = Hktdc.Views || {};
           self.model.set({
             approverSubmittedTo: 'Approver'
           });
+
+        // 2) Preparer === / !==  Applicant && Approver === Applicant
         } else {
-          alert('RuleCode IT0009, rule code error, Preparer: ' + Preparer + ', Applicant: ' + Applicant + ', Approver: ' + Approver);
+          alert('Exception case: RuleCode IT0009, Approver === Applicant');
         }
+
+      // ApproverRuleCode !== 'IT0008'
       } else if (ApplicantRuleCode === 'IT0008') {
+        // Preparer === Applicant && Approver !== Applicant
         if (Preparer === Applicant && Approver !== Applicant) {
           console.log('condition 3 (IT0008): Preparer === Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApplicant = false;
@@ -630,37 +518,225 @@ Hktdc.Views = Hktdc.Views || {};
           self.model.set({
             approverSubmittedTo: 'Approver'
           });
+        // Preparer === Applicant && Approver === Applicant
         } else if (Preparer === Applicant && Approver === Applicant) {
           console.log('condition 4 (IT0008): Preparer === Applicant && Approver === Applicant');
           showButtonOptions.showSendToApprover = true;
           showButtonOptions.approverSendTo = 'Task Actioner';
           self.model.set({ approverSubmittedTo: 'TaskActioner' });
+        // Preparer !== Applicant && Approver === Applicant
         } else if (Preparer !== Applicant && Approver === Applicant) {
           console.log('condition 5 (IT0008): Preparer !== Applicant && Approver === Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.showSendToApprover = false;
           showButtonOptions.applicantSendTo = 'Applicant';
           self.model.set({ applicantSubmittedTo: 'Applicant' });
+        // Preparer !== Applicant && Approver !== Applicant
         } else if (Preparer !== Applicant && Approver !== Applicant) {
           console.log('condition 6 (IT0008): Preparer !== Applicant && Applicant !== Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.applicantSendTo = 'Applicant';
           self.model.set({ applicantSubmittedTo: 'Applicant' });
+        // Preparer !== Applicant && Approver !== Applicant
         } else {
-          alert('RuleCode IT0008, rule code error');
+          alert('Exception case: RuleCode IT0008, unknown situation');
         }
+
+      // ApproverRuleCode !== 'IT0008' !== 'IT0009'
       } else {
-        alert('rule code: !IT0008, !IT0009 error');
+        alert('unacceptable rule code: !== (IT0008 || IT0009)');
+        showButtonOptions = {
+          showSave: false,
+          showDelete: false
+        }
       }
 
-      console.log(showButtonOptions);
+      console.log('before role check: ', showButtonOptions);
+
+      /* Check Login user against role, ANSURE THE ABOVE SET BUT UNWANTED BUTTON NOT SHOW */
+      // formstatus is 'Draft'
+      if (FormStatus === 'Draft') {
+        if (me === Applicant) {
+          showButtonOptions.showSendToApplicant = false;
+        }
+      // formstatus is 'Review'
+      } else if (FormStatus === 'Review') {
+        /* NO role case to handle, must be applicant */
+        showButtonOptions.showReturn = true;
+        showButtonOptions.returnTo = 'Preparer';
+      // formstatus is Return
+      } else if (FormStatus === 'Return') {
+        if (me === Applicant) {
+          showButtonOptions.showDelete = false;
+          showButtonOptions.showSendToApplicant = false;
+          showButtonOptions.showReturn = true;
+        } else if (me === Preparer) {
+          showButtonOptions.showSendToApprover = false;
+          showButtonOptions.showReturn = false;
+        }
+      } else {
+        /* no Case to handle, must be applicant */
+      }
+
+
+      console.log('after role check: ', showButtonOptions);
       // console.groupEnd();
 
       self.doRenderButtons(showButtonOptions);
     },
 
-    renderRequestFormButton: function(FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover) {
+    renderRequestFormButtonByActions: function(actions, defaultOptions) {
+      var options = {actions: actions};
 
+      this.doRenderButtons(options);
+    },
+
+    doRenderButtons: function(showButtonOptions) {
+      /* load available buttons */
+      var defaultOptions = {
+        showSave: false,
+        showSendToApplicant: false,
+        showSendToApprover: false,
+        showDelete: false,
+        showReturn: false,
+        approverSendTo: 'Approver', // [Approver, ITS Approval]
+        applicantSendTo: 'Applicant',
+        returnTo: 'Preparer',
+
+        actions: []
+        // showApprove: false,
+        // showReject: false,
+        // showRecall: false,
+        // showSendEmail: false,
+        // showComplete: false,
+        // showForward: false,
+        // showCancel: false
+      };
+
+      var buttonModel = new Hktdc.Models.Button(_.extend(defaultOptions, showButtonOptions));
+      // console.debug(buttonModel.toJSON());
+      var buttonView = new Hktdc.Views.Button({
+        model: buttonModel,
+        requestFormModel: this.model
+      });
+      // console.log(buttonView.el);
+      $('.buttons-container', this.el).html(buttonView.el);
+    },
+
+    renderApplicantDetail: function(selectedApplicantModel, employeeList) {
+      var applicant = selectedApplicantModel.toJSON();
+      var target = _.find(employeeList, function(employee) {
+        return employee.UserId === applicant.UserId;
+      });
+      selectedApplicantModel.set({
+        RuleCode: target.RuleCode
+      });
+      this.model.set({
+        DEPT: applicant.Depart,
+        Title: applicant.Title,
+        Location: applicant.Office
+        // RuleCode: target.RuleCode
+      });
+      console.log(this.model.toJSON());
+      $('#divdepartment', this.el).text(applicant.Depart);
+    },
+
+    renderSelectedCCView: function(input) {
+      this.model.set({selectedCCCollection: new Hktdc.Collections.SelectedCC(input)});
+      $('.contact-group', this.el).append(new Hktdc.Views.SelectedCCList({
+        collection: this.model.toJSON().selectedCCCollection
+      }).el);
+    },
+
+    renderWorkflowLog: function(workflowLogList) {
+      var workflowLogCollections = new Hktdc.Collections.WorkflowLog(workflowLogList);
+      var workflowLogListView = new Hktdc.Views.WorkflowLogList({
+        collection: workflowLogCollections,
+        requestFormModel: this.model
+      });
+      workflowLogListView.render();
+      $('#workflowlog-container').html(workflowLogListView.el);
+    },
+
+    renderAttachment: function(attachmentList) {
+      var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
+      var attachmentListView = new Hktdc.Views.AttachmentList({
+        collection: attachmentCollections,
+        requestFormModel: this.model
+      });
+      attachmentListView.render();
+      $('#attachment-container').html(attachmentListView.el);
+    },
+
+    renderServiceCatagory: function(serviceCatagoryCollections) {
+      var serviceCatagoryListView = new Hktdc.Views.ServiceCatagoryList({
+        collection: serviceCatagoryCollections,
+        requestFormModel: this.model
+      });
+      serviceCatagoryListView.render();
+      $('#service-container').html(serviceCatagoryListView.el);
+    },
+
+    render: function() {
+      /* selectedApplicantModel is from mainRouter */
+      // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
+      this.model.set({
+        selectedApplicantName: this.model.toJSON().selectedApplicantModel.toJSON().UserFullName
+      });
+
+      this.$el.html(this.template({request: this.model.toJSON()}));
+    },
+
+    /* =================== Deprecated method start =================== */
+    mergeServiceCollection: function(rawData, editedData) {
+      // console.group('merge');
+      // console.log('rawData: ', rawData);
+      // console.log('editedData: ', editedData);
+      var mergedData = _.map(rawData, function(rawServiceCatagory) {
+        var matchedServiceCatagory = _.find(editedData, function(editedServiceCatagory) {
+          // console.log('editedServiceCatagory: ', editedServiceCatagory);
+          // console.log('rawServiceCatagory: ', rawServiceCatagory);
+          return editedServiceCatagory.Name === rawServiceCatagory.Name;
+        });
+        // console.log('matchedServiceCatagory', matchedServiceCatagory);
+        if (matchedServiceCatagory) {
+          // if edited collection present, extend Level2
+          rawServiceCatagory.Level2 = _.map(rawServiceCatagory.Level2, function(rawServiceType) {
+            var matchedServiceType = _.find(matchedServiceCatagory.Level2, function(editedServiceType) {
+              // TODO: use GUID if api fixed
+              // return editedServiceType.Name === rawServiceType.Name;
+              // console.group('check servicetype match');
+              // console.log(editedServiceType.Name);
+              // console.log(rawServiceType.Name);
+              // console.groupEnd();
+              return editedServiceType.Name === rawServiceType.Name;
+            });
+            // console.log('matchedServiceType: ', matchedServiceType);
+            // if edited collection present, extend Level3
+            if (matchedServiceType) {
+              rawServiceType.Level3 = _.map(rawServiceType.Level3, function(rawServiceRequest) {
+                var matchedServiceRequest = _.find(matchedServiceType.Level3, function(editedServiceRequest) {
+                  return editedServiceRequest.Name === rawServiceRequest.Name;
+                });
+                if (matchedServiceRequest) {
+                  return matchedServiceRequest;
+                } else {
+                  return rawServiceRequest;
+                }
+              });
+            }
+            return rawServiceType;
+          });
+        }
+        return rawServiceCatagory;
+      });
+      // console.log(JSON.stringify(mergedData, null, 2));
+      // console.groupEnd();
+
+      return new Hktdc.Collections.ServiceCatagory(mergedData);
+    },
+
+    renderRequestFormButton: function(FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover) {
       var self = this;
       var me = Hktdc.Config.userID;
       var showButtonOptions = {};
@@ -777,53 +853,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
       console.log(showButtonOptions);
       self.doRenderButtons(showButtonOptions);
-    },
-
-    renderSelectedCCView: function(input) {
-      this.model.set({selectedCCCollection: new Hktdc.Collections.SelectedCC(input)});
-      $('.contact-group', this.el).append(new Hktdc.Views.SelectedCCList({
-        collection: this.model.toJSON().selectedCCCollection
-      }).el);
-    },
-
-    renderWorkflowLog: function(workflowLogList) {
-      var workflowLogCollections = new Hktdc.Collections.WorkflowLog(workflowLogList);
-      var workflowLogListView = new Hktdc.Views.WorkflowLogList({
-        collection: workflowLogCollections,
-        requestFormModel: this.model
-      });
-      workflowLogListView.render();
-      $('#workflowlog-container').html(workflowLogListView.el);
-    },
-
-    renderAttachment: function(attachmentList) {
-      var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
-      var attachmentListView = new Hktdc.Views.AttachmentList({
-        collection: attachmentCollections,
-        requestFormModel: this.model
-      });
-      attachmentListView.render();
-      $('#attachment-container').html(attachmentListView.el);
-    },
-
-    renderServiceCatagory: function(serviceCatagoryCollections) {
-      var serviceCatagoryListView = new Hktdc.Views.ServiceCatagoryList({
-        collection: serviceCatagoryCollections,
-        requestFormModel: this.model
-      });
-      serviceCatagoryListView.render();
-      $('#service-container').html(serviceCatagoryListView.el);
-    },
-
-    render: function() {
-      /* selectedApplicantModel is from mainRouter */
-      // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
-      this.model.set({
-        selectedApplicantName: this.model.toJSON().selectedApplicantModel.toJSON().UserFullName
-      });
-
-      this.$el.html(this.template({request: this.model.toJSON()}));
     }
-
+    /* =================== Deprecated method end =================== */
   });
 })();

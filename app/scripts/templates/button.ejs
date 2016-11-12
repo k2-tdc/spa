@@ -22,30 +22,10 @@
   <button class="btn btn-primary btn-lg" id="btnreturn" type="button">Return to Preparer <%= returnTo %></button>
 <% } %>
 
-<% if (showApprove) {%>
-  <button class="btn btn-primary btn-lg" id="btnapprove" type="button">Approve</button>
-<% } %>
-
-<% if (showReject) {%>
-  <button class="btn btn-primary btn-lg" id="btnreject" type="button">Reject</button>
-<% } %>
-
-<% if (showRecall) {%>
-  <button class="btn btn-primary btn-lg" id="btnrecall" type="button">Recall</button>
-<% } %>
-
-<% if (showSendEmail) {%>
-  <button class="btn btn-primary btn-lg" id="btnsendemail" type="button">Resend Email Notification</button>
-<% } %>
-
-<% if (showComplete) {%>
-  <button class="btn btn-primary btn-lg" id="btmcomplete" type="button">Complete</button>
-<% } %>
-
-<% if (showForward) {%>
-  <button class="btn btn-primary btn-lg" id="btnforward" type="button">Forward</button>
-<% } %>
-
-<% if (showCancel) {%>
-  <button class="btn btn-primary btn-lg" id="btncancel" type="button">Cancel</button>
-<% } %>
+<%
+_.each(workflowButtons, function(wfButton){
+%>
+  <button class="btn btn-primary btn-lg" workflowAction="<%= wfButton.WrokflowAction %>" type="button"><%= wfButton.ButtonName %></button>
+<%
+});
+%>
