@@ -171,8 +171,23 @@ window.Hktdc = {
         var menuView = new Hktdc.Views.Menu({
           model: menuModel
         });
+
+        $('#menu').html(menuView.el);
         menuView.listenTo(window.Hktdc.Dispatcher, 'reloadMenu', function() {
-          self.loadMenu();
+          self.loadMenu()
+            .then(function(newMenuModel) {
+              var newMenu = newMenuModel.toJSON();
+              newMenuModel.set({
+                Menu: newMenu.Menu,
+                PList: newMenu.PList,
+                User: { UserName: newMenu.UserName, UserID: newMenu.UserID }
+              });
+              var menuView = new Hktdc.Views.Menu({
+                model: newMenuModel
+              });
+              newMenuModel.set('activeTab', Backbone.history.getHash());
+              $('#menu').html(menuView.el);
+            });
         });
         var userView = new Hktdc.Views.User({
           model: new Hktdc.Models.User({

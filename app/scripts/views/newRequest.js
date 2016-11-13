@@ -8,8 +8,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/newRequest.ejs'],
 
-    el: '#mainContent',
-
     events: {
       'click #recommend-btn': 'checkBudgetAndService',
       'blur #txtjustification': 'updateNewRequestModel',
@@ -29,9 +27,9 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var haveSelectService = !!this.model.toJSON().selectedServiceCollection.toJSON().length;
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
+      // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
+      // console.log(this.model.toJSON().EstimatedCost);
       if (!(haveSelectService && haveFilledCost)) {
-        console.log(this.model.toJSON().selectedServiceCollection.toJSON().length);
-        console.log(this.model.toJSON().EstimatedCost);
         alert('please select service and filled the cost field');
         return false;
       } else {
@@ -117,7 +115,9 @@ Hktdc.Views = Hktdc.Views || {};
              after change the approver(recommend by), render other button */
             self.renderButtonHandler();
             /* init event listener last */
-            self.initModelChange();
+            setTimeout(function() {
+              self.initModelChange();
+            }, 500);
           })
           .fail(function(e) {
             console.error(e);
@@ -175,7 +175,6 @@ Hktdc.Views = Hktdc.Views || {};
               );
               */
               self.renderButtonHandler();
-
             });
           })
           .fail(function(e) {
@@ -207,7 +206,7 @@ Hktdc.Views = Hktdc.Views || {};
               ),
               selectedRecommentModel: new Hktdc.Models.Recommend(recommend),
               selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
-              selectedCCCollection: new Hktdc.Collections.SelectedCC()
+              selectedCCCollection: new Hktdc.Collections.SelectedCC(self.model.toJSON().RequestCC)
 
             });
             // console.log(self.model.toJSON().selectedServiceCollection.toJSON());
@@ -238,7 +237,9 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderButtonHandler();
 
             /* init event listener last */
-            self.initModelChange();
+            setTimeout(function() {
+              self.initModelChange();
+            }, 500);
           })
           .fail(function(e) {
             console.error(e);
@@ -308,6 +309,13 @@ Hktdc.Views = Hktdc.Views || {};
         self.renderButtonHandler();
       });
 
+      this.model.toJSON().selectedServiceCollection.on('remove', function(changedModel) {
+        // console.log(addedService);
+        /* clear the selectedRecommentModel */
+        self.model.set({ selectedRecommentModel: null });
+        self.renderButtonHandler();
+      });
+
       this.model.on('change:showLog', function(model, isShow) {
         console.log('showLog: ', isShow);
       });
@@ -326,6 +334,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(serviceCatagory);
         _.each(serviceCatagory.Level2, function(serviceType) {
           _.each(serviceType.Level3, function(serviceRequest) {
+            serviceRequest.Notes = serviceRequest.SValue;
             requestArr.push(serviceRequest);
           });
         });

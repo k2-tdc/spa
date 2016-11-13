@@ -420,6 +420,10 @@ div.dataTables_wrapper table {
   margin-top: 4px;
 }
 
+.workflowlog-container{
+  overflow: scroll;
+}
+
 .buttons-container{
   .btn{
     margin-bottom: 4px;
@@ -482,7 +486,7 @@ div.dataTables_wrapper table {
   #header_top .logo-hktdc {
     width: 100px;
 
-//    margin-right: 10px;
+  //    margin-right: 10px;
   }
 
   #header_main .logo-hktdc {
@@ -570,7 +574,7 @@ div.dataTables_wrapper table {
 
   html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
     width: 100%;
-//    letter-spacing: -0.5px;
+  //    letter-spacing: -0.5px;
   }
   @media screen and (max-width:959px) {
     span.nav-header-user-text {
@@ -646,13 +650,13 @@ div.dataTables_wrapper table {
 
 
 .select-service{
-    border: 0px;
-    border-bottom: 1px rgba(0, 0, 0, .2) solid;
-    border-radius: 0;
+    // border: 0px;
+    border: 1px rgba(0, 0, 0, .1) solid;
+    border-radius: 4px;
 }
 
 .service-type-container > div > .group-details:last-child  .select-service{
-    border: 0px;
+    // border: 0px;
 }
 
 .service-request-wrap ul.dropdown-menu {

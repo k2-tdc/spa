@@ -9,7 +9,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/menu.ejs'],
 
-    el: '#menu',
 
     // getLinkMap: function() {
     //   return {

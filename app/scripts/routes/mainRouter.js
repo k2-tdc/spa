@@ -41,6 +41,8 @@ Hktdc.Routers = Hktdc.Routers || {};
         model: checkStatusModel
       });
 
+      $('#mainContent').empty().html(csView.el);
+
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
         collection: subheaderMenuListCollection,
@@ -67,6 +69,8 @@ Hktdc.Routers = Hktdc.Routers || {};
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
+
+      $('#mainContent').empty().html(csView.el);
 
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
@@ -96,10 +100,12 @@ Hktdc.Routers = Hktdc.Routers || {};
         model: checkStatusModel
       });
 
+      $('#mainContent').empty().html(csView.el);
+
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
         collection: subheaderMenuListCollection,
-        currentPageName: 'Draft list'
+        currentPageName: 'All Tasks'
       });
       subheaderMenuListView.render();
 
@@ -124,10 +130,12 @@ Hktdc.Routers = Hktdc.Routers || {};
         model: checkStatusModel
       });
 
+      $('#mainContent').empty().html(csView.el);
+
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
         collection: subheaderMenuListCollection,
-        currentPageName: 'Draft list'
+        currentPageName: 'Approval Tasks'
       });
       subheaderMenuListView.render();
 
@@ -154,13 +162,14 @@ Hktdc.Routers = Hktdc.Routers || {};
         model: newRequestModel
       });
 
+      $('#mainContent').empty().html(nrView.el);
+
       var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
       var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
         collection: subheaderMenuListCollection,
         currentPageName: 'New Request'
       });
       subheaderMenuListView.render();
-      console.log($('.subheader-menu-container'));
 
       $('.subheader-menu-container').html(subheaderMenuListView.el);
 
@@ -234,6 +243,8 @@ Hktdc.Routers = Hktdc.Routers || {};
           var requestView = new Hktdc.Views.NewRequest({
             model: requestModel
           });
+
+          $('#mainContent').empty().html(requestView.el);
 
           var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
           var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({

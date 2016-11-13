@@ -9,8 +9,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/checkStatus.ejs'],
 
-    el: '#mainContent',
-
     events: {
       'click #btnSearchCheckStatus': 'doSearch',
       'change .user-select': 'updateModelByEvent',

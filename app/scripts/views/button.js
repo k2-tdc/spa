@@ -91,8 +91,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (isConfirm) {
         Backbone.emulateHTTP = true;
         Backbone.emulateJSON = true;
-        var rowData = self.statusDataTable.row($(this).parents('tr')).data();
-        var refId = rowData.refId;
+        var refId = this.requestFormModel.toJSON().ReferenceID;
         var DeleteRequestModel = Backbone.Model.extend({
           url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
         });
@@ -103,6 +102,7 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log('success: ', a);
             // console.log(b);
             Hktdc.Dispatcher.trigger('reloadMenu');
+            Backbone.history.navigate('draft', {trigger: true});
           },
           error: function(err) {
             console.log(err);
@@ -218,8 +218,8 @@ Hktdc.Views = Hktdc.Views || {};
           : null,
         cc: _.map(this.requestFormModel.toJSON().selectedCCCollection.toJSON(), function(ccData) {
           return {
-            Name: ccData.UserFullName,
-            UserID: ccData.UserId
+            Name: ccData.UserFullName || ccData.FULLNAME,
+            UserID: ccData.UserId || ccData.USERID
           };
         }),
         Remark: requestFormData.Remark,

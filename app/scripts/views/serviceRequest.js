@@ -49,11 +49,13 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log('model', this.model.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
-      if (this.model.toJSON().GUID || String(this.model.toJSON().ControlFlag) === 1) {
-        collection.remove(this.model);
+      if (this.model.toJSON().GUID || String(this.model.toJSON().ControlFlag) === '1') {
+        // collection.remove(this.model);
         /* also delete the collection */
         this.requestFormModel.toJSON().selectedServiceCollection.remove(
-          this.model.toJSON().selectedRequestModel
+          /* insert mode use selectedRequestModel */
+          /* edit mode use this.model */
+          this.model.toJSON().selectedRequestModel || this.model
         );
 
       /* not have GUID = (ControlFlag = 2) */
@@ -65,7 +67,7 @@ Hktdc.Views = Hktdc.Views || {};
         collection.reset();
         // console.log(collection.toJSON());
       }
-      // console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
     addNotesToServiceObject: function(ev) {
       // console.log($(ev.target).val());
@@ -125,7 +127,6 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     removeServiceRequest: function(model) {
-      console.log('remove');
       // console.log('removeServiceRequest in ServiceRequestList view');
       this.serverviceCatagoryModel.set({
         selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount - 1

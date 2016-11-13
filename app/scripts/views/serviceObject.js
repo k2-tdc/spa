@@ -17,7 +17,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
     editServiceHandler: function(ev) {
       // console.log('#lastnosub blur; ', );
-      console.log($(ev.target).val().trim());
+      // console.log($(ev.target).val().trim());
       if ($(ev.target).val().trim().length > 0) {
         this.model.set({
           Notes: $('textarea', this.el).val().trim()
@@ -41,8 +41,9 @@ Hktdc.Views = Hktdc.Views || {};
   Hktdc.Views.ServiceObjectSelect = Backbone.View.extend({
     template: JST['app/scripts/templates/serviceObjectSelect.ejs'],
     tagName: 'li',
+    className: 'anclevel3',
     events: {
-      'click .anclevel3': 'selectServiceHandler'
+      'click': 'selectServiceHandler'
     },
     selectServiceHandler: function() {
       /* save the selected request to the upper level so that can delete request form collection by selected model */
@@ -109,11 +110,12 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       serviceObjectItemView.render();
-      $(this.el).append(serviceObjectItemView.el);
+      // setTimeout(function() {
+        $(this.el).append(serviceObjectItemView.el);
+      // }, 500);
     },
 
     render: function() {
-
       this.collection.each(this.renderServiceObjectItem);
     }
 
