@@ -250,7 +250,6 @@ Hktdc.Routers = Hktdc.Routers || {};
           console.log(err);
         }
       });
-    },
-
+    }
   });
 })();

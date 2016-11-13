@@ -30,8 +30,8 @@ Hktdc.Views = Hktdc.Views || {};
     clickWorkflowBtnHandler: function(ev) {
       // console.log(Backbone.history.getFragment());
       var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
-      var sn = hashWithoutQS.split('/')[2];
-      var actionName = $(ev.target).attr('workflowAction').replace('\n','');
+      var sn = hashWithoutQS.split('/')[3];
+      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       if (!actionName || !sn) {
         alert('Error on prepare data');
       }
@@ -42,8 +42,8 @@ Hktdc.Views = Hktdc.Views || {};
         Comment: this.requestFormModel.toJSON().Comment
       };
       // alert(JSON.stringify(Alltask));
-      var Con = confirm('Are you sure want to ' + $(ev.target).attr('workflowAction') + '?');
-      if (Con) {
+      var isConfirm = confirm('Are you sure want to ' + actionName + '?');
+      if (isConfirm) {
         Backbone.emulateHTTP = true;
         Backbone.emulateJSON = true;
         var worklistModel = new Hktdc.Models.WorklistAction();
@@ -61,6 +61,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       } else {
+        console.log('not ' + actionName);
         return false;
       }
     },

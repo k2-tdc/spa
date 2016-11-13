@@ -25,6 +25,12 @@ Hktdc.Views = Hktdc.Views || {};
         processListView.render();
         $('.process-switch', self.el).append(processListView.el);
       });
+
+      // if (bowser.check({mobile: true})) {
+      //   $('.process-switch', self.el).addClass('mobile');
+      // } else {
+      //   $('.process-switch', self.el).removeClass('mobile');
+      // }
     },
 
     render: function() {

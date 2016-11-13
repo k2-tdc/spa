@@ -80,8 +80,9 @@ Hktdc.Views = Hktdc.Views || {};
           RouteName: 'logout'
         }]
       };
-      menu.push(PListMenu, UserMenu);
-      console.log(menu);
+      menu.push(UserMenu);
+      // menu.push(PListMenu, UserMenu);
+      // console.log(menu);
       /* map the name, the server should return the route later */
       _.each(menu, function(raw) {
         if (raw.sumenu) {

@@ -421,6 +421,9 @@ div.dataTables_wrapper table {
 }
 
 .buttons-container{
+  .btn{
+    margin-bottom: 4px;
+  }
   .available-buttons{
     border: 1px #CCC solid;
     border-radius: 4px;
@@ -478,7 +481,7 @@ div.dataTables_wrapper table {
 
   #header_top .logo-hktdc {
     width: 100px;
-    
+
 //    margin-right: 10px;
   }
 
@@ -566,7 +569,7 @@ div.dataTables_wrapper table {
   }
 
   html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
-    width: 100%;  
+    width: 100%;
 //    letter-spacing: -0.5px;
   }
   @media screen and (max-width:959px) {
@@ -633,7 +636,7 @@ div.dataTables_wrapper table {
 
 @media screen and (min-width: 960px) {
 .text-lg-right{
-        text-align: right !important;    
+        text-align: right !important;
     }
 }
 
@@ -668,6 +671,3 @@ div.dataTables_wrapper table {
 .service-request.btn{
     overflow: hidden;
 }
-
-
-
