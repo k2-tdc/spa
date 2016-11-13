@@ -48,8 +48,8 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log('parent collection', collection.toJSON());
       // console.log('model', this.model.toJSON());
 
-      /* have GUID = (ControlFlag = 1) */
-      if (this.model.toJSON().GUID) {
+      // /* have GUID = (ControlFlag = 1) */
+      if (this.model.toJSON().GUID || String(this.model.toJSON().ControlFlag) === 1) {
         collection.remove(this.model);
         /* also delete the collection */
         this.requestFormModel.toJSON().selectedServiceCollection.remove(

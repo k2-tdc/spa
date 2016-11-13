@@ -148,7 +148,8 @@ window.utils = {
     var accessToken = '';
     var refreshToken = self.getCookie('REFRESH-TOKEN');
 
-    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
+    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+    // var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
 
     if (!refreshToken) {
       // Initiate OAuth login flow

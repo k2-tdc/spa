@@ -36,6 +36,7 @@ Hktdc.Models = Hktdc.Models || {};
 
       // refId: null,
       ReferenceID: null,
+      SN: null,
       CreatedOn: null,
 
       // applicant department
@@ -63,8 +64,11 @@ Hktdc.Models = Hktdc.Models || {};
       // budgetSum: null,
       // BudgetSum: null,
       Remark: null,
-      Comment: null,
 
+      /* the Comment field leads the /SubmitRequest fail */
+      // Comment: null,
+
+      actions: [],
       selectedServiceTree: null,
       selectedServiceCollection: null,
       selectedAttachmentCollection: null,

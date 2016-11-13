@@ -15,6 +15,8 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     defaults: {
+      // TODO: pass to applicant => "Review"
+      // TODO: pass to approver => "Approval"
       Req_Status: '',
       Prepared_By: '',
       Preparer_ID: '',
@@ -25,7 +27,10 @@ Hktdc.Models = Hktdc.Models || {};
       Title: '',
       Office: '',
       Department: '',
-      Comment: '',
+
+      /* the Comment field leads the /SubmitRequest fail */
+      // Comment: '',
+      
       Service_AcquireFor: {
         Hardware_Software_IT_Service: {
           Software_Service: [],

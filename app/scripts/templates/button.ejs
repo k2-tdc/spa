@@ -18,14 +18,10 @@
   <button class="btn btn-primary btn-lg" id="btndelete" type="button">Delete</button>
 <% } %>
 
-<% if (showReturn) {%>
-  <button class="btn btn-primary btn-lg" id="btnreturn" type="button">Return to Preparer <%= returnTo %></button>
-<% } %>
-
 <%
 _.each(workflowButtons, function(wfButton){
 %>
-  <button class="btn btn-primary btn-lg" workflowAction="<%= wfButton.WrokflowAction %>" type="button"><%= wfButton.ButtonName %></button>
+  <button class="btn btn-primary btn-lg workflow-btn" workflowAction="<%= wfButton.Action %>" type="button"><%= wfButton.ButtonName %></button>
 <%
 });
 %>

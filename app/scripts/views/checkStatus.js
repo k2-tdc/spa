@@ -140,12 +140,11 @@ Hktdc.Views = Hktdc.Views || {};
           dataSrc: function(data) {
             // console.log(JSON.stringify({ data: data }, null, 2));
             var modData = _.map(data, function(row) {
-              var formStatusDisplay = row.DisplayStatus;
               return {
                 lastActionDate: row.SubmittedOn,
                 applicant: row.ApplicantFNAME,
                 summary: self.getSummaryFromRow(row.ReferenceID, row.RequestList),
-                status: self.getStatusFrowRow(row.FormStatus, formStatusDisplay, row.LastUser || row.ApplicantFNAME),
+                status: self.getStatusFrowRow(row),
                 refId: row.ReferenceID,
                 ProcInstID: row.ProcInstID,
                 SN: row.SN
@@ -184,7 +183,17 @@ Hktdc.Views = Hktdc.Views || {};
       $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.statusDataTable.row(this).data();
         var SNPath = (rowData.SN) ? '/' + rowData.SN : '';
-        Backbone.history.navigate('request/' + rowData.refId + SNPath, {trigger: true});
+        var typePath;
+        if (self.model.toJSON().mode === 'APPROVAL TASKS') {
+          typePath = '/approval/';
+        } else if (self.model.toJSON().mode === 'ALL TASKS') {
+          typePath = '/all/';
+        } else if (self.model.toJSON().mode === 'DRAFT') {
+          typePath = '/draft/';
+        } else {
+          typePath = '/draft/';
+        }
+        Backbone.history.navigate('request' + typePath + rowData.refId + SNPath, {trigger: true});
       });
 
       $('#statusTable tbody', this.el).on('click', '.btn-del', function(ev) {
@@ -288,19 +297,28 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       return summary;
-
     },
 
-    getStatusFrowRow: function(status, formStatusDisplay, by) {
+    getStatusFrowRow: function(row) {
+      var formStatusDisplay = row.DisplayStatus;
+      var status = row.FormStatus;
+
       if (status === 'Draft') {
-        return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>'
+        return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>';
+      } else if (status === 'Review') {
+        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
+      } else if (status === 'Approval') {
+        return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
+      } else if (status === 'Proces Task') {
+        return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullNAME;
+      } else if (status === 'ITS Approval') {
+        return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullNAME;
       } else {
-        return formStatusDisplay + '<br /> by: ' + by;
+        return formStatusDisplay + '<br /> by: ' + row.LastUser;
       }
 
       // return status + '<br />' + formStatusDisplay + '<br /> by: ' + approver;
     }
 
   });
-
 })();

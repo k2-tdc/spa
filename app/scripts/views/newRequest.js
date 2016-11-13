@@ -64,10 +64,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateNewRequestModel: function(ev) {
-      if (this.model.toJSON().mode === 'read') {
+      var targetField = $(ev.target).attr('field');
+      if (this.model.toJSON().mode === 'read' && targetField !== 'Comment') {
         return false;
       }
-      var targetField = $(ev.target).attr('field');
       var updateObject = {};
       updateObject[targetField] = $(ev.target).val();
       this.model.set(updateObject);
@@ -133,8 +133,19 @@ Hktdc.Views = Hktdc.Views || {};
         ])
           .then(function(results) {
             /* must sync RequestList to selectedServiceCollection for updating */
-            self.model.set({ selectedServiceTree: self.model.toJSON().RequestList });
-            console.log(self.model.toJSON().RequestList);
+            var recommend = _.find(results[1], function(employee) {
+              return employee.UserId === self.model.toJSON().ApproverUserID;
+            });
+
+            /* need override the workerId */
+            recommend.WorkerId = recommend.UserId;
+
+            self.model.set({
+              selectedServiceTree: self.model.toJSON().RequestList,
+              selectedRecommentModel: new Hktdc.Models.Recommend(recommend)
+            });
+
+            // console.log(self.model.toJSON().RequestList);
 
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
@@ -181,12 +192,20 @@ Hktdc.Views = Hktdc.Views || {};
         ])
           .then(function(results) {
             console.log('loaded resource');
+            var recommend = _.find(results[0], function(employee) {
+              return employee.UserId === self.model.toJSON().ApproverUserID;
+            });
+
+            /* need override the workerId */
+            recommend.WorkerId = recommend.UserId;
+
             self.model.set({
               selectedServiceTree: self.model.toJSON().RequestList,
               /* must sync RequestList to selectedServiceCollection for updating */
               selectedServiceCollection: new Hktdc.Collections.SelectedService(
                 self.getAllRequestArray(self.model.toJSON().RequestList)
               ),
+              selectedRecommentModel: new Hktdc.Models.Recommend(recommend),
               selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
               selectedCCCollection: new Hktdc.Collections.SelectedCC()
 
@@ -201,21 +220,22 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderAttachment(self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
 
-            var FormStatus = self.model.toJSON().FormStatus;
-            var Preparer = self.model.toJSON().PreparerUserID;
-            var Applicant = self.model.toJSON().ApplicantUserID;
-            var Approver = self.model.toJSON().ApproverUserID;
-            var ActionTaker = self.model.toJSON().ActionTakerUserID;
-            var ITSApprover = self.model.toJSON().ITSApproverUserID;
-
-            self.renderRequestFormButton(
-              FormStatus,
-              Preparer,
-              Applicant,
-              Approver,
-              ActionTaker,
-              ITSApprover
-            );
+            // var FormStatus = self.model.toJSON().FormStatus;
+            // var Preparer = self.model.toJSON().PreparerUserID;
+            // var Applicant = self.model.toJSON().ApplicantUserID;
+            // var Approver = self.model.toJSON().ApproverUserID;
+            // var ActionTaker = self.model.toJSON().ActionTakerUserID;
+            // var ITSApprover = self.model.toJSON().ITSApproverUserID;
+            //
+            // self.renderRequestFormButton(
+            //   FormStatus,
+            //   Preparer,
+            //   Applicant,
+            //   Approver,
+            //   ActionTaker,
+            //   ITSApprover
+            // );
+            self.renderButtonHandler();
 
             /* init event listener last */
             self.initModelChange();
@@ -424,29 +444,36 @@ Hktdc.Views = Hktdc.Views || {};
       var FormStatus = self.model.toJSON().FormStatus;
       if (
         !FormStatus ||
-        FormStatus === 'Draft' ||
-        FormStatus === 'Review' ||
-        FormStatus === 'Return'
+        FormStatus === 'Draft'
+        // FormStatus === 'Review' ||
+        // FormStatus === 'Return'
       ) {
         console.debug('NEED Check APPLICANT_RULECODE');
         /* load related button set */
         var Preparer = self.model.toJSON().PreparerUserID;
         var ApplicantRuleCode = self.model.toJSON().selectedApplicantModel.toJSON().RuleCode;
-        var Approver = self.model.toJSON().selectedRecommentModel.toJSON().WorkerId;
-
+        var Approver = (self.model.toJSON().selectedRecommentModel)
+          ? self.model.toJSON().selectedRecommentModel.toJSON().WorkerId
+          : self.model.toJSON().ApproverUserID;
         // var ApproverRuleCode = self.model.toJSON().selectedRecommentModel.toJSON().RuleCode;
         console.log('Preparer: ', Preparer);
         console.log('Applicant: ', Applicant);
         console.log('ApplicantRuleCode: ', ApplicantRuleCode);
         console.log('Approver: ', Approver);
         if (!Preparer || !Applicant || !Approver || !ApplicantRuleCode) {
-          self.doRenderButtons({showSave: true});
+          if (FormStatus) {
+            self.doRenderButtons({
+              showSave: true,
+              showDelete: false
+            });
+          } else {
+            self.doRenderButtons({ showSave: true });
+          }
         } else {
-          self.renderNewAndEditModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
+          self.renderDraftModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
         }
       } else {
         console.debug('BY FORMSTATUS');
-        alert('Approval and beyond ');
         // var FormStatus = self.model.toJSON().FormStatus;
         // var Preparer = self.model.toJSON().PreparerUserID;
         // // var Applicant = self.model.toJSON().ApplicantUserID;
@@ -469,9 +496,9 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    renderNewAndEditModeButton: function(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode) {
+    renderDraftModeButton: function(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode) {
       var self = this;
-      var me = Hktdc.Config.userID;
+      // var me = Hktdc.Config.userID;
       var showButtonOptions = { showSave: true };
       if (self.model.toJSON().FormStatus) {
         showButtonOptions.showDelete = true;
@@ -555,29 +582,28 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* Check Login user against role, ANSURE THE ABOVE SET BUT UNWANTED BUTTON NOT SHOW */
       // formstatus is 'Draft'
-      if (FormStatus === 'Draft') {
-        if (me === Applicant) {
-          showButtonOptions.showSendToApplicant = false;
-        }
-      // formstatus is 'Review'
-      } else if (FormStatus === 'Review') {
-        /* NO role case to handle, must be applicant */
-        showButtonOptions.showReturn = true;
-        showButtonOptions.returnTo = 'Preparer';
-      // formstatus is Return
-      } else if (FormStatus === 'Return') {
-        if (me === Applicant) {
-          showButtonOptions.showDelete = false;
-          showButtonOptions.showSendToApplicant = false;
-          showButtonOptions.showReturn = true;
-        } else if (me === Preparer) {
-          showButtonOptions.showSendToApprover = false;
-          showButtonOptions.showReturn = false;
-        }
-      } else {
-        /* no Case to handle, must be applicant */
-      }
-
+      // if (FormStatus === 'Draft') {
+      //   if (me === Applicant) {
+      //     showButtonOptions.showSendToApplicant = false;
+      //   }
+      // // formstatus is 'Review'
+      // } else if (FormStatus === 'Review') {
+      //   /* NO role case to handle, must be applicant */
+      //   showButtonOptions.showReturn = true;
+      //   showButtonOptions.returnTo = 'Preparer';
+      // // formstatus is Return
+      // } else if (FormStatus === 'Return') {
+      //   if (me === Applicant) {
+      //     showButtonOptions.showDelete = false;
+      //     showButtonOptions.showSendToApplicant = false;
+      //     showButtonOptions.showReturn = true;
+      //   } else if (me === Preparer) {
+      //     showButtonOptions.showSendToApprover = false;
+      //     showButtonOptions.showReturn = false;
+      //   }
+      // } else {
+      //   /* no Case to handle, must be applicant */
+      // }
 
       console.log('after role check: ', showButtonOptions);
       // console.groupEnd();
@@ -586,8 +612,19 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderRequestFormButtonByActions: function(actions, defaultOptions) {
-      var options = {actions: actions};
-
+      var options = {workflowButtons: actions};
+      var Applicant = this.model.toJSON().ApplicantUserID || this.model.toJSON().selectedApplicantModel.toJSON().UserId;
+      var Preparer = this.model.toJSON().PreparerUserID;
+      var me = Hktdc.Config.userID;
+      if (this.model.toJSON().FormStatus === 'Review' || this.model.toJSON().FormStatus === 'Return') {
+        options.showSave = true;
+        if (
+          (this.model.toJSON().FormStatus === 'Review' && me === Applicant) ||
+          (this.model.toJSON().FormStatus === 'Return' && me === Preparer)
+        ) {
+          options.showDelete = true;
+        }
+      }
       this.doRenderButtons(options);
     },
 
@@ -603,7 +640,7 @@ Hktdc.Views = Hktdc.Views || {};
         applicantSendTo: 'Applicant',
         returnTo: 'Preparer',
 
-        actions: []
+        workflowButtons: []
         // showApprove: false,
         // showReject: false,
         // showRecall: false,

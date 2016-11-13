@@ -17,7 +17,8 @@ Hktdc.Views = Hktdc.Views || {};
       'click #btnsave': 'clickSaveHandler',
       'click #btnapplicant': 'clickApplicantHandler',
       'click #btnapprover': 'clickApproverHandler',
-      'click .alltaskbtn': 'doApproveHandler'
+      'click #btndelete': 'clickDeleteBtnHandler',
+      'click .workflow-btn': 'clickWorkflowBtnHandler'
     },
 
     initialize: function(props) {
@@ -26,44 +27,48 @@ Hktdc.Views = Hktdc.Views || {};
       this.render();
     },
 
-    doApproveHandler: function(ev) {
-      var Alltask = {
-        UserId: Userid,
-        SN: getParameterByName('SN'),
-        ActionName: $(this).attr("id"),
-        Comment: $("#txtcomment").val()
-
+    clickWorkflowBtnHandler: function(ev) {
+      // console.log(Backbone.history.getFragment());
+      var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
+      var sn = hashWithoutQS.split('/')[2];
+      var actionName = $(ev.target).attr('workflowAction').replace('\n','');
+      if (!actionName || !sn) {
+        alert('Error on prepare data');
       }
+      var body = {
+        UserId: Hktdc.Config.userID,
+        SN: sn,
+        ActionName: actionName,
+        Comment: this.requestFormModel.toJSON().Comment
+      };
       // alert(JSON.stringify(Alltask));
-      var Con = confirm("Are you sure want to " + $(this).attr("id") + "?");
-      if (Con == true) {
+      var Con = confirm('Are you sure want to ' + $(ev.target).attr('workflowAction') + '?');
+      if (Con) {
         Backbone.emulateHTTP = true;
         Backbone.emulateJSON = true;
-        var ActionModel = Backbone.Model.extend({
-          urlRoot: '' + Config.DomainName + '/api/request/WorklistAction'
-        });
-        var action = new ActionModel();
-        action.set(Alltask);
-        action.save({}, {
-          headers: {
-            "Authorization": 'Bearer ' + accessToken
-          },
+        var worklistModel = new Hktdc.Models.WorklistAction();
+        worklistModel.set(body);
+        worklistModel.save({}, {
+          beforeSend: utils.setAuthHeader,
           success: function(action, response) {
-            window.location.href = "alltask.html";
+            console.log('ok');
+            Backbone.history.navigate('alltask', {trigger: true});
+            Hktdc.Dispatcher.trigger('reloadMenu');
+            // window.location.href = "alltask.html";
           },
           error: function(action, response) {
-
+            console.log('error');
           }
         });
       } else {
-        ev.stopPropagation();
         return false;
       }
     },
 
     clickSaveHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Draft', '');
+        var status = this.model.toJSON().FormStatus || 'Draft';
+        this.saveAndApprover(status, '');
       }
     },
 
@@ -77,6 +82,37 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.checkIsValid()) {
         this.saveAndApprover('Submitted', 'approver');
       }
+    },
+
+    clickDeleteBtnHandler: function() {
+      var isConfirm = confirm('Are you sure to delete the request?');
+      var self = this;
+      if (isConfirm) {
+        Backbone.emulateHTTP = true;
+        Backbone.emulateJSON = true;
+        var rowData = self.statusDataTable.row($(this).parents('tr')).data();
+        var refId = rowData.refId;
+        var DeleteRequestModel = Backbone.Model.extend({
+          url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
+        });
+        var DeleteRequestModelInstance = new DeleteRequestModel();
+        DeleteRequestModelInstance.save(null, {
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            // console.log('success: ', a);
+            // console.log(b);
+            Hktdc.Dispatcher.trigger('reloadMenu');
+          },
+          error: function(err) {
+            console.log(err);
+            // console.log(b);
+          }
+        });
+      } else {
+        return false;
+      }
+      // var rowData = self.statusDataTable.row(this).data();
+      // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
     },
 
     checkIsValid: function() {

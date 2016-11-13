@@ -9,22 +9,27 @@ Hktdc.Models = Hktdc.Models || {};
 
 
     defaults: {
-      showBack: false, // TODO: need?
+      // new / edit mode button
       showSave: false,
       showSendToApplicant: false,
       showSendToApprover: false,
       showDelete: false,
       showReturn: false,
-      showApprove: false,
-      showReject: false,
-      showRecall: false,
-      showSendEmail: false,
-      showComplete: false,
-      showForward: false,
-      showCancel: false,
       approverSendTo: 'Approver', // [Approver, ITS Approval]
       applicantSendTo: 'Applicant',
-      returnTo: 'Preparer'
+      returnTo: 'Preparer',
+
+      // read mode button
+      workflowButtons: [],
+      // showApprove: false,
+      // showReject: false,
+      // showRecall: false,
+      // showSendEmail: false,
+      // showComplete: false,
+      // showForward: false,
+      // showCancel: false,
+
+      showBack: false // TODO: need?
     },
 
     validate: function(attrs, options) {

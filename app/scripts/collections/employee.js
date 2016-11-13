@@ -12,7 +12,7 @@ Hktdc.Collections = Hktdc.Collections || {};
     getQueryParams: function() {
       return {
         RuleID: Hktdc.Config.RuleCode,
-        UserId: Hktdc.Config.userID,
+        UserId: '',
         WorkId: Hktdc.Config.userID
       };
     },

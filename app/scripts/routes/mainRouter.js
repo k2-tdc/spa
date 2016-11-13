@@ -10,8 +10,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       '': 'checkStatus',
       'check_status': 'checkStatus',
       'request': 'newRequest',
-      'request/:requestId': 'editRequest',
-      'request/:requestId/:sn': 'editRequest',
+      'request/draft/:requestId': 'editRequest',
+      'request/all/:requestId/:sn': 'editRequest',
+      'request/approval/:requestId/:sn': 'editRequest',
       'draft': 'draft',
       'alltask': 'allTask',
       'approvaltask': 'approvalTask'
@@ -178,8 +179,16 @@ Hktdc.Routers = Hktdc.Routers || {};
     editRequest: function(requestId, sn) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
       var requestCollection = new Hktdc.Collections.NewRequest();
-      var procId = sn.split('_')[0]; // SN = '123_456'
-      requestCollection.url = requestCollection.url(requestId, procId);
+      var procId = (sn) ? sn.split('_')[0] : false; // SN = '123_456'
+      var type;
+      if (/\/approval\//.test(Backbone.history.getHash())) {
+        type = 'Approval';
+      } else if (/\/all\//.test(Backbone.history.getHash())) {
+        type = 'Worklist';
+      } else {
+        type = 'Draft';
+      }
+      requestCollection.url = requestCollection.url(requestId, type, procId, sn);
       requestCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function(result, response) {
@@ -208,10 +217,11 @@ Hktdc.Routers = Hktdc.Routers || {};
               status: ['Draft', 'Review', 'Return']
             }
           ];
-          var mode = _.find(modeMapping, function(modeObj) {
+          var modeObj = _.find(modeMapping, function(modeObj) {
             // console.log(_.contains(modeObj.status, requestModel.toJSON().FormStatus));
             return _.contains(modeObj.status, requestModel.toJSON().FormStatus);
-          }).name || 'read';
+          });
+          var mode = (modeObj) ? modeObj.name : 'read';
           // console.log(mode);
           requestModel.set({
             mode: mode,
