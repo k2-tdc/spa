@@ -55,7 +55,7 @@ a:hover,
 a:link,
 a:visited {
   color: inherit;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 nav:not(.mm-menu) {
@@ -167,6 +167,7 @@ label.control-label {
   font-weight: lighter;
   text-align: left;
   float: left;
+
 }
 
 .btn-primary {
@@ -205,6 +206,7 @@ div.newrequest-title {
   margin-bottom: 0;
 }
 
+
 .service-catagory-item > .select-service-header:hover {
   box-shadow: 0 0 10px #f57921;
 }
@@ -240,8 +242,8 @@ div.newrequest-title {
 }
 
 ul.dropdown-menu {
-  margin-left: 15px;
-  width: calc(100% - 30px);
+    margin-left: 15px;
+    width: calc(100% - 30px);
 }
 
 .nav-header-main ul.dropdown-menu {
@@ -310,13 +312,15 @@ ul.dropdown-menu {
   width: 30px;
   height: 30px;
   line-height: 30px;
-  display: block;
+  display: inline-block;
   text-align: center;
   font-weight: bold;
+  padding: 0;
 }
 
 div.full-width > button:not(.dropdown-toggle):not(.btn-add) {
-  width: calc(100% - 26px);
+//  width: calc(100% - 26px);
+    width: calc(100% - 26px);
   text-align: left;
 }
 
@@ -329,6 +333,7 @@ span.glyphicon.glyphicon-remove.select-applicant-del {
   border-radius: 50%;
   text-align: center;
   color: white;
+  cursor: pointer;
 }
 
 span.glyphicon.glyphicon-menu-down,
@@ -472,8 +477,9 @@ div.dataTables_wrapper table {
   }
 
   #header_top .logo-hktdc {
-    width: 80px;
-    margin-right: 10px;
+    width: 100px;
+    
+//    margin-right: 10px;
   }
 
   #header_main .logo-hktdc {
@@ -555,12 +561,13 @@ div.dataTables_wrapper table {
   }
 
   html.mm-opening #header_main > span.sep-space {
-    /*width: 90px;*/
-    width: 20px;
+    width: 90px;
+
   }
 
   html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
-    letter-spacing: -0.5px;
+    width: 100%;  
+//    letter-spacing: -0.5px;
   }
   @media screen and (max-width:959px) {
     span.nav-header-user-text {
@@ -573,7 +580,7 @@ div.dataTables_wrapper table {
 
     #header_top .logo-hktdc {
       display: initial;
-      width: 80px;
+      width: 100px;
       margin-right: 20px;
     }
 
@@ -612,9 +619,55 @@ div.dataTables_wrapper table {
   }
 
   #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
-    width: 100px;
+    width: 100%;
     overflow: hidden;
     text-overflow : ellipsis;
     white-space : nowrap;
   }
 }
+
+.text-lg-right{
+    max-width: 150px;
+    padding-right: 0px;
+}
+
+@media screen and (min-width: 960px) {
+.text-lg-right{
+        text-align: right !important;    
+    }
+}
+
+.service_num{
+    float: left;
+}
+
+
+.select-service{
+    border: 0px;
+    border-bottom: 1px rgba(0, 0, 0, .2) solid;
+    border-radius: 0;
+}
+
+.service-type-container > div > .group-details:last-child  .select-service{
+    border: 0px;
+}
+
+.service-request-wrap ul.dropdown-menu {
+    margin-left: 0px;
+    //width: auto;
+    width: calc(100% - 0px);
+    overflow: hidden;
+}
+
+
+.service-request-wrap ul.dropdown-menu > li{
+    padding: 0;
+    margin: 0;
+}
+
+.service-request.btn{
+    overflow: hidden;
+}
+
+
+

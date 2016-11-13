@@ -50,7 +50,7 @@
 
     &>a:hover {
       color: rgb(245, 121, 33);
-      text-decoration: underline;
+//      text-decoration: underline;
     }
 
     &>.sep-vertical {
@@ -94,6 +94,7 @@
     display: table-cell;
 
     button.btn.btn-default.dropdown-toggle {
+        overflow: hidden;
       border: 0;
       color: #f47820;
       font-size: 18px;
@@ -112,7 +113,11 @@
 
 
     ul.dropdown-menu {
-      width: 100%;
+        width: 100%;
+        z-index: 1000;
+        -webkit-transform: translateZ(0px);
+        transform: translateZ(0px);
+        
       a {
         text-decoration: none;
         overflow-wrap: break-word;

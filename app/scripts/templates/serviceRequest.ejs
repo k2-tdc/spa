@@ -10,13 +10,13 @@
 
   <div class="service-request-wrap"><!-- old <div class="leve2sub"> -->
     <div class="row">
-      <div class="col-xs-1 col-md-1" style='padding-left: 10px;'>
+      <div class="service_num" style='padding-left: 20px;'>
         <span class="select-applicant-step">
           <%= request.index %>
         </span>
       </div>
 
-      <div class="col-xs-9 col-md-9" style='padding-left:20px;'>
+      <div class="col-xs-8 col-md-9" style='padding-left:10px;'>
         <div class="service-object-container btn-group full-width" style='width:100%'>
           <button type="button" class="service-request btn btn-default selectleve2sub" data-toggle="dropdown" id="leve2sub">
             <% if (request.selectedRequestModel) { %>
@@ -40,7 +40,7 @@
         </div>
       </div>
 
-      <div class="col-xs-2 col-md-2" style='padding:0;'>
+      <div class="col-xs-1 col-md-1" style='padding:0;'>
         <% if (needDelBtn) { %>
           <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
         <% } %>
@@ -59,19 +59,19 @@
 %>
 
 <div class="row service-request-wrap">
-  <div class="col-xs-1 col-md-1" style='padding-left: 10px;'>
+  <div class="service_num" style='padding-left: 20px;'>
     <span class="select-applicant-step">
       <%= request.index %>
     </span>
   </div>
-  <div class="col-xs-9 col-md-9 select-service-title" style='padding-left:20px;'>
-
+  <div class="col-xs-8 col-md-9 select-service-title" style='padding-left:10px;'>
+    
     <div class="service-object-container">
       <!-- START: Repeat Unit of the level3: service object -->
     </div>
 
   </div>
-  <div class="col-xs-2 col-md-2" style='padding:0;'>
+  <div class="service_num" style='padding:0;'>
     <% if (needDelBtn) { %>
       <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
     <% } %>
