@@ -11,5 +11,4 @@ Hktdc.Models = Hktdc.Models || {};
       selectedServiceObject: true
     }
   });
-
 })();

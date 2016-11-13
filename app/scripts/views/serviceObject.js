@@ -76,12 +76,12 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: function() {
       var col = this.collection.toJSON();
-      return (col[0] && col[0].ControlFlag == 1) ? 'ul' : 'div';
+      return (col[0] && (String(col[0].ControlFlag) === '1')) ? 'ul' : 'div';
     },
 
     className: function() {
       var col = this.collection.toJSON();
-      return (col[0] && col[0].ControlFlag == 1) ? 'dropdown-menu' : 'text-request-object';
+      return (col[0] && (String(col[0].ControlFlag) === '1')) ? 'dropdown-menu' : 'text-request-object';
     },
 
     initialize: function(props) {

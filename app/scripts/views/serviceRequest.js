@@ -50,13 +50,20 @@ Hktdc.Views = Hktdc.Views || {};
 
       // /* have GUID = (ControlFlag = 1) */
       if (this.model.toJSON().GUID || String(this.model.toJSON().ControlFlag) === '1') {
-        // collection.remove(this.model);
+        collection.remove(this.model);
+
+        /* insert mode use selectedRequestModel */
+        /* edit mode use this.model */
+        var targetModel = this.model.toJSON().selectedRequestModel ||
+                          this.model;
+        /* console.group('group');
+        console.log('collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+        console.log('selectedRequestModel: ', this.model.toJSON().selectedRequestModel.toJSON());
+        console.log('this model: ', this.model.toJSON());
+        console.log('targetModel: ', targetModel.toJSON());
+        console.groupEnd(); */
         /* also delete the collection */
-        this.requestFormModel.toJSON().selectedServiceCollection.remove(
-          /* insert mode use selectedRequestModel */
-          /* edit mode use this.model */
-          this.model.toJSON().selectedRequestModel || this.model
-        );
+        this.requestFormModel.toJSON().selectedServiceCollection.remove(targetModel);
 
       /* not have GUID = (ControlFlag = 2) */
       } else {

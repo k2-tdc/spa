@@ -212,6 +212,7 @@ Hktdc.Views = Hktdc.Views || {};
               // console.log('success: ', a);
               // console.log(b);
               self.statusDataTable.ajax.reload();
+              Hktdc.Dispatcher.trigger('reloadMenu');
             },
             error: function(err) {
               console.log(err);
