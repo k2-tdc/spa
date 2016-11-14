@@ -20,14 +20,14 @@
         <% } %>
 
         <div class="form-group">
-          <label for="ref_id" class="col-sm-2 control-label">Ref. ID</label>
-          <div class="col-sm-6">
+          <label for="ref_id" class="col-xs-12 col-sm-2 control-label">Ref. ID</label>
+          <div class="col-xs-12 col-sm-6">
             <input type="text" id="txtindexrefid" name="ReferID" class="search-field form-control" placeholder="" value="<%= ReferID %>">
           </div>
         </div>
         <div class="form-group">
           <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
-          <div class="col-xs-6 col-sm-3">
+          <div class="create_date_pick1 col-xs-6 col-sm-3">
             <div class="input-group date pick-date-start" data-provide="datepicker">
               <input type="text" id="txtIndexfromdate" name="FDate" class="search-field form-control" value="<%= FDate %>">
               <div class="input-group-addon">
@@ -35,7 +35,7 @@
               </div>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-3">
+          <div class="create_date_pick2 col-xs-6 col-sm-3">
             <div class="input-group date pick-date-end" data-provide="datepicker" data-date-autoclose="true">
               <input type="text" id="txtIndextodate" name="TDate" class="search-field form-control" value="<%= TDate %>">
               <div class="input-group-addon">

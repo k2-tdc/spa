@@ -15,8 +15,9 @@
           <%= request.index %>
         </span>
       </div>
-
-      <div class="col-xs-8 col-md-9" style='padding-left:10px;'>
+    
+    <!--col-xs-8 col-sm-10-->
+      <div class="service-request-input" style='padding: 0 10px;'>
         <div class="service-object-container btn-group full-width" style='width:100%'>
           <button type="button" class="service-request btn btn-default selectleve2sub" data-toggle="dropdown" id="leve2sub">
             <% if (request.selectedRequestModel) { %>
@@ -40,7 +41,7 @@
         </div>
       </div>
 
-      <div class="col-xs-1 col-md-1" style='padding:0;'>
+      <div class="service_num">
         <% if (needDelBtn) { %>
           <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
         <% } %>
@@ -64,14 +65,15 @@
       <%= request.index %>
     </span>
   </div>
-  <div class="col-xs-8 col-md-9 select-service-title" style='padding-left:10px;'>
+  
+  <div class="service-request-input select-service-title" style='padding: 0 10px;'>
     
     <div class="service-object-container">
       <!-- START: Repeat Unit of the level3: service object -->
     </div>
 
   </div>
-  <div class="service_num" style='padding:0;'>
+  <div class="service_num">
     <% if (needDelBtn) { %>
       <span class="glyphicon glyphicon-remove select-applicant-del btn-del"></span>
     <% } %>
