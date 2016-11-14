@@ -12,16 +12,16 @@
 
     <!-- Add Button: click to add a row to level 3 -->
 
-    <div class="row" style="
-    <% if (serviceType.needAddBtn) { %>
-      display:block
-    <% } else { %>
-      display:none
-    <% } %>
-    ">
+    <div class="row">
      <div class="sep-space"></div>
       <div class="col-xs-4 col-md-3 btn-group">
-        <button type="button" class="btn btn-orange btn-add">
+        <button type="button" class="btn btn-orange btn-add" style="
+        <% if (serviceType.needAddBtn) { %>
+          display:block
+        <% } else { %>
+          display:none
+        <% } %>
+        ">
           <span class="glyphicon glyphicon-plus"></span>
           &nbsp;add
         </button>

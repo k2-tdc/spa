@@ -23,6 +23,8 @@ Hktdc.Views = Hktdc.Views || {};
           Notes: $('textarea', this.el).val().trim()
         });
         this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
+        console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+
       } else {
         this.requestFormModel.toJSON().selectedServiceCollection.remove(this.model);
       }
@@ -53,6 +55,8 @@ Hktdc.Views = Hktdc.Views || {};
         selectedServiceObject: true
       });
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
+      console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      
       // console.log(this.model.toJSON());
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },

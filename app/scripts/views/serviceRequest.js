@@ -45,13 +45,13 @@ Hktdc.Views = Hktdc.Views || {};
     deleteRequestObject: function(ev) {
       var collection = this.model.toJSON().parentCollection;
       var self = this;
-      // console.log('parent collection', collection.toJSON());
       // console.log('model', this.model.toJSON());
+      console.log('serviceRequestList Collection: ', collection.toJSON());
+      console.log('selectedServiceCollection collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
       if (this.model.toJSON().GUID || String(this.model.toJSON().ControlFlag) === '1') {
         collection.remove(this.model);
-
         /* insert mode use selectedRequestModel */
         /* edit mode use this.model */
         var targetModel = this.model.toJSON().selectedRequestModel ||
@@ -67,14 +67,32 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* not have GUID = (ControlFlag = 2) */
       } else {
+        // console.log('condition b');
+        console.log('this.model', this.model.toJSON());
         collection.each(function(model) {
-          self.requestFormModel.toJSON().selectedServiceCollection.remove(model);
+          console.log('models in serviceRequestList collection', model.toJSON());
+          // when 'new' mode
+          if (model.toJSON().availableServiceObjectArray) {
+            _.each(model.toJSON().availableServiceObjectArray, function(service) {
+              console.log('service ID: ', service.GUID);
+              self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedServiceModel) {
+                console.log('current: ', selectedServiceModel.toJSON().GUID);
+                if (selectedServiceModel.toJSON().GUID === service.GUID) {
+                  console.log('found: ', selectedServiceModel.toJSON().GUID);
+                  self.requestFormModel.toJSON().selectedServiceCollection.remove(selectedServiceModel);
+                }
+              });
+            });
+          // when edit mode
+          } else {
+            self.requestFormModel.toJSON().selectedServiceCollection.remove(model);
+          }
         });
 
         collection.reset();
         // console.log(collection.toJSON());
       }
-      console.log(this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      console.log('removed, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
     addNotesToServiceObject: function(ev) {
       // console.log($(ev.target).val());
@@ -122,7 +140,6 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     addServiceRequest: function(model) {
-      console.log('add service request');
       if (model.toJSON().ControlFlag === 2) {
         // hide add button
         this.serviceTypeModel.set({ needAddBtn: false });

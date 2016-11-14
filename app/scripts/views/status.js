@@ -27,7 +27,6 @@ Hktdc.Views = Hktdc.Views || {};
     }
   });
 
-
   Hktdc.Views.StatusList = Backbone.View.extend({
     tagName: 'select',
     className: 'form-control status-select',

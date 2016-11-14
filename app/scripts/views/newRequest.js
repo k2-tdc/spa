@@ -137,8 +137,9 @@ Hktdc.Views = Hktdc.Views || {};
               return employee.UserId === self.model.toJSON().ApproverUserID;
             });
 
-            /* need override the workerId */
+            /* need override the workerId and WorkerFullName */
             recommend.WorkerId = recommend.UserId;
+            recommend.WorkerFullName = recommend.UserFullName;
 
             self.model.set({
               selectedServiceTree: self.model.toJSON().RequestList,
@@ -195,8 +196,9 @@ Hktdc.Views = Hktdc.Views || {};
               return employee.UserId === self.model.toJSON().ApproverUserID;
             });
 
-            /* need override the workerId */
+            /* need override the workerId and WorkerFullName */
             recommend.WorkerId = recommend.UserId;
+            recommend.WorkerFullName = recommend.UserFullName;
 
             self.model.set({
               selectedServiceTree: self.model.toJSON().RequestList,
