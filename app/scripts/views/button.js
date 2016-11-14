@@ -75,13 +75,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickApplicantHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Submitted', 'applicant');
+        this.saveAndApprover('Review', 'applicant');
       }
     },
 
     clickApproverHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Submitted', 'approver');
+        this.saveAndApprover('Approval', 'approver');
       }
     },
 

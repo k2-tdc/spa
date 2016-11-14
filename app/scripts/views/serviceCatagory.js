@@ -90,7 +90,7 @@ Hktdc.Views = Hktdc.Views || {};
           collection: serviceTypeCollection,
           selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
           requestFormModel: this.requestFormModel,
-          serverviceCatagoryModel: this.model
+          serviceCatagoryModel: this.model
         });
         serviceTypeListView.render();
         setTimeout(function() {

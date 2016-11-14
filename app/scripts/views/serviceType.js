@@ -97,7 +97,7 @@ Hktdc.Views = Hktdc.Views || {};
           collection: this.childServiceRequestCollection,
           availableServiceObjectArray: availableServiceObjectArray,
           requestFormModel: this.requestFormModel,
-          serverviceCatagoryModel: this.serverviceCatagoryModel,
+          serviceCatagoryModel: this.serviceCatagoryModel,
           /* the serviceTypeName is used to mapping the service object to it's service type when saving request */
           serviceTypeModel: this.model
         });
@@ -134,7 +134,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       /* requestFormModel is new request model */
 
-      /* selectedServiceCatagoryTree, requestFormModel, serverviceCatagoryModel */
+      /* selectedServiceCatagoryTree, requestFormModel, serviceCatagoryModel */
       _.extend(this, props);
       /* important to use bindAll as directly use this.renderItem in render */
       _.bindAll(this, 'renderServiceTypeItem');
@@ -169,7 +169,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: model,
         requestFormModel: this.requestFormModel,
         selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
-        serverviceCatagoryModel: this.serverviceCatagoryModel
+        serviceCatagoryModel: this.serviceCatagoryModel
       });
       serviceTypeItemView.render();
 

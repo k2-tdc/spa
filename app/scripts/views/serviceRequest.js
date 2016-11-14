@@ -127,16 +127,16 @@ Hktdc.Views = Hktdc.Views || {};
         // hide add button
         this.serviceTypeModel.set({ needAddBtn: false });
       }
-      this.serverviceCatagoryModel.set({
-        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount + 1
+      this.serviceCatagoryModel.set({
+        selectedServiceCount: this.serviceCatagoryModel.toJSON().selectedServiceCount + 1
       });
       this.renderServiceRequest(model, this.collection.length - 1);
     },
 
     removeServiceRequest: function(model) {
       // console.log('removeServiceRequest in ServiceRequestList view');
-      this.serverviceCatagoryModel.set({
-        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount - 1
+      this.serviceCatagoryModel.set({
+        selectedServiceCount: this.serviceCatagoryModel.toJSON().selectedServiceCount - 1
       });
       if (model.toJSON().ControlFlag === 2) {
         // hide add button
@@ -150,8 +150,8 @@ Hktdc.Views = Hktdc.Views || {};
     resetServiceRequest: function(col, prevCol) {
       /* should be from ControlFlag = 2 source */
       // console.log('reset:', col);
-      this.serverviceCatagoryModel.set({
-        selectedServiceCount: this.serverviceCatagoryModel.toJSON().selectedServiceCount - prevCol.previousModels.length
+      this.serviceCatagoryModel.set({
+        selectedServiceCount: this.serviceCatagoryModel.toJSON().selectedServiceCount - prevCol.previousModels.length
       });
 
       this.serviceTypeModel.set({ needAddBtn: true });
@@ -167,27 +167,27 @@ Hktdc.Views = Hktdc.Views || {};
         index: index + 1,
         availableServiceObjectArray: this.availableServiceObjectArray,
         parentCollection: this.collection,
-        serverviceCatagoryModel: this.serverviceCatagoryModel,
+        serviceCatagoryModel: this.serviceCatagoryModel,
         serviceTypeName: this.serviceTypeName
       });
 
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
         model: model,
         requestFormModel: this.requestFormModel,
-        serverviceCatagoryModel: this.serverviceCatagoryModel
+        serviceCatagoryModel: this.serviceCatagoryModel
       });
       serviceRequestItemView.render();
       $(this.el).append(serviceRequestItemView.el);
     },
 
     renderTextServiceRequest: function() {
-      // console.log(this.availableServiceObjectArray.toJSON());
+      console.log(this.availableServiceObjectArray);
       var model = new Hktdc.Models.ServiceRequest({
         index: 1,
         availableServiceObjectArray: _.extend(this.availableServiceObjectArray, this.collection.toJSON()),
         parentCollection: this.collection,
         serviceTypeName: this.serviceTypeName,
-        serverviceCatagoryModel: this.serverviceCatagoryModel
+        serviceCatagoryModel: this.serviceCatagoryModel
       });
 
       var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
