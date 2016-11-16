@@ -12,13 +12,14 @@ Hktdc.Models = Hktdc.Models || {};
     defaults: {
       message: '',
       title: '',
-      type: 'info'
+      type: 'info',
+      catagory: 'alert'
     },
 
     validate: function(attrs, options) {
     },
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

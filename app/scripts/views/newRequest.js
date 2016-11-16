@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, alert, _ */
+/* global Hktdc, Backbone, JST, $, Q, utils, _ */
 Hktdc.Views = Hktdc.Views || {};
 
 (function() {
@@ -30,7 +30,11 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
       // console.log(this.model.toJSON().EstimatedCost);
       if (!(haveSelectService && haveFilledCost)) {
-        alert('please select service and filled the cost field');
+        Hktdc.Dispatcher.trigger('openAler', {
+          message: 'please select service and filled the cost field',
+          type: 'error',
+          title: 'Error'
+        });
         return false;
       } else {
         var recommendCollection = new Hktdc.Collections.Recommend();
@@ -260,14 +264,17 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log('change:selectedApplicantModel: ', self.model.toJSON().selectedApplicantModel.toJSON());
         var selectedUserName = selectedApplicantModel.toJSON().UserFullName;
         $('.selectedApplicant', self.el).text(selectedUserName);
+        /* clear the selectedRecommentModel */
+        self.model.set({ selectedRecommentModel: null });
+
+        /* clear the button set to prevent lag button render */
+        self.doRenderButtons({showSave: true});
+
         self.loadApplicantDetail()
           .then(function(applicant) {
             self.renderApplicantDetail(applicant, self.model.toJSON().employeeList);
+            self.renderButtonHandler();
           });
-
-        /* clear the selectedRecommentModel */
-        self.model.set({ selectedRecommentModel: null });
-        self.renderButtonHandler();
       });
 
       this.model.on('change:EstimatedCost', function(model, newCost, options) {
@@ -502,7 +509,11 @@ Hktdc.Views = Hktdc.Views || {};
         if (self.model.toJSON().actions) {
           self.renderRequestFormButtonByActions(self.model.toJSON().actions);
         } else {
-          alert('no actions button');
+          Hktdc.Dispatcher.trigger('openAler', {
+            message: 'no actions button',
+            type: 'error',
+            title: 'Error'
+          });
         }
       }
     },
@@ -542,7 +553,11 @@ Hktdc.Views = Hktdc.Views || {};
 
         // 2) Preparer === / !==  Applicant && Approver === Applicant
         } else {
-          alert('Exception case: RuleCode IT0009, Approver === Applicant');
+          Hktdc.Dispatcher.trigger('openAler', {
+            message: 'Exception case: RuleCode IT0009, Approver === Applicant',
+            type: 'error',
+            title: 'Error'
+          });
         }
 
       // ApproverRuleCode !== 'IT0008'
@@ -577,16 +592,24 @@ Hktdc.Views = Hktdc.Views || {};
           self.model.set({ applicantSubmittedTo: 'Applicant' });
         // Preparer !== Applicant && Approver !== Applicant
         } else {
-          alert('Exception case: RuleCode IT0008, unknown situation');
+          Hktdc.Dispatcher.trigger('openAler', {
+            message: 'Exception case: RuleCode IT0008, unknown situation',
+            type: 'error',
+            title: 'Error'
+          });
         }
 
       // ApproverRuleCode !== 'IT0008' !== 'IT0009'
       } else {
-        alert('unacceptable rule code: !== (IT0008 || IT0009)');
+        Hktdc.Dispatcher.trigger('openAler', {
+          message: 'unacceptable rule code: !== (IT0008 || IT0009)',
+          type: 'error',
+          title: 'Error'
+        });
         showButtonOptions = {
           showSave: false,
           showDelete: false
-        }
+        };
       }
 
       console.log('before role check: ', showButtonOptions);
@@ -616,7 +639,7 @@ Hktdc.Views = Hktdc.Views || {};
       //   /* no Case to handle, must be applicant */
       // }
 
-      console.log('after role check: ', showButtonOptions);
+      // console.log('after role check: ', showButtonOptions);
       // console.groupEnd();
 
       self.doRenderButtons(showButtonOptions);
@@ -660,7 +683,7 @@ Hktdc.Views = Hktdc.Views || {};
         // showForward: false,
         // showCancel: false
       };
-
+      console.log('final button options', _.extend(defaultOptions, showButtonOptions));
       var buttonModel = new Hktdc.Models.Button(_.extend(defaultOptions, showButtonOptions));
       // console.debug(buttonModel.toJSON());
       var buttonView = new Hktdc.Views.Button({
@@ -733,175 +756,6 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.$el.html(this.template({request: this.model.toJSON()}));
-    },
-
-    /* =================== Deprecated method start =================== */
-    mergeServiceCollection: function(rawData, editedData) {
-      // console.group('merge');
-      // console.log('rawData: ', rawData);
-      // console.log('editedData: ', editedData);
-      var mergedData = _.map(rawData, function(rawServiceCatagory) {
-        var matchedServiceCatagory = _.find(editedData, function(editedServiceCatagory) {
-          // console.log('editedServiceCatagory: ', editedServiceCatagory);
-          // console.log('rawServiceCatagory: ', rawServiceCatagory);
-          return editedServiceCatagory.Name === rawServiceCatagory.Name;
-        });
-        // console.log('matchedServiceCatagory', matchedServiceCatagory);
-        if (matchedServiceCatagory) {
-          // if edited collection present, extend Level2
-          rawServiceCatagory.Level2 = _.map(rawServiceCatagory.Level2, function(rawServiceType) {
-            var matchedServiceType = _.find(matchedServiceCatagory.Level2, function(editedServiceType) {
-              // TODO: use GUID if api fixed
-              // return editedServiceType.Name === rawServiceType.Name;
-              // console.group('check servicetype match');
-              // console.log(editedServiceType.Name);
-              // console.log(rawServiceType.Name);
-              // console.groupEnd();
-              return editedServiceType.Name === rawServiceType.Name;
-            });
-            // console.log('matchedServiceType: ', matchedServiceType);
-            // if edited collection present, extend Level3
-            if (matchedServiceType) {
-              rawServiceType.Level3 = _.map(rawServiceType.Level3, function(rawServiceRequest) {
-                var matchedServiceRequest = _.find(matchedServiceType.Level3, function(editedServiceRequest) {
-                  return editedServiceRequest.Name === rawServiceRequest.Name;
-                });
-                if (matchedServiceRequest) {
-                  return matchedServiceRequest;
-                } else {
-                  return rawServiceRequest;
-                }
-              });
-            }
-            return rawServiceType;
-          });
-        }
-        return rawServiceCatagory;
-      });
-      // console.log(JSON.stringify(mergedData, null, 2));
-      // console.groupEnd();
-
-      return new Hktdc.Collections.ServiceCatagory(mergedData);
-    },
-
-    renderRequestFormButton: function(FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover) {
-      var self = this;
-      var me = Hktdc.Config.userID;
-      var showButtonOptions = {};
-      switch (FormStatus) {
-        case 'Draft':
-          if (me === Applicant) {
-            showButtonOptions.showSave = true;
-            showButtonOptions.showSendToApprover = true;
-            showButtonOptions.showDelete = true;
-          } else {
-            var ApplicantRuleCode = self.model.toJSON().selectedApplicantModel.toJSON().RuleCode;
-            if (ApplicantRuleCode === 'IT0008') {
-              showButtonOptions.showSave = true;
-              showButtonOptions.showSendToApplicant = true;
-              showButtonOptions.showDelete = true;
-            } else if (ApplicantRuleCode === 'IT0009') {
-              showButtonOptions.showSave = true;
-              showButtonOptions.showSendToApplicant = true;
-              showButtonOptions.showSendToApprover = true;
-              showButtonOptions.showDelete = true;
-            } else {
-              alert(FormStatus + ': exception condition of render button.');
-            };
-          }
-          break;
-        case 'Review':
-          if (me === Applicant) {
-            showButtonOptions.showSave = true;
-            showButtonOptions.showSendToApprover = true;
-            showButtonOptions.showDelete = true;
-            showButtonOptions.showReturn = true;
-            showButtonOptions.returnTo = 'Preparer';
-          } else {
-            alert(FormStatus + ': exception condition of render button.');
-          }
-          break;
-        case 'Approval':
-          if (me === Applicant) {
-            showButtonOptions.showRecall = true;
-            showButtonOptions.showSendEmail = true;
-          } else if (me === Approver) {
-            showButtonOptions.showApprove = true;
-            showButtonOptions.showReject = true;
-            showButtonOptions.showReturn = true;
-            showButtonOptions.showDelete = true;
-            showButtonOptions.returnTo = 'Applicant';
-          } else {
-            alert(FormStatus + ': exception condition of render button.');
-          }
-          break;
-        case 'Process Task':
-          if (me === ActionTaker) {
-            showButtonOptions.showReject = true;
-            showButtonOptions.showComplete = true;
-            showButtonOptions.showForward = true;
-            showButtonOptions.showCancel = true;
-            showButtonOptions.showSendToApprover = true;
-            showButtonOptions.approverSendTo = 'ITS Approval';
-          } else {
-            alert(FormStatus + ': exception condition of render button.');
-          }
-          break;
-        case 'ITS Approval':
-          if (me === ITSApprover) {
-            showButtonOptions.showReject = true;
-            showButtonOptions.showRecommend = true;
-          } else {
-            alert(FormStatus + ': exception condition of render button.');
-          }
-          break;
-        case 'Approved by ITS':
-          if (me === ActionTaker) {
-            showButtonOptions.showReject = true;
-            showButtonOptions.showComplete = true;
-            showButtonOptions.showForward = true;
-            showButtonOptions.showCancel = true;
-          } else {
-            alert(FormStatus + ': exception condition of render button.');
-          }
-          break;
-        case 'Rejected by ITS':
-          if (me === ActionTaker) {
-            showButtonOptions.showReject = true;
-            showButtonOptions.showComplete = true;
-            showButtonOptions.showForward = true;
-            showButtonOptions.showCancel = true;
-          } else {
-            alert(FormStatus + ': exception condition of render button.');
-          }
-          break;
-        case 'Return':
-          if (me === Preparer) {
-            showButtonOptions.showSave = true;
-            showButtonOptions.showSendToApplicant = true;
-            showButtonOptions.showDelete = true;
-          } else if (me === Applicant) {
-            showButtonOptions.showSave = true;
-            showButtonOptions.showSendToApprover = true;
-            showButtonOptions.showReturn = true;
-            showButtonOptions.returnTo = 'Preparer';
-          } else {
-            alert(FormStatus + ': exception condition of render button.');
-          }
-          break;
-        case 'Reject':
-        case 'Completed':
-        case 'Cancelled':
-        case 'Deleted':
-        case 'Recall':
-          console.log('not show any button Reject, Completed, Cancelled, Deleted, Recall');
-          break;
-        default:
-          alert('wrong Form status:\n' + FormStatus);
-      }
-      console.log(showButtonOptions);
-      self.doRenderButtons(showButtonOptions);
     }
-    /* =================== Deprecated method end =================== */
   });
 })();
