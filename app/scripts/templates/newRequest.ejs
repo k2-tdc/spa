@@ -8,26 +8,26 @@
     <div class="newrequest-basic-information">
       <div class="row">
         <% if (request.ReferenceID) { %>
-          <div class="col-xs-3 col-sm-2 newrequest-title text-left text-lg-right">Ref ID</div>
-          <div class="col-xs-9 col-sm-10 col-md-4" id="divRefID"><%= request.ReferenceID %></div>
+          <div class="col-xs-5 col-sm-2 newrequest-title text-left text-lg-right">Ref ID</div>
+          <div class="col-xs-7 col-sm-2 col-md-2" id="divRefID"><%= request.ReferenceID %></div>
         <% } else { %>
-          <div class="col-xs-3 col-md-2 newrequest-title text-left text-lg-right"></div>
-          <div class="col-xs-9 col-md-4" id="divRefID"></div>
+          <div class="col-xs-5 col-sm-2 newrequest-title text-left text-lg-right"></div>
+          <div class="col-xs-7 col-sm-2 col-md-2" id="divRefID"></div>
         <% } %>
-        <div class="col-xs-3 col-sm-2 newrequest-title text-left text-lg-right">Create Date</div>
-        <div class="col-xs-9 col-sm-10 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
+        <div class="col-xs-5 col-sm-2 newrequest-title text-left text-lg-right">Create Date</div>
+        <div class="col-xs-7 col-sm-4 col-md-4" id="divCreateddate"><%= request.CreatedOn %></div>
       </div>
       <div class="row">
-        <div class="col-xs-3 col-sm-2 newrequest-title text-left text-lg-right">Status</div>
-        <div class="col-xs-9 col-sm-10 col-md-4" id="divStatus">
+        <div class="col-xs-5 col-sm-2 newrequest-title text-left text-lg-right">Status</div>
+        <div class="col-xs-7 col-sm-2" id="divStatus">
           <% if (request.FormStatus) { %>
             <%= request.FormStatus %>
           <% } else { %>
             New
           <% } %>
         </div>
-        <div class="col-xs-3 col-sm-2 newrequest-title text-left text-lg-right">Prepared by</div>
-        <div class="col-xs-9 col-sm-10 col-md-4" id="divPreparedby"><%= request.PreparerFNAME %></div>
+        <div class="col-xs-5 col-sm-2 newrequest-title text-left text-lg-right">Prepared by</div>
+        <div class="col-xs-7 col-sm-4 " id="divPreparedby"><%= request.PreparerFNAME %></div>
       </div>
     </div>
 
@@ -36,7 +36,7 @@
       <div class="panel-body">
         <div class="row">
           <label for="applicant" class="col-xs-12 col-sm-2 control-label text-lg-right">Applicant *</label>
-          <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width applicant-container">
+          <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width applicant-container form_input">
             <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">
               <% if (request.selectedApplicantName){ %>
                 <%= request.selectedApplicantName%>
@@ -60,13 +60,14 @@
           <div class="col-xs-12 col-md-2 newrequest-title text-left">Office</div>
           <div class="col-xs-12 col-md-10" id="divoffice"><%= request.Location %></div>
         </div>
+        <div class="sep-space"></div>
         <div class="row">
           <div class="col-xs-12 col-sm-2 newrequest-title text-left text-lg-right">Department</div>
           <div class="col-xs-12 col-sm-10 col-md-8" id="divdepartment"><%= request.DEPT %></div>
         </div>
       </div>
     </div>
-
+    <div class="sep-space"></div>
     <div class="request-application">
       <div class="row">
         <div class="col-xs-10 col-md-10 newrequest-title text-left">Service Acquired for</div>
@@ -79,12 +80,12 @@
             <!-- ========================= -->
           </div>
 
-
+          <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Justification and Important Notes * <span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
           </div>
           <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-10 form_input">
               <textarea class="form-control" rows="3" field="Justification" id="txtjustification"><%= request.Justification %></textarea>
             </div>
           </div>
@@ -93,7 +94,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Expected Delivery Date</div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-10">
+            <div class="col-xs-12 col-sm-10 form_input">
               <div class="input-group date pick-date-start" data-provide="datepicker" data-date-autoclose="true">
                 <input type="text" class="form-control" id="txtexpectedDD" field="EDeliveryDate" value="<%= request.EDeliveryDate %>" />
                 <div class="input-group-addon">
@@ -107,7 +108,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Frequency/Duration of Use</div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-10">
+            <div class="col-xs-12 col-sm-10 form_input">
               <input type="text" class="form-control" id="txtfrequency" field="DurationOfUse" value="<%= request.DurationOfUse %>" />
             </div>
           </div>
@@ -116,7 +117,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Estimated Cost (HK$) *</div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-10">
+            <div class="col-xs-12 col-sm-10 form_input">
               <input type="number" class="form-control" id="txtestimatedcost" field="EstimatedCost" value="<%= request.EstimatedCost %>" />
             </div>
           </div>
@@ -125,7 +126,7 @@
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Budget Provided</div>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-sm-10">
+            <div class="col-xs-12 col-sm-10 form_input">
               <input type="text" class="form-control" id="txtbudgetprovided" field="BudgetProvided" value="<%= request.BudgetProvided %>" />
             </div>
           </div>
@@ -139,9 +140,10 @@
             </div>
           </div>
           <div class="sep-space"></div> -->
+          <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Recommend By *</div>
-            <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width recommend-container">
+            <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width recommend-container form_input">
               <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>
                   <%= request.ApproverFNAME %>
@@ -167,8 +169,8 @@
           </div>
           <div class="sep-space"></div>
           <div class="row">
-            <div class="col-xs-2 col-sm-2 hidden-xs newrequest-title text-lg-right">&nbsp;</div>
-            <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width cc-container">
+            <div class="col-xs-2 col-sm-2 hidden-xs newrequest-title text-lg-right  ">&nbsp;</div>
+            <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width cc-container form_input">
               <input type="text" class="cc-picker form-control" data-provide="typeahead" autocomplete="off"/>
               <!-- <button type="button" class="btn btn-default btncc selectedCC" data-toggle="dropdown">--Select--</button>
               <button type="button" class="btn btn-default dropdown-toggle btncc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -182,7 +184,7 @@
           <div class="sep-space"></div>
           <div class="row">
             <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Remark</div>
-            <div class="col-xs-12 col-sm-10 col-md-8">
+            <div class="col-xs-12 col-sm-10 col-md-8 form_input">
               <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
             </div>
           </div>

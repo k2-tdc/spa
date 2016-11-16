@@ -151,6 +151,7 @@ div.subheader-menu-container > button.btn.btn-default.dropdown-toggle > span.gly
 
 ul.dropdown-menu > li > a {
   text-decoration: none;
+    cursor: pointer;
 }
 
 ul.dropdown-menu > li > a:hover {
@@ -174,6 +175,7 @@ label.control-label {
   background: white;
   border-color: rgb(0, 85, 255);
   color: rgb(0, 85, 255);
+  margin-bottom: 2px ;
 }
 
 .btn-primary:hover {
@@ -189,14 +191,15 @@ label.control-label {
 }
 
 .newrequest-basic-information > div {
-  line-height: 35px;
+    line-height: 35px;
   text-align: left;
   margin: 0;
 }
 
 div.newrequest-title {
   color: rgb(0, 85, 255);
-  line-height: 35px;
+//  line-height: 35px;
+    line-height: 20px;
 }
 
 .select-applicant,
@@ -217,7 +220,7 @@ div.newrequest-title {
 
 .select-applicant > .panel-body > div {
   text-align: left;
-  line-height: 35px;
+//  line-height: 35px;
   padding: 0;
 }
 
@@ -225,6 +228,7 @@ div.newrequest-title {
   padding: 0;
   text-align: left;
   line-height: 36px;
+    border:1px solid red;
 }
 
 .select-applicant .applicant-list{
@@ -268,8 +272,10 @@ ul.dropdown-menu {
   -o-transform: scale(2);
   /* Opera */
   float: left;
-  margin: 8px 20px 0 5px;
+ // margin: 8px 20px 0 5px;
 }
+
+
 
 .select-service-header .checkbox-option {
   line-height: 30px;
@@ -277,7 +283,20 @@ ul.dropdown-menu {
   font-weight: bold;
   text-transform: uppercase;
   text-align: left;
+  margin-left: 12px;
+  min-width: 210px;
 }
+@media screen and (max-width: 480px) {
+    .select-service-header .checkbox-option {
+        font-size: 15px;
+    }
+    
+    .select-service-header input[type=checkbox] {
+        margin: 0;
+    }
+}
+
+
 
 .select-service-header .checkbox-option-drop {
   text-align: right;
@@ -296,10 +315,23 @@ ul.dropdown-menu {
   height: 10px;
 }
 
+.select-service{
+    border-radius: 0;
+    
+}
 .select-service .select-service-title {
   text-transform: uppercase;
-  line-height: 40px;
+  line-height: 30px;
   text-align: left;
+//    font-weight: bold;
+}
+
+.service-request-wrap{
+    padding-top: 10px;
+}
+
+.select-service .panel-body{
+    padding-top: 10px 0;
 }
 
 .select-service {
@@ -319,8 +351,7 @@ ul.dropdown-menu {
 }
 
 div.full-width > button:not(.dropdown-toggle):not(.btn-add) {
-//  width: calc(100% - 26px);
-    width: calc(100% - 26px);
+  width: calc(100% - 26px);
   text-align: left;
 }
 
@@ -334,6 +365,8 @@ span.glyphicon.glyphicon-remove.select-applicant-del {
   text-align: center;
   color: white;
   cursor: pointer;
+    padding: 0;
+    margin: 0;
 }
 
 span.glyphicon.glyphicon-menu-down,
@@ -410,7 +443,7 @@ div.dataTables_wrapper table {
 }
 
 .selectedServiceCount{
-  padding-left: 12px;
+  padding-left: 6px;
   color: #0055ff;
   font-size: 14px;
   font-weight: bold;
@@ -431,7 +464,7 @@ div.dataTables_wrapper table {
   .available-buttons{
     border: 1px #CCC solid;
     border-radius: 4px;
-    padding: 11px;
+    padding: 11px 5px;
   }
 }
 
@@ -525,6 +558,7 @@ div.dataTables_wrapper table {
 
 /* TABLET > Desktop */
 @media screen and (min-width: 768px) {
+    
   #header_top .logo-hktdc {
     display: none;
   }
@@ -564,11 +598,11 @@ div.dataTables_wrapper table {
   }
 
   #header_main > span.sep-space {
-    width: 20px;
+    width: 10px;
   }
 
   html.mm-opening #header_main > span.sep-space {
-    width: 90px;
+//    width: 90px;
 
   }
 
@@ -592,18 +626,19 @@ div.dataTables_wrapper table {
     }
 
     html.mm-opening #header_main > span.sep-space {
-      width: 250px;
+//      width: 250px;
     }
+      
   }
 }
 
 // vicosys
 @media screen and (max-width: 768px) {
   .newrequest-basic-information div[class^="col-xs-"] {
-    padding:0;
+    padding:0 10px;
   }
   .service-catagory-item > .select-service-header {
-    background-color:#e8e8e8;
+    //background-color:#e8e8e8;
   }
   .buttons-container > .available-buttons {
     background-color:#e8e8e8;
@@ -634,13 +669,48 @@ div.dataTables_wrapper table {
 }
 
 .text-lg-right{
-    max-width: 150px;
-    padding-right: 0px;
+    min-width:100px;
+    max-width:150px;
+    padding-right: 0;
+    padding-bottom: 0;
 }
 
-@media screen and (min-width: 960px) {
-.text-lg-right{
-        text-align: right !important;
+.service-type-container{
+    padding: 15px;
+}
+@media screen and (max-width: 520px) {
+    .select-service{
+        border: 0px;
+        border-bottom: 1px rgba(0, 0, 0, .2) solid;
+        border-radius: 0;
+    }
+    
+    .service-type-container{
+        padding: 8px;
+    }
+    
+    .service-type-container > div > .group-details:last-child  .select-service{
+        border: 0px;
+    }
+    
+    .service-catagory-item .group-header{
+        background-color:#e8e8e8;
+    }
+    
+    .select-service .panel-body{
+        padding: 10px 0;
+    }
+}
+
+
+@media screen and (min-width: 768px) {
+    .mm-opened .text-lg-right{
+//        min-width:80px;
+    }
+    
+    .text-lg-right{
+        text-align: right !important;  
+        max-width: 150px;
     }
 }
 
@@ -674,4 +744,50 @@ div.dataTables_wrapper table {
 
 .service-request.btn{
     overflow: hidden;
+}
+
+#checkStatus label {
+    padding-right: 0;
+}
+
+#statusTable > tbody > tr > td:last-child{
+    text-align: center;    
+}
+
+
+#menu{
+    z-index: 0;
+}
+#page{
+    z-index: 1 ;
+    pointer-events: none !important;
+}
+
+#header, #content, #footer{
+    pointer-events: auto !important;
+}
+
+.service-request-input{
+    float:left;
+    width: calc(100% - 100px);
+}
+
+.create_date_pick1{
+    padding-right:5px;
+}
+
+.create_date_pick2{
+    padding-left:5px;
+}
+
+.newrequest-basic-information{
+    max-width: 900px;
+}
+
+.newrequest-basic-information div{
+    line-height: 30px;  
+}
+
+.form_input{
+    max-width: 600px;
 }
