@@ -33,7 +33,11 @@ Hktdc.Views = Hktdc.Views || {};
       var sn = hashWithoutQS.split('/')[3];
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       if (!actionName || !sn) {
-        alert('Error on prepare data');
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: 'Error on prepare data',
+          type: 'error',
+          title: 'Error'
+        });
       }
       var body = {
         UserId: Hktdc.Config.userID,
@@ -41,7 +45,6 @@ Hktdc.Views = Hktdc.Views || {};
         ActionName: actionName,
         Comment: this.requestFormModel.toJSON().Comment
       };
-      // alert(JSON.stringify(Alltask));
       var isConfirm = confirm('Are you sure want to ' + actionName + '?');
       if (isConfirm) {
         Backbone.emulateHTTP = true;
@@ -75,13 +78,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickApplicantHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Review', 'applicant');
+        this.saveAndApprover('Submitted', 'applicant');
       }
     },
 
     clickApproverHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Approval', 'approver');
+        this.saveAndApprover('Submitted', 'approver');
       }
     },
 
@@ -118,23 +121,52 @@ Hktdc.Views = Hktdc.Views || {};
 
     checkIsValid: function() {
       var isValid = true;
-      console.log(this.requestFormModel.toJSON());
+      var errMessage = '';
+      var self = this;
+      // console.log(this.requestFormModel.toJSON());
       if (!(this.requestFormModel.toJSON().Justification && this.requestFormModel.toJSON().Justification.trim())) {
         isValid = false;
-        alert('Please fill the Justification and Important Notes');
-      }
-      if (!(this.requestFormModel.toJSON().EstimatedCost && this.requestFormModel.toJSON().EstimatedCost.trim())) {
+        errMessage = 'Please fill the Justification and Important Notes';
+      } else if (!(this.requestFormModel.toJSON().EstimatedCost && this.requestFormModel.toJSON().EstimatedCost.trim())) {
         isValid = false;
-        alert('Please fill the Estimated Cost');
-      }
-      if (!this.requestFormModel.toJSON().selectedApplicantModel) {
+        errMessage = 'Please fill the Estimated Cost';
+      } else if (!this.requestFormModel.toJSON().selectedApplicantModel) {
         isValid = false;
-        alert('Please select a Applicant');
-      }
-      if (!this.requestFormModel.toJSON().selectedRecommentModel) {
+        errMessage = 'Please select a Applicant';
+      } else if (!this.requestFormModel.toJSON().selectedRecommentModel) {
         isValid = false;
-        alert('Please select a Recommend By');
+        errMessage = 'Please select a Recommend By.';
+      } else if (!self.selectedServiceValid()) {
+        isValid = false;
+        errMessage = 'Please fill all fields from the Service Acquired for.'
       }
+
+      Hktdc.Dispatcher.trigger('openAlert', {
+        message: errMessage,
+        title: 'Error!',
+        type: 'error'
+      });
+
+      return isValid;
+    },
+
+    selectedServiceValid: function() {
+      var isValid = true;
+      var selectedServiceCollection = this.requestFormModel.toJSON().selectedServiceCollection;
+      // console.log(selectedServiceCollection);
+      if (!selectedServiceCollection || selectedServiceCollection.length === 0) {
+        isValid = false;
+      } else {
+        selectedServiceCollection.each(function(selectedServiceModel) {
+          var selectedService = selectedServiceModel.toJSON();
+          console.log(selectedService);
+          if (!selectedService.Notes) {
+            isValid = false;
+          }
+        });
+      }
+      // return false;
+      // console.log(isValid);
       return isValid;
     },
 
@@ -148,7 +180,7 @@ Hktdc.Views = Hktdc.Views || {};
       var insertServiceResponse;
       Q.fcall(this.setRequestObject.bind(this, status, realSubmitTo))
         .then(function(sendRequestModel) {
-          console.log('ended set data', sendRequestModel.toJSON());
+          console.debug('ended set data', sendRequestModel.toJSON());
           /* send the request object */
           return this.sendXhrRequest(sendRequestModel);
         }.bind(this))
@@ -169,7 +201,11 @@ Hktdc.Views = Hktdc.Views || {};
           // if (true) {
           if (insertServiceResponse.FormID) {
             // window.location.href = Hktdc.Config.projectPath + '#draft';
-            alert("Record Saved Successfully \n Reference ID : " + insertServiceResponse.FormID);
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'Record Saved Successfully <br /> Reference ID : ' + insertServiceResponse.FormID,
+              title: 'Success',
+              type: 'success'
+            });
 
             // if (true) {
             if (status === 'Submitted') {
@@ -181,12 +217,20 @@ Hktdc.Views = Hktdc.Views || {};
             /* reload the menu for new counts */
             Hktdc.Dispatcher.trigger('reloadMenu');
           } else {
-            alert('error on saving the ')
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'error on saving the record',
+              title: 'Error',
+              type: 'error'
+            });
           }
         })
 
         .fail(function(err) {
-          alert('Error on saving record\n', err);
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'catched error on saving the record: <br /><code>' + JSON.stringify(err, null, 2) + '</code>',
+            title: 'Error',
+            type: 'error'
+          });
         });
     },
 
@@ -501,13 +545,20 @@ Hktdc.Views = Hktdc.Views || {};
       sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
         beforeSend: utils.setAuthHeader,
         success: function(model, response) {
-          alert('Record Saved Successfully \n Reference ID : ' + $('#divRefID').text());
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Record Saved Successfully <br /> Reference ID : ' + refId,
+            type: 'success',
+            title: 'Success'
+          });
           deferred.resolve();
         },
         error: function(model, response) {
           deferred.reject();
-          var err = eval("(" + response.responseText + ")");
-          alert(err.Message);
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Error on upload file',
+            type: 'error',
+            title: 'Error'
+          });
         }
       }));
       return deferred.promise;

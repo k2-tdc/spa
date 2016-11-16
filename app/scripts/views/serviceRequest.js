@@ -42,6 +42,7 @@ Hktdc.Views = Hktdc.Views || {};
       'click .btn-del': 'deleteRequestObject',
       'blur .service-notes': 'addNotesToServiceObject'
     },
+
     deleteRequestObject: function(ev) {
       var collection = this.model.toJSON().parentCollection;
       var self = this;
@@ -94,6 +95,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
       console.log('removed, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
+
     addNotesToServiceObject: function(ev) {
       // console.log($(ev.target).val());
       this.model.set({
@@ -101,6 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
         Notes: $(ev.target).val().trim()
       });
     },
+
     initModelChangeHandler: function() {
       var self = this;
       this.model.on('change:selectedRequestModel', function(selectedReq, newModel) {

@@ -157,6 +157,8 @@ window.Hktdc = {
       model: footerModel
     });
 
+    this.initAlertDialog();
+
     this.loadMenu()
       .then(function(menuModel) {
         var menu = menuModel.toJSON();
@@ -220,6 +222,23 @@ window.Hktdc = {
       }
     });
     return deferred.promise;
+  },
+
+  initAlertDialog: function() {
+    var alertDialogView = new Hktdc.Views.AlertDialog({
+      model: new Hktdc.Models.AlertDialog()
+    });
+
+    $('body').append(alertDialogView);
+
+    alertDialogView.listenTo(window.Hktdc.Dispatcher, 'openAlert', function(data) {
+      alertDialogView.model.set({
+        message: data.message,
+        title: data.title,
+        type: data.type,
+        open: true
+      });
+    });
   }
 };
 
