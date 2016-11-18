@@ -46,12 +46,12 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function(props) {
       _.extend(this, props);
-      _.bindAll(this, 'renderStepOptions');
+      _.bindAll(this, 'renderStepOptions', 'selectStepItemHandler');
       this.render();
     },
 
     selectStepItemHandler: function(ev) {
-      this.delegationPageModel.set({
+      this.parentModel.set({
         StepId: $(ev.target).val()
       })
     },

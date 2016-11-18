@@ -20,7 +20,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       // console.log(this.selectedProcess);
-      // console.log(this.model.toJSON().ProcessID);
+      // console.log(this.model.toJSON());
       if (this.tagName === 'option') {
         this.$el.attr('value', this.model.toJSON().ProcessID);
         if (String(this.selectedProcess) === String(this.model.toJSON().ProcessID)) {
@@ -47,7 +47,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     selectProcessItemHandler: function(ev) {
-      this.delegationPageModel.set({
+      this.parentModel.set({
         ProId: $(ev.target).val()
       });
     },
@@ -71,6 +71,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.tagName === 'select') {
         this.$el.prepend('<option value="" >--Select--</option>');
       }
+      // console.log(this.to);
       this.collection.each(this.renderProcessItem);
     }
 

@@ -275,7 +275,8 @@ Hktdc.Routers = Hktdc.Routers || {};
         Type: utils.getParameterByName('Type')
       });
       var delegationPageView = new Hktdc.Views.DelegationPage({
-        model: delegationPageModel
+        model: delegationPageModel,
+        dialogModel: new Hktdc.Models.DelegationDialog()
       });
       $('#mainContent').html(delegationPageView.el);
       // delegationPageModel.fetch({

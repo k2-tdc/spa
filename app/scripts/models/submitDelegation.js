@@ -5,9 +5,11 @@ Hktdc.Models = Hktdc.Models || {};
 (function () {
   'use strict';
 
-  Hktdc.Models.DelegationDialog = Backbone.Model.extend({
+  Hktdc.Models.SubmitDelegation = Backbone.Model.extend({
 
-    url: '',
+    url: function() {
+      return Hktdc.Config.apiURL + '/SubmitDelegation';
+    },
 
     initialize: function() {
     },
@@ -15,14 +17,13 @@ Hktdc.Models = Hktdc.Models || {};
     defaults: {
       DelegationId: '',
       Type: '',
-      ProId: '',
+      ProcessId: '',
       StepId: '',
       FromUserId: '',
       ToUserId: '',
-      Enabled: '',
-      Remark: '',
-
-      open: false
+      CreateUserId: '',
+      Enable: '',
+      Remark: ''
     },
 
     validate: function(attrs, options) {
