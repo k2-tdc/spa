@@ -1,14 +1,17 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Collections.Process = Backbone.Collection.extend({
 
+    url: function() {
+      return Hktdc.Config.apiURL + '/api/request/GetProcessList?UserId=' + Hktdc.Config.userID;
+    },
+
     model: Hktdc.Models.Process
 
   });
-
 })();

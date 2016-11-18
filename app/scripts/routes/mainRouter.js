@@ -13,6 +13,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'request/draft/:requestId': 'editRequest',
       'request/all/:requestId/:sn': 'editRequest',
       'request/approval/:requestId/:sn': 'editRequest',
+      'delegation': 'delegationList',
       'draft': 'draft',
       'alltask': 'allTask',
       'approvaltask': 'approvalTask'
@@ -261,6 +262,31 @@ Hktdc.Routers = Hktdc.Routers || {};
           console.log(err);
         }
       });
+    },
+
+    delegationList: function() {
+      console.log('mainRouter delegationlist');
+      // console.log(utils.getParameterByName('ProId'));
+      var delegationPageModel = new Hktdc.Models.DelegationPage({
+        UserId: utils.getParameterByName('UserId'),
+        DeleId: utils.getParameterByName('DeleId'),
+        ProId: utils.getParameterByName('ProId'),
+        StepId: utils.getParameterByName('StepId'),
+        Type: utils.getParameterByName('Type')
+      });
+      var delegationPageView = new Hktdc.Views.DelegationPage({
+        model: delegationPageModel
+      });
+      $('#mainContent').html(delegationPageView.el);
+      // delegationPageModel.fetch({
+      //   beforeSend: utils.setAuthHeader,
+      //   success: function() {
+      //   },
+      //   error: function() {
+      //   }
+      // });
+
+      // console.log(delegationPageView.el);
     }
   });
 })();

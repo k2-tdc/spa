@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Collections.Delegation = Backbone.Collection.extend({
@@ -15,5 +15,4 @@ Hktdc.Collections = Hktdc.Collections || {};
     model: Hktdc.Models.Delegation
 
   });
-
 })();

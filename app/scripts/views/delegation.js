@@ -1,8 +1,8 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Views.DelegationOption = Backbone.View.extend({
@@ -36,6 +36,7 @@ Hktdc.Views = Hktdc.Views || {};
       _.bindAll(this, 'renderDelegationOption');
       this.render();
     },
+
     events: {
       'select': 'selectApplcantHandler'
     },
@@ -57,7 +58,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       delegationOptionView.render();
       // console.log(delegationOptionView.el);
-      $(this.el).append(delegationOptionView.el);
+      this.$el.append(delegationOptionView.el);
     },
 
     render: function() {
@@ -66,7 +67,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.tagName === 'ul') {
         this.collection.each(this.renderDelegationItem);
       } else {
-        $(this.el).append('<option value="">-- Select --</option>');
+        this.$el.append('<option value="">-- Select --</option>');
         this.collection.each(this.renderDelegationOption);
       }
     }

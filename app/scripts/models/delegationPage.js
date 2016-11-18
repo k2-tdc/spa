@@ -1,26 +1,21 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
-(function () {
+(function() {
   'use strict';
 
-  Hktdc.Models.Process = Backbone.Model.extend({
-
+  Hktdc.Models.DelegationPage = Backbone.Model.extend({
 
     initialize: function() {
     },
 
     defaults: {
-      FULL_NAME: '',
-      IsDefault: '',
-      ProcessDisplayName: '',
-      ProcessID: null,
-      ProcessName: '',
-      RoleType: '',
       UserId: '',
-
-      type: 'li'
+      DeleId: '',
+      ProId: '',
+      StepId: '',
+      Type: ''
     },
 
     validate: function(attrs, options) {
@@ -30,5 +25,4 @@ Hktdc.Models = Hktdc.Models || {};
       return response;
     }
   });
-
 })();

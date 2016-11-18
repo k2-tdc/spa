@@ -1,0 +1,104 @@
+<div class="modal-dialog modal-sm" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="modal-title" id="myModalLabel">
+        Delegation
+      </h4>
+    </div>
+    <div class="modal-body">
+      <div id="divnewdelegation">
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
+              <label for="process" class=" control-label">Type</label>
+            </div>
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <input type="radio" name="type" value="Delegation">
+              Delegation
+            </div>
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <input type="radio" name="type" value="Forwarding">
+              Forwarding
+            </div>
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <input type="radio" name="type" value="Sharing">
+              Sharing
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <label for="process" class="control-label">Process</label>
+            </div>
+            <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
+              <select id="divProcess" class="form-control divProcess"></select>
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <label for="Step" class="control-label">Step</label>
+            </div>
+            <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
+              <select id="divStep" class="form-control step">
+                <option value=null>--Select--</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <label for="fromuser" class="control-label">From User</label>
+            </div>
+            <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
+              <select id="divfromuser" class="form-control divfromuser"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <label for="touser" class="control-label">To User</label>
+            </div>
+            <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
+              <select id="divtouser" class="form-control divtouser"></select>
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <label for="status" class="control-label">Enabled</label>
+            </div>
+            <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
+              <input style="float:left;" class="enabled" type="checkbox" name="touser" id="enabled" value="touser"/>
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+              <label for="remark" class="control-label">Remark</label>
+            </div>
+            <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
+              <input type="text" delegationid="0" id="txtremark" class="form-control txtremark" placeholder="">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,6 +7,7 @@ window.Hktdc = {
   Routers: {},
   Dispatcher: _.extend({}, Backbone.Events),
   Config: {
+    procId: 1,
     apiURL: false,
     refreshTokenInterval: 2,  // in minutes
     gettingToken: false,
@@ -163,7 +164,6 @@ window.Hktdc = {
       .then(function(menuModel) {
         var menu = menuModel.toJSON();
         Hktdc.Config.userName = menu.UserName;
-        // console.log('menu.UserName', menu.UserName);
         menuModel.set({
           Menu: menu.Menu,
           PList: menu.PList,

@@ -1,3 +1,13 @@
+<%
+if (type === 'li') {
+%>
 <a class="processlist" id="<%=ProcessID%>">
   <%=ProcessDisplayName%>
 </a>
+<%
+} else {
+%>
+<%=ProcessDisplayName%>
+<%
+}
+%>

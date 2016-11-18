@@ -67,7 +67,7 @@ Hktdc.Views = Hktdc.Views || {};
           Mlink: '#',
           Name: 'Delegation',
           onlyMobile: true,
-          Route: '/#',
+          Route: '/#delegation',
           Scount: null,
           RouteName: 'delegation'
         }, {
