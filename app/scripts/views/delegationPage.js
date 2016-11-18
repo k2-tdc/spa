@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, Q, utils, _, $ */
+/* global Hktdc, Backbone, JST, Q, utils, _, $, confirm */
 
 
 Hktdc.Views = Hktdc.Views || {};
@@ -30,71 +30,26 @@ Hktdc.Views = Hktdc.Views || {};
         this.loadProcessList()
       ])
         .then(function(results) {
-          var stepCollection = results[0];
-          var employeeCollection = results[1];
-          var processCollection = results[2];
+          self.stepCollection = results[0];
+          self.employeeCollection = results[1];
+          self.processCollection = results[2];
+
           // console.log(self.dialogModel.toJSON());
-
-
-          var dialogView = new Hktdc.Views.DelegationDialog({
-            model: self.dialogModel,
-            pageModal: self.model
-          });
-          $('body').append(dialogView.el);
-          var stepListViewInDialog = new Hktdc.Views.StepList({
-            collection: stepCollection,
-            attributes: {
-              name: 'select-step'
-            },
-            parentModel: self.dialogModel
-          });
-          var processListViewInDialog = new Hktdc.Views.ProcessList({
-            tagName: 'select',
-            className: 'form-control select-process',
-            to: 'dialog',
-            attributes: {
-              name: 'select-process'
-            },
-            collection: processCollection,
-            parentModel: self.dialogModel
-          });
-          var toUserListViewInDialog = new Hktdc.Views.ToUserList({
-            collection: new Hktdc.Collections.ToUser(employeeCollection.toJSON()),
-            parentModel: self.dialogModel
-          });
-          var fromUserListViewInDialog = new Hktdc.Views.FromUserList({
-            collection: new Hktdc.Collections.ToUser(employeeCollection.toJSON()),
-            parentModel: self.dialogModel
-          });
-          $('.step-container', dialogView.el).html(stepListViewInDialog.el);
-          $('.process-container', dialogView.el).html(processListViewInDialog.el);
-          // console.log(fromUserListViewInDialog.el);
-          $('.fromUser-container', dialogView.el).html(fromUserListViewInDialog.el);
-          $('.toUser-container', dialogView.el).html(toUserListViewInDialog.el);
-
-
+          self.renderDialog();
 
           var stepListView = new Hktdc.Views.StepList({
-            collection: stepCollection,
-            selectedStep: self.model.toJSON().StepId,
+            collection: self.stepCollection,
             parentModel: self.model
           });
           var processListView = new Hktdc.Views.ProcessList({
             tagName: 'select',
             className: 'form-control',
-            collection: processCollection,
-            selectedProcess: self.model.toJSON().ProId,
+            collection: self.processCollection,
             parentModel: self.model
           });
 
           processListView.render();
-          processListViewInDialog.render();
-          // console.log(self.model.toJSON());
-          // console.log(stepListView.el);
           $('.step-container', self.el).html(stepListView.el);
-          // console.log($('.step-container', dialogView.el));
-          // console.log(stepListViewInDialog.el);
-          console.log(processListViewInDialog.el);
           $('.process-container', self.el).html(processListView.el);
         });
 
@@ -105,9 +60,9 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('change:ProId', function() {
         self.loadProcessSteps()
           .then(function(stepCollection) {
+            self.model.set({StepId: ''});
             var stepListView = new Hktdc.Views.StepList({
               collection: stepCollection,
-              selectedStep: self.model.toJSON().StepId,
               parentModel: self.model
             });
 
@@ -130,15 +85,10 @@ Hktdc.Views = Hktdc.Views || {};
           dataSrc: function(data) {
             // console.log(JSON.stringify({ data: data }, null, 2));
             var modData = _.map(data, function(row) {
-              return {
-                process: row.ProcessDisplayName,
-                step: row.StepDisplayName,
-                type: row.DelegationType,
-                enabled: row.Enabled,
-                fromUser: row.FromUser_FULL_NAME,
-                toUser: row.ToUser_FULL_NAME,
+              _.extend(row, {
                 operation: self.getOperation()
-              };
+              });
+              return row;
             });
             return modData;
             // return { data: modData, recordsTotal: modData.length };
@@ -155,55 +105,59 @@ Hktdc.Views = Hktdc.Views || {};
             $(this).removeClass('highlight');
           });
         },
-        columns: [{
-          data: 'process'
-          // render: function(data) {
-          //   return moment(data).format('DD MMM YYYY');
-          // }
-        }, {
-          data: 'step'
-        }, {
-          data: 'type'
-        }, {
-          data: 'enabled'
-        }, {
-          data: 'fromUser'
-        }, {
-          data: 'toUser'
-        }, {
-          data: 'operation'
-        }],
+        columns: [
+          {
+            data: 'ProcessDisplayName'
+            // render: function(data) {
+            //   return moment(data).format('DD MMM YYYY');
+            // }
+          }, {
+            data: 'StepDisplayName'
+          }, {
+            data: 'DelegationType'
+          }, {
+            data: 'Enabled'
+          }, {
+            data: 'FromUser_FULL_NAME'
+          }, {
+            data: 'ToUser_FULL_NAME'
+          }, {
+            data: 'operation'
+          }
+        ],
         bRetrieve: true
       });
 
       $('#delegationTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.delegationDataTable.row(this).data();
-        var SNPath = (rowData.SN) ? '/' + rowData.SN : '';
-        var typePath;
-        if (self.model.toJSON().mode === 'APPROVAL TASKS') {
-          typePath = '/approval/';
-        } else if (self.model.toJSON().mode === 'ALL TASKS') {
-          typePath = '/all/';
-        } else if (self.model.toJSON().mode === 'DRAFT') {
-          typePath = '/draft/';
-        } else {
-          typePath = '/draft/';
-        }
-        Backbone.history.navigate('request' + typePath + rowData.refId + SNPath, {
-          trigger: true
+        console.log('b4 dialog model', self.dialogModel.toJSON());
+
+        self.dialogModel.set({
+          DelegationId: rowData.DelegationID,
+          Type: rowData.DelegationType,
+          ProId: rowData.ProcessID,
+          StepId: rowData.StepID,
+          OldStepId: rowData.StepID,
+          FromUserId: rowData.FromUser_USER_ID,
+          ToUserId: rowData.ToUser_USER_ID,
+          Enabled: rowData.Enabled,
+          Remark: rowData.Remark
         });
+        // self.renderDialog(true);
+        console.log('after dialog model', self.dialogModel.toJSON());
+        self.openDialog();
       });
 
       $('#delegationTable tbody', this.el).on('click', '.btn-del', function(ev) {
-        var isConfirm = confirm("Are you sure to delete draft?");
+        var isConfirm = confirm('Are you sure to delete delegation?');
         if (isConfirm) {
           Backbone.emulateHTTP = true;
           Backbone.emulateJSON = true;
           ev.stopPropagation();
           var rowData = self.delegationDataTable.row($(this).parents('tr')).data();
-          var refId = rowData.refId;
+          var DelegationID = rowData.DelegationID;
           var DeleteRequestModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
+            url: Hktdc.Config.apiURL + '/DeleteDelegation?DeleID=' + DelegationID
           });
           var DeleteRequestModelInstance = new DeleteRequestModel();
           DeleteRequestModelInstance.save(null, {
@@ -212,11 +166,14 @@ Hktdc.Views = Hktdc.Views || {};
               // console.log('success: ', a);
               // console.log(b);
               self.delegationDataTable.ajax.reload();
-              Hktdc.Dispatcher.trigger('reloadMenu');
+              // Hktdc.Dispatcher.trigger('reloadMenu');
             },
             error: function(err) {
-              console.log(err);
-              // console.log(b);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'error on delete delegation' + JSON.stringify(err, null, 2),
+                type: 'error',
+                title: 'Error'
+              });
             }
           });
         } else {
@@ -226,6 +183,48 @@ Hktdc.Views = Hktdc.Views || {};
         // var rowData = self.delegationDataTable.row(this).data();
         // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
       });
+    },
+
+    renderDialog: function() {
+      var self = this;
+      console.log('renderDialog');
+      var dialogView = new Hktdc.Views.DelegationDialog({
+        model: self.dialogModel,
+        pageModal: self.model
+      });
+
+      var stepListViewInDialog = new Hktdc.Views.StepList({
+        collection: self.stepCollection,
+        attributes: {
+          name: 'select-step'
+        },
+        parentModel: self.dialogModel
+      });
+      var processListViewInDialog = new Hktdc.Views.ProcessList({
+        tagName: 'select',
+        className: 'form-control select-process',
+        to: 'dialog',
+        attributes: {
+          name: 'select-process'
+        },
+        collection: self.processCollection,
+        parentModel: self.dialogModel
+      });
+      processListViewInDialog.render();
+
+      var toUserListViewInDialog = new Hktdc.Views.ToUserList({
+        collection: new Hktdc.Collections.ToUser(self.employeeCollection.toJSON()),
+        parentModel: self.dialogModel
+      });
+      var fromUserListViewInDialog = new Hktdc.Views.FromUserList({
+        collection: new Hktdc.Collections.ToUser(self.employeeCollection.toJSON()),
+        parentModel: self.dialogModel
+      });
+      $('.step-container', dialogView.el).html(stepListViewInDialog.el);
+      $('.process-container', dialogView.el).html(processListViewInDialog.el);
+      // console.log(fromUserListViewInDialog.el);
+      $('.fromUser-container', dialogView.el).html(fromUserListViewInDialog.el);
+      $('.toUser-container', dialogView.el).html(toUserListViewInDialog.el);
     },
 
     updateModel: function(field, value) {
@@ -245,8 +244,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     doSearch: function() {
-      var queryParams = this.model.toJSON();
-      // var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode', 'searchUserType');
+      // var queryParams = this.model.toJSON();
+      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'DeleId');
       // console.log(Backbone.history.getHash().split('?')[0]);
       var currentBase = Backbone.history.getHash().split('?')[0];
       Backbone.history.navigate(currentBase + utils.getQueryString(queryParams));
@@ -316,7 +315,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     openDialog: function() {
-      console.log('crash');
+      console.log(this.dialogModel.toJSON());
       this.dialogModel.set({open: true});
     }
 

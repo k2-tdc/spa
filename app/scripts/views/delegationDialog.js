@@ -12,6 +12,7 @@ Hktdc.Views = Hktdc.Views || {};
       'aria-labelledby': 'delegation dialog'
     },
     events: {
+      'change .select-process': 'clearOldStepId',
       'click .btn-save': 'clickSaveBtn',
       'change #enabled': 'changeField',
       'change #txtremark': 'changeField',
@@ -35,9 +36,14 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.on('change:ProId', function(model, id) {
-        // console.log(id);
+        console.log('in dialog');
         self.loadProcessStepsByProcId(id)
           .then(function(stepCollection) {
+
+            self.model.set({
+              StepId: ''
+              // OldStepId: ''
+            });
             var stepListView = new Hktdc.Views.StepList({
               collection: stepCollection,
               parentModel: self.model
@@ -47,6 +53,20 @@ Hktdc.Views = Hktdc.Views || {};
           });
       });
 
+      this.model.on('change:Type', function(model, value) {
+        $('input[name="Type"][value="' + value + '"]', self.el).prop('checked', true);
+      });
+
+      this.model.on('change:Enabled', function(model, value) {
+        if (value) {
+          $('input[name="Enabled"]', self.el).prop('checked', true);
+        }
+      });
+
+      this.model.on('change:Remark', function(model, value) {
+        $('input[name="Remark"]', self.el).val(value);
+      });
+
       this.$el.on('hidden.bs.modal', function() {
         self.model.set({
           open: false,
@@ -54,6 +74,7 @@ Hktdc.Views = Hktdc.Views || {};
           Type: '',
           ProId: '',
           StepId: '',
+          OldStepId: '',
           FromUserId: '',
           ToUserId: '',
           CreateUserId: Hktdc.Config.userID,
@@ -116,6 +137,12 @@ Hktdc.Views = Hktdc.Views || {};
       console.log(newObject);
       this.model.set(newObject);
     },
+    clearOldStepId: function() {
+      console.log('change in dialog');
+      this.model.set({
+        OldStepId: ''
+      });
+    },
     loadProcessStepsByProcId: function(procId) {
       /* employee component */
       var deferred = Q.defer();
@@ -135,6 +162,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
+      // console.log('render in delegation dialog');
       this.$el.html(this.template(this.model.toJSON()));
     }
 

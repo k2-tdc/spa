@@ -17,7 +17,13 @@
             </div>
             <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
               <label>
-                <input type="radio" class='typeRadio' name="Type" value="Delegation">
+                <input
+                  type="radio"
+                  class='typeRadio'
+                  name="Type"
+                  value="Delegation"
+                  <% if (Type === 'Delegation') { %>checked<% } %>
+                />
                 Delegation
               </label>
             </div>
@@ -27,7 +33,14 @@
             </div> -->
             <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
               <label>
-                <input type="radio" class='typeRadio' name="Type" value="Sharing">
+                <input
+                  type="radio"
+                  class='typeRadio'
+                  name="Type"
+                  value="Sharing"
+                  <% if (Type === 'Sharing') { %>checked<% } %>
+
+                />
                 Sharing
               </label>
             </div>
@@ -83,7 +96,17 @@
               <label for="status" class="control-label">Enabled</label>
             </div>
             <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
-              <input style="float:left;" class="enabled" type="checkbox" name="Enabled" id="enabled" value="1" />
+              <input
+                style="float:left;"
+                class="enabled"
+                type="checkbox"
+                name="Enabled"
+                id="enabled"
+                value="1"
+                <% if (Enabled) { %>
+                  checked
+                <% } %>
+              />
             </div>
           </div>
 
@@ -94,7 +117,13 @@
               <label for="remark" class="control-label">Remark</label>
             </div>
             <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;margin-bottom:10px;">
-              <input type="text" name="Remark" id="txtremark" class="form-control txtremark" placeholder="" />
+              <input
+                type="text"
+                name="Remark"
+                id="txtremark"
+                class="form-control txtremark"
+                value="<% if (Remark) { %><%= Remark %><% } %>"
+              />
             </div>
           </div>
 

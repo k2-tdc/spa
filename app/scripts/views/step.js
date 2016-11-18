@@ -22,9 +22,13 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template(this.model.toJSON()));
 
       this.$el.attr('value', this.model.toJSON().StepID);
-      // console.log(this.selectedStep);
+      // console.log(this.parentModel.toJSON());
       // console.log(this.model.toJSON().StepID);
-      if (String(this.selectedStep) === String(this.model.toJSON().StepID)) {
+      var parentStepId = (this.parentModel.toJSON().OldStepId)
+        ? String(this.parentModel.toJSON().OldStepId)
+        : String(this.parentModel.toJSON().StepId);
+
+      if (parentStepId === String(this.model.toJSON().StepID)) {
         this.$el.prop('selected', true);
       }
     }
@@ -45,9 +49,13 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function(props) {
+      var self = this;
       _.extend(this, props);
       _.bindAll(this, 'renderStepOptions', 'selectStepItemHandler');
       this.render();
+      this.parentModel.on('change:StepId', function() {
+        self.render();
+      });
     },
 
     selectStepItemHandler: function(ev) {
@@ -59,7 +67,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderStepOptions: function(model) {
       var stepOptionView = new Hktdc.Views.Step({
         model: model,
-        selectedStep: this.selectedStep
+        parentModel: this.parentModel
       });
       this.$el.append(stepOptionView.el);
     },

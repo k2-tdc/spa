@@ -18,6 +18,9 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       this.$el.html(this.template({user: this.model.toJSON()}));
       this.$el.attr('value', this.model.toJSON().UserId);
+      if (String(this.parentModel.toJSON().FromUserId) === String(this.model.toJSON().UserId)) {
+        this.$el.prop('selected', true);
+      }
     }
 
   });
@@ -29,9 +32,14 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'form-control',
 
     initialize: function(props) {
+      var self = this;
       _.extend(this, props);
       _.bindAll(this, 'renderFromUserOption');
       this.render();
+      this.parentModel.on('change:ToUserId', function() {
+        self.$el.empty();
+        self.render();
+      });
     },
     events: {
       'change': 'selectFromUserHandler'

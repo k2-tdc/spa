@@ -23,7 +23,7 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.toJSON());
       if (this.tagName === 'option') {
         this.$el.attr('value', this.model.toJSON().ProcessID);
-        if (String(this.selectedProcess) === String(this.model.toJSON().ProcessID)) {
+        if (String(this.parentModel.toJSON().ProId) === String(this.model.toJSON().ProcessID)) {
           this.$el.prop('selected', true);
         }
       }
@@ -40,10 +40,18 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initialize: function(props) {
+      var self = this;
       _.extend(this, props);
       _.bindAll(this, 'renderProcessItem');
       // console.log(this.collection.toJSON());
       // this.listenTo(this.model, 'change', this.render);
+      if (this.tagName === 'select') {
+        this.parentModel.on('change:ProId', function() {
+          console.log('in process');
+          self.$el.empty();
+          self.render();
+        });
+      }
     },
 
     selectProcessItemHandler: function(ev) {
@@ -61,7 +69,7 @@ Hktdc.Views = Hktdc.Views || {};
       var processItemView = new Hktdc.Views.Process({
         model: model,
         tagName: itemViewTagName,
-        selectedProcess: this.selectedProcess
+        parentModel: this.parentModel
       });
       // console.log(processItemView.el);
       this.$el.append(processItemView.el);
