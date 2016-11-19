@@ -15,6 +15,7 @@ Hktdc.Models = Hktdc.Models || {};
       showSendToApprover: false,
       showDelete: false,
       showReturn: false,
+      showRecall: false,
       approverSendTo: 'Approver', // [Approver, ITS Approval]
       applicantSendTo: 'Applicant',
       returnTo: 'Preparer',
@@ -23,7 +24,6 @@ Hktdc.Models = Hktdc.Models || {};
       workflowButtons: [],
       // showApprove: false,
       // showReject: false,
-      // showRecall: false,
       // showSendEmail: false,
       // showComplete: false,
       // showForward: false,

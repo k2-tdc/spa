@@ -191,10 +191,12 @@ window.Hktdc = {
               $('#menu').html(menuView.el);
             });
         });
+        // console.log(Hktdc.Config.environments[Hktdc.Config.environment].SPAHomePath);
         var userView = new Hktdc.Views.User({
           model: new Hktdc.Models.User({
             UserName: menu.UserName,
-            UserID: menu.UserID
+            UserID: menu.UserID,
+            HomePath: Hktdc.Config.environments[Hktdc.Config.environment].SPAHomePath
           })
         });
 

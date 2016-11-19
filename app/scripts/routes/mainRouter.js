@@ -11,6 +11,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'check_status': 'checkStatus',
       'request': 'newRequest',
       'request/draft/:requestId': 'editRequest',
+      'request/check/:requestId': 'editRequest',
       'request/all/:requestId/:sn': 'editRequest',
       'request/approval/:requestId/:sn': 'editRequest',
       'delegation': 'delegationList',
@@ -195,6 +196,8 @@ Hktdc.Routers = Hktdc.Routers || {};
         type = 'Approval';
       } else if (/\/all\//.test(Backbone.history.getHash())) {
         type = 'Worklist';
+      } else if (/\/check\//.test(Backbone.history.getHash())) {
+        type = 'Check';
       } else {
         type = 'Draft';
       }
@@ -232,7 +235,17 @@ Hktdc.Routers = Hktdc.Routers || {};
             return _.contains(modeObj.status, requestModel.toJSON().FormStatus);
           });
           var mode = (modeObj) ? modeObj.name : 'read';
+
+          /* special case for preparer enter the review form */
+          if (
+            rawData.ApplicantUserID !== Hktdc.Config.userID &&
+            rawData.PreparerUserID === Hktdc.Config.userID &&
+            requestModel.toJSON().FormStatus === 'Review'
+          ) {
+            mode = 'read';
+          }
           // console.log(mode);
+
           requestModel.set({
             mode: mode,
             selectedApplicantModel: new Hktdc.Models.Applicant({
@@ -268,7 +281,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       console.log('mainRouter delegationlist');
       // console.log(utils.getParameterByName('ProId'));
       var delegationPageModel = new Hktdc.Models.DelegationPage({
-        UserId: utils.getParameterByName('UserId'),
+        UserId: Hktdc.Config.userID,
         DeleId: utils.getParameterByName('DeleId'),
         ProId: utils.getParameterByName('ProId'),
         StepId: utils.getParameterByName('StepId'),

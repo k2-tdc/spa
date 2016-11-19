@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, utils, Q */
+/* global Hktdc, Backbone, JST, $, _, utils, Q, confirm */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -18,6 +18,7 @@ Hktdc.Views = Hktdc.Views || {};
       'click #btnapplicant': 'clickApplicantHandler',
       'click #btnapprover': 'clickApproverHandler',
       'click #btndelete': 'clickDeleteBtnHandler',
+      'click #btnrecall': 'clickRecallBtnHandler',
       'click .workflow-btn': 'clickWorkflowBtnHandler'
     },
 
@@ -71,7 +72,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickSaveHandler: function() {
       if (this.checkIsValid()) {
-        var status = this.model.toJSON().FormStatus || 'Draft';
+        var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
         this.saveAndApprover(status, '');
       }
     },
@@ -112,6 +113,49 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log(b);
           }
         });
+      } else {
+        return false;
+      }
+      // var rowData = self.statusDataTable.row(this).data();
+      // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
+    },
+
+    clickRecallBtnHandler: function() {
+      var Con = confirm('Are you sure want to ' + this.requestFormModel.toJSON().FormID + '?');
+      if (Con) {
+        Backbone.emulateHTTP = true;
+        Backbone.emulateJSON = true;
+        var ActionModel = Backbone.Model.extend({
+          urlRoot: Hktdc.Config.apiURL + '/RecallAction'
+        });
+        var action = new ActionModel();
+        action.set({
+          UserId: Hktdc.Config.userID,
+          ProcInstID: this.requestFormModel.toJSON().ProcInstID,
+          ActionName: 'Recall',
+          Comment: this.requestFormModel.toJSON().Comment
+        });
+        action.save({}, {
+          beforeSend: utils.setAuthHeader,
+          success: function(action, response) {
+            console.log(response);
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'Successfully Recall request',
+              type: 'success',
+              title: 'Success'
+            });
+            Backbone.history.navigate('/', {trigger: true});
+          },
+          error: function(action, response) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'Error on Recall request' + JSON.stringify(response.responseText.Message, null, 2),
+              type: 'error',
+              title: 'Error'
+            });
+          }
+        });
+
+
       } else {
         return false;
       }

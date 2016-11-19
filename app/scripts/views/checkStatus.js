@@ -146,7 +146,7 @@ Hktdc.Views = Hktdc.Views || {};
                 refId: row.ReferenceID,
                 ProcInstID: row.ProcInstID,
                 SN: row.SN
-              }
+              };
             });
             return modData;
             // return { data: modData, recordsTotal: modData.length };
@@ -189,7 +189,7 @@ Hktdc.Views = Hktdc.Views || {};
         } else if (self.model.toJSON().mode === 'DRAFT') {
           typePath = '/draft/';
         } else {
-          typePath = '/draft/';
+          typePath = '/check/';
         }
         Backbone.history.navigate('request' + typePath + rowData.refId + SNPath, {trigger: true});
       });
@@ -283,14 +283,15 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getSummaryFromRow: function(formID, requestList) {
-      var summary = "Ref.ID : " + formID;
+      var summary = 'Ref.ID : ' + formID;
       _.each(requestList, function(Level1) {
-        summary += "<br /><strong style='text-decoration: underline'>" + Level1.Name + "</strong><br />";
+        summary += '<br /><strong style="text-decoration: underline">' + Level1.Name + '</strong><br />';
         _.each(Level1.Level2, function(Level2) {
-          summary += " <br /><strong><span style='margin-left:10px;'>" + "--" + Level2.Name + " </span></strong><br />";
+          summary += ' <br /><strong><span style="margin-left:10px;">' + '--' + Level2.Name + ' </span></strong><br />';
           _.each(Level2.Level3, function(Level3) {
-            if (Level3.Name != null)
-              summary += "<br /><span style='margin-left:20px;'>" + "---" + Level3.Name + " </span><br /> ";
+            if (Level3.Name) {
+              summary += '<br /><span style="margin-left:20px;">' + '---' + Level3.Name + ' </span><br /> ';
+            }
           });
         });
       });

@@ -46,7 +46,6 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     selectToUserHandler: function(ev) {
-      console.log('select to user');
       /* The new request model will handle the change */
       // var self = this;
       this.parentModel.set({

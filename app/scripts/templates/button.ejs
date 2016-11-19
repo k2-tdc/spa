@@ -1,7 +1,3 @@
-<% if (showBack) {%>
-  <button class="btn btn-primary" id="btnBack" type="button">Back</button>
-<% } %>
-
 <% if (showSave) {%>
   <button class="btn btn-primary" id="btnsave" type="button">Save</button>
 <% } %>
@@ -12,6 +8,10 @@
 
 <% if (showSendToApprover) {%>
   <button class="btn btn-primary" id="btnapprover" type="button">Send to <%= approverSendTo %></button>
+<% } %>
+
+<% if (showRecall) {%>
+  <button class="btn btn-primary" id="btnrecall" type="button">Recall</button>
 <% } %>
 
 <% if (showDelete) { %>

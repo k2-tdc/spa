@@ -9,7 +9,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     url: function(procId) {
       procId = _.isNull(procId) ? '' : procId;
-      return Hktdc.Config.apiURL + '/api/request/GetProcessStepList?ProId=' + procId;
+      return Hktdc.Config.apiURL + '/GetProcessStepList?ProId=' + procId;
     },
 
     model: Hktdc.Models.Step

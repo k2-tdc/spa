@@ -47,7 +47,6 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
       if (this.tagName === 'select') {
         this.parentModel.on('change:ProId', function() {
-          console.log('in process');
           self.$el.empty();
           self.render();
         });

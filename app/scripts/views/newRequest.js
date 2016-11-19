@@ -189,6 +189,7 @@ Hktdc.Views = Hktdc.Views || {};
       /* mode === edit */
       } else if (this.model.toJSON().mode === 'edit') {
         console.debug('This is << EDIT >> mode');
+
         Q.all([
           self.loadEmployee(),
           self.loadServiceCatagory(),
@@ -494,22 +495,38 @@ Hktdc.Views = Hktdc.Views || {};
         console.debug('BY FORMSTATUS');
         // var FormStatus = self.model.toJSON().FormStatus;
         // var Preparer = self.model.toJSON().PreparerUserID;
-        // // var Applicant = self.model.toJSON().ApplicantUserID;
+        var options = {};
+        // var Applicant = this.model.toJSON().ApplicantUserID || this.model.toJSON().selectedApplicantModel.toJSON().UserId;
+        var me = Hktdc.Config.userID;
+
+        // var Preparer = this.model.toJSON().PreparerUserID;
+        // var Applicant = self.model.toJSON().ApplicantUserID;
         // var Approver = self.model.toJSON().ApproverUserID;
         // var ActionTaker = self.model.toJSON().ActionTakerUserID;
         // var ITSApprover = self.model.toJSON().ITSApproverUserID;
-        // self.renderRequestFormButton(
-        //   FormStatus,
-        //   Preparer,
-        //   Applicant,
-        //   Approver,
-        //   ActionTaker,
-        //   ITSApprover
-        // );
+        // self.renderRequestFormButton( FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover);
+        if (this.model.toJSON().FormStatus === 'Review' || this.model.toJSON().FormStatus === 'Return') {
+          options.showSave = true;
+          // if (
+          //   (this.model.toJSON().FormStatus === 'Review' && me === Applicant) ||
+          //   (this.model.toJSON().FormStatus === 'Return' && me === Preparer)
+          // ) {
+          //   options.showDelete = true;
+          // }
+        }
+
+        if (this.model.toJSON().FormStatus === 'Approval' && me === Applicant) {
+          options.showRecall = true;
+        }
+
         if (self.model.toJSON().actions) {
-          self.renderRequestFormButtonByActions(self.model.toJSON().actions);
+          self.renderRequestFormButtonByActions(self.model.toJSON().actions, options);
         } else {
-          Hktdc.Dispatcher.trigger('openAler', {
+          self.doRenderButtons(options);
+        }
+
+        if (_.isEmpty(options)) {
+          Hktdc.Dispatcher.trigger('openAlert', {
             message: 'no actions button',
             type: 'error',
             title: 'Error'
@@ -646,19 +663,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderRequestFormButtonByActions: function(actions, defaultOptions) {
-      var options = {workflowButtons: actions};
-      var Applicant = this.model.toJSON().ApplicantUserID || this.model.toJSON().selectedApplicantModel.toJSON().UserId;
-      var Preparer = this.model.toJSON().PreparerUserID;
-      var me = Hktdc.Config.userID;
-      if (this.model.toJSON().FormStatus === 'Review' || this.model.toJSON().FormStatus === 'Return') {
-        options.showSave = true;
-        if (
-          (this.model.toJSON().FormStatus === 'Review' && me === Applicant) ||
-          (this.model.toJSON().FormStatus === 'Return' && me === Preparer)
-        ) {
-          options.showDelete = true;
-        }
-      }
+      var options = _.extend({workflowButtons: actions}, defaultOptions);
+
       this.doRenderButtons(options);
     },
 
@@ -670,6 +676,7 @@ Hktdc.Views = Hktdc.Views || {};
         showSendToApprover: false,
         showDelete: false,
         showReturn: false,
+        showRecall: false,
         approverSendTo: 'Approver', // [Approver, ITS Approval]
         applicantSendTo: 'Applicant',
         returnTo: 'Preparer',
