@@ -313,6 +313,8 @@ Hktdc.Views = Hktdc.Views || {};
         return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullNAME;
       } else if (status === 'ITS Approval') {
         return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullNAME;
+      } else if (status === 'Submitted') {
+        return formStatusDisplay + '<br /> by: ' + row.PreparerUserID;
       } else {
         return formStatusDisplay + '<br /> by: ' + row.LastUser;
       }

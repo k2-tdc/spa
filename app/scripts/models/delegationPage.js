@@ -15,7 +15,9 @@ Hktdc.Models = Hktdc.Models || {};
       DeleId: '',
       ProId: '',
       StepId: '',
-      Type: ''
+      Type: '',
+
+      saved: false
     },
 
     validate: function(attrs, options) {

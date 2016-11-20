@@ -29,7 +29,7 @@ Hktdc.Models = Hktdc.Models || {};
       // showForward: false,
       // showCancel: false,
 
-      showBack: false // TODO: need?
+      noButton: false
     },
 
     validate: function(attrs, options) {

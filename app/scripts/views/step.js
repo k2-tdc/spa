@@ -54,13 +54,15 @@ Hktdc.Views = Hktdc.Views || {};
       _.bindAll(this, 'renderStepOptions', 'selectStepItemHandler');
       this.render();
       this.parentModel.on('change:StepId', function() {
+        self.$el.empty();
         self.render();
       });
     },
 
     selectStepItemHandler: function(ev) {
       this.parentModel.set({
-        StepId: $(ev.target).val()
+        StepId: $(ev.target).val(),
+        OldStepId: ''
       })
     },
 

@@ -53,9 +53,17 @@ Hktdc.Views = Hktdc.Views || {};
           $('.process-container', self.el).html(processListView.el);
         });
 
-      this.model.on('change:saved', function() {
-        self.model.clear();
-        self.doSearch();
+      this.model.on('change:saved', function(model, saved) {
+        if (saved) {
+          self.model.set({
+            UserId: Hktdc.Config.userID,
+            DeleId: '',
+            ProId: '',
+            StepId: '',
+            Type: ''
+          });
+          self.doSearch();
+        }
       });
       this.model.on('change:ProId', function() {
         self.loadProcessSteps()
@@ -116,7 +124,10 @@ Hktdc.Views = Hktdc.Views || {};
           }, {
             data: 'DelegationType'
           }, {
-            data: 'Enabled'
+            data: 'Enabled',
+            render: function(data) {
+              return (String(data) === '1') ? 'Yes' : 'No';
+            }
           }, {
             data: 'FromUser_FULL_NAME'
           }, {
@@ -131,7 +142,9 @@ Hktdc.Views = Hktdc.Views || {};
       $('#delegationTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.delegationDataTable.row(this).data();
         console.log('b4 dialog model', self.dialogModel.toJSON());
-
+        self.model.set({
+          saved: false
+        });
         self.dialogModel.set({
           DelegationId: rowData.DelegationID,
           Type: rowData.DelegationType,
@@ -245,7 +258,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     doSearch: function() {
       // var queryParams = this.model.toJSON();
-      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'DeleId');
+      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'DeleId', 'saved');
       // console.log(Backbone.history.getHash().split('?')[0]);
       var currentBase = Backbone.history.getHash().split('?')[0];
       Backbone.history.navigate(currentBase + utils.getQueryString(queryParams));
@@ -265,17 +278,21 @@ Hktdc.Views = Hktdc.Views || {};
     loadProcessSteps: function() {
       /* employee component */
       var deferred = Q.defer();
-      var stepCollection = new Hktdc.Collections.Step();
-      stepCollection.url = stepCollection.url(this.model.toJSON().ProId);
-      stepCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(stepCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      if (this.model.toJSON().ProId) {
+        var stepCollection = new Hktdc.Collections.Step();
+        stepCollection.url = stepCollection.url(this.model.toJSON().ProId);
+        stepCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(stepCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      } else {
+        deferred.resolve(new Hktdc.Collections.Step([]));
+      }
 
       return deferred.promise;
     },
@@ -316,7 +333,12 @@ Hktdc.Views = Hktdc.Views || {};
 
     openDialog: function() {
       console.log(this.dialogModel.toJSON());
-      this.dialogModel.set({open: true});
+      this.model.set({
+        saved: false
+      });
+      this.dialogModel.set({
+        open: true
+      });
     }
 
   });

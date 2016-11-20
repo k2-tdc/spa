@@ -103,7 +103,7 @@
                 name="Enabled"
                 id="enabled"
                 value="1"
-                <% if (Enabled) { %>
+                <% if (String(Enabled) === '1') { %>
                   checked
                 <% } %>
               />

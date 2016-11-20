@@ -14,7 +14,7 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'change .select-process': 'clearOldStepId',
       'click .btn-save': 'clickSaveBtn',
-      'change #enabled': 'changeField',
+      'change #enabled': 'changeChecked',
       'change #txtremark': 'changeField',
       'click .typeRadio': 'changeField'
     },
@@ -39,7 +39,6 @@ Hktdc.Views = Hktdc.Views || {};
         console.log('in dialog');
         self.loadProcessStepsByProcId(id)
           .then(function(stepCollection) {
-
             self.model.set({
               StepId: ''
               // OldStepId: ''
@@ -58,8 +57,10 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.on('change:Enabled', function(model, value) {
-        if (value) {
+        if (String(value) === '1') {
           $('input[name="Enabled"]', self.el).prop('checked', true);
+        } else {
+          $('input[name="Enabled"]', self.el).prop('checked', false);
         }
       });
 
@@ -69,37 +70,18 @@ Hktdc.Views = Hktdc.Views || {};
 
       this.$el.on('hidden.bs.modal', function() {
         self.model.set({
-          open: false,
-          DelegationId: '',
-          Type: '',
-          ProId: '',
-          StepId: '',
-          OldStepId: '',
-          FromUserId: '',
-          ToUserId: '',
-          CreateUserId: Hktdc.Config.userID,
-          Enable: '',
-          Remark: ''
-        });
-
-        self.$el.find('select').find('option:eq(0)').prop('selected', true);
-        self.$el.find('input[type=text]').val('');
-        self.$el.find('input[type=radio]').prop('checked', false);
-        self.$el.find('input[type=checkbox]').prop('checked', false);
-
-        self.pageModal.set({
-          saved: true
+          open: false
         });
       });
     },
     clickSaveBtn: function() {
       console.log(this.model.toJSON());
-
+      var self = this;
       var submitDelegationModel = new Hktdc.Models.SubmitDelegation({
         DelegationId: this.model.toJSON().DelegationId,
         Type: this.model.toJSON().Type,
         ProcessId: this.model.toJSON().ProId,
-        StepId: this.model.toJSON().StepId,
+        StepId: this.model.toJSON().StepId || this.model.toJSON().OldStepId,
         FromUserId: this.model.toJSON().FromUserId,
         ToUserId: this.model.toJSON().ToUserId,
         CreateUserId: Hktdc.Config.userID,
@@ -113,12 +95,13 @@ Hktdc.Views = Hktdc.Views || {};
 
       submitDelegationModel.save({}, {
         success: function() {
-          this.$el.modal('hide');
+          self.$el.modal('hide');
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'Successfully saved delegation',
             title: 'Success',
             type: 'success'
           });
+          self.onSavedDelegation();
         },
         fail: function() {
           Hktdc.Dispatcher.trigger('openAlert', {
@@ -137,27 +120,66 @@ Hktdc.Views = Hktdc.Views || {};
       console.log(newObject);
       this.model.set(newObject);
     },
+    changeChecked: function(ev) {
+      var modelName = $(ev.target).attr('name');
+      var newObject = {};
+      if ($(ev.target).prop('checked')) {
+        newObject[modelName] = 1;
+      } else {
+        newObject[modelName] = 0;
+      }
+      this.model.set(newObject);
+    },
     clearOldStepId: function() {
       console.log('change in dialog');
       this.model.set({
         OldStepId: ''
       });
     },
+    onSavedDelegation: function() {
+      var self = this;
+      self.model.set({
+        open: false,
+        DelegationId: '',
+        Type: '',
+        ProId: '',
+        StepId: '',
+        OldStepId: '',
+        FromUserId: '',
+        ToUserId: '',
+        CreateUserId: Hktdc.Config.userID,
+        Enable: '',
+        Remark: ''
+      });
+
+      self.$el.find('select').find('option:eq(0)').prop('selected', true);
+      self.$el.find('input[type=text]').val('');
+      self.$el.find('input[type=radio]').prop('checked', false);
+      self.$el.find('input[type=checkbox]').prop('checked', false);
+
+      self.pageModal.set({
+        saved: true
+      });
+    },
     loadProcessStepsByProcId: function(procId) {
       /* employee component */
       var deferred = Q.defer();
-      var stepCollection = new Hktdc.Collections.Step();
-      stepCollection.url = stepCollection.url(procId);
-      stepCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(stepCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
 
+      if (this.model.toJSON().ProId) {
+        var stepCollection = new Hktdc.Collections.Step();
+        stepCollection.url = stepCollection.url(procId);
+        stepCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(stepCollection);
+          },
+          error: function(err) {
+            deferred.reject(err);
+          }
+        });
+      }else {
+        deferred.resolve(new Hktdc.Collections.Step([]));
+      }
       return deferred.promise;
     },
 

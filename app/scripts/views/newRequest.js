@@ -79,11 +79,6 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
       // Backbone.Validation.bind(this);
       var self = this;
-      if (self.model.toJSON().FormStatus && self.model.toJSON().FormStatus !== 'Draft') {
-        self.model.set({
-          showComment: true
-        });
-      }
       /* *** Some model data is pre-set in the main router *** */
 
       /* must render the parent content first */
@@ -155,7 +150,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             self.renderAttachment(self.model.toJSON().Attachments);
-
+            self.renderCommentBlock();
             /* direct put the Request list to collection because no need to change selection */
             self.renderServiceCatagory(results[0]);
 
@@ -225,6 +220,7 @@ Hktdc.Views = Hktdc.Views || {};
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
             self.renderAttachment(self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
+            self.renderCommentBlock();
 
             // var FormStatus = self.model.toJSON().FormStatus;
             // var Preparer = self.model.toJSON().PreparerUserID;
@@ -456,6 +452,19 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
+    renderCommentBlock: function() {
+      var me = Hktdc.Config.userID;
+      var preparer = this.model.toJSON().PreparerUserID;
+      if (
+        (this.model.toJSON().FormStatus && this.model.toJSON().FormStatus !== 'Draft') ||
+        (this.model.toJSON().FormStatus === 'Approval' && me !== preparer)
+      ) {
+        this.model.set({
+          showComment: true
+        });
+      }
+    },
+
     renderButtonHandler: function() {
       var self = this;
       /* From list || from choose applicant */
@@ -525,12 +534,13 @@ Hktdc.Views = Hktdc.Views || {};
           self.doRenderButtons(options);
         }
 
-        if (_.isEmpty(options)) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'no actions button',
-            type: 'error',
-            title: 'Error'
-          });
+        if (_.isEmpty(options) && !(self.model.toJSON().actions)) {
+          // Hktdc.Dispatcher.trigger('openAlert', {
+          //   message: 'no actions button',
+          //   type: 'error',
+          //   title: 'Error'
+          // });
+          self.doRenderButtons({noButton: true});
         }
       }
     },
@@ -681,7 +691,9 @@ Hktdc.Views = Hktdc.Views || {};
         applicantSendTo: 'Applicant',
         returnTo: 'Preparer',
 
-        workflowButtons: []
+        workflowButtons: [],
+        noButton: false
+        
         // showApprove: false,
         // showReject: false,
         // showRecall: false,
