@@ -92,7 +92,8 @@ Hktdc.Views = Hktdc.Views || {};
         Q.all([
           self.loadEmployee(),
           self.loadApplicantDetail(),
-          self.loadServiceCatagory()
+          self.loadServiceCatagory(),
+          self.loadFileTypeRules()
         ])
           .then(function(result) {
             console.log('load ed resource');
@@ -107,7 +108,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderApplicantAndCCList(result[0]);
             self.renderApplicantDetail(result[1], result[0]);
             self.renderServiceCatagory(result[2]);
-            self.renderAttachment();
+            self.renderAttachment(result[3]);
             self.renderSelectedCCView();
 
             /* default render the save button only,
@@ -127,7 +128,8 @@ Hktdc.Views = Hktdc.Views || {};
         console.debug('This is << READ >> mode');
         Q.all([
           self.loadServiceCatagory(),
-          self.loadEmployee()
+          self.loadEmployee(),
+          self.loadFileTypeRules()
           // ... load other remote resource
         ])
           .then(function(results) {
@@ -149,7 +151,7 @@ Hktdc.Views = Hktdc.Views || {};
 
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
-            self.renderAttachment(self.model.toJSON().Attachments);
+            self.renderAttachment(results[2], self.model.toJSON().Attachments);
             self.renderCommentBlock();
             /* direct put the Request list to collection because no need to change selection */
             self.renderServiceCatagory(results[0]);
@@ -188,7 +190,8 @@ Hktdc.Views = Hktdc.Views || {};
         Q.all([
           self.loadEmployee(),
           self.loadServiceCatagory(),
-          self.loadApplicantDetail()
+          self.loadApplicantDetail(),
+          self.loadFileTypeRules()
         ])
           .then(function(results) {
             console.log('loaded resource');
@@ -218,7 +221,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderServiceCatagory(results[1]);
             self.renderApplicantDetail(results[2], results[0]);
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
-            self.renderAttachment(self.model.toJSON().Attachments);
+            self.renderAttachment(results[3], self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderCommentBlock();
 
@@ -407,6 +410,19 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
       return deferred.promise;
+    },
+
+    loadFileTypeRules: function() {
+      var fileRuleModel = new Hktdc.Models.FileRule();
+      fileRuleModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          console.log(fileRuleModel.toJSON());
+        },
+        error: function(err) {
+          console.log(err);
+        }
+      });
     },
 
     renderApplicantAndCCList: function(employeeArray) {
@@ -693,7 +709,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         workflowButtons: [],
         noButton: false
-        
+
         // showApprove: false,
         // showReject: false,
         // showRecall: false,
@@ -748,11 +764,12 @@ Hktdc.Views = Hktdc.Views || {};
       $('#workflowlog-container').html(workflowLogListView.el);
     },
 
-    renderAttachment: function(attachmentList) {
+    renderAttachment: function(rulesModel, attachmentList) {
       var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
       var attachmentListView = new Hktdc.Views.AttachmentList({
         collection: attachmentCollections,
-        requestFormModel: this.model
+        requestFormModel: this.model,
+        rules: rulesModel.toJSON()
       });
       attachmentListView.render();
       $('#attachment-container').html(attachmentListView.el);

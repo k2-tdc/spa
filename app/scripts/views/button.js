@@ -154,8 +154,6 @@ Hktdc.Views = Hktdc.Views || {};
             });
           }
         });
-
-
       } else {
         return false;
       }

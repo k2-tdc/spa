@@ -160,19 +160,64 @@ Hktdc.Views = Hktdc.Views || {};
 
     onFileChange: function(ev) {
       var newFiles = ev.target.files;
-      // console.group('file change: ', newFiles);
-      var modelArray = _.map(newFiles, function(file) {
-        return new Hktdc.Models.Attachment({file: file});
+      console.log('file change: ', newFiles);
+      var validateFilesObj = this.doValidateFiles(newFiles);
+      if (validateFilesObj.valid) {
+        var modelArray = _.map(newFiles, function(file) {
+          return new Hktdc.Models.Attachment({file: file});
+        });
+        // console.debug('this collection before: ', this.collection.toJSON());
+        this.collection.set(modelArray);
+        $('#divfilename', this.el).empty();
+        this.collection.each(this.renderAttachmentItem);
+        // console.debug('this collection after: ', this.collection.toJSON());
+        // console.debug('requestFormModel collection before: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());
+        this.requestFormModel.toJSON().selectedAttachmentCollection.set(this.collection.toJSON());
+        // console.debug('requestFormModel collection after: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());
+        // console.groupEnd();
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: validateFilesObj.errorMessages.join(',<br />'),
+          type: 'error',
+          title: 'Error'
+        });
+      }
+    },
+
+    doValidateFiles: function(files) {
+      var maxSizeRule = _.find(this.rules, function(rule) {
+        return rule.Key === 'MaxSize';
       });
-      // console.debug('this collection before: ', this.collection.toJSON());
-      this.collection.set(modelArray);
-      $('#divfilename', this.el).empty();
-      this.collection.each(this.renderAttachmentItem);
-      // console.debug('this collection after: ', this.collection.toJSON());
-      // console.debug('requestFormModel collection before: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());
-      this.requestFormModel.toJSON().selectedAttachmentCollection.set(this.collection.toJSON());
-      // console.debug('requestFormModel collection after: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());
-      // console.groupEnd();
+      var fileTypeRules = _.find(this.rules, function(rule) {
+        return rule.Key === 'FileType';
+      }).Value.split(';');
+      var base;
+      switch (maxSizeRule.Remark.toUpperCase()) {
+        case 'MB':
+          base = 1024 * 1024;
+          break;
+        case 'KB':
+          base = 1024;
+          break;
+        default:
+          /* Bytes */
+          base = 1;
+      }
+      var maxSizeInByte = base * maxSizeRule.Value;
+      var valid = true;
+      var errMsgArr = [];
+      _.each(files, function(file) {
+        if (file.size > maxSizeInByte) {
+          valid = false;
+          errMsgArr.push('file size must <= ' + maxSizeRule.Value + maxSizeRule.Remark);
+        }
+        if (!_.contains(fileTypeRules, file.type)) {
+          valid = false;
+          errMsgArr.push('file type not accepted');
+        }
+      });
+
+      return {valid: valid, errorMessages: errMsgArr};
     },
 
     renderAttachmentItem: function(model) {
