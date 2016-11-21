@@ -1,10 +1,10 @@
 <div class="panel panel-default">
   <div class="panel-heading" role="tab" id="headingOne">
-    <h3 class="panel-title">
+    <h3 class="panel-title subheader-menu-container">
       <!-- Single button -->
       <div class="btn-group check-status">
-        <button type="button" class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Delegation
+        <button type="button" class="btn btn-default dropdown-toggle btn-block btn_sub_title " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <h3 style="display:inline; ">Delegation</h3>
           <span class="glyphicon glyphicon-menu-down"></span>
         </button>
         <ul class="dropdown-menu">
@@ -21,7 +21,7 @@
       <form class="form-horizontal">
         <div class="form-group">
           <label for="status" class="col-sm-2 control-label">Type</label>
-          <div class="col-sm-10">
+          <div class="col-xs-12 col-sm-6">
             <select class="form-control type-select" name='Type'>
               <option value="null" <% if (!Type) { %>selected<% } %>>--Select--</option>
               <option value="Delegation" <% if (Type==='Delegation') { %>selected<% } %>>Delegation</option>
@@ -32,20 +32,19 @@
         </div>
         <div class="form-group">
           <label for="status" class="col-sm-2 control-label">Process</label>
-          <div class="col-sm-10 process-container">
+          <div class="col-xs-12 col-sm-6 process-container">
             <!-- process select option -->
           </div>
         </div>
         <div class="form-group">
           <label for="status" class="col-sm-2 control-label">Step</label>
-          <div class="col-sm-10 step-container">
+          <div class="col-xs-12 col-sm-6 step-container">
             <!-- step select option -->
           </div>
         </div>
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-1">
+        <div class="form-group buttons-container">
+          <div class="text-center available-buttons">
             <input type="button" class="btn btn-primary" value="Search" id="btnSearchDelegation">
-
           </div>
         </div>
       </form>
@@ -54,7 +53,7 @@
   </div>
 </div>
 <div class="table-responsive">
-  <table id="delegationTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+  <table id="delegationTable" class="table table-striped table-bordered table-grey" cellspacing="0" width="100%">
     <thead>
       <tr>
         <th>Process</th>
