@@ -227,6 +227,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderApplicantAndCCList(results[0]);
             self.renderServiceCatagory(results[1]);
             self.renderApplicantDetail(results[2], results[0]);
+            self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
             self.renderAttachment(results[3], self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
