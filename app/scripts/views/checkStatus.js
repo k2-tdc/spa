@@ -132,6 +132,9 @@ Hktdc.Views = Hktdc.Views || {};
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable funciton */
       this.statusDataTable = $('#statusTable', this.el).DataTable({
+        bRetrieve: true,
+        order: [0, 'desc'],
+        searching: false,
         ajax: {
           url: this.getAjaxURL(),
           beforeSend: utils.setAuthHeader,
@@ -152,7 +155,6 @@ Hktdc.Views = Hktdc.Views || {};
             // return { data: modData, recordsTotal: modData.length };
           }
         },
-        order: [0, 'desc'],
         createdRow: function(row, data, index) {
           $(row).css({cursor: 'pointer'});
           $(row).hover(function() {
@@ -174,8 +176,7 @@ Hktdc.Views = Hktdc.Views || {};
           data: 'summary'
         }, {
           data: 'status'
-        }],
-        bRetrieve: true
+        }]
       });
 
       $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {

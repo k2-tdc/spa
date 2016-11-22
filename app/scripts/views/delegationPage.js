@@ -87,6 +87,9 @@ Hktdc.Views = Hktdc.Views || {};
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable funciton */
       this.delegationDataTable = $('#delegationTable', this.el).DataTable({
+        bRetrieve: true,
+        order: [0, 'desc'],
+        searching: false,
         ajax: {
           url: this.getAjaxURL(),
           beforeSend: utils.setAuthHeader,
@@ -102,7 +105,6 @@ Hktdc.Views = Hktdc.Views || {};
             // return { data: modData, recordsTotal: modData.length };
           }
         },
-        order: [0, 'desc'],
         createdRow: function(row, data, index) {
           $(row).css({
             cursor: 'pointer'
@@ -135,8 +137,7 @@ Hktdc.Views = Hktdc.Views || {};
           }, {
             data: 'operation'
           }
-        ],
-        bRetrieve: true
+        ]
       });
 
       $('#delegationTable tbody', this.el).on('click', 'tr', function(ev) {
