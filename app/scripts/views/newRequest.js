@@ -85,6 +85,7 @@ Hktdc.Views = Hktdc.Views || {};
       /* *** Some model data is pre-set in the main router *** */
 
       /* must render the parent content first */
+      self.setCommentBlock();
       self.render();
 
       /* mode === new */
@@ -156,7 +157,6 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             self.renderAttachment(results[2], self.model.toJSON().Attachments);
-            self.renderCommentBlock();
             /* direct put the Request list to collection because no need to change selection */
             self.renderServiceCatagory(results[0]);
 
@@ -230,7 +230,6 @@ Hktdc.Views = Hktdc.Views || {};
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
             self.renderAttachment(results[3], self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
-            self.renderCommentBlock();
 
             // var FormStatus = self.model.toJSON().FormStatus;
             // var Preparer = self.model.toJSON().PreparerUserID;
@@ -480,7 +479,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    renderCommentBlock: function() {
+    setCommentBlock: function() {
       var me = Hktdc.Config.userID;
       var preparer = this.model.toJSON().PreparerUserID;
       if (
