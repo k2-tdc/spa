@@ -1,31 +1,46 @@
-<% if (noButton) {%>
-  <span>No Suitable Actions</span>
-<% } %>
+<div>
 
-<% if (showSave) {%>
-  <button class="btn btn-primary" id="btnsave" type="button">Save</button>
-<% } %>
+  <% if (noButton) {%>
+    <span>No Suitable Actions</span>
+  <% } %>
 
-<% if (showSendToApplicant) {%>
-  <button class="btn btn-primary" id="btnapplicant" type="button">Send to <%= applicantSendTo %></button>
-<% } %>
+  <% if (showSave) {%>
+    <button class="btn btn-primary" id="btnsave" type="button">Save</button>
+  <% } %>
 
-<% if (showSendToApprover) {%>
-  <button class="btn btn-primary" id="btnapprover" type="button">Send to <%= approverSendTo %></button>
-<% } %>
+  <% if (showSendToApplicant) {%>
+    <button class="btn btn-primary" id="btnapplicant" type="button">Send to <%= applicantSendTo %></button>
+  <% } %>
 
-<% if (showRecall) {%>
-  <button class="btn btn-primary" id="btnrecall" type="button">Recall</button>
-<% } %>
+  <% if (showSendToApprover) {%>
+    <button class="btn btn-primary" id="btnapprover" type="button">Send to <%= approverSendTo %></button>
+  <% } %>
 
-<% if (showDelete) { %>
-  <button class="btn btn-primary" id="btndelete" type="button">Delete</button>
-<% } %>
+  <% if (showRecall) {%>
+    <button class="btn btn-primary" id="btnrecall" type="button">Recall</button>
+  <% } %>
 
-<%
-_.each(workflowButtons, function(wfButton){
-%>
-  <button class="btn btn-primary workflow-btn" workflowAction="<%= wfButton.Action %>" type="button"><%= wfButton.ButtonName %></button>
-<%
-});
-%>
+  <% if (showResend) {%>
+    <button class="btn btn-primary" id="btnresend" type="button">Resend Email Notification</button>
+  <% } %>
+
+  <% if (showDelete) { %>
+    <button class="btn btn-primary" id="btndelete" type="button">Delete</button>
+  <% } %>
+
+  <%
+  _.each(workflowButtons, function(wfButton){
+  %>
+    <button class="btn btn-primary workflow-btn" workflowAction="<%= wfButton.Action %>" type="button"><%= wfButton.ButtonName %></button>
+  <%
+  });
+  %>
+</div>
+<% if (showForwardTo) { %>
+<div class="row">
+  <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Forward To:</div>
+  <div class="col-xs-12 col-sm-10 col-md-8 full-width forwardToUser form_input">
+
+  </div>
+</div>
+<% } %>

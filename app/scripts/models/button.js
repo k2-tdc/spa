@@ -16,6 +16,7 @@ Hktdc.Models = Hktdc.Models || {};
       showDelete: false,
       showReturn: false,
       showRecall: false,
+      showResend: false,
       approverSendTo: 'Approver', // [Approver, ITS Approval]
       applicantSendTo: 'Applicant',
       returnTo: 'Preparer',

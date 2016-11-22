@@ -72,6 +72,7 @@ Hktdc.Models = Hktdc.Models || {};
       selectedServiceTree: null,
       selectedServiceCollection: null,
       selectedAttachmentCollection: null,
+      deleteAttachmentCollection: null,
       selectedCCCollection: null,
 
       selectedApplicantModel: null,

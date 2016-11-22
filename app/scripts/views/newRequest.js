@@ -20,6 +20,9 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtremark': 'updateNewRequestModel'
     },
 
+    deleteAttachment: function() {
+    },
+
     checkBudgetAndService: function() {
       if (this.model.toJSON().mode === 'read') {
         return false;
@@ -97,7 +100,7 @@ Hktdc.Views = Hktdc.Views || {};
         ])
           .then(function(result) {
             console.log('load ed resource');
-
+            self.employeeArray = result[0];
             self.model.set({
               selectedServiceCollection: new Hktdc.Collections.SelectedService(),
               selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
@@ -137,7 +140,8 @@ Hktdc.Views = Hktdc.Views || {};
             var recommend = _.find(results[1], function(employee) {
               return employee.UserId === self.model.toJSON().ApproverUserID;
             });
-
+            self.employeeArray = results[1];
+            console.log(self.employeeArray);
             /* need override the workerId and WorkerFullName */
             recommend.WorkerId = recommend.UserId;
             recommend.WorkerFullName = recommend.UserFullName;
@@ -195,6 +199,8 @@ Hktdc.Views = Hktdc.Views || {};
         ])
           .then(function(results) {
             console.log('loaded resource');
+            self.employeeArray = results[0];
+
             var recommend = _.find(results[0], function(employee) {
               return employee.UserId === self.model.toJSON().ApproverUserID;
             });
@@ -211,6 +217,7 @@ Hktdc.Views = Hktdc.Views || {};
               ),
               selectedRecommentModel: new Hktdc.Models.Recommend(recommend),
               selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
+              deleteAttachmentIdArray: [],
               selectedCCCollection: new Hktdc.Collections.SelectedCC(self.model.toJSON().RequestCC)
 
             });
@@ -413,16 +420,21 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     loadFileTypeRules: function() {
+      var deferred = Q.defer();
       var fileRuleModel = new Hktdc.Models.FileRule();
       fileRuleModel.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          console.log(fileRuleModel.toJSON());
+          deferred.resolve(fileRuleModel);
+          // console.log(fileRuleModel.toJSON());
+
         },
         error: function(err) {
-          console.log(err);
+          deferred.reject(err);
+          // console.log(err);
         }
       });
+      return deferred.promise;
     },
 
     renderApplicantAndCCList: function(employeeArray) {
@@ -542,6 +554,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         if (this.model.toJSON().FormStatus === 'Approval' && me === Applicant) {
           options.showRecall = true;
+          options.showResend = true;
         }
 
         if (self.model.toJSON().actions) {
@@ -690,7 +703,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderRequestFormButtonByActions: function(actions, defaultOptions) {
       var options = _.extend({workflowButtons: actions}, defaultOptions);
-
+      if (_.find(actions, function(action) {
+        return action.Action === 'Forwarded';
+      })) {
+        options.showForwardTo = true;
+      }
+      // options.showForwardTo = true;
+      // console.log(options);
       this.doRenderButtons(options);
     },
 
@@ -706,7 +725,7 @@ Hktdc.Views = Hktdc.Views || {};
         approverSendTo: 'Approver', // [Approver, ITS Approval]
         applicantSendTo: 'Applicant',
         returnTo: 'Preparer',
-
+        showForwardTo: false,
         workflowButtons: [],
         noButton: false
 
@@ -718,13 +737,21 @@ Hktdc.Views = Hktdc.Views || {};
         // showForward: false,
         // showCancel: false
       };
-      console.log('final button options', _.extend(defaultOptions, showButtonOptions));
+
+      // console.log('final button options', _.extend(defaultOptions, showButtonOptions));
       var buttonModel = new Hktdc.Models.Button(_.extend(defaultOptions, showButtonOptions));
       // console.debug(buttonModel.toJSON());
       var buttonView = new Hktdc.Views.Button({
         model: buttonModel,
         requestFormModel: this.model
       });
+
+      var toUserView = new Hktdc.Views.ToUserList({
+        collection: new Hktdc.Collections.Employee(this.employeeArray),
+        parentModel: this.model,
+        selectFieldName: 'Forward_To_ID'
+      });
+      $('.forwardToUser', buttonView.el).html(toUserView.el);
       // console.log(buttonView.el);
       $('.buttons-container', this.el).html(buttonView.el);
     },
@@ -766,6 +793,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderAttachment: function(rulesModel, attachmentList) {
       var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
+      console.log(rulesModel);
       var attachmentListView = new Hktdc.Views.AttachmentList({
         collection: attachmentCollections,
         requestFormModel: this.model,

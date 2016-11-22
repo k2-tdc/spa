@@ -18,7 +18,7 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       this.$el.html(this.template({user: this.model.toJSON()}));
       this.$el.attr('value', this.model.toJSON().UserId);
-      if (String(this.parentModel.toJSON().ToUserId) === String(this.model.toJSON().UserId)) {
+      if (this.parentModel && String(this.parentModel.toJSON().ToUserId) === String(this.model.toJSON().UserId)) {
         this.$el.prop('selected', true);
       }
     }
@@ -36,10 +36,13 @@ Hktdc.Views = Hktdc.Views || {};
       _.extend(this, props);
       _.bindAll(this, 'renderToUserOption');
       this.render();
-      this.parentModel.on('change:ToUserId', function() {
-        self.$el.empty();
-        self.render();
-      });
+      if (this.parentModel) {
+        this.parentModel.on('change:ToUserId', function() {
+          self.$el.empty();
+          self.render();
+        });
+
+      }
     },
     events: {
       'change': 'selectToUserHandler'
@@ -48,9 +51,15 @@ Hktdc.Views = Hktdc.Views || {};
     selectToUserHandler: function(ev) {
       /* The new request model will handle the change */
       // var self = this;
-      this.parentModel.set({
-        ToUserId: $(ev.target).val()
-      });
+      if (this.parentModel) {
+        var setObj = {};
+        if (this.selectFieldName) {
+          setObj[this.selectFieldName] = $(ev.target).val();
+        } else {
+          setObj.ToUserId = $(ev.target).val();
+        }
+        this.parentModel.set(setObj);
+      }
       // this.parentModel.on('change:ToUserId', function() {
       //   self.$el.find('option').eq(0).prop('selected', true);
       // });

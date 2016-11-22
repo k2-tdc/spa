@@ -130,10 +130,17 @@ Hktdc.Views = Hktdc.Views || {};
           self.close();
         }
       });
-      this.collection.on('remove', function() {
+      this.collection.on('remove', function(model, collection, options) {
         $('#divfilename', this.el).empty();
         self.collection.each(self.renderAttachmentItem);
-        self.requestFormModel.set({selectedAttachmentCollection: self.collection});
+        self.requestFormModel.set({
+          selectedAttachmentCollection: self.collection
+        });
+        // console.log(model.toJSON());
+        if (model.toJSON().AttachmentGUID) {
+          self.requestFormModel.toJSON().deleteAttachmentIdArray.push(model.toJSON().AttachmentGUID);
+          console.log(self.requestFormModel.toJSON().deleteAttachmentIdArray);
+        }
       });
     },
 

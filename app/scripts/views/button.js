@@ -25,11 +25,15 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
       _.extend(this, props);
+      this.model.on('change')
       this.render();
     },
 
     clickWorkflowBtnHandler: function(ev) {
       // console.log(Backbone.history.getFragment());
+      if ($(ev.target).attr('workflowAction') === 'Forwarded') {
+        // this.model.set({showForwardTo: true});
+      }
       var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
       var sn = hashWithoutQS.split('/')[3];
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
@@ -237,6 +241,11 @@ Hktdc.Views = Hktdc.Views || {};
           );
         }.bind(this))
 
+        .then(function(data) {
+          /* delete file */
+          return this.deleteAttachment(this.requestFormModel.toJSON().deleteAttachmentIdArray);
+        }.bind(this))
+
         .then(function() {
           // console.log('end send attachment');
           // FormID = ReferenceID and FormID
@@ -289,6 +298,7 @@ Hktdc.Views = Hktdc.Views || {};
         Title: requestFormData.Title,
         Office: requestFormData.Location,
         Department: requestFormData.DEPT,
+        Forward_To_ID: requestFormData.Forward_To_ID,
 
         Justification_Importand_Notes: requestFormData.Justification,
         Expected_Dalivery_Date: requestFormData.EDeliveryDate,
@@ -553,7 +563,7 @@ Hktdc.Views = Hktdc.Views || {};
       // var attachmentCollection = attachmentCollection.toJSON();
       // var attachmentCollection = $('#Fileattach').get(0).files;
       // console.log('attchCollection', attachmentCollection);
-      if (attachmentCollection.length <= 0) {
+      if (attachmentCollection.toJSON().length <= 0) {
         return false;
       }
       var ajaxOptions = {
@@ -587,22 +597,34 @@ Hktdc.Views = Hktdc.Views || {};
       sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
         beforeSend: utils.setAuthHeader,
         success: function(model, response) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Record Saved Successfully <br /> Reference ID : ' + refId,
-            type: 'success',
-            title: 'Success'
-          });
           deferred.resolve();
         },
         error: function(model, response) {
           deferred.reject();
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Error on upload file',
-            type: 'error',
-            title: 'Error'
-          });
         }
       }));
+      return deferred.promise;
+    },
+
+    deleteAttachment: function(deleteAttachmentIdArray) {
+      var deferred = Q.defer();
+      Backbone.emulateHTTP = true;
+      Backbone.emulateJSON = true;
+      var delFileModel = new Hktdc.Models.DeleteFile();
+      delFileModel.set({
+        files: _.map(deleteAttachmentIdArray, function(AttachmentGUID) {
+          return {GUID: AttachmentGUID};
+        })
+      });
+      delFileModel.save({}, {
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(deleteAttachmentIdArray);
+        },
+        error: function(err) {
+          deferred.reject(err);
+        }
+      });
       return deferred.promise;
     },
 
