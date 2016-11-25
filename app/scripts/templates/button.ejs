@@ -1,41 +1,41 @@
-<div>
+<% if (!noButton) {%>
+  <div class='available-buttons text-center'>
 
-  <% if (noButton) {%>
-    <span>No Suitable Actions</span>
-  <% } %>
+    <% if (showSave) {%>
+      <button class="btn btn-primary" id="btnsave" type="button">Save</button>
+    <% } %>
 
-  <% if (showSave) {%>
-    <button class="btn btn-primary" id="btnsave" type="button">Save</button>
-  <% } %>
+    <% if (showSendToApplicant) {%>
+      <button class="btn btn-primary" id="btnapplicant" type="button">Send to <%= applicantSendTo %></button>
+    <% } %>
 
-  <% if (showSendToApplicant) {%>
-    <button class="btn btn-primary" id="btnapplicant" type="button">Send to <%= applicantSendTo %></button>
-  <% } %>
+    <% if (showSendToApprover) {%>
+      <button class="btn btn-primary" id="btnapprover" type="button">Send to <%= approverSendTo %></button>
+    <% } %>
 
-  <% if (showSendToApprover) {%>
-    <button class="btn btn-primary" id="btnapprover" type="button">Send to <%= approverSendTo %></button>
-  <% } %>
+    <% if (showRecall) {%>
+      <button class="btn btn-primary" id="btnrecall" type="button">Recall</button>
+    <% } %>
 
-  <% if (showRecall) {%>
-    <button class="btn btn-primary" id="btnrecall" type="button">Recall</button>
-  <% } %>
+    <% if (showResend) {%>
+      <button class="btn btn-primary" id="btnresend" type="button">Resend Email Notification</button>
+    <% } %>
 
-  <% if (showResend) {%>
-    <button class="btn btn-primary" id="btnresend" type="button">Resend Email Notification</button>
-  <% } %>
+    <% if (showDelete) { %>
+      <button class="btn btn-primary" id="btndelete" type="button">Delete</button>
+    <% } %>
 
-  <% if (showDelete) { %>
-    <button class="btn btn-primary" id="btndelete" type="button">Delete</button>
-  <% } %>
+    <%
+    _.each(workflowButtons, function(wfButton){
+    %>
+      <button class="btn btn-primary workflow-btn" workflowAction="<%= wfButton.Action %>" type="button"><%= wfButton.ButtonName %></button>
+    <%
+    });
+    %>
 
-  <%
-  _.each(workflowButtons, function(wfButton){
-  %>
-    <button class="btn btn-primary workflow-btn" workflowAction="<%= wfButton.Action %>" type="button"><%= wfButton.ButtonName %></button>
-  <%
-  });
-  %>
-</div>
+  </div>
+<% } %>
+
 <% if (showForwardTo) { %>
 <div class="row">
   <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Forward To:</div>

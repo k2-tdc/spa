@@ -34,7 +34,14 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
       this.model.on('change:selectedServiceCount', function(model, newCount) {
-        $('.selectedServiceCount', self.el).html('(' + newCount + ')');
+        setTimeout(function() {
+          if (parseInt(newCount) > 0) {
+            $('.selectedServiceCount', self.el).show();
+            $('.selectedServiceCount', self.el).html('(' + newCount + ')');
+          } else {
+            $('.selectedServiceCount', self.el).hide();
+          }
+        });
       });
     },
 

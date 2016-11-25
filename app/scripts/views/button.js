@@ -11,8 +11,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: 'div',
 
-    className: 'available-buttons text-center',
-
     events: {
       'click #btnsave': 'clickSaveHandler',
       'click #btnapplicant': 'clickApplicantHandler',
@@ -31,7 +29,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickWorkflowBtnHandler: function(ev) {
       // console.log(Backbone.history.getFragment());
-      if ($(ev.target).attr('workflowAction') === 'Forwarded') {
+      var self = this;
+      if ($(ev.target).attr('workflowAction') === 'Forward') {
         // this.model.set({showForwardTo: true});
       }
       var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
@@ -60,7 +59,8 @@ Hktdc.Views = Hktdc.Views || {};
           beforeSend: utils.setAuthHeader,
           success: function(action, response) {
             console.log('ok');
-            Backbone.history.navigate('alltask', {trigger: true});
+            // Backbone.history.navigate('alltask', {trigger: true});
+            self.successRedirect();
             Hktdc.Dispatcher.trigger('reloadMenu');
             // window.location.href = "alltask.html";
           },
@@ -110,7 +110,8 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log('success: ', a);
             // console.log(b);
             Hktdc.Dispatcher.trigger('reloadMenu');
-            Backbone.history.navigate('draft', {trigger: true});
+            // Backbone.history.navigate('draft', {trigger: true});
+            self.successRedirect();
           },
           error: function(err) {
             console.log(err);
@@ -125,6 +126,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     clickRecallBtnHandler: function() {
+      var self = this;
       var Con = confirm('Are you sure want to ' + this.requestFormModel.toJSON().FormID + '?');
       if (Con) {
         Backbone.emulateHTTP = true;
@@ -148,7 +150,8 @@ Hktdc.Views = Hktdc.Views || {};
               type: 'success',
               title: 'Success'
             });
-            Backbone.history.navigate('/', {trigger: true});
+            // Backbone.history.navigate('/', {trigger: true});
+            self.successRedirect();
           },
           error: function(action, response) {
             Hktdc.Dispatcher.trigger('openAlert', {
@@ -186,12 +189,14 @@ Hktdc.Views = Hktdc.Views || {};
         isValid = false;
         errMessage = 'Please fill all fields from the Service Acquired for.'
       }
+      if (!isValid) {
 
-      Hktdc.Dispatcher.trigger('openAlert', {
-        message: errMessage,
-        title: 'Error!',
-        type: 'error'
-      });
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: errMessage,
+          title: 'Error!',
+          type: 'error'
+        });
+      }
 
       return isValid;
     },
@@ -219,6 +224,7 @@ Hktdc.Views = Hktdc.Views || {};
     saveAndApprover: function(status, submitTo) {
       /* set the request object */
       var realSubmitTo = this.requestFormModel.toJSON().applicantSubmittedTo;
+      var self = this;
       if (submitTo) {
         realSubmitTo = this.requestFormModel.toJSON()[submitTo + 'SubmittedTo'];
       }
@@ -233,7 +239,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         .then(function(data) {
           insertServiceResponse = data;
-          console.log('ended post data');
+          console.log('ended save request');
           /* send file */
           return this.sendAttachment(
             insertServiceResponse.FormID,
@@ -243,11 +249,12 @@ Hktdc.Views = Hktdc.Views || {};
 
         .then(function(data) {
           /* delete file */
+          console.log('end send attachment');
           return this.deleteAttachment(this.requestFormModel.toJSON().deleteAttachmentIdArray);
         }.bind(this))
 
         .then(function() {
-          // console.log('end send attachment');
+          console.log('end delete attachment');
           // FormID = ReferenceID and FormID
           // if (true) {
           if (insertServiceResponse.FormID) {
@@ -259,11 +266,7 @@ Hktdc.Views = Hktdc.Views || {};
             });
 
             // if (true) {
-            if (status === 'Submitted') {
-              Backbone.history.navigate('', {trigger: true});
-            } else if (status === 'Draft') {
-              Backbone.history.navigate('draft', {trigger: true});
-            }
+            self.successRedirect();
 
             /* reload the menu for new counts */
             Hktdc.Dispatcher.trigger('reloadMenu');
@@ -277,8 +280,9 @@ Hktdc.Views = Hktdc.Views || {};
         })
 
         .fail(function(err) {
+          console.log(err);
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'catched error on saving the record: <br /><code>' + JSON.stringify(err, null, 2) + '</code>',
+            message: 'caught error on saving the record: <br /><code>' + err + '</code>',
             title: 'Error',
             type: 'error'
           });
@@ -552,7 +556,7 @@ Hktdc.Views = Hktdc.Views || {};
           deferred.resolve(response);
         },
         error: function(e) {
-          deferred.reject(e);
+          deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
         }
       });
       return deferred.promise;
@@ -563,8 +567,13 @@ Hktdc.Views = Hktdc.Views || {};
       // var attachmentCollection = attachmentCollection.toJSON();
       // var attachmentCollection = $('#Fileattach').get(0).files;
       // console.log('attchCollection', attachmentCollection);
-      if (attachmentCollection.toJSON().length <= 0) {
-        return false;
+      var deferred = Q.defer();
+      var files = _.reject(attachmentCollection.toJSON(), function(attachment) {
+        return attachment.AttachmentGUID;
+      });
+      if (files.length <= 0) {
+        deferred.resolve();
+        return;
       }
       var ajaxOptions = {
         type: 'POST',
@@ -572,20 +581,19 @@ Hktdc.Views = Hktdc.Views || {};
         cache: false,
         contentType: false
       };
-      var deferred = Q.defer();
-      var files = attachmentCollection;
       // var files = $('#Fileattach').get(0).files;
       var data = new FormData();
       var sendAttachmentModel = new Hktdc.Models.SendAttachment();
-      var filename = attachmentCollection.map(function(fileModel) {
-        return fileModel.toJSON().file.name;
+      var filename = _.map(files, function(file) {
+        // return file.toJSON().file.name;
+        return file.file.name;
       });
       // console.log(filename);
       sendAttachmentModel.url = sendAttachmentModel.url(refId, filename);
 
-      attachmentCollection.each(function(fileModel, i) {
-        console.log(fileModel.toJSON().file);
-        data.append('file' + i, fileModel.toJSON().file);
+      _.each(files, function(file, i) {
+        console.log(file.file);
+        data.append('file' + i, file.file);
       });
 
       // console.log('final data: ', data);
@@ -599,8 +607,8 @@ Hktdc.Views = Hktdc.Views || {};
         success: function(model, response) {
           deferred.resolve();
         },
-        error: function(model, response) {
-          deferred.reject();
+        error: function(e) {
+          deferred.reject('Submit File Error' + JSON.stringify(e, null, 2));
         }
       }));
       return deferred.promise;
@@ -608,6 +616,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     deleteAttachment: function(deleteAttachmentIdArray) {
       var deferred = Q.defer();
+      if (deleteAttachmentIdArray && deleteAttachmentIdArray.length <= 0) {
+        deferred.resolve();
+        return;
+      }
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
       var delFileModel = new Hktdc.Models.DeleteFile();
@@ -621,11 +633,26 @@ Hktdc.Views = Hktdc.Views || {};
         success: function() {
           deferred.resolve(deleteAttachmentIdArray);
         },
-        error: function(err) {
-          deferred.reject(err);
+        error: function(e) {
+          deferred.reject('Delete File Error' + JSON.stringify(e, null, 2));
         }
       });
       return deferred.promise;
+    },
+
+    successRedirect: function() {
+      var baseURL = Backbone.history.getHash().split('?')[0];
+      if (/\/check\//.test(baseURL)) {
+        Backbone.history.navigate('', {trigger: true});
+      } else if (/\/draft\//.test(baseURL)) {
+        Backbone.history.navigate('draft', {trigger: true});
+      } else if (/\/all\//.test(baseURL)) {
+        Backbone.history.navigate('alltask', {trigger: true});
+      } else if (/\/approval\//.test(baseURL)) {
+        Backbone.history.navigate('approvaltask', {trigger: true});
+      } else {
+        Backbone.history.navigate('', {trigger: true});
+      }
     },
 
     render: function() {

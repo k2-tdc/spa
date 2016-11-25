@@ -33,6 +33,15 @@ Hktdc.Views = Hktdc.Views || {};
       // }
     },
 
+    events: {
+      'click .process-switch': 'changeZIndex'
+    },
+
+    changeZIndex: function() {
+      // $('#menu').css({zIndex: 0});
+      // $('#page').css({zIndex: 1});
+    },
+
     render: function() {
       // var data = this.model.toJSON() || ;
       this.$el.html(this.template());

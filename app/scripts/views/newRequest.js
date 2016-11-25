@@ -20,9 +20,6 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtremark': 'updateNewRequestModel'
     },
 
-    deleteAttachment: function() {
-    },
-
     checkBudgetAndService: function() {
       if (this.model.toJSON().mode === 'read') {
         return false;
@@ -33,7 +30,7 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
       // console.log(this.model.toJSON().EstimatedCost);
       if (!(haveSelectService && haveFilledCost)) {
-        Hktdc.Dispatcher.trigger('openAler', {
+        Hktdc.Dispatcher.trigger('openAlert', {
           message: 'please select service and filled the cost field',
           type: 'error',
           title: 'Error'
@@ -208,7 +205,9 @@ Hktdc.Views = Hktdc.Views || {};
             /* need override the workerId and WorkerFullName */
             recommend.WorkerId = recommend.UserId;
             recommend.WorkerFullName = recommend.UserFullName;
-
+            var attachmentModelArray = _.map(self.model.toJSON().Attachments, function(attachment) {
+              return new Hktdc.Models.Attachment();
+            })
             self.model.set({
               selectedServiceTree: self.model.toJSON().RequestList,
               /* must sync RequestList to selectedServiceCollection for updating */
@@ -216,7 +215,7 @@ Hktdc.Views = Hktdc.Views || {};
                 self.getAllRequestArray(self.model.toJSON().RequestList)
               ),
               selectedRecommentModel: new Hktdc.Models.Recommend(recommend),
-              selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
+              selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(attachmentModelArray),
               deleteAttachmentIdArray: [],
               selectedCCCollection: new Hktdc.Collections.SelectedCC(self.model.toJSON().RequestCC)
 
@@ -484,8 +483,9 @@ Hktdc.Views = Hktdc.Views || {};
       var me = Hktdc.Config.userID;
       var preparer = this.model.toJSON().PreparerUserID;
       if (
-        (this.model.toJSON().FormStatus && this.model.toJSON().FormStatus !== 'Draft') ||
-        (this.model.toJSON().FormStatus === 'Approval' && me !== preparer)
+        ((this.model.toJSON().FormStatus && this.model.toJSON().FormStatus !== 'Draft') ||
+        (this.model.toJSON().FormStatus === 'Approval' && me !== preparer)) &&
+        (this.model.toJSON().actions)
       ) {
         this.model.set({
           showComment: true
@@ -496,8 +496,12 @@ Hktdc.Views = Hktdc.Views || {};
     renderButtonHandler: function() {
       var self = this;
       /* From list || from choose applicant */
-      var Applicant = self.model.toJSON().ApplicantUserID || self.model.toJSON().selectedApplicantModel.toJSON().UserId;
       var FormStatus = self.model.toJSON().FormStatus;
+      var Preparer = self.model.toJSON().PreparerUserID;
+      var Applicant = self.model.toJSON().ApplicantUserID || self.model.toJSON().selectedApplicantModel.toJSON().UserId;
+      // var ActionTaker = self.model.toJSON().ActionTakerUserID;
+      // var ITSApprover = self.model.toJSON().ITSApproverUserID;
+      var me = Hktdc.Config.userID;
       if (
         !FormStatus ||
         FormStatus === 'Draft'
@@ -506,7 +510,6 @@ Hktdc.Views = Hktdc.Views || {};
       ) {
         console.debug('NEED Check APPLICANT_RULECODE');
         /* load related button set */
-        var Preparer = self.model.toJSON().PreparerUserID;
         var ApplicantRuleCode = self.model.toJSON().selectedApplicantModel.toJSON().RuleCode;
         var Approver = (self.model.toJSON().selectedRecommentModel)
           ? self.model.toJSON().selectedRecommentModel.toJSON().WorkerId
@@ -530,26 +533,21 @@ Hktdc.Views = Hktdc.Views || {};
         }
       } else {
         console.debug('BY FORMSTATUS');
-        // var FormStatus = self.model.toJSON().FormStatus;
-        // var Preparer = self.model.toJSON().PreparerUserID;
         var options = {};
-        // var Applicant = this.model.toJSON().ApplicantUserID || this.model.toJSON().selectedApplicantModel.toJSON().UserId;
-        var me = Hktdc.Config.userID;
 
-        // var Preparer = this.model.toJSON().PreparerUserID;
-        // var Applicant = self.model.toJSON().ApplicantUserID;
-        // var Approver = self.model.toJSON().ApproverUserID;
-        // var ActionTaker = self.model.toJSON().ActionTakerUserID;
-        // var ITSApprover = self.model.toJSON().ITSApproverUserID;
         // self.renderRequestFormButton( FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover);
-        if (this.model.toJSON().FormStatus === 'Review' || this.model.toJSON().FormStatus === 'Return') {
+        if (this.model.toJSON().FormStatus === 'Review' && me === Applicant) {
           options.showSave = true;
-          // if (
-          //   (this.model.toJSON().FormStatus === 'Review' && me === Applicant) ||
-          //   (this.model.toJSON().FormStatus === 'Return' && me === Preparer)
-          // ) {
-          //   options.showDelete = true;
-          // }
+          options.showDelete = true;
+        }
+
+        if (this.model.toJSON().FormStatus === 'Return' && me === Applicant) {
+          options.showSave = true;
+        }
+
+        if (this.model.toJSON().FormStatus === 'Rework' && me === Preparer) {
+          options.showSave = true;
+          options.showDelete = true;
         }
 
         if (this.model.toJSON().FormStatus === 'Approval' && me === Applicant) {
@@ -558,6 +556,12 @@ Hktdc.Views = Hktdc.Views || {};
         }
 
         if (self.model.toJSON().actions) {
+          if (_.find(self.model.toJSON().actions, function(action) {
+            return action.Action === 'Forward';
+          })) {
+            options.showForwardTo = true;
+          }
+
           self.renderRequestFormButtonByActions(self.model.toJSON().actions, options);
         } else {
           self.doRenderButtons(options);
@@ -609,7 +613,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         // 2) Preparer === / !==  Applicant && Approver === Applicant
         } else {
-          Hktdc.Dispatcher.trigger('openAler', {
+          Hktdc.Dispatcher.trigger('openAlert', {
             message: 'Exception case: RuleCode IT0009, Approver === Applicant',
             type: 'error',
             title: 'Error'
@@ -648,7 +652,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.model.set({ applicantSubmittedTo: 'Applicant' });
         // Preparer !== Applicant && Approver !== Applicant
         } else {
-          Hktdc.Dispatcher.trigger('openAler', {
+          Hktdc.Dispatcher.trigger('openAlert', {
             message: 'Exception case: RuleCode IT0008, unknown situation',
             type: 'error',
             title: 'Error'
@@ -657,7 +661,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       // ApproverRuleCode !== 'IT0008' !== 'IT0009'
       } else {
-        Hktdc.Dispatcher.trigger('openAler', {
+        Hktdc.Dispatcher.trigger('openAlert', {
           message: 'unacceptable rule code: !== (IT0008 || IT0009)',
           type: 'error',
           title: 'Error'
@@ -703,13 +707,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderRequestFormButtonByActions: function(actions, defaultOptions) {
       var options = _.extend({workflowButtons: actions}, defaultOptions);
-      if (_.find(actions, function(action) {
-        return action.Action === 'Forwarded';
-      })) {
-        options.showForwardTo = true;
-      }
-      // options.showForwardTo = true;
-      // console.log(options);
       this.doRenderButtons(options);
     },
 

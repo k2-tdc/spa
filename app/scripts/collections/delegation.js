@@ -9,7 +9,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     url: function(task) {
       // TODO: all options of 'Type'
-      return Hktdc.Config.apiURL + '/GetDelegationList?Type=Sharing';
+      return Hktdc.Config.apiURL + '/GetDelegationList?Type=Sharing&UserId=' + Hktdc.Config.userID;
     },
 
     model: Hktdc.Models.Delegation

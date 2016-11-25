@@ -24,13 +24,12 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       // console.log(this.model.toJSON());
       // console.log(this.template({log: this.model.toJSON()}));
-      this.$el.html(this.template({log: this.model.toJSON()}));
+      this.$el.html(this.template({
+        log: this.model.toJSON()
+      }));
     }
 
   });
-
-
-
 
   Hktdc.Views.WorkflowLogList = Backbone.View.extend({
 
@@ -52,11 +51,13 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           self.close();
         }
-      })
+      });
     },
 
     clickToggleButton: function() {
-      this.requestFormModel.set({ showLog: !this.requestFormModel.toJSON().showLog });
+      this.requestFormModel.set({
+        showLog: !this.requestFormModel.toJSON().showLog
+      });
     },
 
     open: function() {
@@ -68,14 +69,13 @@ Hktdc.Views = Hktdc.Views || {};
         .attr('arrow', 'glyphicon-menu-up');
     },
 
-    close: function(){
+    close: function() {
       $('.headdivworkflowlog', this.el).hide();
       $('#ancworkflowlog')
         .attr('arrow', 'glyphicon-menu-down')
         .removeClass('glyphicon glyphicon-menu-up')
         .addClass('glyphicon glyphicon-menu-down');
     },
-
 
     renderWrokflowLogItem: function(model) {
       var workflowLogItemView = new Hktdc.Views.WorkflowLog({
@@ -88,16 +88,16 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       this.$el.html(this.template());
       // console.log(this.model);
-      this.collection.each(this.renderWrokflowLogItem)
-      // setTimeout(() => {
-        $('.workflowlogTable', this.el).DataTable({
-          paging: false,
-          searching: false,
-          pageLength: false
-        });
+      this.collection.each(this.renderWrokflowLogItem);
+        // setTimeout(() => {
+      $('.workflowlogTable', this.el).DataTable({
+        paging: false,
+        searching: false,
+        pageLength: false,
+        order: [3, 'asc']
+      });
       // }, 1000);
     }
 
   });
-
 })();

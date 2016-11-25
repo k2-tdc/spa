@@ -27,12 +27,16 @@ Hktdc.Views = Hktdc.Views || {};
         // employee for dialog only
         this.loadEmployee(),
 
-        this.loadProcessList()
+        this.loadProcessList(),
+        this.loadFromUser()
       ])
         .then(function(results) {
           self.stepCollection = results[0];
           self.employeeCollection = results[1];
           self.processCollection = results[2];
+
+          // have set in loadFromuser
+          // self.fromUserCollection = results[2];
 
           // console.log(self.dialogModel.toJSON());
           self.renderDialog();
@@ -231,7 +235,7 @@ Hktdc.Views = Hktdc.Views || {};
         parentModel: self.dialogModel
       });
       var fromUserListViewInDialog = new Hktdc.Views.FromUserList({
-        collection: new Hktdc.Collections.ToUser(self.employeeCollection.toJSON()),
+        collection: self.fromUserCollection,
         parentModel: self.dialogModel
       });
       $('.step-container', dialogView.el).html(stepListViewInDialog.el);
@@ -305,6 +309,22 @@ Hktdc.Views = Hktdc.Views || {};
         beforeSend: utils.setAuthHeader,
         success: function() {
           deferred.resolve(employeeCollection);
+        },
+        error: function(err) {
+          deferred.reject(err);
+        }
+      });
+      return deferred.promise;
+    },
+
+    loadFromUser: function() {
+      var deferred = Q.defer();
+      var self = this;
+      this.fromUserCollection = new Hktdc.Collections.FromUser();
+      this.fromUserCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(self.fromUserCollection);
         },
         error: function(err) {
           deferred.reject(err);

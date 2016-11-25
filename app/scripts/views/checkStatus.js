@@ -109,7 +109,7 @@ Hktdc.Views = Hktdc.Views || {};
           statusApiURL = Hktdc.Config.apiURL + '/GetDraftDetails?' + filterArr.join('&');
           break;
         case 'ALL TASKS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetWorklistDetails?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/GetWorklist?' + filterArr.join('&');
           break;
         case 'APPROVAL TASKS':
           statusApiURL = Hktdc.Config.apiURL + '/GetApproveListDetails?' + filterArr.join('&');
@@ -286,12 +286,12 @@ Hktdc.Views = Hktdc.Views || {};
     getSummaryFromRow: function(formID, requestList) {
       var summary = 'Ref.ID : ' + formID;
       _.each(requestList, function(Level1) {
-        summary += '<br /><strong style="text-decoration: underline">' + Level1.Name + '</strong><br />';
+        // summary += '<br /><strong style="text-decoration: underline">' + Level1.Name + '</strong><br />';
         _.each(Level1.Level2, function(Level2) {
-          summary += ' <br /><strong><span style="margin-left:10px;">' + '--' + Level2.Name + ' </span></strong><br />';
+          summary += ' <div><strong><span>' + Level2.Name + ' </span></strong></div>';
           _.each(Level2.Level3, function(Level3) {
             if (Level3.Name) {
-              summary += '<br /><span style="margin-left:20px;">' + '---' + Level3.Name + ' </span><br /> ';
+              summary += '<div><span>-</span><span>&nbsp;' + Level3.Name + ' </span></div> ';
             }
           });
         });
@@ -304,8 +304,9 @@ Hktdc.Views = Hktdc.Views || {};
       var formStatusDisplay = row.DisplayStatus;
       var status = row.FormStatus;
 
+      // if (true) {
       if (status === 'Draft') {
-        return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>';
+        return '<div><button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button></div>';
       } else if (status === 'Review') {
         return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
       } else if (status === 'Approval') {

@@ -100,7 +100,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      console.log(this.model.toJSON());
+      // console.log(this.model.toJSON());
       this.$el.html(this.template({
         file: this.model.toJSON().file || this.model.toJSON(),
         insertMode: this.requestFormModel.toJSON().mode !== 'read'
@@ -131,7 +131,8 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
       this.collection.on('remove', function(model, collection, options) {
-        $('#divfilename', this.el).empty();
+        console.log('on remove file collectin', model.toJSON());
+        $('#divfilename', self.el).empty();
         self.collection.each(self.renderAttachmentItem);
         self.requestFormModel.set({
           selectedAttachmentCollection: self.collection
@@ -139,7 +140,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(model.toJSON());
         if (model.toJSON().AttachmentGUID) {
           self.requestFormModel.toJSON().deleteAttachmentIdArray.push(model.toJSON().AttachmentGUID);
-          console.log(self.requestFormModel.toJSON().deleteAttachmentIdArray);
+          // console.log(self.requestFormModel.toJSON().deleteAttachmentIdArray);
         }
       });
     },
@@ -167,16 +168,20 @@ Hktdc.Views = Hktdc.Views || {};
 
     onFileChange: function(ev) {
       var newFiles = ev.target.files;
-      console.log('file change: ', newFiles);
+      // console.log('file change: ', newFiles);
       var validateFilesObj = this.doValidateFiles(newFiles);
+      var self = this;
       if (validateFilesObj.valid) {
-        var modelArray = _.map(newFiles, function(file) {
-          return new Hktdc.Models.Attachment({file: file});
+        _.each(newFiles, function(file) {
+          self.collection.add(new Hktdc.Models.Attachment({
+            file: file,
+            FileName: file.name
+          }));
         });
         // console.debug('this collection before: ', this.collection.toJSON());
-        this.collection.set(modelArray);
-        $('#divfilename', this.el).empty();
-        this.collection.each(this.renderAttachmentItem);
+        $('#divfilename', self.el).empty();
+        // console.log($('#divfilename', this.el));
+        this.collection.each(self.renderAttachmentItem);
         // console.debug('this collection after: ', this.collection.toJSON());
         // console.debug('requestFormModel collection before: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());
         this.requestFormModel.toJSON().selectedAttachmentCollection.set(this.collection.toJSON());
@@ -228,8 +233,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderAttachmentItem: function(model) {
+      // console.log(model.toJSON());
       var tagName;
       var appendTarget;
+      var self = this;
       if (this.requestFormModel.toJSON().mode !== 'read') {
         tagName = 'div';
         appendTarget = '#divfilename';
@@ -245,8 +252,11 @@ Hktdc.Views = Hktdc.Views || {};
       });
       // console.log(attachmentItemView.tagName);
       attachmentItemView.render();
-
-      $(appendTarget, this.el).append(attachmentItemView.el);
+      // console.log($(appendTarget, this.el));
+      // console.log(attachmentItemView.el);
+      setTimeout(function() {
+        $(appendTarget, self.el).append(attachmentItemView.el);
+      });
     },
 
     render: function() {

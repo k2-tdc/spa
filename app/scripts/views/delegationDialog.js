@@ -69,9 +69,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.$el.on('hidden.bs.modal', function() {
-        self.model.set({
-          open: false
-        });
+        self.closeAndResetModel();
       });
     },
     clickSaveBtn: function() {
@@ -138,7 +136,19 @@ Hktdc.Views = Hktdc.Views || {};
     },
     onSavedDelegation: function() {
       var self = this;
-      self.model.set({
+      self.closeAndResetModel();
+      self.$el.find('select').find('option:eq(0)').prop('selected', true);
+      self.$el.find('input[type=text]').val('');
+      self.$el.find('input[type=radio]').prop('checked', false);
+      self.$el.find('input[type=checkbox]').prop('checked', false);
+
+      self.pageModal.set({
+        saved: true
+      });
+    },
+
+    closeAndResetModel: function() {
+      this.model.set({
         open: false,
         DelegationId: '',
         Type: '',
@@ -151,16 +161,8 @@ Hktdc.Views = Hktdc.Views || {};
         Enable: '',
         Remark: ''
       });
-
-      self.$el.find('select').find('option:eq(0)').prop('selected', true);
-      self.$el.find('input[type=text]').val('');
-      self.$el.find('input[type=radio]').prop('checked', false);
-      self.$el.find('input[type=checkbox]').prop('checked', false);
-
-      self.pageModal.set({
-        saved: true
-      });
     },
+
     loadProcessStepsByProcId: function(procId) {
       /* employee component */
       var deferred = Q.defer();

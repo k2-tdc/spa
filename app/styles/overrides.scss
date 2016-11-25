@@ -290,7 +290,7 @@ ul.dropdown-menu {
     .select-service-header .checkbox-option {
         font-size: 15px;
     }
-    
+
     .select-service-header input[type=checkbox] {
         margin: 0;
     }
@@ -317,7 +317,7 @@ ul.dropdown-menu {
 
 .select-service{
     border-radius: 0;
-    
+
 }
 .select-service .select-service-title {
   text-transform: uppercase;
@@ -564,7 +564,7 @@ div.dataTables_wrapper table {
 
 /* TABLET > Desktop */
 @media screen and (min-width: 768px) {
-    
+
   #header_top .logo-hktdc {
     display: none;
   }
@@ -634,7 +634,7 @@ div.dataTables_wrapper table {
     html.mm-opening #header_main > span.sep-space {
 //      width: 250px;
     }
-      
+
   }
 }
 
@@ -690,19 +690,19 @@ div.dataTables_wrapper table {
         border-bottom: 1px rgba(0, 0, 0, .2) solid;
         border-radius: 0;
     }
-    
+
     .service-type-container{
         padding: 8px;
     }
-    
+
     .service-type-container > div > .group-details:last-child  .select-service{
         border: 0px;
     }
-    
+
     .service-catagory-item .group-header{
         background-color:#e8e8e8;
     }
-    
+
     .select-service .panel-body{
         padding: 10px 0;
     }
@@ -713,9 +713,9 @@ div.dataTables_wrapper table {
     .mm-opened .text-lg-right{
 //        min-width:80px;
     }
-    
+
     .text-lg-right{
-        text-align: right !important;  
+        text-align: right !important;
         max-width: 150px;
     }
 }
@@ -756,19 +756,21 @@ div.dataTables_wrapper table {
     padding-right: 0;
 }
 
-#statusTable > tbody > tr > td:last-child,
-#delegationTable > tbody > tr > td:last-child,
+#statusTable > tbody > tr > td:last-child div,
+#delegationTable > tbody > tr > td:last-child div,
 {
     text-align: center;
+    // margin:0 auto;
 }
 
 
 #menu{
-    z-index: 0;
+  // ie not work
+  // z-index: 1;
 }
 #page{
-    z-index: 1 ;
-    pointer-events: none !important;
+  // z-index: 1 ;
+  pointer-events: none !important;
 }
 
 #header, #content, #footer{
@@ -793,7 +795,7 @@ div.dataTables_wrapper table {
 }
 
 .newrequest-basic-information div{
-    line-height: 30px;  
+    line-height: 30px;
 }
 
 .form_input{
@@ -835,7 +837,7 @@ div.dataTables_wrapper table {
 
 .modal-dialog .text-lg label{
     width: 100%;
-    
+
 }
 
 .modal-dialog .modal-footer{
@@ -852,8 +854,7 @@ div.dataTables_wrapper table {
 }
 @media screen and (min-width: 990px) {
     .modal-dialog .text-lg label{
-        text-align: right !important;  
+        text-align: right !important;
     }
-    
-}
 
+}

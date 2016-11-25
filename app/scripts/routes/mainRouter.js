@@ -207,47 +207,41 @@ Hktdc.Routers = Hktdc.Routers || {};
         success: function(result, response) {
           var rawData = response[0];
           var requestModel = new Hktdc.Models.NewRequest(rawData);
-
+          var FormStatus = requestModel.toJSON().FormStatus;
+          var me = Hktdc.Config.userID;
           /* ----------- IMPORTANT: pre-set the request mode  ----------- */
-          var modeMapping = [
-            {
-              name: 'read',
-              status: [
-                'Approval',
-                'Process Task',
-                'ITS Approval',
-                'Approved by ITS',
-                'Rejected by ITS',
-                'Reject',
-                'Completed',
-                'Cancelled',
-                'Deleted',
-                'Recall'
-              ]
-            },
-            {
-              name: 'edit',
-              status: ['Draft', 'Review', 'Return']
+          var editModeStatus = ['Draft', 'Review', 'Return', 'Rework'];
+
+          // var mode = (modeObj) ? modeObj.name : 'read';
+          var getMode = function() {
+            if (!(_.contains(editModeStatus, FormStatus))) {
+              return 'read';
+            } else {
+              if (FormStatus === 'Review' && requestModel.toJSON().ApplicantUserID === me) {
+                return 'edit';
+              } else if (FormStatus === 'Return' && requestModel.toJSON().ApplicantUserID === me) {
+                return 'edit';
+              } else if (FormStatus === 'Rework' && requestModel.toJSON().PreparerUserID === me) {
+                return 'edit';
+              } else if (FormStatus === 'Draft') {
+                return 'edit';
+              }
+              return 'read';
             }
-          ];
-          var modeObj = _.find(modeMapping, function(modeObj) {
-            // console.log(_.contains(modeObj.status, requestModel.toJSON().FormStatus));
-            return _.contains(modeObj.status, requestModel.toJSON().FormStatus);
-          });
-          var mode = (modeObj) ? modeObj.name : 'read';
+          };
 
           /* special case for preparer enter the review form */
-          if (
-            rawData.ApplicantUserID !== Hktdc.Config.userID &&
-            rawData.PreparerUserID === Hktdc.Config.userID &&
-            requestModel.toJSON().FormStatus === 'Review'
-          ) {
-            mode = 'read';
-          }
+          // if (
+          //   rawData.ApplicantUserID !== Hktdc.Config.userID &&
+          //   rawData.PreparerUserID === Hktdc.Config.userID &&
+          //   requestModel.toJSON().FormStatus === 'Review'
+          // ) {
+          //   mode = 'read';
+          // }
           // console.log(mode);
 
           requestModel.set({
-            mode: mode,
+            mode: getMode(),
             selectedApplicantModel: new Hktdc.Models.Applicant({
               UserId: rawData.ApplicantUserID,
               UserFullName: rawData.ApplicantFNAME
