@@ -17,6 +17,7 @@ Hktdc.Collections = Hktdc.Collections || {};
         qsArr.push('SN=' + sn);
         return Hktdc.Config.apiURL + '/GetApproveDetails?' + qsArr.join('&');
       } else if (type === 'Worklist') {
+        qsArr.push('ReferID=' + refId);
         qsArr.push('ProsIncId=' + procId);
         qsArr.push('SN=' + sn);
         return Hktdc.Config.apiURL + '/GetWorklistDetails?' + qsArr.join('&');

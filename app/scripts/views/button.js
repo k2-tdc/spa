@@ -30,9 +30,6 @@ Hktdc.Views = Hktdc.Views || {};
     clickWorkflowBtnHandler: function(ev) {
       // console.log(Backbone.history.getFragment());
       var self = this;
-      if ($(ev.target).attr('workflowAction') === 'Forward') {
-        // this.model.set({showForwardTo: true});
-      }
       var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
       var sn = hashWithoutQS.split('/')[3];
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
@@ -49,6 +46,10 @@ Hktdc.Views = Hktdc.Views || {};
         ActionName: actionName,
         Comment: this.requestFormModel.toJSON().Comment
       };
+      if ($(ev.target).attr('workflowAction') === 'Forward') {
+        body.Forward_To_ID = this.requestFormModel.toJSON().Forward_To_ID;
+      }
+
       var isConfirm = confirm('Are you sure want to ' + actionName + '?');
       if (isConfirm) {
         Backbone.emulateHTTP = true;
@@ -77,19 +78,25 @@ Hktdc.Views = Hktdc.Views || {};
     clickSaveHandler: function() {
       if (this.checkIsValid()) {
         var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
-        this.saveAndApprover(status, '');
+        this.saveAndApprover(status, '', function() {
+          Backbone.history.navigate('draft', {trigger: true});
+        });
       }
     },
 
     clickApplicantHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Submitted', 'applicant');
+        this.saveAndApprover('Submitted', 'applicant', function() {
+          Backbone.history.navigate('', {trigger: true});
+        });
       }
     },
 
     clickApproverHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Submitted', 'approver');
+        this.saveAndApprover('Submitted', 'approver', function() {
+          Backbone.history.navigate('', {trigger: true});
+        });
       }
     },
 
@@ -221,7 +228,7 @@ Hktdc.Views = Hktdc.Views || {};
       return isValid;
     },
 
-    saveAndApprover: function(status, submitTo) {
+    saveAndApprover: function(status, submitTo, redirectCallback) {
       /* set the request object */
       var realSubmitTo = this.requestFormModel.toJSON().applicantSubmittedTo;
       var self = this;
@@ -265,9 +272,11 @@ Hktdc.Views = Hktdc.Views || {};
               type: 'success'
             });
 
-            // if (true) {
-            self.successRedirect();
-
+            // if (!redirectCallback) {
+            //   self.successRedirect();
+            // } else {
+            redirectCallback();
+            // }
             /* reload the menu for new counts */
             Hktdc.Dispatcher.trigger('reloadMenu');
           } else {

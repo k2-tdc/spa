@@ -90,14 +90,18 @@
     position: relative;
     display: table-cell;
 
-    button.btn.btn-default.dropdown-toggle {
+    .dropdown-toggle {
       overflow: hidden;
       border: 0;
-      color: #f47820;
+      color: #e66100;
       font-size: 18px;
       margin-top: 5px;
       background: initial;
-
+      .process-name{
+        max-width: 300px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
       &:active,
       &:focus,
       &:hover {
@@ -131,7 +135,7 @@
         hyphens: auto;
 
         &:hover {
-          color: #f47820;
+          color: #e66100;
         }
       }
     }

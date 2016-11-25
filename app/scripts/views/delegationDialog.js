@@ -75,6 +75,8 @@ Hktdc.Views = Hktdc.Views || {};
     clickSaveBtn: function() {
       console.log(this.model.toJSON());
       var self = this;
+      var valid = true;
+      var errMsgArr = [];
       var submitDelegationModel = new Hktdc.Models.SubmitDelegation({
         DelegationId: this.model.toJSON().DelegationId,
         Type: this.model.toJSON().Type,
@@ -88,6 +90,34 @@ Hktdc.Views = Hktdc.Views || {};
       });
       console.log(submitDelegationModel.toJSON());
 
+      if (!submitDelegationModel.toJSON().Type) {
+        valid = false;
+        errMsgArr.push('Please select the type');
+      }
+      if (!submitDelegationModel.toJSON().ProcessId) {
+        valid = false;
+        errMsgArr.push('Please select the process');
+      }
+      if (!submitDelegationModel.toJSON().StepId) {
+        valid = false;
+        errMsgArr.push('Please select the step');
+      }
+      if (!submitDelegationModel.toJSON().FromUserId) {
+        valid = false;
+        errMsgArr.push('Please select the from user');
+      }
+      if (!submitDelegationModel.toJSON().ToUserId) {
+        valid = false;
+        errMsgArr.push('Please select the to user');
+      }
+
+      if (!valid) {
+        Backbone.Dispatcher.trigger('openAlert', {
+          message: errMsgArr.join('<br />'),
+          title: 'Input is not valid',
+          type: 'error'
+        });
+      }
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
 

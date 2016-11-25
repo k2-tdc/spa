@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, _ */
+/* global Hktdc, Backbone, JST, $, Q, utils, _, moment */
 Hktdc.Views = Hktdc.Views || {};
 
 (function() {
@@ -11,7 +11,7 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click #recommend-btn': 'checkBudgetAndService',
       'blur #txtjustification': 'updateNewRequestModel',
-      'blur #txtexpectedDD': 'updateNewRequestModel',
+      'blur #txtexpectedDD': 'updateDateModelByEvent',
       'blur #txtfrequency': 'updateNewRequestModel',
       'blur #txtestimatedcost': 'updateNewRequestModel',
       'blur #txtbudgetprovided': 'updateNewRequestModel',
@@ -75,6 +75,16 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.set(updateObject);
     },
 
+    updateDateModelByEvent: function(ev) {
+      var field = $(ev.target).attr('name');
+      var value = '';
+      if ($(ev.target).val()) {
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
+      }
+
+      this.updateModel(field, value);
+    },
+
     initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
       // Backbone.Validation.bind(this);
@@ -111,7 +121,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderServiceCatagory(result[2]);
             self.renderAttachment(result[3]);
             self.renderSelectedCCView();
-
+            self.initDatePicker();
             /* default render the save button only,
              after change the approver(recommend by), render other button */
             self.renderButtonHandler();
@@ -230,6 +240,7 @@ Hktdc.Views = Hktdc.Views || {};
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
             self.renderAttachment(results[3], self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
+            self.initDatePicker();
 
             // var FormStatus = self.model.toJSON().FormStatus;
             // var Preparer = self.model.toJSON().PreparerUserID;
@@ -334,6 +345,47 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('change:showLog', function(model, isShow) {
         console.log('showLog: ', isShow);
       });
+    },
+
+    initDatePicker: function() {
+      var self = this;
+      $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
+        ev.stopPropagation();
+        // $('.date', self.el).data('open');
+        var $target = $(ev.target).parents('.input-group').find('.date');
+        var open = $target.data('open');
+        if (open) {
+          $target.datepicker('hide');
+        } else {
+          $target.datepicker('show');
+        }
+      });
+      $('.date', self.el)
+        .datepicker({
+          autoclose: true,
+          format: {
+            toDisplay: function(date, format, language) {
+              return moment(date).format('DD MMM YYYY');
+            },
+            toValue: function(date, format, language) {
+              return moment(date).format('MM/DD/YYYY');
+            }
+          }
+        })
+        .on('changeDate', function(ev) {
+          var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
+          var fieldName = $input.attr('name');
+          var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
+          var obj = {};
+          obj[fieldName] = val;
+          self.model.set(obj);
+        })
+        .on('show', function() {
+          $(this).data('open', true);
+        })
+        .on('hide', function() {
+          $(this).data('open', false);
+        });
     },
 
     getGroupedRequestList: function(RequestList) {
@@ -498,7 +550,9 @@ Hktdc.Views = Hktdc.Views || {};
       /* From list || from choose applicant */
       var FormStatus = self.model.toJSON().FormStatus;
       var Preparer = self.model.toJSON().PreparerUserID;
-      var Applicant = self.model.toJSON().ApplicantUserID || self.model.toJSON().selectedApplicantModel.toJSON().UserId;
+      var Applicant = (self.model.toJSON().selectedApplicantModel)
+        ? self.model.toJSON().selectedApplicantModel.toJSON().UserId
+        : self.model.toJSON().ApplicantUserID;
       // var ActionTaker = self.model.toJSON().ActionTakerUserID;
       // var ITSApprover = self.model.toJSON().ITSApproverUserID;
       var me = Hktdc.Config.userID;

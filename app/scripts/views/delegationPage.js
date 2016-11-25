@@ -349,7 +349,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getOperation: function(row) {
-      return '<button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button>';
+      return '<div><button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button></div>';
     },
 
     openDialog: function() {

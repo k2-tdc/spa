@@ -1,4 +1,4 @@
-<div class="mm-panels mm-vertical"> 
+<div class="mm-panels mm-vertical">
   <div class="mm-panel mm-vertical mm-opened mm-current" id="mm-0">
       <ul class="mm-listview mm-vertical">
 
@@ -36,7 +36,7 @@
           <li routename='<%= submenu.RouteName %>' <% if (items.onlyMobile) { %>class='visible-xs-block'<% } %>>
             <a href='<%=submenu.Route%>'>
               <%= submenu.Name %>
-              <% if(submenu.Scount && String(items.Scount) !== '0') { %>
+              <% if(submenu.Scount && String(submenu.Scount) !== '0') { %>
               <span class='menu-index-value outline'><%=submenu.Scount%></span>
               <% }
               %>

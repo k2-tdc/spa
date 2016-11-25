@@ -13,25 +13,55 @@ Hktdc.Views = Hktdc.Views || {};
       'click #btnSearchCheckStatus': 'doSearch',
       'change .user-select': 'updateModelByEvent',
       'change .status-select': 'updateModelByEvent',
-      'blur .search-field': 'updateModelByEvent'
+      'blur .search-field': 'updateModelByEvent',
+      'blur .date': 'updateDateModelByEvent'
     },
 
     initialize: function(props) {
-      console.debug('[ views/checkStatus.js ] - Initizing check status views');
+      // console.debug('[ views/checkStatus.js ] - Initizing check status views');
       // this.listenTo(this.model, 'change', this.render);
       var self = this;
       // _.extend(this, props);
       this.render();
-
-      $('.date')
+      // console.log($('.date', this.el));
+      $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
+        ev.stopPropagation();
+        // $(this).prev().data('open');
+        // console.log($(ev.target));
+        var $target = $(ev.target).parents('.input-group').find('.date');
+        var open = $target.data('open');
+        // console.log(open);
+        if (open) {
+          $target.datepicker('hide');
+        } else {
+          $target.datepicker('show');
+        }
+      });
+      $('.date', self.el)
         .datepicker({
-          autoclose: true
+          autoclose: true,
+          format: {
+            toDisplay: function(date, format, language) {
+              return moment(date).format('DD MMM YYYY');
+            },
+            toValue: function(date, format, language) {
+              return moment(date).format('MM/DD/YYYY');
+            }
+          }
         })
-        .on('changeDate', function(ev, a) {
-          var $input = $(ev.target).find('input');
+        .on('changeDate', function(ev) {
+          var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
           var fieldName = $input.attr('name');
-          var val = $input.val();
+          var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
+          // console.log(fieldName);
+          // console.log(val);
           self.updateModel(fieldName, val);
+        })
+        .on('show', function(ev) {
+          $(ev.target).data('open', true);
+        })
+        .on('hide', function(ev) {
+          $(ev.target).data('open', false);
         });
 
       Q.all([
@@ -79,13 +109,20 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.set(newObject);
     },
 
-    updateModelByEvent: function(ev, fieldName) {
+    updateModelByEvent: function(ev) {
       var field = $(ev.target).attr('name');
-      // console.log(field);
-      var newObject = {};
-      newObject[field] = $(ev.target).val();
-      console.log(newObject);
-      this.model.set(newObject);
+      var value = $(ev.target).val();
+      this.updateModel(field, value);
+    },
+
+    updateDateModelByEvent: function(ev) {
+      var field = $(ev.target).attr('name');
+      var value = '';
+      if ($(ev.target).val()) {
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
+      }
+
+      this.updateModel(field, value);
     },
 
     doSearch: function() {

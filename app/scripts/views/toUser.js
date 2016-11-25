@@ -51,6 +51,7 @@ Hktdc.Views = Hktdc.Views || {};
     selectToUserHandler: function(ev) {
       /* The new request model will handle the change */
       // var self = this;
+      console.log(this.selectFieldName);
       if (this.parentModel) {
         var setObj = {};
         if (this.selectFieldName) {

@@ -18,7 +18,8 @@ Hktdc.Models = Hktdc.Models || {};
       UserId: Hktdc.Config.userID,
       SN: '',
       ActionName: '',
-      Comment: ''
+      Comment: '',
+      Forward_To_ID: ''
     },
 
     validate: function(attrs, options) {
