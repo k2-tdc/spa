@@ -1,0 +1,29 @@
+
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block {
+  border: 0;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: left;
+}
+
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block:active,
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block:focus,
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle.btn-block:hover {
+  background: initial;
+}
+
+div.subheader-menu-container > button.btn.btn-default.dropdown-toggle > span.glyphicon {
+  font-size: 14px;
+}
+
+div.subheader-menu-container > ul.dropdown-menu {
+  width: 100%;
+  margin-left: 0;
+}
+
+.subheader-menu {
+  margin: 0;
+  padding: 0 14px;
+  text-transform: uppercase;
+}
