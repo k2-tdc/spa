@@ -1,0 +1,56 @@
+
+.btn_sub_title {
+  border: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.btn_sub_title .glyphicon {
+  margin-left: 10pt;
+}
+
+.modal-dialog .modal-title {
+  text-align: center;
+  font-size: 15pt;
+  text-transform: uppercase;
+}
+
+.input_radio {
+  float: left;
+  padding-left: 20px;
+  display: inline-block;
+}
+
+.input_checkbox {
+  float: left;
+  padding-left: 20px;
+  display: inline-block;
+}
+
+.modal-dialog .text-lg {
+  line-height: 20px;
+  display: inline-block;
+  float: left;
+}
+
+.modal-dialog .text-lg label {
+  width: 100%;
+}
+
+.modal-dialog .modal-footer {
+  text-align: center;
+}
+@media screen and (max-width: 990px) {
+  .input_checkbox {
+    padding-left: 0;
+  }
+
+  .modal-dialog .text-lg label {
+    padding-right: 0;
+  }
+}
+@media screen and (min-width: 990px) {
+  .modal-dialog .text-lg label {
+    text-align: right !important;
+  }
+}
