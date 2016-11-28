@@ -35,8 +35,8 @@
     <div class="panel panel-default select-applicant">
       <div class="panel-body">
         <div class="row">
-          <label for="applicant" class="col-xs-12 col-sm-2 control-label text-lg-right">Applicant *</label>
-          <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width applicant-container form_input">
+          <label for="applicant" class="col-xs-2 col-sm-2 control-label text-lg-right">Applicant *</label>
+          <div class="col-xs-10 col-sm-10 col-md-8 btn-group full-width applicant-container form_input">
             <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">
               <% if (request.selectedApplicantName){ %>
                 <%= request.selectedApplicantName%>
@@ -81,19 +81,19 @@
           </div>
 
           <div class="sep-space"></div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Justification and Important Notes * <span class="service-title-desp">(Business Value / Descripttion / Reason)</span></div>
           </div>
-          <div class="row">
+          <div class="row field">
             <div class="col-md-10 form_input">
               <textarea class="form-control" rows="3" field="Justification" id="txtjustification"><%= request.Justification %></textarea>
             </div>
           </div>
           <div class="sep-space"></div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Expected Delivery Date</div>
           </div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-sm-10 form_input">
               <div class="input-group">
                 <input type="text" class="form-control date" id="txtexpectedDD" field="EDeliveryDate" value="<%= request.EDeliveryDate %>" />
@@ -104,37 +104,37 @@
             </div>
           </div>
           <div class="sep-space"></div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Frequency/Duration of Use</div>
           </div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-sm-10 form_input">
               <input type="text" class="form-control" id="txtfrequency" field="DurationOfUse" value="<%= request.DurationOfUse %>" />
             </div>
           </div>
           <div class="sep-space"></div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Estimated Cost (HK$) *</div>
           </div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-sm-10 form_input">
               <input type="number" class="form-control" id="txtestimatedcost" field="EstimatedCost" value="<%= request.EstimatedCost %>" />
             </div>
           </div>
           <div class="sep-space"></div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Budget Provided</div>
           </div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-sm-10 form_input">
               <input type="text" class="form-control" id="txtbudgetprovided" field="BudgetProvided" value="<%= request.BudgetProvided %>" />
             </div>
           </div>
           <div class="sep-space"></div>
-          <!-- <div class="row">
+          <!-- <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Budget Sum</div>
           </div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-10 col-sm-10">
               <input type="text" class="form-control" id="txtbudgetsum" field="BudgetSum" value="<%= request.BudgetSum %>"/>
             </div>
@@ -142,7 +142,7 @@
           <div class="sep-space"></div> -->
           <div class="sep-space"></div>
 
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Recommend By *</div>
             <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width recommend-container form_input">
               <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
@@ -163,7 +163,7 @@
           </div>
           <div class="sep-space"></div>
 
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">CC</div>
             <div class="col-xs-12 col-sm-10 col-md-8 contact-group">
 
@@ -171,7 +171,7 @@
           </div>
           <div class="sep-space"></div>
 
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-2 col-sm-2 hidden-xs newrequest-title text-lg-right  ">&nbsp;</div>
             <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width cc-container form_input">
               <input type="text" class="cc-picker form-control" data-provide="typeahead" autocomplete="off"/>
@@ -186,7 +186,7 @@
           </div>
           <div class="sep-space"></div>
 
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Remark</div>
             <div class="col-xs-12 col-sm-10 col-md-8 form_input">
               <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
@@ -194,12 +194,12 @@
           </div>
           <div class="sep-space"></div>
 
-          <div class="rowrow" id="attachment-container">
+          <div class="rowrow field" id="attachment-container">
             <!-- attachment here -->
           </div>
           <div class="sep-space"></div>
 
-          <div class="rowrow" id="workflowlog-container">
+          <div class="rowrow field" id="workflowlog-container">
             <!-- workflow log here -->
           </div>
           <div class="sep-space"></div>
@@ -207,7 +207,7 @@
           <% if (request.showComment) { %>
 
           <div class="sep-space"></div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Comment</div>
             <div class="col-xs-12 col-sm-10 col-md-8 form_input">
               <textarea class="form-control keepEdit" rows="3" id="txtcomment" field="Comment"></textarea>
@@ -216,14 +216,14 @@
 
           <% } %>
 
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-10 col-sm-2 newrequest-title"></div>
             <div class="col-xs-12 col-md-3 btn-group" style="text-align: left;">
             </div>
 
           </div>
           <div class="sep-space"></div>
-          <div class="row">
+          <div class="row field">
             <div class="col-xs-12 col-md-12 buttons-container">
               <!--
                 <button class="btn btn-primary" id="btnBack" style="display:none" type="button">Back</button>

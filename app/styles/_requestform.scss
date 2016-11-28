@@ -1,0 +1,303 @@
+.form-sep {
+  height: 20px;
+  display: block;
+  width: 100%;
+}
+
+.newrequest-basic-information {
+  padding: 20px 0;
+  width: 100%;
+  margin: 0;
+}
+
+.newrequest-basic-information > div {
+  line-height: 35px;
+  text-align: left;
+  margin: 0;
+}
+
+.select-applicant,
+.select-service,
+.select-service-header {
+  border: 1px rgba(0, 0, 0, .1) solid;
+  margin-bottom: 0;
+}
+
+.service-catagory-item > .select-service-header:hover {
+  box-shadow: 0 0 10px #f57921;
+}
+
+.select-applicant > .panel-body {
+  padding: 15px;
+}
+
+.select-applicant > .panel-body > div {
+  text-align: left; //  line-height: 35px;
+  padding: 0;
+}
+
+.select-applicant > .panel-body > label {
+  padding: 0;
+  text-align: left;
+  line-height: 36px;
+  border: 1px solid red;
+}
+
+.select-applicant .applicant-list {
+  height: 250px;
+  overflow-y: scroll;
+}
+
+.cc-list {
+  height: 250px;
+  overflow-y: scroll;
+}
+
+.select-applicant button:not(.dropdown-toggle) {
+  width: calc(100% - 26px);
+  text-align: left;
+}
+
+.request-application > .row {
+  margin: 0;
+}
+
+.request-application > .row > div {
+  text-align: left;
+}
+
+.select-service-header input[type=checkbox] {
+  -ms-transform: scale(2);
+  /* IE */
+  -moz-transform: scale(2);
+  /* FF */
+  -webkit-transform: scale(2);
+  /* Safari and Chrome */
+  -o-transform: scale(2);
+  /* Opera */
+  float: left;
+  // margin: 8px 20px 0 5px;
+}
+
+.select-service-header .checkbox-option {
+  line-height: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: left;
+  margin-left: 12px;
+  min-width: 210px;
+}
+
+.select-service-header .checkbox-option-drop {
+  text-align: right;
+}
+
+.select-service-header .checkbox-option-drop > span {
+  width: 30px;
+  height: 30px;
+  line-height: 28px;
+  border-radius: 50%;
+  border: 2px grey solid;
+  text-align: center;
+}
+
+div.newrequest-title {
+  color: #006bf0; //  line-height: 35px;
+  line-height: 20px;
+}
+
+span.service-title-desp {
+  text-transform: initial;
+  color: grey;
+  margin-left: 20px;
+}
+
+.select-service {
+  border-radius: 0;
+}
+
+.select-service .select-service-title {
+  text-transform: uppercase;
+  line-height: 30px;
+  text-align: left; //    font-weight: bold;
+}
+
+.service-request-wrap {
+  padding-top: 10px;
+}
+
+.select-service .panel-body {
+  padding-top: 10px 0;
+}
+
+.select-service {
+  margin-bottom: 0;
+}
+
+.select-service span.select-applicant-step {
+  border-radius: 50%;
+  border: 1px grey solid;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  padding: 0;
+}
+
+.contact-group {
+  text-align: left;
+
+  .seleced-cc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: inline;
+    }
+  }
+}
+
+.filename-container {
+  position: relative;
+}
+
+.filedownload {
+  cursor: pointer;
+  color: blue;
+}
+
+.selectedServiceCount {
+  padding-left: 6px;
+  color: #006bf0;
+  // font-size: 14px;
+  font-weight: bold;
+}
+
+.service-catagory-item {
+  margin-top: 4px;
+}
+
+.workflowlog-container {
+  overflow: scroll;
+}
+
+.buttons-container {
+  .btn {
+    margin-bottom: 4px;
+  }
+
+  .available-buttons {
+    border: 1px #CCC solid;
+    border-radius: 4px;
+    padding: 11px 5px;
+  }
+}
+
+.service-type-container {
+  padding: 15px;
+}
+
+.newrequest-basic-information {
+  max-width: 900px;
+
+  div {
+    line-height: 30px;
+  }
+}
+
+.service-request-input {
+  float: left;
+  width: calc(100% - 100px);
+}
+
+.service_num {
+  float: left;
+}
+
+.select-service {
+  // border: 0px;
+  border: 1px rgba(0, 0, 0, .1) solid;
+  border-radius: 4px;
+}
+
+.service-type-container > div > .group-details:last-child .select-service {
+  // border: 0px;
+}
+
+.service-request-wrap ul.dropdown-menu {
+  margin-left: 0;
+  //width: auto;
+  width: calc(100% - 0px);
+  overflow: hidden;
+}
+
+.service-request-wrap ul.dropdown-menu > li {
+  padding: 0;
+  margin: 0;
+}
+
+.service-request.btn {
+  overflow: hidden;
+}
+
+.onsite-standby-service span.service-title-desp {
+  margin-left: 0;
+  display: block;
+}
+
+.select-service-header div.newrequest-title {}
+
+@media screen and (max-width: 480px) {
+  .select-service-header .checkbox-option {
+    font-size: 15px;
+  }
+
+  .select-service-header input[type=checkbox] {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .field{
+    padding: 0 8px;
+  }
+  .service-catagory-item {
+    margin-top: 0px;
+  }
+
+  .select-service {
+    border: 0;
+    border-bottom: 1px rgba(0, 0, 0, .2) solid;
+    border-radius: 0;
+  }
+
+  .service-type-container {
+    padding: 0px;
+    &>div>.group-details .select-service{
+      padding: 8px;
+    }
+  }
+
+  .service-type-container > div > .group-details:last-child .select-service {
+    // border: 0;
+  }
+
+  .service-catagory-item .group-header {
+    background-color: #e8e8e8;
+  }
+
+  .select-service .panel-body {
+    padding: 10px 0;
+  }
+  .select-service-header{
+    border: 0;
+  }
+
+  .select-applicant > .panel-body{
+    padding: 15px 8px;
+  }
+}
