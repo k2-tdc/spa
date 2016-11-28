@@ -28,6 +28,31 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     clickWorkflowBtnHandler: function(ev) {
+      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
+      var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
+      var self = this;
+      if (status === 'Review') {
+        self.saveAndApprover(status, 'approver', function() {
+          var isConfirm = confirm('Are you sure want to ' + actionName + '?');
+          if (isConfirm) {
+            self.workflowHandler(ev);
+          } else {
+            console.log('not ' + actionName);
+            return false;
+          }
+        });
+      } else {
+        var isConfirm = confirm('Are you sure want to ' + actionName + '?');
+        if (isConfirm) {
+          self.workflowHandler(ev);
+        } else {
+          console.log('not ' + actionName);
+          return false;
+        }
+      }
+    },
+
+    workflowHandler: function(ev) {
       // console.log(Backbone.history.getFragment());
       var self = this;
       var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
@@ -50,29 +75,23 @@ Hktdc.Views = Hktdc.Views || {};
         body.Forward_To_ID = this.requestFormModel.toJSON().Forward_To_ID;
       }
 
-      var isConfirm = confirm('Are you sure want to ' + actionName + '?');
-      if (isConfirm) {
-        Backbone.emulateHTTP = true;
-        Backbone.emulateJSON = true;
-        var worklistModel = new Hktdc.Models.WorklistAction();
-        worklistModel.set(body);
-        worklistModel.save({}, {
-          beforeSend: utils.setAuthHeader,
-          success: function(action, response) {
-            console.log('ok');
-            // Backbone.history.navigate('alltask', {trigger: true});
-            self.successRedirect();
-            Hktdc.Dispatcher.trigger('reloadMenu');
-            // window.location.href = "alltask.html";
-          },
-          error: function(action, response) {
-            console.log('error');
-          }
-        });
-      } else {
-        console.log('not ' + actionName);
-        return false;
-      }
+      Backbone.emulateHTTP = true;
+      Backbone.emulateJSON = true;
+      var worklistModel = new Hktdc.Models.WorklistAction();
+      worklistModel.set(body);
+      worklistModel.save({}, {
+        beforeSend: utils.setAuthHeader,
+        success: function(action, response) {
+          console.log('ok');
+          // Backbone.history.navigate('alltask', {trigger: true});
+          self.successRedirect();
+          Hktdc.Dispatcher.trigger('reloadMenu');
+          // window.location.href = "alltask.html";
+        },
+        error: function(action, response) {
+          console.log('error');
+        }
+      });
     },
 
     clickSaveHandler: function() {

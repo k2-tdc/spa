@@ -89,7 +89,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template());
       // console.log(this.model);
       this.collection.each(this.renderWrokflowLogItem);
-        // setTimeout(() => {
+      // setTimeout(() => {
       $('.workflowlogTable', this.el).DataTable({
         paging: false,
         searching: false,
