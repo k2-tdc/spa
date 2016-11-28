@@ -214,8 +214,15 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           // var mode = (modeObj) ? modeObj.name : 'read';
           var getMode = function() {
-            if (!(_.contains(editModeStatus, FormStatus))) {
+            // 'Draft'
+            if (FormStatus === 'Draft') {
+              return 'edit';
+
+            // other status
+            } else if ((!(_.contains(editModeStatus, FormStatus)) || !rawData.actions)) {
               return 'read';
+
+            // ['Review', 'Return', 'Rework']
             } else {
               if (FormStatus === 'Review' && requestModel.toJSON().ApplicantUserID === me) {
                 return 'edit';
@@ -223,11 +230,9 @@ Hktdc.Routers = Hktdc.Routers || {};
                 return 'edit';
               } else if (FormStatus === 'Rework' && requestModel.toJSON().PreparerUserID === me) {
                 return 'edit';
-              } else if (FormStatus === 'Draft') {
-                return 'edit';
               }
-              return 'read';
             }
+            return 'read';
           };
 
           /* special case for preparer enter the review form */

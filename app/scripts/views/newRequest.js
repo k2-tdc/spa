@@ -585,23 +585,25 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           self.renderDraftModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
         }
+
+      // non Draft FormStatus
       } else {
         console.debug('BY FORMSTATUS');
         var options = {};
 
         // self.renderRequestFormButton( FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover);
-        if (this.model.toJSON().FormStatus === 'Review' && me === Applicant) {
+        if (this.model.toJSON().FormStatus === 'Review' && me === Applicant && this.model.toJSON().mode !== 'read') {
           options.showSave = true;
-          options.showDelete = true;
+          // options.showDelete = true;
         }
 
-        if (this.model.toJSON().FormStatus === 'Return' && me === Applicant) {
+        if (this.model.toJSON().FormStatus === 'Return' && me === Applicant && this.model.toJSON().mode !== 'read') {
           options.showSave = true;
         }
 
-        if (this.model.toJSON().FormStatus === 'Rework' && me === Preparer) {
+        if (this.model.toJSON().FormStatus === 'Rework' && me === Preparer && this.model.toJSON().mode !== 'read') {
           options.showSave = true;
-          options.showDelete = true;
+          // options.showDelete = true;
         }
 
         if (this.model.toJSON().FormStatus === 'Approval' && me === Applicant) {

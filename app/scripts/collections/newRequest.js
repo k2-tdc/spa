@@ -14,6 +14,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
       if (type === 'Approval') {
         qsArr.push('ProsIncId=' + procId);
+        qsArr.push('ReferID=' + refId);
         qsArr.push('SN=' + sn);
         return Hktdc.Config.apiURL + '/GetApproveDetails?' + qsArr.join('&');
       } else if (type === 'Worklist') {
