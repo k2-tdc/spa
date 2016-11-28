@@ -358,7 +358,8 @@ Hktdc.Views = Hktdc.Views || {};
         saved: false
       });
       this.dialogModel.set({
-        open: true
+        open: true,
+        FromUserId: Hktdc.Config.userID
       });
     }
 

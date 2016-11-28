@@ -23,7 +23,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
       _.extend(this, props);
-      this.model.on('change')
+      // this.model.on('change')
       this.render();
     },
 
@@ -31,7 +31,7 @@ Hktdc.Views = Hktdc.Views || {};
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
       var self = this;
-      if (status === 'Review') {
+      if (status === 'Review' && this.model.toJSON().showSave) {
         self.saveAndApprover(status, 'approver', function() {
           var isConfirm = confirm('Are you sure want to ' + actionName + '?');
           if (isConfirm) {

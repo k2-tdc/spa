@@ -68,6 +68,12 @@ Hktdc.Views = Hktdc.Views || {};
         $('input[name="Remark"]', self.el).val(value);
       });
 
+      this.model.on('change:FromUserId', function(model, value) {
+        $('select[name="FromUserId"]', self.el)
+          .find('option[value="' + value + '"]')
+          .prop('selected', true);
+      });
+
       this.$el.on('hidden.bs.modal', function() {
         self.closeAndResetModel();
       });
@@ -112,7 +118,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       if (!valid) {
-        Backbone.Dispatcher.trigger('openAlert', {
+        Hktdc.Dispatcher.trigger('openAlert', {
           message: errMsgArr.join('<br />'),
           title: 'Input is not valid',
           type: 'error'

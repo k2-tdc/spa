@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $, Q */
+/* global Hktdc, Backbone, utils, _, $, Q, NProgress */
 
 window.Hktdc = {
   Models: {},
@@ -84,11 +84,13 @@ window.Hktdc = {
       // if (true) {
       if (env === 'uat') {
         // TODO: prevent user make request when getting token
-        /* $.ajax({
-          beforeSend: function() {
-
-          }
-        }) */
+        // $(document).ajaxStart(function() {
+        //   NProgress.start();
+        // });
+        // $(document).ajaxEnd(function() {
+        //   NProgress.done();
+        //   NProgress.remove();
+        // });
 
         /* check auth */
         utils.getAccessToken(function(accessToken) {
