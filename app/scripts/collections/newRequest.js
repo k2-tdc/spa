@@ -24,9 +24,11 @@ Hktdc.Collections = Hktdc.Collections || {};
         return Hktdc.Config.apiURL + '/GetWorklistDetails?' + qsArr.join('&');
       } else if (type === 'Draft') {
         qsArr.push('ReferID=' + refId);
+        qsArr.push('ProInstID=');
         return Hktdc.Config.apiURL + '/GetRequestDetails?' + qsArr.join('&');
       } else {
         qsArr.push('ReferID=' + refId);
+        qsArr.push('ProInstID=' + procId);
         return Hktdc.Config.apiURL + '/GetRequestDetails?' + qsArr.join('&');
       }
     },

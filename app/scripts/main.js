@@ -80,17 +80,21 @@ window.Hktdc = {
     try {
       var self = this;
       utils.setURL(env);
+      NProgress.configure({
+        parent: '#page',
+        showSpinner: false
+      });
 
       // if (true) {
       if (env === 'uat') {
         // TODO: prevent user make request when getting token
-        // $(document).ajaxStart(function() {
-        //   NProgress.start();
-        // });
-        // $(document).ajaxEnd(function() {
-        //   NProgress.done();
-        //   NProgress.remove();
-        // });
+        $(document).ajaxStart(function() {
+          NProgress.start();
+        });
+        $(document).ajaxComplete(function() {
+          NProgress.done();
+          // NProgress.remove();
+        });
 
         /* check auth */
         utils.getAccessToken(function(accessToken) {

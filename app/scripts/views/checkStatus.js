@@ -143,16 +143,16 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.);
       switch (this.model.toJSON().mode) {
         case 'DRAFT':
-          statusApiURL = Hktdc.Config.apiURL + '/GetDraftDetails?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/GetDraftList?' + filterArr.join('&');
           break;
         case 'ALL TASKS':
           statusApiURL = Hktdc.Config.apiURL + '/GetWorklist?' + filterArr.join('&');
           break;
         case 'APPROVAL TASKS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetApproveListDetails?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/GetApproveList?' + filterArr.join('&');
           break;
         case 'CHECK STATUS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/GetRequestList?' + filterArr.join('&');
           break;
         default:
           console.log('mode error');
@@ -218,7 +218,14 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
         var rowData = self.statusDataTable.row(this).data();
-        var SNPath = (rowData.SN) ? '/' + rowData.SN : '';
+        var SNOrProcIdPath = '';
+        if ((rowData.SN)) {
+          SNOrProcIdPath = '/' + rowData.SN;
+        } else {
+          if (rowData.ProcInstID) {
+            SNOrProcIdPath = '/' + rowData.ProcInstID;
+          }
+        }
         var typePath;
         if (self.model.toJSON().mode === 'APPROVAL TASKS') {
           typePath = '/approval/';
@@ -229,7 +236,7 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           typePath = '/check/';
         }
-        Backbone.history.navigate('request' + typePath + rowData.refId + SNPath, {trigger: true});
+        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath, {trigger: true});
       });
 
       $('#statusTable tbody', this.el).on('click', '.btn-del', function(ev) {
@@ -348,10 +355,10 @@ Hktdc.Views = Hktdc.Views || {};
         return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
       } else if (status === 'Approval') {
         return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
-      } else if (status === 'Proces Task') {
-        return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullNAME;
-      } else if (status === 'ITS Approval') {
-        return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullNAME;
+      } else if (status === 'ProcessTasks') {
+        return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
+      } else if (status === 'ITSApproval') {
+        return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
       } else if (status === 'Submitted') {
         return formStatusDisplay + '<br /> by: ' + row.PreparerUserID;
       } else {
