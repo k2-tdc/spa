@@ -350,7 +350,8 @@ Hktdc.Views = Hktdc.Views || {};
 
       // if (true) {
       if (status === 'Draft') {
-        return '<div><button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button></div>';
+        return 'Draft <br /> by: ' + Hktdc.Config.userName;
+        // return '<div><button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button></div>';
       } else if (status === 'Review') {
         return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
       } else if (status === 'Approval') {

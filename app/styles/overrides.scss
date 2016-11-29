@@ -103,7 +103,7 @@ textarea {
 }
 
 #content {
-  padding: 110px 20px 20px;
+  padding: 100px 20px 20px;
 }
 
 #footer {
@@ -133,10 +133,14 @@ textarea {
 }
 
 .panel-default > .panel-heading {
-  border: 1px rgba(0, 0, 0, .1) solid;
   background-color: white;
-  border-radius: 5px;
-  padding: 5px;
+  padding: 8px;
+  border-bottom: none;
+  & > div {
+
+    border: 1px rgba(0, 0, 0, .1) solid;
+    border-radius: 5px;
+  }
 }
 
 .panel-title {
@@ -458,11 +462,21 @@ div.dataTables_wrapper table {
     padding-left: 0;
     padding-right: 0;
     overflow: hidden;
+    &.app-web-view{
+      padding-top: 70px;
+      .headingOne{
+        display: none;
+      }
+    }
   }
 
   #footer{
     padding: 0 8px;
   }
+
+  // .panel-default > .panel-heading {
+  //   padding: 0 5px;
+  // }
 }
 @media screen and (min-width: 768px) {
   .mm-opened .text-lg-right {

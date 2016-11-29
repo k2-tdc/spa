@@ -8,6 +8,7 @@ window.Hktdc = {
   Dispatcher: _.extend({}, Backbone.Events),
   Config: {
     procId: 1,
+    isAppWebView: false,
     apiURL: false,
     refreshTokenInterval: 2,  // in minutes
     gettingToken: false,
@@ -118,10 +119,11 @@ window.Hktdc = {
 
             /* to prevent token expiry when using the SPA */
             setInterval(function() {
-              window.Hktdc.Config.gettingToken = true;
+              Hktdc.Config.gettingToken = true;
               utils.getAccessToken(function(accessToken) {
-                window.Hktdc.Config.gettingToken = false;
+                Hktdc.Config.gettingToken = false;
                 Hktdc.Config.accessToken = accessToken;
+                console.log('refreshed the access token: ', accessToken);
               });
             }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
@@ -157,12 +159,32 @@ window.Hktdc = {
     var headerModel = new Hktdc.Models.Header();
     var footerModel = new Hktdc.Models.Footer();
 
+    // TODO: webview custom user-agent
+    // Hktdc.Config.isAppWebView = navigator.userAgent === ??????
+
+    Hktdc.Config.isAppWebView = true;
+    // Hktdc.Config.isAppWebView = false;
+
     var headerView = new Hktdc.Views.Header({
       model: headerModel
     });
     var footerView = new Hktdc.Views.Footer({
       model: footerModel
     });
+
+    if (Hktdc.Config.isAppWebView) {
+      // process switch
+      $('#header_main .nav-header-main').addClass('app-web-view');
+
+      // web view show current page
+      $('#header_main .subheader-menu-container').addClass('app-web-view');
+
+      // tdc logo
+      $('#header').addClass('app-web-view');
+
+      // content subheader
+      $('#content').addClass('app-web-view');
+    }
 
     this.initAlertDialog();
 
