@@ -267,11 +267,11 @@ Hktdc.Views = Hktdc.Views || {};
       if (!isInsert) {
       //   this.bindFileChangeEvent();
       // } else {
-        $('.attachmentTable', this.el).DataTable({
-          paging: false,
-          searching: false,
-          pageLength: false
-        });
+        // $('.attachmentTable', this.el).DataTable({
+        //   paging: false,
+        //   searching: false,
+        //   pageLength: false
+        // });
       }
     }
   });

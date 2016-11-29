@@ -91,12 +91,14 @@ li span.menu-index-value.outline {
 
 li.menu-section {
   background: #eaeaea;
+  font-size: 12px;
+  // font-weight: bold;
 }
 
 li.menu-section > span {
   line-height: 35px;
   height: 35px;
-  padding: 0 20px;
+  padding: 0 10px;
   text-transform: initial;
 }
 

@@ -90,12 +90,12 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model);
       this.collection.each(this.renderWrokflowLogItem);
       // setTimeout(() => {
-      $('.workflowlogTable', this.el).DataTable({
-        paging: false,
-        searching: false,
-        pageLength: false,
-        order: [3, 'asc']
-      });
+      // $('.workflowlogTable', this.el).DataTable({
+      //   paging: false,
+      //   searching: false,
+      //   pageLength: false,
+      //   order: [3, 'asc']
+      // });
       // }, 1000);
     }
 

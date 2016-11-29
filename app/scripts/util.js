@@ -159,7 +159,8 @@ window.utils = {
       accessToken = self.getCookie('ACCESS-TOKEN');
       console.log('accessToken:' + accessToken);
 
-      if (accessToken !== '') {
+      // if (accessToken !== '') {
+      if (!accessToken || accessToken === '' || accessToken === undefined) {
         // Send GET request to token endpoint for getting access token through AJAX
         // console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
         var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
@@ -187,7 +188,8 @@ window.utils = {
         xhr.send();
       } else {
         console.error('no access token');
-        window.location.href = oauthUrl;
+        // window.location.href = oauthUrl;
+        onSuccess(accessToken);
       }
     }
   },

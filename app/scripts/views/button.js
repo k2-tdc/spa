@@ -614,7 +614,7 @@ Hktdc.Views = Hktdc.Views || {};
       var sendAttachmentModel = new Hktdc.Models.SendAttachment();
       var filename = _.map(files, function(file) {
         // return file.toJSON().file.name;
-        return file.file.name;
+        return (file.file) && file.file.name;
       });
       // console.log(filename);
       sendAttachmentModel.url = sendAttachmentModel.url(refId, filename);
