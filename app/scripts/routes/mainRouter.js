@@ -11,7 +11,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'check_status': 'checkStatus',
       'request': 'newRequest',
       'request/draft/:requestId': 'editRequest',
-      'request/check/:requestId': 'editRequest',
+      'request/check/:requestId/:procId': 'editRequest',
       'request/all/:requestId/:sn': 'editRequest',
       'request/approval/:requestId/:sn': 'editRequest',
       'delegation': 'delegationList',
@@ -187,10 +187,12 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     /* this handling 'edit' old request OR 'read' old request */
-    editRequest: function(requestId, sn) {
+    editRequest: function(requestId, snOrProcId) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
       var requestCollection = new Hktdc.Collections.NewRequest();
-      var procId = (sn) ? sn.split('_')[0] : false; // SN = '123_456'
+      var procId = (snOrProcId && snOrProcId.indexOf('_') > 0)
+        ? snOrProcId.split('_')[0]
+        : snOrProcId; // SN = '123_456'
       var type;
       if (/\/approval\//.test(Backbone.history.getHash())) {
         type = 'Approval';
@@ -201,7 +203,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       } else {
         type = 'Draft';
       }
-      requestCollection.url = requestCollection.url(requestId, type, procId, sn);
+      requestCollection.url = requestCollection.url(requestId, type, procId, snOrProcId);
       requestCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function(result, response) {
@@ -214,8 +216,15 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           // var mode = (modeObj) ? modeObj.name : 'read';
           var getMode = function() {
-            if (!(_.contains(editModeStatus, FormStatus))) {
+            // 'Draft'
+            if (FormStatus === 'Draft') {
+              return 'edit';
+
+            // other status
+            } else if ((!(_.contains(editModeStatus, FormStatus)) || !rawData.actions)) {
               return 'read';
+
+            // ['Review', 'Return', 'Rework']
             } else {
               if (FormStatus === 'Review' && requestModel.toJSON().ApplicantUserID === me) {
                 return 'edit';
@@ -223,11 +232,9 @@ Hktdc.Routers = Hktdc.Routers || {};
                 return 'edit';
               } else if (FormStatus === 'Rework' && requestModel.toJSON().PreparerUserID === me) {
                 return 'edit';
-              } else if (FormStatus === 'Draft') {
-                return 'edit';
               }
-              return 'read';
             }
+            return 'read';
           };
 
           /* special case for preparer enter the review form */

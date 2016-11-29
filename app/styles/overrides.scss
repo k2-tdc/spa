@@ -270,6 +270,16 @@ div.dataTables_wrapper table {
 /*=============================================<<<<<*/
 // end vicosys
 /* RESPONSIVE PART - DO NOT MODIFY UP TO THIS LINE */
+
+@import 'header';
+@import 'mmenu';
+@import 'requestform';
+@import 'component';
+@import 'delegation';
+@import 'checkstatus';
+@import 'subheader';
+
+
 @media screen and (max-width: 767px) {
   #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
     font-size: 13px;
@@ -444,26 +454,14 @@ div.dataTables_wrapper table {
   }
 }
 @media screen and (max-width: 520px) {
-  .select-service {
-    border: 0;
-    border-bottom: 1px rgba(0, 0, 0, .2) solid;
-    border-radius: 0;
+  #content{
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
   }
 
-  .service-type-container {
-    padding: 8px;
-  }
-
-  .service-type-container > div > .group-details:last-child .select-service {
-    border: 0;
-  }
-
-  .service-catagory-item .group-header {
-    background-color: #e8e8e8;
-  }
-
-  .select-service .panel-body {
-    padding: 10px 0;
+  #footer{
+    padding: 0 8px;
   }
 }
 @media screen and (min-width: 768px) {

@@ -14,6 +14,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
       if (type === 'Approval') {
         qsArr.push('ProsIncId=' + procId);
+        qsArr.push('ReferID=' + refId);
         qsArr.push('SN=' + sn);
         return Hktdc.Config.apiURL + '/GetApproveDetails?' + qsArr.join('&');
       } else if (type === 'Worklist') {
@@ -23,9 +24,11 @@ Hktdc.Collections = Hktdc.Collections || {};
         return Hktdc.Config.apiURL + '/GetWorklistDetails?' + qsArr.join('&');
       } else if (type === 'Draft') {
         qsArr.push('ReferID=' + refId);
+        qsArr.push('ProInstID=');
         return Hktdc.Config.apiURL + '/GetRequestDetails?' + qsArr.join('&');
       } else {
         qsArr.push('ReferID=' + refId);
+        qsArr.push('ProInstID=' + procId);
         return Hktdc.Config.apiURL + '/GetRequestDetails?' + qsArr.join('&');
       }
     },

@@ -88,15 +88,6 @@
   margin-left: 12px;
   min-width: 210px;
 }
-@media screen and (max-width: 480px) {
-  .select-service-header .checkbox-option {
-    font-size: 15px;
-  }
-
-  .select-service-header input[type=checkbox] {
-    margin: 0;
-  }
-}
 
 .select-service-header .checkbox-option-drop {
   text-align: right;
@@ -259,3 +250,54 @@ span.service-title-desp {
 }
 
 .select-service-header div.newrequest-title {}
+
+@media screen and (max-width: 480px) {
+  .select-service-header .checkbox-option {
+    font-size: 15px;
+  }
+
+  .select-service-header input[type=checkbox] {
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .field{
+    padding: 0 8px;
+  }
+  .service-catagory-item {
+    margin-top: 0px;
+  }
+
+  .select-service {
+    border: 0;
+    border-bottom: 1px rgba(0, 0, 0, .2) solid;
+    border-radius: 0;
+  }
+
+  .service-type-container {
+    padding: 0px;
+    &>div>.group-details .select-service{
+      padding: 8px;
+    }
+  }
+
+  .service-type-container > div > .group-details:last-child .select-service {
+    // border: 0;
+  }
+
+  .service-catagory-item .group-header {
+    background-color: #e8e8e8;
+  }
+
+  .select-service .panel-body {
+    padding: 10px 0;
+  }
+  .select-service-header{
+    border: 0;
+  }
+
+  .select-applicant > .panel-body{
+    padding: 15px 8px;
+  }
+}

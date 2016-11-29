@@ -31,6 +31,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     className: 'form-control',
 
+    attributes: {
+      name: 'FromUserId'
+    },
+
     initialize: function(props) {
       var self = this;
       _.extend(this, props);
