@@ -117,9 +117,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var request = this.model.toJSON();
-      // console.log(request);
+      var isActive = (this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
       var tmpl = this.template({
         request: request,
+        isActive: isActive,
 
         /* only 'edit' request mode will have delete button */
         needDelBtn: (this.requestFormModel.toJSON().mode !== 'read')

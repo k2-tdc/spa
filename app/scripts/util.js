@@ -162,7 +162,7 @@ window.utils = {
       // if (accessToken !== '') {
       if (!accessToken || accessToken === '' || accessToken === undefined) {
         // Send GET request to token endpoint for getting access token through AJAX
-        // console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
+        console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
         var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
         if (!xhr) {
           onError('CORS not supported');
@@ -173,7 +173,7 @@ window.utils = {
         // Response handlers.
         xhr.onload = function() {
           var text = xhr.responseText;
-          // console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
+          console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
 
           accessToken = self.getCookie('ACCESS-TOKEN');
           onSuccess(accessToken);
@@ -187,7 +187,7 @@ window.utils = {
 
         xhr.send();
       } else {
-        console.error('no access token');
+        console.error('use existing token: ', accessToken);
         // window.location.href = oauthUrl;
         onSuccess(accessToken);
       }
