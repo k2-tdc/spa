@@ -160,10 +160,9 @@ window.Hktdc = {
     var footerModel = new Hktdc.Models.Footer();
 
     // TODO: webview custom user-agent
-    // Hktdc.Config.isAppWebView = navigator.userAgent === ??????
-
+    Hktdc.Config.isAppWebView = utils.getParameterByName('intraapp') && utils.getParameterByName('intraapp') === 'yes';
     // Hktdc.Config.isAppWebView = true;
-    Hktdc.Config.isAppWebView = false;
+    // Hktdc.Config.isAppWebView = false;
 
     var headerView = new Hktdc.Views.Header({
       model: headerModel
