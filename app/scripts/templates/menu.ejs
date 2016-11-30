@@ -24,7 +24,7 @@
           } else {
           %>
 
-          <li class='menu-section <% if (items.onlyMobile) { %>visible-xs-block<% } %>' >
+          <li class='menu-section <% if (items.onlyMobileAndTablet) { %>visible-xs-block visible-sm-block<% } %>' >
             <span><%=items.Name%></span>
           </li>
 
@@ -33,7 +33,7 @@
           _.each(items.sumenu, function(submenu, sindex) {
           %>
 
-          <li routename='<%= submenu.RouteName %>' <% if (items.onlyMobile) { %>class='visible-xs-block'<% } %>>
+          <li routename='<%= submenu.RouteName %>' <% if (items.onlyMobileAndTablet) { %>class='visible-xs-block visible-sm-block'<% } %>>
             <a href='<%=submenu.Route%>'>
               <%= submenu.Name %>
               <% if(submenu.Scount && String(submenu.Scount) !== '0') { %>

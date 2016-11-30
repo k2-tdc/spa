@@ -44,12 +44,12 @@ Hktdc.Views = Hktdc.Views || {};
         Route: '/#',
         RouteName: 'Process List',
         Scount: null,
-        onlyMobile: true,
+        onlyMobileAndTablet: true,
         sumenu: _.map(rawMenu.PList, function(Process) {
           return {
             Mlink: '#',
             Name: Process.ProcessDisplayName,
-            onlyMobile: true,
+            onlyMobileAndTablet: true,
             Route: '/#',
             Scount: null,
             RouteName: Process.ProcessName
@@ -62,17 +62,17 @@ Hktdc.Views = Hktdc.Views || {};
         Route: '/#',
         RouteName: rawMenu.User.UserID,
         Scount: null,
-        onlyMobile: true,
+        onlyMobileAndTablet: true,
         sumenu: [{
           Mlink: '#',
           Name: 'Delegation',
-          onlyMobile: true,
+          onlyMobileAndTablet: true,
           Route: '/#delegation',
           Scount: null,
           RouteName: 'delegation'
         }, {
           Mlink: '#',
-          onlyMobile: true,
+          onlyMobileAndTablet: true,
           Name: 'Logout',
           Route: '/#',
           Scount: null,
@@ -115,7 +115,8 @@ Hktdc.Views = Hktdc.Views || {};
         // offCanvas: false
       });
       // console.log($('nav#menu'));
-      if ($(window).width() <= 767) {
+      if ($(window).width() <= 991) {
+      // if ($(window).width() <= 767) {
         $('nav#menu').data('mmenu').close();
       } else {
         $('nav#menu').data('mmenu').open();
