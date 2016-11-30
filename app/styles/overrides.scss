@@ -130,6 +130,10 @@ textarea {
   pointer-events: auto !important;
 }
 /* OVERRIDES LIBRARY'S STYLE START */
+.btn.btn-orange{
+  padding: 3px 10px !important;
+}
+
 .panel-default {
   border: 0;
   box-shadow: none;
@@ -340,12 +344,12 @@ div.dataTables_wrapper table {
   }
   // end vicosys
   @media screen and (min-width: 520px) {
-	
+
 	  .nav-header-main{
 		  padding:0;
-		 
+
 	  }
-	  
+
 	#header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
       font-size: 18px;
     }
@@ -459,12 +463,12 @@ div.dataTables_wrapper table {
   #header_main > .sep-space {
     table-layout: fixed;
   }
-	
+
 	#header_main .btn-group.nav-header-main{
 		width: calc(100% - 60px);
 	}
 
-  
+
 }
 @media screen and (max-width: 520px) {
   #content{
@@ -478,11 +482,11 @@ div.dataTables_wrapper table {
       }
     }
   }
-	
+
 	.refId{
 		min-width: 65px;
 	}
-	
+
 	#header_main .nav-header-main .btnnavheader{
 		width: 95%;
 		background: red;
@@ -496,31 +500,31 @@ div.dataTables_wrapper table {
 		display: inline-block;
 		float: left;
 	}
-	
+
 	.text-lg-right{
 		padding-right:0;
 	}
-	
+
 	.select-service-body{
 		padding: 0 !important;
 	}
-	
+
 	#header_main .nav-header-main .glyphicon-menu-down
 	{
 		float: right;
 		margin-right: 10px;
 	}
-	
+
 	#footer{
 		padding: 0 8px;
 	}
-	
+
 	.buttons-container{
 		background: #e8e8e8;
 		padding: 0;
 		border: 0;
 	}
-	
+
 }
 @media screen and (min-width: 768px) {
   .mm-opened .text-lg-right {
@@ -555,4 +559,3 @@ div.dataTables_wrapper table {
 .b{ border:1px solid red; }
 .reset-line-h { line-height: inherit !important; }
 .font-bold { font-weight: bold; }
-
