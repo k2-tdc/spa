@@ -29,26 +29,21 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickWorkflowBtnHandler: function(ev) {
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
+      // var isConfirm = confirm('Are you sure to ' + actionName + ' the request?');
       var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
       var self = this;
-      if (status === 'Review' && this.model.toJSON().showSave) {
-        self.saveAndApprover(status, 'approver', function() {
-          var isConfirm = confirm('Are you sure want to ' + actionName + '?');
-          if (isConfirm) {
+      var isConfirm = confirm('Are you sure want to ' + actionName + '?');
+      if (isConfirm) {
+        if (status === 'Review' && this.model.toJSON().showSave) {
+          self.saveAndApprover(status, 'approver', function() {
             self.workflowHandler(ev);
-          } else {
-            console.log('not ' + actionName);
-            return false;
-          }
-        });
-      } else {
-        var isConfirm = confirm('Are you sure want to ' + actionName + '?');
-        if (isConfirm) {
-          self.workflowHandler(ev);
+          });
         } else {
-          console.log('not ' + actionName);
-          return false;
+          self.workflowHandler(ev);
         }
+      } else {
+        console.log('not ' + actionName);
+        return false;
       }
     },
 
@@ -97,25 +92,39 @@ Hktdc.Views = Hktdc.Views || {};
     clickSaveHandler: function() {
       if (this.checkIsValid()) {
         var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
-        this.saveAndApprover(status, '', function() {
-          Backbone.history.navigate('draft', {trigger: true});
-        });
+        var isConfirm = confirm('confirm save?');
+        if (isConfirm) {
+          this.saveAndApprover(status, '', function() {
+            Backbone.history.navigate('draft', {trigger: true});
+          });
+        } else {
+          return false;
+        }
       }
     },
 
     clickApplicantHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Submitted', 'applicant', function() {
-          Backbone.history.navigate('', {trigger: true});
-        });
+        var isConfirm = confirm('Are you sure you want to send to applicant?');
+        if (isConfirm) {
+          this.saveAndApprover('Submitted', 'applicant', function() {
+            Backbone.history.navigate('', {trigger: true});
+          });
+        } else {
+          return false;
+        }
       }
     },
-
     clickApproverHandler: function() {
       if (this.checkIsValid()) {
-        this.saveAndApprover('Submitted', 'approver', function() {
-          Backbone.history.navigate('', {trigger: true});
-        });
+        var isConfirm = confirm('Are you sure you want to send to approver?');
+        if (isConfirm) {
+          this.saveAndApprover('Submitted', 'approver', function() {
+            Backbone.history.navigate('', {trigger: true});
+          });
+        } else {
+          return false;
+        }
       }
     },
 
@@ -153,8 +162,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickRecallBtnHandler: function() {
       var self = this;
-      var Con = confirm('Are you sure want to ' + this.requestFormModel.toJSON().FormID + '?');
-      if (Con) {
+      var isConfirm = confirm('Are you sure want to ' + this.requestFormModel.toJSON().FormID + '?');
+      if (isConfirm) {
         Backbone.emulateHTTP = true;
         Backbone.emulateJSON = true;
         var ActionModel = Backbone.Model.extend({
@@ -286,7 +295,7 @@ Hktdc.Views = Hktdc.Views || {};
           if (insertServiceResponse.FormID) {
             // window.location.href = Hktdc.Config.projectPath + '#draft';
             Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'Record Saved Successfully <br /> Reference ID : ' + insertServiceResponse.FormID,
+              message: 'Your request is confirmed and sent to ' + realSubmitTo + '.<br /> The ref. code is ' + insertServiceResponse.FormID,
               title: 'Success',
               type: 'success'
             });

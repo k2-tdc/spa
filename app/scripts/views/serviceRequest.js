@@ -117,7 +117,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var request = this.model.toJSON();
-      var isActive = (this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
+      var isActive = (
+        this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
+        this.requestFormModel.toJSON().ActionTakerServiceType &&
+        request.GUID
+      );
       var tmpl = this.template({
         request: request,
         isActive: isActive,

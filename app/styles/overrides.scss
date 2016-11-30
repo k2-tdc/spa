@@ -130,6 +130,13 @@ textarea {
   pointer-events: auto !important;
 }
 /* OVERRIDES LIBRARY'S STYLE START */
+.modal-header{
+  background: lighten(#e66100, 20%);
+}
+.modal-content{
+  overflow: hidden;
+}
+
 .btn.btn-orange{
   padding: 3px 10px !important;
 }
