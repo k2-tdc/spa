@@ -118,8 +118,11 @@ textarea {
 
 #page {
   // z-index: 1 ;
+  z-index: 2;
   pointer-events: none !important;
 }
+
+
 
 #content,
 #footer,
@@ -188,6 +191,7 @@ label.control-label {
 div.full-width > button:not(.dropdown-toggle):not(.btn-add) {
   width: calc(100% - 26px);
   text-align: left;
+  overflow: hidden;
 }
 
 span.glyphicon.glyphicon-remove.select-applicant-del {
@@ -282,7 +286,7 @@ div.dataTables_wrapper table {
 
 @media screen and (max-width: 767px) {
   #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
-    font-size: 13px;
+    //font-size: 13px;
     padding: 6px 0;
     letter-spacing: -0.5px;
   }
@@ -332,8 +336,14 @@ div.dataTables_wrapper table {
   }
   // end vicosys
   @media screen and (min-width: 520px) {
-    #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
-      font-size: 16px;
+	
+	  .nav-header-main{
+		  padding:0;
+		 
+	  }
+	  
+	#header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+      font-size: 18px;
     }
   }
 }
@@ -445,13 +455,12 @@ div.dataTables_wrapper table {
   #header_main > .sep-space {
     table-layout: fixed;
   }
+	
+	#header_main .btn-group.nav-header-main{
+		width: calc(100% - 60px);
+	}
 
-  #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  
 }
 @media screen and (max-width: 520px) {
   #content{
@@ -459,10 +468,49 @@ div.dataTables_wrapper table {
     padding-right: 0;
     overflow: hidden;
   }
-
-  #footer{
-    padding: 0 8px;
-  }
+	
+	.refId{
+		min-width: 65px;
+	}
+	
+	#header_main .nav-header-main .btnnavheader{
+		width: 95%;
+		background: red;
+	}
+	.btn_txt
+	{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		width: 84%;
+		display: inline-block;
+		float: left;
+	}
+	
+	.text-lg-right{
+		padding-right:0;
+	}
+	
+	.select-service-body{
+		padding: 0 !important;
+	}
+	
+	#header_main .nav-header-main .glyphicon-menu-down
+	{
+		float: right;
+		margin-right: 10px;
+	}
+	
+	#footer{
+		padding: 0 8px;
+	}
+	
+	.buttons-container{
+		background: #e8e8e8;
+		padding: 0;
+		border: 0;
+	}
+	
 }
 @media screen and (min-width: 768px) {
   .mm-opened .text-lg-right {
@@ -474,3 +522,27 @@ div.dataTables_wrapper table {
     max-width: 150px;
   }
 }
+
+
+.w100p { width: 100%; }
+.p0{ padding:0 !important; }
+.p10{ padding:10px !important; }
+
+.p0m0{
+	padding:0 !important;
+	margin:0 !important;
+}
+
+.pr0{ padding-right:0; }
+.pl0{ padding-left:0; }
+
+.pl10{ padding-left:10px; }
+.pr10{ padding-right:10px; }
+.pt10{ padding-top:10px; }
+.pb10{ padding-bottom:10px; }
+
+
+.b{ border:1px solid red; }
+.reset-line-h { line-height: inherit !important; }
+.font-bold { font-weight: bold; }
+
