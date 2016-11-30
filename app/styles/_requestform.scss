@@ -168,6 +168,19 @@ span.service-title-desp {
 .filedownload {
   cursor: pointer;
   color: blue;
+  display: inline-block;
+  padding-left: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+
+.filename-container .deletefile{
+	margin-left:10px; 
+	margin-top: 13px;
+	cursor:pointer; 
+	position:absolute;
+	left:0;
 }
 
 .selectedServiceCount {
@@ -238,6 +251,10 @@ span.service-title-desp {
 .service-request-wrap ul.dropdown-menu > li {
   padding: 0;
   margin: 0;
+}
+
+.service-request-wrap .sep-space{
+	height: 5px;
 }
 
 .service-request.btn {
