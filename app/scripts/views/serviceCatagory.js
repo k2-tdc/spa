@@ -56,6 +56,11 @@ Hktdc.Views = Hktdc.Views || {};
         checked: $(ev.currentTarget).is(':checked'),
         open: $(ev.currentTarget).is(':checked')
       });
+      if (!$(ev.currentTarget).is(':checked')) {
+        // console.log($('.btn-del', this.el));
+        this.model.trigger('clearServiceRequest', this.model.toJSON());
+        // $('.btn-del', this.el).trigger('click');
+      }
     },
 
     onToggleButtonClick: function(ev) {

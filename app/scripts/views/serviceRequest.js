@@ -16,6 +16,7 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
     className: 'Headleve2sub',
     initialize: function(props) {
+      var self = this;
       try {
         _.extend(this, props);
         var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
@@ -31,7 +32,9 @@ Hktdc.Views = Hktdc.Views || {};
           $('.service-object-container', this.el).append(serviceObjectListView.el);
           this.initModelChangeHandler();
         }.bind(this));
-        // }
+
+        this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));
+        // this.listenTo('clearServiceRequest', this.deleteRequestObject.bind(this));
       } catch (e) {
         console.error('service request render error');
         console.log(e);
@@ -120,7 +123,7 @@ Hktdc.Views = Hktdc.Views || {};
       var isActive = (
         this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
         this.requestFormModel.toJSON().ActionTakerServiceType &&
-        request.GUID
+        this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID
       );
       var tmpl = this.template({
         request: request,
