@@ -7,7 +7,7 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.ReferenceId = Backbone.Model.extend({
 
-    url: function(){
+    url: function() {
       return Hktdc.Config.apiURL + '/GetReferenceID';
     },
 
@@ -18,9 +18,8 @@ Hktdc.Models = Hktdc.Models || {};
     validate: function(attrs, options) {
     },
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });
-
 })();
