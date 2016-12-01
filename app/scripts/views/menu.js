@@ -64,14 +64,15 @@ Hktdc.Views = Hktdc.Views || {};
         Scount: null,
         onlyMobileAndTablet: true,
         sumenu: [{
-          Mlink: '#',
-          Name: 'Delegation',
+          Mlink: '#delegation',
+          Name: 'Delegation (under construct)',
           onlyMobileAndTablet: true,
           Route: '/#delegation',
+          // Route: '/#',
           Scount: null,
           RouteName: 'delegation'
         }, {
-          Mlink: '#',
+          Mlink: '#logout',
           onlyMobileAndTablet: true,
           Name: 'Logout',
           Route: '/#',
@@ -99,8 +100,8 @@ Hktdc.Views = Hktdc.Views || {};
           raw.RouteName = upperLodash || 'HOME';
         }
         // console.log(upperLodash);
-        raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
-        raw.RouteName = upperLodash || 'HOME';
+        // raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
+        // raw.RouteName = upperLodash || 'HOME';
       });
 
       // console.log(menu);

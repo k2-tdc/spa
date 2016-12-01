@@ -14,7 +14,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'request/check/:requestId/:procId': 'editRequest',
       'request/all/:requestId/:sn': 'editRequest',
       'request/approval/:requestId/:sn': 'editRequest',
-      'delegation': 'delegationList',
+      // 'delegation': 'delegationList',
       'draft': 'draft',
       'alltask': 'allTask',
       'approvaltask': 'approvalTask'

@@ -176,25 +176,23 @@ module.exports = function(grunt) {
     // not enabled since usemin task does concat and uglify
     // check index.html to edit your build targets
     // enable this task if you prefer defining your build targets here
-    /*uglify: {
+    /* uglify: {
       dist: {}
-    },*/
+    }, */
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
       options: {
-        dest: '<%= yeoman.dist %>',
+        dest: '<%= yeoman.dist %>'
 
-        /* below change default to not uglify */
-        flow: {
-          steps: {
-            js: ['concat'],
-            // js: ['concat', 'uglify'],
-            css: ['concat', 'cssmin']
-          },
-          post: {}
-        }
-
-
+        /* override default to not uglify -- start */
+        // flow: {
+        //   steps: {
+        //     js: ['concat'],
+        //     css: ['concat', 'cssmin']
+        //   },
+        //   post: {}
+        // }
+        /* override default to not uglify -- end */
       }
     },
     usemin: {
@@ -356,7 +354,7 @@ module.exports = function(grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    // 'uglify',
+    'uglify',
     'copy',
     'rev',
     'usemin'

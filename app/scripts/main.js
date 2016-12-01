@@ -53,7 +53,7 @@ window.Hktdc = {
         projectPath: '/',
         SPAHomePath: '/'
       },
-      // REAL UAT VM
+      // REAL UAT VM - dev test
       uat: {
         api: {
           protocol: 'https',
@@ -63,6 +63,22 @@ window.Hktdc = {
         needAuthHeader: true,
         projectPath: '/vicosysspa/',
         SPAHomePath: '/vicosysspa/',
+        SPADomain: 'https://workflowuat.tdc.org.hk',
+        OAuthLoginPath: '/workflow/oauth2/login',
+        OAuthGetTokenPath: '/workflow/oauth2/token',
+        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo'
+      },
+
+      // REAL UAT VM - uat test
+      chsw: {
+        api: {
+          protocol: 'https',
+          host: 'api.uat.hktdc.org',
+          base: '/workflowdev/api/request'
+        },
+        needAuthHeader: true,
+        projectPath: '/chsw/',
+        SPAHomePath: '/chsw/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
         OAuthLoginPath: '/workflow/oauth2/login',
         OAuthGetTokenPath: '/workflow/oauth2/token',
@@ -87,7 +103,7 @@ window.Hktdc = {
       });
 
       // if (true) {
-      if (env === 'uat') {
+      if (env === 'uat' || env === 'chsw') {
         // TODO: prevent user make request when getting token
         $(document).ajaxStart(function() {
           NProgress.start();
@@ -273,7 +289,7 @@ window.Hktdc = {
 
 $(document).ready(function() {
   'use strict';
-  // Hktdc.init('dev');
-  // Hktdc.init('uat');
   Hktdc.init('localDev');
+  // Hktdc.init('uat');
+  // Hktdc.init('chsw');
 });
