@@ -76,13 +76,15 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateDateModelByEvent: function(ev) {
-      var field = $(ev.target).attr('name');
+      var field = $(ev.target).attr('field');
       var value = '';
+      var obj = {};
       if ($(ev.target).val()) {
         value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
       }
+      obj[field] = value;
 
-      this.updateModel(field, value);
+      this.model.set(obj);
     },
 
     initialize: function(props) {
@@ -374,7 +376,7 @@ Hktdc.Views = Hktdc.Views || {};
         })
         .on('changeDate', function(ev) {
           var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var fieldName = $input.attr('name');
+          var fieldName = $input.attr('field');
           var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
           var obj = {};
           obj[fieldName] = val;

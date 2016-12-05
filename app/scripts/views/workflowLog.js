@@ -78,6 +78,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderWrokflowLogItem: function(model) {
+      model.set({
+        CreatedOn: moment(model.toJSON().CreatedOn).format('DD MMM YYYY')
+      });
+      // console.log(model.toJSON());
       var workflowLogItemView = new Hktdc.Views.WorkflowLog({
         model: model
       });
@@ -87,7 +91,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       this.$el.html(this.template());
-      // console.log(this.model);
+      // this.model.set({
+      //   CreatedOn: moment()
+      // })
       this.collection.each(this.renderWrokflowLogItem);
       // setTimeout(() => {
       // $('.workflowlogTable', this.el).DataTable({

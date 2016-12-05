@@ -295,15 +295,15 @@ Hktdc.Views = Hktdc.Views || {};
           // if (true) {
           if (insertServiceResponse.FormID) {
             // window.location.href = Hktdc.Config.projectPath + '#draft';
-            if (realSubmitTo) {
+            if (!submitTo) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Your request is confirmed and sent to ' + realSubmitTo + '.<br /> The ref. code is ' + insertServiceResponse.FormID,
+                message: 'Your Draft has been saved. <br /> The request ID is ' + insertServiceResponse.FormID,
                 title: 'Success',
                 type: 'success'
               });
             } else {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Your Draft is saved. <br /> The ref. code is ' +  + insertServiceResponse.FormID,
+                message: 'Your request is confirmed and sent to ' + realSubmitTo + '.<br /> The ref. code is ' + insertServiceResponse.FormID,
                 title: 'Success',
                 type: 'success'
               });
