@@ -107,7 +107,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.checkIsValid()) {
         var isConfirm = confirm('Are you sure you want to send to applicant?');
         if (isConfirm) {
-          this.saveAndApprover('Submitted', 'applicant', function() {
+          this.saveAndApprover('Review', 'applicant', function() {
             Backbone.history.navigate('', {trigger: true});
           });
         } else {
@@ -115,11 +115,12 @@ Hktdc.Views = Hktdc.Views || {};
         }
       }
     },
+
     clickApproverHandler: function() {
       if (this.checkIsValid()) {
         var isConfirm = confirm('Are you sure you want to send to approver?');
         if (isConfirm) {
-          this.saveAndApprover('Submitted', 'approver', function() {
+          this.saveAndApprover('Approval', 'approver', function() {
             Backbone.history.navigate('', {trigger: true});
           });
         } else {

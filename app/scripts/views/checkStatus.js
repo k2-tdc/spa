@@ -352,6 +352,8 @@ Hktdc.Views = Hktdc.Views || {};
       if (status === 'Draft') {
         return 'Draft <br /> by: ' + Hktdc.Config.userName;
         // return '<div><button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button></div>';
+      } else if (status === 'Submitted') {
+        return 'Submitted<br /> by: ' + Hktdc.Config.userName;
       } else if (status === 'Review') {
         return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
       } else if (status === 'Approval') {
@@ -360,8 +362,6 @@ Hktdc.Views = Hktdc.Views || {};
         return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
       } else if (status === 'ITSApproval') {
         return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
-      } else if (status === 'Submitted') {
-        return formStatusDisplay + '<br /> by: ' + Hktdc.Config.userID;
       } else {
         return formStatusDisplay + '<br /> by: ' + row.LastUser;
       }
