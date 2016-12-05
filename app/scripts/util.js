@@ -151,15 +151,18 @@ window.utils = {
     var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
     // var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
 
+    // if no refresh token
     if (!refreshToken) {
       // Initiate OAuth login flow
       // console.log(oauthUrl);
       window.location.href = oauthUrl;
+
+    // else have refresh token
     } else {
       accessToken = self.getCookie('ACCESS-TOKEN');
       console.log('accessToken:' + accessToken);
 
-      // if (accessToken !== '') {
+      // if access token is invalid: no accessToken OR accessToken is expiried
       if (!accessToken || accessToken === '' || accessToken === undefined) {
         // Send GET request to token endpoint for getting access token through AJAX
         console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
@@ -186,6 +189,7 @@ window.utils = {
         };
 
         xhr.send();
+      // access token is valid
       } else {
         console.error('use existing token: ', accessToken);
         // window.location.href = oauthUrl;

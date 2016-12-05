@@ -74,7 +74,7 @@ window.Hktdc = {
         api: {
           protocol: 'https',
           host: 'api.uat.hktdc.org',
-          base: '/workflowdev/api/request'
+          base: '/workflow/api/request'
         },
         needAuthHeader: true,
         projectPath: '/chsw/',
