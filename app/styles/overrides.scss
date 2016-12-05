@@ -116,6 +116,10 @@ textarea {
   // z-index: 1;
 }
 
+#mainContent {
+  max-width: 700px;
+}
+
 #page {
   // z-index: 1 ;
   // z-index: 2;
@@ -131,7 +135,7 @@ textarea {
 }
 /* OVERRIDES LIBRARY'S STYLE START */
 .modal-header{
-  background: lighten(#e66100, 20%);
+  background: #F7A36B;
 }
 .modal-content{
   overflow: hidden;

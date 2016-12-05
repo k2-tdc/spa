@@ -20,71 +20,6 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtremark': 'updateNewRequestModel'
     },
 
-    checkBudgetAndService: function() {
-      if (this.model.toJSON().mode === 'read') {
-        return false;
-      }
-      var self = this;
-      var haveSelectService = !!this.model.toJSON().selectedServiceCollection.toJSON().length;
-      var haveFilledCost = !!this.model.toJSON().EstimatedCost;
-      // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
-      // console.log(this.model.toJSON().EstimatedCost);
-      if (!(haveSelectService && haveFilledCost)) {
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: 'please select service and filled the cost field',
-          type: 'error',
-          title: 'Error'
-        });
-        return false;
-      } else {
-        var recommendCollection = new Hktdc.Collections.Recommend();
-        var ruleCodeArr = _.map(this.model.toJSON().selectedServiceCollection.toJSON(), function(selectedService) {
-          return selectedService.Approver;
-        });
-        var ruleCode = _.uniq(ruleCodeArr).join(';');
-        // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
-        var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
-        var cost = this.model.toJSON().EstimatedCost;
-        recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
-        recommendCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            var recommendListView = new Hktdc.Views.RecommendList({
-              collection: recommendCollection,
-              requestFormModel: self.model
-            });
-
-            $('.recommend-list', self.el).remove('.recommend-list');
-            $('.recommend-container', self.el).append(recommendListView.el);
-          },
-          error: function() {
-            console.log('error');
-          }
-        });
-      }
-      // return (this.model.toJSON().selectedServiceCollection.toJSON().length && this.model.toJSON().cost);
-    },
-
-    updateNewRequestModel: function(ev) {
-      var targetField = $(ev.target).attr('field');
-      if (this.model.toJSON().mode === 'read' && targetField !== 'Comment') {
-        return false;
-      }
-      var updateObject = {};
-      updateObject[targetField] = $(ev.target).val();
-      this.model.set(updateObject);
-    },
-
-    updateDateModelByEvent: function(ev) {
-      var field = $(ev.target).attr('name');
-      var value = '';
-      if ($(ev.target).val()) {
-        value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
-      }
-
-      this.updateModel(field, value);
-    },
-
     initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
       // Backbone.Validation.bind(this);
@@ -129,66 +64,6 @@ Hktdc.Views = Hktdc.Views || {};
             setTimeout(function() {
               self.initModelChange();
             }, 500);
-          })
-          .fail(function(e) {
-            console.error(e);
-          });
-
-      /* mode === read */
-      } else if (this.model.toJSON().mode === 'read') {
-        console.debug('This is << READ >> mode');
-        Q.all([
-          self.loadServiceCatagory(),
-          self.loadEmployee(),
-          self.loadFileTypeRules()
-          // ... load other remote resource
-        ])
-          .then(function(results) {
-            /* must sync RequestList to selectedServiceCollection for updating */
-            var recommend = _.find(results[1], function(employee) {
-              return employee.UserId === self.model.toJSON().ApproverUserID;
-            });
-            self.employeeArray = results[1];
-            console.log(self.employeeArray);
-            /* need override the workerId and WorkerFullName */
-            recommend.WorkerId = recommend.UserId;
-            recommend.WorkerFullName = recommend.UserFullName;
-
-            self.model.set({
-              selectedServiceTree: self.model.toJSON().RequestList,
-              selectedRecommentModel: new Hktdc.Models.Recommend(recommend)
-            });
-
-            // console.log(self.model.toJSON().RequestList);
-
-            self.renderSelectedCCView(self.model.toJSON().RequestCC);
-            self.renderWorkflowLog(self.model.toJSON().ProcessLog);
-            self.renderAttachment(results[2], self.model.toJSON().Attachments);
-            /* direct put the Request list to collection because no need to change selection */
-            self.renderServiceCatagory(results[0]);
-
-            // quick hack to do after render
-            setTimeout(function() {
-              $('input, textarea:not(.keepEdit), button', self.el).prop('disabled', 'disabled');
-              /*
-              var FormStatus = self.model.toJSON().FormStatus;
-              var Preparer = self.model.toJSON().PreparerUserID;
-              var Applicant = self.model.toJSON().ApplicantUserID;
-              var Approver = self.model.toJSON().ApproverUserID;
-              var ActionTaker = self.model.toJSON().ActionTakerUserID;
-              var ITSApprover = self.model.toJSON().ITSApproverUserID;
-
-              self.renderRequestFormButton(
-                FormStatus,
-                Preparer,
-                Applicant,
-                Approver,
-                ActionTaker,
-                ITSApprover
-              );
-              */
-              self.renderButtonHandler();
-            });
           })
           .fail(function(e) {
             console.error(e);
@@ -272,6 +147,73 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         console.error('no available request mode');
       }
+    },
+
+    checkBudgetAndService: function() {
+      if (this.model.toJSON().mode === 'read') {
+        return false;
+      }
+      var self = this;
+      var haveSelectService = !!this.model.toJSON().selectedServiceCollection.toJSON().length;
+      var haveFilledCost = !!this.model.toJSON().EstimatedCost;
+      // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
+      // console.log(this.model.toJSON().EstimatedCost);
+      if (!(haveSelectService && haveFilledCost)) {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: 'please select service and filled the cost field',
+          type: 'error',
+          title: 'Error'
+        });
+        return false;
+      } else {
+        var recommendCollection = new Hktdc.Collections.Recommend();
+        var ruleCodeArr = _.map(this.model.toJSON().selectedServiceCollection.toJSON(), function(selectedService) {
+          return selectedService.Approver;
+        });
+        var ruleCode = _.uniq(ruleCodeArr).join(';');
+        // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
+        var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
+        var cost = this.model.toJSON().EstimatedCost;
+        recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
+        recommendCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            var recommendListView = new Hktdc.Views.RecommendList({
+              collection: recommendCollection,
+              requestFormModel: self.model
+            });
+
+            $('.recommend-list', self.el).remove('.recommend-list');
+            $('.recommend-container', self.el).append(recommendListView.el);
+          },
+          error: function() {
+            console.log('error');
+          }
+        });
+      }
+      // return (this.model.toJSON().selectedServiceCollection.toJSON().length && this.model.toJSON().cost);
+    },
+
+    updateNewRequestModel: function(ev) {
+      var targetField = $(ev.target).attr('field');
+      if (this.model.toJSON().mode === 'read' && targetField !== 'Comment') {
+        return false;
+      }
+      var updateObject = {};
+      updateObject[targetField] = $(ev.target).val();
+      this.model.set(updateObject);
+    },
+
+    updateDateModelByEvent: function(ev) {
+      var field = $(ev.target).attr('field');
+      var value = '';
+      var obj = {};
+      if ($(ev.target).val()) {
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
+      }
+      obj[field] = value;
+
+      this.model.set(obj);
     },
 
     initModelChange: function() {
@@ -374,7 +316,7 @@ Hktdc.Views = Hktdc.Views || {};
         })
         .on('changeDate', function(ev) {
           var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var fieldName = $input.attr('name');
+          var fieldName = $input.attr('field');
           var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
           var obj = {};
           obj[fieldName] = val;
@@ -517,8 +459,9 @@ Hktdc.Views = Hktdc.Views || {};
       $input.autocomplete({
         source: newEmployeeArray,
         select: function(ev, ui) {
-          var existing = _.find(self.model.toJSON().selectedCCCollection.toJSON(), function(cc){
-            return cc.UserId === ui.item.UserId;
+          console.log(ui);
+          var existing = _.find(self.model.toJSON().selectedCCCollection.toJSON(), function(cc) {
+            return (cc.UserId === ui.item.UserId);
           });
           if (!existing) {
             self.model.toJSON().selectedCCCollection.add(new Hktdc.Models.CC(ui.item));
