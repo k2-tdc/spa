@@ -207,6 +207,7 @@ window.Hktdc = {
       .then(function(menuModel) {
         var menu = menuModel.toJSON();
         Hktdc.Config.userName = menu.UserName;
+        Hktdc.Config.employeeID = menu.EmployeeNo;
         menuModel.set({
           Menu: menu.Menu,
           PList: menu.PList,

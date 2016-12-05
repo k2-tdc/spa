@@ -31,6 +31,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         canChooseStatus: true,
         searchUserType: 'Applicant',
         UserId: Hktdc.Config.userID,
+        EmployeeId: Hktdc.Config.employeeID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
@@ -61,6 +62,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         canChooseStatus: false,
         searchUserType: 'Applicant',
         UserId: Hktdc.Config.userID,
+        EmployeeId: Hktdc.Config.employeeID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
@@ -89,8 +91,8 @@ Hktdc.Routers = Hktdc.Routers || {};
       var checkStatusModel = new Hktdc.Models.CheckStatus({
         searchUserType: 'Sharing User',
         canChooseStatus: true,
-
         UserId: Hktdc.Config.userID,
+        EmployeeId: Hktdc.Config.employeeID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
@@ -119,8 +121,8 @@ Hktdc.Routers = Hktdc.Routers || {};
       var checkStatusModel = new Hktdc.Models.CheckStatus({
         canChooseStatus: true,
         searchUserType: 'Sharing User',
-
         UserId: Hktdc.Config.userID,
+        EmployeeId: Hktdc.Config.employeeID,
         CStat: utils.getParameterByName('CStat'),
         ReferID: utils.getParameterByName('ReferID'),
         FDate: utils.getParameterByName('FDate'),
@@ -147,33 +149,43 @@ Hktdc.Routers = Hktdc.Routers || {};
     /* this handling insert new */
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-      var newRequestModel = new Hktdc.Models.NewRequest({
-        // ReferenceID: referenceIdModel.toJSON().ReferenceID,
-        PreparerFNAME: Hktdc.Config.userName,
-        PreparerUserID: Hktdc.Config.userID,
-        CreatedOn: window.moment().format('DD MMM YYYY'),
-        mode: 'new',
 
-        /* set the default selected applicant is self */
-        selectedApplicantModel: new Hktdc.Models.Applicant({
-          UserId: Hktdc.Config.userID,
-          UserFullName: Hktdc.Config.userName
-        })
+      var referenceIdModel = new Hktdc.Models.ReferenceId();
+      referenceIdModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          var newRequestModel = new Hktdc.Models.NewRequest({
+            ReferenceID: referenceIdModel.toJSON().ReferenceID,
+            PreparerFNAME: Hktdc.Config.userName,
+            PreparerUserID: Hktdc.Config.userID,
+            CreatedOn: window.moment().format('DD MMM YYYY'),
+            mode: 'new',
+
+            /* set the default selected applicant is self */
+            selectedApplicantModel: new Hktdc.Models.Applicant({
+              UserId: Hktdc.Config.userID,
+              UserFullName: Hktdc.Config.userName
+            })
+          });
+          var nrView = new Hktdc.Views.NewRequest({
+            model: newRequestModel
+          });
+
+          $('#mainContent').empty().html(nrView.el);
+
+          var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+          var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+            collection: subheaderMenuListCollection,
+            currentPageName: 'New Request'
+          });
+          subheaderMenuListView.render();
+
+          $('.subheader-menu-container').html(subheaderMenuListView.el);
+        },
+        error: function(err) {
+        }
       });
-      var nrView = new Hktdc.Views.NewRequest({
-        model: newRequestModel
-      });
 
-      $('#mainContent').empty().html(nrView.el);
-
-      var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
-      var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
-        collection: subheaderMenuListCollection,
-        currentPageName: 'New Request'
-      });
-      subheaderMenuListView.render();
-
-      $('.subheader-menu-container').html(subheaderMenuListView.el);
 
       /* var referenceIdModel = new Hktdc.Models.ReferenceId();
       referenceIdModel.fetch({

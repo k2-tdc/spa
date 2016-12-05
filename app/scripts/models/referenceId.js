@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.ReferenceId = Backbone.Model.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL + '/GetReferenceID';
+      return Hktdc.Config.apiURL + '/GetReferenceID?UserId=' + Hktdc.Config.userID;
     },
 
     defaults: {

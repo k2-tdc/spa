@@ -14,8 +14,9 @@ Hktdc.Collections = Hktdc.Collections || {};
         RuleID: Hktdc.Config.RuleCode,
         UserId: '',
         WorkId: Hktdc.Config.userID,
+        EmployeeId: Hktdc.Config.employeeID,
         Type: type || null
-      }
+      };
     },
 
     url: function(type) {

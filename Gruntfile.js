@@ -182,16 +182,16 @@ module.exports = function(grunt) {
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
       options: {
-        dest: '<%= yeoman.dist %>'
+        // dest: '<%= yeoman.dist %>'
 
         /* override default to not uglify -- start */
-        // flow: {
-        //   steps: {
-        //     js: ['concat'],
-        //     css: ['concat', 'cssmin']
-        //   },
-        //   post: {}
-        // }
+        flow: {
+          steps: {
+            js: ['concat'],
+            css: ['concat', 'cssmin']
+          },
+          post: {}
+        }
         /* override default to not uglify -- end */
       }
     },
@@ -354,7 +354,7 @@ module.exports = function(grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    'uglify',
+    // 'uglify',
     'copy',
     'rev',
     'usemin'

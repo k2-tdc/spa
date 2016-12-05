@@ -191,7 +191,7 @@ window.utils = {
         xhr.send();
       // access token is valid
       } else {
-        console.error('use existing token: ', accessToken);
+        console.debug('use existing token: ', accessToken);
         // window.location.href = oauthUrl;
         onSuccess(accessToken);
       }

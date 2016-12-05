@@ -134,7 +134,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var usefulData = _.pick(this.model.toJSON(), 'CStat', 'ReferID', 'FDate', 'TDate', 'Appl', 'UserId', 'SUser', 'ProsIncId');
+      var usefulData = _.pick(this.model.toJSON(), 'CStat', 'ReferID', 'FDate', 'TDate', 'Appl', 'UserId', 'SUser', 'ProsIncId', 'EmployeeId');
       var filterArr = _.map(usefulData, function(val, filter) {
         var value = (_.isNull(val)) ? '' : val;
         return filter + '=' + value;
