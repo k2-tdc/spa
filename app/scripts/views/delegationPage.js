@@ -167,39 +167,42 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       $('#delegationTable tbody', this.el).on('click', '.btn-del', function(ev) {
-        var isConfirm = confirm('Are you sure to delete delegation?');
-        if (isConfirm) {
-          Backbone.emulateHTTP = true;
-          Backbone.emulateJSON = true;
-          ev.stopPropagation();
-          var rowData = self.delegationDataTable.row($(this).parents('tr')).data();
-          var DelegationID = rowData.DelegationID;
-          var DeleteRequestModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/DeleteDelegation?DeleID=' + DelegationID
-          });
-          var DeleteRequestModelInstance = new DeleteRequestModel();
-          DeleteRequestModelInstance.save(null, {
-            beforeSend: utils.setAuthHeader,
-            success: function(model, response) {
-              // console.log('success: ', a);
-              // console.log(b);
-              self.delegationDataTable.ajax.reload();
-              // Hktdc.Dispatcher.trigger('reloadMenu');
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'error on delete delegation' + JSON.stringify(err, null, 2),
-                type: 'error',
-                title: 'Error'
-              });
-            }
-          });
-        } else {
-          ev.stopPropagation();
-          return false;
-        }
-        // var rowData = self.delegationDataTable.row(this).data();
-        // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
+        ev.stopPropagation();
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'confirmation',
+          message: 'Are you sure to delete delegation?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+
+            Backbone.emulateHTTP = true;
+            Backbone.emulateJSON = true;
+            var rowData = self.delegationDataTable.row($(this).parents('tr')).data();
+            var DelegationID = rowData.DelegationID;
+            var DeleteRequestModel = Backbone.Model.extend({
+              url: Hktdc.Config.apiURL + '/DeleteDelegation?DeleID=' + DelegationID
+            });
+            var DeleteRequestModelInstance = new DeleteRequestModel();
+            DeleteRequestModelInstance.save(null, {
+              beforeSend: utils.setAuthHeader,
+              success: function(model, response) {
+                // console.log('success: ', a);
+                // console.log(b);
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                self.delegationDataTable.ajax.reload();
+                // Hktdc.Dispatcher.trigger('reloadMenu');
+              },
+              error: function(err) {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'error on delete delegation' + JSON.stringify(err, null, 2),
+                  type: 'error',
+                  title: 'Error'
+                });
+              }
+            });
+          }
+        });
       });
     },
 

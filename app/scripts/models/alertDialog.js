@@ -12,8 +12,9 @@ Hktdc.Models = Hktdc.Models || {};
     defaults: {
       message: '',
       title: '',
-      type: 'info',
-      catagory: 'alert'
+      type: 'notice',
+      catagory: 'alert',
+      open: false
     },
 
     validate: function(attrs, options) {

@@ -32,11 +32,12 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.on('hidden.bs.modal', function() {
         self.model.set({open: false});
       });
+      // self.$el.modal('show');
 
       this.model.on('change', function(model) {
         if (model.toJSON().open) {
-          self.render();
           self.$el.modal('show');
+          self.render();
         }
       });
     },

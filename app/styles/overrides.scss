@@ -134,11 +134,27 @@ textarea {
   pointer-events: auto !important;
 }
 /* OVERRIDES LIBRARY'S STYLE START */
-.modal-header{
-  background: #F7A36B;
-}
 .modal-content{
-  overflow: hidden;
+  padding: 3px;
+  border-radius: 2px;
+  .modal-header{
+    background: #F7A36B;
+    border: 1px #aaa solid;
+  }
+  .modal-body{
+    border: 1px #aaa solid;
+    border-top: none;
+    overflow: hidden;
+    font-weight: bold;
+    text-align: center;
+    .modal-actions{
+      padding: 20px;
+      padding-bottom: 8px;
+      button{
+        min-width: 120px;
+      }
+    }
+  }
 }
 
 .btn.btn-orange{

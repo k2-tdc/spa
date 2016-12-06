@@ -202,6 +202,7 @@ window.Hktdc = {
     }
 
     this.initAlertDialog();
+    this.initConfirmDialog();
 
     this.loadMenu()
       .then(function(menuModel) {
@@ -283,6 +284,33 @@ window.Hktdc = {
         title: data.title,
         type: data.type,
         open: true
+      });
+    });
+  },
+
+  initConfirmDialog: function() {
+    var confirmDialogView = new Hktdc.Views.ConfirmDialog({
+      model: new Hktdc.Models.ConfirmDialog()
+    });
+
+    $('body').append(confirmDialogView);
+
+    confirmDialogView.listenTo(window.Hktdc.Dispatcher, 'openConfirm', function(data) {
+      confirmDialogView.model.set({
+        message: data.message,
+        title: data.title,
+        onConfirm: data.onConfirm,
+        open: true
+      });
+    });
+    confirmDialogView.listenTo(window.Hktdc.Dispatcher, 'closeConfirm', function(data) {
+      confirmDialogView.model.set({
+        open: false
+      });
+    });
+    confirmDialogView.listenTo(window.Hktdc.Dispatcher, 'toggleLockButton', function(isLock) {
+      confirmDialogView.model.set({
+        lockConfirmBtn: isLock
       });
     });
   }

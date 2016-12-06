@@ -29,25 +29,35 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickWorkflowBtnHandler: function(ev) {
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
-      // var isConfirm = confirm('Are you sure to ' + actionName + ' the request?');
       var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
       var self = this;
-      var isConfirm = confirm('Are you sure want to ' + actionName + '?');
-      if (isConfirm) {
-        if (status === 'Review' && this.model.toJSON().showSave) {
-          self.saveAndApprover(status, 'approver', function() {
-            self.workflowHandler(ev);
-          });
-        } else {
-          self.workflowHandler(ev);
+      Hktdc.Dispatcher.trigger({
+        title: 'confirmation',
+        message: 'Are you sure want to ' + actionName + '?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+          if (status === 'Review' && this.model.toJSON().showSave) {
+            self.saveAndApprover(status, 'approver', function() {
+              self.workflowHandler(ev, function() {
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              }, function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              });
+            });
+          } else {
+            self.workflowHandler(ev, function() {
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+            }, function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+            });
+          }
         }
-      } else {
-        console.log('not ' + actionName);
-        return false;
-      }
+      });
     },
 
-    workflowHandler: function(ev) {
+    workflowHandler: function(ev, successCallback, errorCallback) {
       // console.log(Backbone.history.getFragment());
       var self = this;
       var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
@@ -82,126 +92,174 @@ Hktdc.Views = Hktdc.Views || {};
           self.successRedirect();
           Hktdc.Dispatcher.trigger('reloadMenu');
           // window.location.href = "alltask.html";
+          if (successCallback) {
+            successCallback();
+          }
         },
         error: function(action, response) {
-          console.log('error');
+          // console.log('error on worklist action');
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Error on workflow action',
+            type: 'error',
+            title: 'Error'
+          });
+
+          if (errorCallback) {
+            errorCallback();
+          }
         }
       });
     },
 
     clickSaveHandler: function() {
+      var self = this;
+      // if (true) {
       if (this.checkIsValid()) {
         var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
-        var isConfirm = confirm('confirm save?');
-        if (isConfirm) {
-          this.saveAndApprover(status, '', function() {
-            Backbone.history.navigate('draft', {trigger: true});
-          });
-        } else {
-          return false;
-        }
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'confirmation',
+          message: 'Confirm save the Draft?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+            self.saveAndApprover(status, '', function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Backbone.history.navigate('draft', {trigger: true});
+            }, function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+            });
+          }
+        });
       }
     },
 
     clickApplicantHandler: function() {
+      var self = this;
       if (this.checkIsValid()) {
-        var isConfirm = confirm('Are you sure you want to send to applicant?');
-        if (isConfirm) {
-          this.saveAndApprover('Review', 'applicant', function() {
-            Backbone.history.navigate('', {trigger: true});
-          });
-        } else {
-          return false;
-        }
+        Hktdc.Dispatcher.trigger({
+          title: 'Comfirmation',
+          message: 'Are you sure you want to send to applicant?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+            self.saveAndApprover('Review', 'applicant', function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Backbone.history.navigate('', {trigger: true});
+            }, function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+            });
+          }
+        });
       }
     },
 
     clickApproverHandler: function() {
+      var self = this;
       if (this.checkIsValid()) {
-        var isConfirm = confirm('Are you sure you want to send to approver?');
-        if (isConfirm) {
-          this.saveAndApprover('Approval', 'approver', function() {
-            Backbone.history.navigate('', {trigger: true});
-          });
-        } else {
-          return false;
-        }
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'confirmation',
+          message: 'Are you sure you want to send to approver?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+            self.saveAndApprover('Approval', 'approver', function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Backbone.history.navigate('', {trigger: true});
+            }, function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+            });
+          }
+        });
       }
     },
 
     clickDeleteBtnHandler: function() {
-      var isConfirm = confirm('Are you sure to delete the request?');
       var self = this;
-      if (isConfirm) {
-        Backbone.emulateHTTP = true;
-        Backbone.emulateJSON = true;
-        var refId = this.requestFormModel.toJSON().ReferenceID;
-        var DeleteRequestModel = Backbone.Model.extend({
-          url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
-        });
-        var DeleteRequestModelInstance = new DeleteRequestModel();
-        DeleteRequestModelInstance.save(null, {
-          beforeSend: utils.setAuthHeader,
-          success: function(model, response) {
-            // console.log('success: ', a);
-            // console.log(b);
-            Hktdc.Dispatcher.trigger('reloadMenu');
-            // Backbone.history.navigate('draft', {trigger: true});
-            self.successRedirect();
-          },
-          error: function(err) {
-            console.log(err);
-            // console.log(b);
-          }
-        });
-      } else {
-        return false;
-      }
-      // var rowData = self.statusDataTable.row(this).data();
-      // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'confirmation',
+        message: 'Are you sure to delete the request?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+
+          Backbone.emulateHTTP = true;
+          Backbone.emulateJSON = true;
+          var refId = this.requestFormModel.toJSON().ReferenceID;
+          var DeleteRequestModel = Backbone.Model.extend({
+            url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
+          });
+          var DeleteRequestModelInstance = new DeleteRequestModel();
+          DeleteRequestModelInstance.save(null, {
+            beforeSend: utils.setAuthHeader,
+            success: function(model, response) {
+              // console.log('success: ', a);
+              // console.log(b);
+              Hktdc.Dispatcher.trigger('reloadMenu');
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+
+              // Backbone.history.navigate('draft', {trigger: true});
+              self.successRedirect();
+            },
+            error: function(err) {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'server error on delete: ' + err,
+                type: 'error',
+                title: 'Error'
+              });
+              console.log(err);
+              // console.log(b);
+            }
+          });
+        }
+      });
     },
 
     clickRecallBtnHandler: function() {
       var self = this;
-      var isConfirm = confirm('Are you sure want to ' + this.requestFormModel.toJSON().FormID + '?');
-      if (isConfirm) {
-        Backbone.emulateHTTP = true;
-        Backbone.emulateJSON = true;
-        var ActionModel = Backbone.Model.extend({
-          urlRoot: Hktdc.Config.apiURL + '/RecallAction'
-        });
-        var action = new ActionModel();
-        action.set({
-          UserId: Hktdc.Config.userID,
-          ProcInstID: this.requestFormModel.toJSON().ProcInstID,
-          ActionName: 'Recall',
-          Comment: this.requestFormModel.toJSON().Comment
-        });
-        action.save({}, {
-          beforeSend: utils.setAuthHeader,
-          success: function(action, response) {
-            console.log(response);
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'Successfully Recall request',
-              type: 'success',
-              title: 'Success'
-            });
-            // Backbone.history.navigate('/', {trigger: true});
-            self.successRedirect();
-          },
-          error: function(action, response) {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'Error on Recall request' + JSON.stringify(response.responseText.Message, null, 2),
-              type: 'error',
-              title: 'Error'
-            });
-          }
-        });
-      } else {
-        return false;
-      }
-      // var rowData = self.statusDataTable.row(this).data();
-      // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'confirmation',
+        message: 'Are you sure want to ' + this.requestFormModel.toJSON().FormID + '?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+
+          Backbone.emulateHTTP = true;
+          Backbone.emulateJSON = true;
+          var ActionModel = Backbone.Model.extend({
+            urlRoot: Hktdc.Config.apiURL + '/RecallAction'
+          });
+          var action = new ActionModel();
+          action.set({
+            UserId: Hktdc.Config.userID,
+            ProcInstID: this.requestFormModel.toJSON().ProcInstID,
+            ActionName: 'Recall',
+            Comment: this.requestFormModel.toJSON().Comment
+          });
+          action.save({}, {
+            beforeSend: utils.setAuthHeader,
+            success: function(action, response) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Successfully Recall request',
+                type: 'notice',
+                title: 'Confirmation'
+              });
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+
+              // Backbone.history.navigate('/', {trigger: true});
+              self.successRedirect();
+            },
+            error: function(action, response) {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Error on Recall request' + JSON.stringify(response.responseText.Message, null, 2),
+                type: 'error',
+                title: 'Error'
+              });
+            }
+          });
+        }
+      });
     },
 
     checkIsValid: function() {
@@ -257,7 +315,7 @@ Hktdc.Views = Hktdc.Views || {};
       return isValid;
     },
 
-    saveAndApprover: function(status, submitTo, redirectCallback) {
+    saveAndApprover: function(status, submitTo, redirectCallback, failCallback) {
       /* set the request object */
       var realSubmitTo = this.requestFormModel.toJSON().applicantSubmittedTo;
       var self = this;
@@ -317,6 +375,10 @@ Hktdc.Views = Hktdc.Views || {};
             /* reload the menu for new counts */
             Hktdc.Dispatcher.trigger('reloadMenu');
           } else {
+            if (failCallback) {
+              failCallback();
+            }
+
             Hktdc.Dispatcher.trigger('openAlert', {
               message: 'error on saving the record',
               title: 'Error',
@@ -326,7 +388,10 @@ Hktdc.Views = Hktdc.Views || {};
         })
 
         .fail(function(err) {
-          console.log(err);
+          // console.log(err);
+          if (failCallback) {
+            failCallback();
+          }
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'caught error on saving the record: <br /><code>' + err + '</code>',
             title: 'Error',
