@@ -31,12 +31,12 @@ Hktdc.Views = Hktdc.Views || {};
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
       var self = this;
-      Hktdc.Dispatcher.trigger({
+      Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
         message: 'Are you sure want to ' + actionName + '?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
-          if (status === 'Review' && this.model.toJSON().showSave) {
+          if (status === 'Review' && self.model.toJSON().showSave) {
             self.saveAndApprover(status, 'approver', function() {
               self.workflowHandler(ev, function() {
                 Hktdc.Dispatcher.trigger('closeConfirm');
@@ -136,7 +136,7 @@ Hktdc.Views = Hktdc.Views || {};
     clickApplicantHandler: function() {
       var self = this;
       if (this.checkIsValid()) {
-        Hktdc.Dispatcher.trigger({
+        Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'Comfirmation',
           message: 'Are you sure you want to send to applicant?',
           onConfirm: function() {
@@ -183,7 +183,7 @@ Hktdc.Views = Hktdc.Views || {};
 
           Backbone.emulateHTTP = true;
           Backbone.emulateJSON = true;
-          var refId = this.requestFormModel.toJSON().ReferenceID;
+          var refId = self.requestFormModel.toJSON().ReferenceID;
           var DeleteRequestModel = Backbone.Model.extend({
             url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
           });
@@ -219,7 +219,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure want to ' + this.requestFormModel.toJSON().FormID + '?',
+        message: 'Are you sure want to ' + self.requestFormModel.toJSON().FormID + '?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
 
@@ -231,9 +231,9 @@ Hktdc.Views = Hktdc.Views || {};
           var action = new ActionModel();
           action.set({
             UserId: Hktdc.Config.userID,
-            ProcInstID: this.requestFormModel.toJSON().ProcInstID,
+            ProcInstID: self.requestFormModel.toJSON().ProcInstID,
             ActionName: 'Recall',
-            Comment: this.requestFormModel.toJSON().Comment
+            Comment: self.requestFormModel.toJSON().Comment
           });
           action.save({}, {
             beforeSend: utils.setAuthHeader,
