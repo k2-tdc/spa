@@ -1,31 +1,28 @@
-.form-sep {
-  height: 20px;
-  display: block;
-  width: 100%;
+.form_input {
+  max-width: 600px;
+}
+
+.form_data {
+  // max-width: 600px;
+  min-height: 1em;
 }
 
 .newrequest-basic-information {
   padding: 20px 0;
   width: 100%;
   margin: 0;
+  max-width: 900px;
+  & > div {
+    line-height: 35px;
+    text-align: left;
+    margin: 0;
+  }
+
+  div {
+    line-height: 30px;
+  }
 }
 
-.newrequest-basic-information > div {
-  line-height: 35px;
-  text-align: left;
-  margin: 0;
-}
-
-.select-applicant,
-.select-service,
-.select-service-header {
-  border: 1px rgba(0, 0, 0, .1) solid;
-  margin-bottom: 0;
-}
-
-.service-catagory-item > .select-service-header:hover {
-  box-shadow: 0 0 10px #f57921;
-}
 
 .select-applicant > .panel-body {
   padding: 15px;
@@ -176,9 +173,9 @@ span.service-title-desp {
 
 
 .filename-container .deletefile{
-	margin-left:10px; 
+	margin-left:10px;
 	margin-top: 13px;
-	cursor:pointer; 
+	cursor:pointer;
 	position:absolute;
 	left:0;
 }
@@ -212,14 +209,6 @@ span.service-title-desp {
 
 .service-type-container {
   padding: 15px;
-}
-
-.newrequest-basic-information {
-  max-width: 900px;
-
-  div {
-    line-height: 30px;
-  }
 }
 
 .service-request-input {
@@ -268,6 +257,45 @@ span.service-title-desp {
 
 .select-service-header div.newrequest-title {}
 
+// read mode
+#newRequest{
+  .select-applicant,
+  .select-service,
+  .select-service-header {
+    border: 1px rgba(0, 0, 0, .1) solid;
+    margin-bottom: 0;
+  }
+
+  .service-catagory-item > .select-service-header:hover {
+    box-shadow: 0 0 10px #f57921;
+  }
+
+}
+#readRequest{
+  .sep-space {
+    height: 2em;
+  }
+  .select-service-header {
+    border: 1px rgba(0, 0, 0, .1) solid;
+    margin-bottom: 0;
+  }
+
+  .readrequest-basic-information{
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .select-applicant {
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+}
+
+
+
+
+
 @media screen and (max-width: 480px) {
   .select-service-header .checkbox-option {
     font-size: 15px;
@@ -277,7 +305,6 @@ span.service-title-desp {
     margin: 0;
   }
 }
-
 @media screen and (max-width: 520px) {
   .field{
     padding: 0 8px;
@@ -321,5 +348,26 @@ span.service-title-desp {
 
   .select-applicant > .panel-body{
     padding: 15px 8px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .newrequest-basic-information div[class^="col-xs-"] {
+    padding: 0 10px;
+  }
+
+  .service-catagory-item > .select-service-header {
+    //background-color:#e8e8e8;
+  }
+
+  .buttons-container > .available-buttons {
+    background-color: #e8e8e8;
+  }
+
+  .service-catagory-item > .select-service-header:hover {
+    box-shadow: none;
+  }
+
+  .service-catagory-item > .select-service-header.panel-active {
+    box-shadow: none;
   }
 }
