@@ -45,6 +45,9 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       _.bindAll(this, 'renderWrokflowLogItem', 'clickToggleButton');
       this.requestFormModel = props.requestFormModel;
+      if (props.showLog) {
+        self.open();
+      }
       this.requestFormModel.on('change:showLog', function(model, isShow) {
         if (isShow) {
           self.open();

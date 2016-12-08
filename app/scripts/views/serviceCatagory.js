@@ -157,6 +157,72 @@ Hktdc.Views = Hktdc.Views || {};
 
   });
 
+  Hktdc.Views.ServiceCatagoryReadOnly = Backbone.View.extend({
+
+    template: JST['app/scripts/templates/serviceCategoryReadOnly.ejs'],
+
+    className: 'service-catagory-item',
+
+    tag: 'div',
+
+    initialize: function(props) {
+      var self = this;
+      _.extend(this, props);
+    },
+
+    renderServiceTypeList: function() {
+      /* initialize level2 service type */
+      var Catagory = this.model.toJSON();
+      var serviceTypeCollection = new Hktdc.Collections.ServiceType(Catagory.Level2);
+      // console.log('Catagory.Name: ', Catagory.Name);
+      try {
+        // console.log('selectedServiceCatTree', selectedServiceCatagoryTree);
+        var serviceTypeListView = new Hktdc.Views.ServiceTypeList({
+          collection: serviceTypeCollection,
+          selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
+          requestFormModel: this.requestFormModel,
+          serviceCatagoryModel: this.model
+        });
+        serviceTypeListView.render();
+        setTimeout(function() {
+          /* quick hack to let parent render on the window DOM first */
+          $('.service-type-container', this.el).html(serviceTypeListView.el);
+        }.bind(this));
+      } catch (e) {
+        // TODO: pop up alert dialog
+        console.error('render level 2 error', e);
+      }
+    },
+
+    render: function($container) {
+      var self = this;
+      var Catagory = this.model.toJSON();
+      var selectedServiceCount = 0;
+
+      this.selectedServiceCatagoryTree = _.find(this.requestFormModel.toJSON().RequestList, function(selectedCat) {
+        return Catagory.Name === selectedCat.Name;
+      });
+
+      if (this.selectedServiceCatagoryTree) {
+        selectedServiceCount = _.reduce(this.selectedServiceCatagoryTree.Level2, function(memo, level2Obj) {
+          return memo + level2Obj.Level3.length;
+        }, 0);
+      }
+
+      this.model.set({selectedServiceCount: selectedServiceCount});
+
+      // this.model.set({selectedServiceCount: this.selectedServiceCatagoryTree.toJSON().selectedServiceCollection.toJSON().length})
+      var tmpl = this.template({
+        serviceCatagory: this.model.toJSON()
+      });
+
+      $(this.el).append(tmpl);
+
+      this.renderServiceTypeList();
+    }
+
+  });
+
   Hktdc.Views.ServiceCatagoryList = Backbone.View.extend({
     tagName: 'div',
 
@@ -168,10 +234,21 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderCatagoryItem: function(model) {
-      var serviceCatagoryItemView = new Hktdc.Views.ServiceCatagory({
-        model: model,
-        requestFormModel: this.requestFormModel
+      model.set({
+        readonly: this.requestFormModel.toJSON().mode === 'read'
       });
+
+      if (this.requestFormModel.toJSON().mode === 'read') {
+        var serviceCatagoryItemView = new Hktdc.Views.ServiceCatagoryReadOnly({
+          model: model,
+          requestFormModel: this.requestFormModel
+        });
+      } else {
+        var serviceCatagoryItemView = new Hktdc.Views.ServiceCatagory({
+          model: model,
+          requestFormModel: this.requestFormModel
+        });
+      }
       serviceCatagoryItemView.render();
       $(this.el).append(serviceCatagoryItemView.el);
     },

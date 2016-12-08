@@ -61,7 +61,7 @@
         <div class="row">
           <label for="applicant" class="col-xs-2 col-sm-1 control-label text-lg-right">Applicant *</label>
           <div class="col-xs-8 col-sm-10 col-md-8 btn-group full-width p-r-0 applicant-container form_input">
-            <button type="button" class="btn btn-default btnapplicant selectedApplicant" data-toggle="dropdown">
+            <button type="button" class="btn btn-default btnapplicant selectedApplicant" field="selectedApplicant" data-toggle="dropdown">
               <% if (request.selectedApplicantName){ %>
                 <%= request.selectedApplicantName%>
               <% } else { %>
@@ -73,6 +73,7 @@
               <span class="sr-only">Toggle Dropdown</span>
             </button>
             <!-- applicant list here -->
+            <div class="error-message hidden">Please choose one</div>
 
           </div>
         </div>
@@ -103,8 +104,8 @@
             <!-- service type content here -->
             <!-- ========================= -->
           </div>
-
           <div class="sep-space"></div>
+
           <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Justification and Important Notes *
               <span class="service-title-desp">(Business Value / Descripttion / Reason)</span>
@@ -113,9 +114,11 @@
           <div class="row field">
             <div class="col-md-10 form_input">
               <textarea class="form-control" rows="3" field="Justification" id="txtjustification"><%= request.Justification %></textarea>
+              <div class="error-message hidden">Please fill up this field</div>
             </div>
           </div>
           <div class="sep-space"></div>
+
           <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">Expected Delivery Date</div>
           </div>
@@ -144,7 +147,8 @@
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_input">
-              <input type="number" class="form-control" id="txtestimatedcost" field="EstimatedCost" value="<%= request.EstimatedCost %>"/>
+              <input type="number" class="form-control" id="txtestimatedcost" field="EstimatedCost" value="<%= request.EstimatedCost %>" />
+              <div class="error-message hidden">Please fill up this field</div>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -171,7 +175,7 @@
           <div class="row field">
             <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Recommend By *</div>
             <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width recommend-container form_input">
-              <button type="button" class="btn btn-default recommend" data-toggle="dropdown" id="recommend-btn">
+              <button type="button" class="btn btn-default recommend" field="selectedRecommentModel" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>
                   <%= request.ApproverFNAME %>
                 <% } else {%>
@@ -182,6 +186,8 @@
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
               </button>
+              <div class="error-message hidden">Please choose one</div>
+
               <!-- <ul id="ulrecommend" style="height:250px;overflow-y:scroll" class="dropdown-menu">
               </ul> -->
 

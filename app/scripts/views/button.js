@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, utils, Q, confirm */
+/* global Hktdc, Backbone, JST, $, _, utils, Q */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -24,7 +24,7 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
       _.extend(this, props);
       // this.model.on('change')
-      this.render();
+      // this.render();
     },
 
     clickWorkflowBtnHandler: function(ev) {
@@ -114,28 +114,28 @@ Hktdc.Views = Hktdc.Views || {};
     clickSaveHandler: function() {
       var self = this;
       // if (true) {
-      if (this.checkIsValid()) {
-        var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
-        Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
-          message: 'Confirm save the Draft?',
-          onConfirm: function() {
-            Hktdc.Dispatcher.trigger('toggleLockButton', true);
-            self.saveAndApprover(status, '', function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              Backbone.history.navigate('draft', {trigger: true});
-            }, function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-            });
-          }
-        });
-      }
+      this.model.trigger('checkIsValid', function() {
+          var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
+          Hktdc.Dispatcher.trigger('openConfirm', {
+            title: 'confirmation',
+            message: 'Confirm save the Draft?',
+            onConfirm: function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', true);
+              self.saveAndApprover(status, '', function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                Backbone.history.navigate('draft', {trigger: true});
+              }, function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              });
+            }
+          });
+      });
     },
 
     clickApplicantHandler: function() {
       var self = this;
-      if (this.checkIsValid()) {
+      this.model.trigger('checkIsValid', function() {
         Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'Comfirmation',
           message: 'Are you sure you want to send to applicant?',
@@ -150,12 +150,12 @@ Hktdc.Views = Hktdc.Views || {};
             });
           }
         });
-      }
+      });
     },
 
     clickApproverHandler: function() {
       var self = this;
-      if (this.checkIsValid()) {
+      this.model.trigger('checkIsValid', function() {
         Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'confirmation',
           message: 'Are you sure you want to send to approver?',
@@ -170,7 +170,7 @@ Hktdc.Views = Hktdc.Views || {};
             });
           }
         });
-      }
+      });
     },
 
     clickDeleteBtnHandler: function() {
@@ -260,59 +260,6 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }
       });
-    },
-
-    checkIsValid: function() {
-      var isValid = true;
-      var errMessage = '';
-      var self = this;
-      // console.log(this.requestFormModel.toJSON());
-      if (!(this.requestFormModel.toJSON().Justification && this.requestFormModel.toJSON().Justification.trim())) {
-        isValid = false;
-        errMessage = 'Please fill the Justification and Important Notes';
-      } else if (!(this.requestFormModel.toJSON().EstimatedCost && this.requestFormModel.toJSON().EstimatedCost.trim())) {
-        isValid = false;
-        errMessage = 'Please fill the Estimated Cost';
-      } else if (!this.requestFormModel.toJSON().selectedApplicantModel) {
-        isValid = false;
-        errMessage = 'Please select a Applicant';
-      } else if (!this.requestFormModel.toJSON().selectedRecommentModel) {
-        isValid = false;
-        errMessage = 'Please select a Recommend By.';
-      } else if (!self.selectedServiceValid()) {
-        isValid = false;
-        errMessage = 'Please fill all fields from the Service Acquired for.'
-      }
-      if (!isValid) {
-
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: errMessage,
-          title: 'Error!',
-          type: 'error'
-        });
-      }
-
-      return isValid;
-    },
-
-    selectedServiceValid: function() {
-      var isValid = true;
-      var selectedServiceCollection = this.requestFormModel.toJSON().selectedServiceCollection;
-      // console.log(selectedServiceCollection);
-      if (!selectedServiceCollection || selectedServiceCollection.length === 0) {
-        isValid = false;
-      } else {
-        selectedServiceCollection.each(function(selectedServiceModel) {
-          var selectedService = selectedServiceModel.toJSON();
-          console.log(selectedService);
-          if (!selectedService.Notes) {
-            isValid = false;
-          }
-        });
-      }
-      // return false;
-      // console.log(isValid);
-      return isValid;
     },
 
     saveAndApprover: function(status, submitTo, redirectCallback, failCallback) {
@@ -485,168 +432,6 @@ Hktdc.Views = Hktdc.Views || {};
       return basicData;
     },
 
-    getServiceData: function(selectedServiceCollectionArray) {
-      /* !!!Dreprecated!!! */
-
-      /* serviceName and uatServiceName is the name from service type api call */
-      /* This stupid mapping is beacause the server api is hardcoded the request service params */
-      // console.log(selectedServiceCollectionArray);
-      var catagoryMapping = [
-        {
-          paramName: 'Hardware_Software_IT_Service',
-          serviceName: 'Acquire Hardware/Software/IT Services',
-          uatServiceName: 'Hardware/Software/IT Services'
-        }, {
-          paramName: 'General_Support_StandBy_Service',
-          serviceName: 'Acquire General Support/ Stand-by Services',
-          uatServiceName: 'General Support/ Stand-by Services'
-        }
-      ];
-
-      var serviceMapping = [
-        {
-          paramName: 'Software_Service',
-          serviceName: {
-            localDev: 'Request for Software',
-            uat: 'Software'
-          },
-          object: [{
-            param: 'SW_Name',
-            name: 'Name'
-          }, {
-            param: 'SW_Notes',
-            name: 'Notes'
-          }, {
-            param: 'SW_GUID',
-            name: 'GUID'
-          }],
-          parent: 'Hardware_Software_IT_Service'
-        }, {
-          paramName: 'Hardware_Service',
-          serviceName: {
-            localDev: 'Request for Hardware',
-            uat: 'Hardware'
-          },
-          object: [{
-            param: 'HW_Name',
-            name: 'Name'
-          }, {
-            param: 'HW_Notes',
-            name: 'Notes'
-          }, {
-            param: 'HW_GUID',
-            name: 'GUID'
-          }],
-          parent: 'Hardware_Software_IT_Service'
-        }, {
-          paramName: 'Maintenance_Service',
-          serviceName: {
-            localDev: 'Request for Maintenance Services',
-            uat: 'Maintenance Services'
-          },
-          object: [{
-            param: 'Main_Name',
-            name: 'Name'
-          }, {
-            param: 'Main_Notes',
-            name: 'Notes'
-          }, {
-            param: 'Main_GUID',
-            name: 'GUID'
-          }],
-          parent: 'Hardware_Software_IT_Service'
-        }, {
-          paramName: 'IT_Service',
-          serviceName: {
-            localDev: 'Request for IT Services(for IT only)',
-            uat: 'IT Services(for IT only)'
-          },
-          object: [{
-            param: 'IT_Name',
-            name: 'Name'
-          }, {
-            param: 'IT_Notes',
-            name: 'Notes'
-          }, {
-            param: 'IT_GUID',
-            name: 'GUID'
-          }],
-          parent: 'Hardware_Software_IT_Service'
-        },
-
-
-        {
-          paramName: 'General_Support',
-          serviceName: {
-            localDev: 'Request for General Support',
-            uat: 'General Support'
-          },
-          object: [{
-            param: 'Request_Name',
-            name: 'Name'
-          }, {
-            param: 'Request_Notes',
-            name: 'Notes'
-          }, {
-            param: 'Request_GUID',
-            name: 'GUID'
-          }],
-          parent: 'General_Support_StandBy_Service'
-        },
-
-        {
-          paramName: 'Onsite_StandBy_Service',
-          serviceName: {
-            localDev: 'Request for Onsite/Stand-by Services',
-            uat: 'Onsite/Stand-by Services'
-          },
-          object: [{
-            param: 'Onsite_Service_Notes',
-            name: 'Notes'
-          }, {
-            param: 'Onsite_Service_Name',
-            name: 'Name'
-          }, {
-            param: 'Onsite_Service_ID',
-            name: 'GUID'
-          }],
-          parent: 'General_Support_StandBy_Service'
-        }
-      ];
-
-      var returnData = {};
-
-      _.each(catagoryMapping, function(catagory) {
-        var serviceUnderThisCatagory = _.filter(serviceMapping, function(service) {
-          return service.parent === catagory.paramName;
-        });
-        // console.log('serviceUnderThisCatagory', serviceUnderThisCatagory);
-        var catService = {};
-        _.each(serviceUnderThisCatagory, function(service) {
-          // console.group();
-          // console.log('selectedServiceCollectionArray', selectedServiceCollectionArray);
-          // console.log('service.serviceName.uat', service.serviceName.uat);
-          var relatedServices = _.where(selectedServiceCollectionArray, {
-            serviceTypeName: service.serviceName.uat
-            // serviceTypeName: service.serviceName[Hktdc.Config.environment]
-          });
-          // console.log('relatedServices', relatedServices);
-          // console.groupEnd();
-          relatedServices = _.map(relatedServices, function(relatedService) {
-            var returnObj = {};
-            _.each(service.object, function(obj) {
-              returnObj[obj.param] = relatedService[obj.name];
-            });
-            return returnObj;
-          });
-          catService[service.paramName] = relatedServices;
-        });
-        returnData[catagory.paramName] = catService;
-      });
-
-      return returnData;
-    },
-
     getActionTaker: function(selectedServiceCollectionArray) {
       var actionTakerArray = _.map(selectedServiceCollectionArray, function(serviceData) {
         // console.log(serviceData);
@@ -766,7 +551,232 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    render: function() {
+    renderButtonHandler: function() {
+      var self = this;
+      /* From list || from choose applicant */
+      var FormStatus = self.requestFormModel.toJSON().FormStatus;
+      var Preparer = self.requestFormModel.toJSON().PreparerUserID;
+      var Applicant = (self.requestFormModel.toJSON().selectedApplicantModel)
+        ? self.requestFormModel.toJSON().selectedApplicantModel.toJSON().UserId
+        : self.requestFormModel.toJSON().ApplicantUserID;
+      // var ActionTaker = self.requestFormModel.toJSON().ActionTakerUserID;
+      // var ITSApprover = self.requestFormModel.toJSON().ITSApproverUserID;
+      var me = Hktdc.Config.userID;
+      if (
+        !FormStatus ||
+        FormStatus === 'Draft'
+        // FormStatus === 'Review' ||
+        // FormStatus === 'Return'
+      ) {
+        console.debug('NEED Check APPLICANT_RULECODE');
+        /* load related button set */
+        var ApplicantRuleCode = self.requestFormModel.toJSON().selectedApplicantModel.toJSON().RuleCode;
+        var Approver = (self.requestFormModel.toJSON().selectedRecommentModel)
+          ? self.requestFormModel.toJSON().selectedRecommentModel.toJSON().WorkerId
+          : self.requestFormModel.toJSON().ApproverUserID;
+        // var ApproverRuleCode = self.requestFormModel.toJSON().selectedRecommentModel.toJSON().RuleCode;
+        console.log('Preparer: ', Preparer);
+        console.log('Applicant: ', Applicant);
+        console.log('ApplicantRuleCode: ', ApplicantRuleCode);
+        console.log('Approver: ', Approver);
+        if (!Preparer || !Applicant || !Approver || !ApplicantRuleCode) {
+          if (FormStatus) {
+            self.render({
+              showSave: true,
+              showDelete: false
+            });
+          } else {
+            self.render({ showSave: true });
+          }
+        } else {
+          self.renderDraftModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
+        }
+
+      // non Draft FormStatus
+      } else {
+        console.debug('BY FORMSTATUS');
+        var options = {};
+
+        // self.renderRequestFormButton( FormStatus, Preparer, Applicant, Approver, ActionTaker, ITSApprover);
+        if (this.requestFormModel.toJSON().FormStatus === 'Review' && me === Applicant && this.requestFormModel.toJSON().mode !== 'read') {
+          options.showSave = true;
+          // options.showDelete = true;
+        }
+
+        if (this.requestFormModel.toJSON().FormStatus === 'Return' && me === Applicant && this.requestFormModel.toJSON().mode !== 'read') {
+          options.showSave = true;
+        }
+
+        if (this.requestFormModel.toJSON().FormStatus === 'Rework' && me === Preparer && this.requestFormModel.toJSON().mode !== 'read') {
+          options.showSave = true;
+          // options.showDelete = true;
+        }
+
+        if (this.requestFormModel.toJSON().FormStatus === 'Approval' && me === Applicant) {
+          options.showRecall = true;
+          options.showResend = true;
+        }
+
+        if (self.requestFormModel.toJSON().actions) {
+          if (_.find(self.requestFormModel.toJSON().actions, function(action) {
+            return action.Action === 'Forward';
+          })) {
+            options.showForwardTo = true;
+          }
+
+          self.renderRequestFormButtonByActions(self.requestFormModel.toJSON().actions, options);
+        } else {
+          self.render(options);
+        }
+
+        if (_.isEmpty(options) && !(self.requestFormModel.toJSON().actions)) {
+          // Hktdc.Dispatcher.trigger('openAlert', {
+          //   message: 'no actions button',
+          //   type: 'error',
+          //   title: 'Error'
+          // });
+          self.render({noButton: true});
+        }
+      }
+    },
+
+    renderDraftModeButton: function(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode) {
+      var self = this;
+      // var me = Hktdc.Config.userID;
+      var showButtonOptions = { showSave: true };
+      if (self.requestFormModel.toJSON().FormStatus) {
+        showButtonOptions.showDelete = true;
+      }
+      // console.group('check condition');
+      // for submitted to
+
+      // ApproverRuleCode !== 'IT0009'
+      if (ApplicantRuleCode === 'IT0009') {
+        // 1) Preparer !== Applicant && Approver !== Applicant
+        if (Preparer !== Applicant && Approver !== Applicant) {
+          console.log('condition 1 (IT0009): Preparer !== Applicant && Approver !== Applicant');
+          showButtonOptions.showSendToApplicant = true;
+          showButtonOptions.applicantSendTo = 'Applicant';
+          showButtonOptions.showSendToApprover = true;
+          showButtonOptions.approverSendTo = 'Approver';
+          self.requestFormModel.set({
+            applicantSubmittedTo: 'Applicant',
+            approverSubmittedTo: 'Approver'
+          });
+
+        // 2) Preparer === Applicant && Approver !== Applicant
+        } else if (Preparer === Applicant && Approver !== Applicant) {
+          console.log('condition 2 (IT0009): Preparer === Applicant && Approver !== Applicant');
+          showButtonOptions.showSendToApprover = true;
+          showButtonOptions.approverSendTo = 'Approver';
+          self.requestFormModel.set({
+            approverSubmittedTo: 'Approver'
+          });
+
+        // 2) Preparer === / !==  Applicant && Approver === Applicant
+        } else {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Exception case: RuleCode IT0009, Approver === Applicant',
+            type: 'error',
+            title: 'Error'
+          });
+        }
+
+      // ApproverRuleCode !== 'IT0008'
+      } else if (ApplicantRuleCode === 'IT0008') {
+        // Preparer === Applicant && Approver !== Applicant
+        if (Preparer === Applicant && Approver !== Applicant) {
+          console.log('condition 3 (IT0008): Preparer === Applicant && Approver !== Applicant');
+          showButtonOptions.showSendToApplicant = false;
+          showButtonOptions.showSendToApprover = true;
+          showButtonOptions.approverSendTo = 'Approver';
+          self.requestFormModel.set({
+            approverSubmittedTo: 'Approver'
+          });
+        // Preparer === Applicant && Approver === Applicant
+        } else if (Preparer === Applicant && Approver === Applicant) {
+          console.log('condition 4 (IT0008): Preparer === Applicant && Approver === Applicant');
+          showButtonOptions.showSendToApprover = true;
+          showButtonOptions.approverSendTo = 'Task Actioner';
+          self.requestFormModel.set({ approverSubmittedTo: 'TaskActioner' });
+        // Preparer !== Applicant && Approver === Applicant
+        } else if (Preparer !== Applicant && Approver === Applicant) {
+          console.log('condition 5 (IT0008): Preparer !== Applicant && Approver === Applicant');
+          showButtonOptions.showSendToApplicant = true;
+          showButtonOptions.showSendToApprover = false;
+          showButtonOptions.applicantSendTo = 'Applicant';
+          self.requestFormModel.set({ applicantSubmittedTo: 'Applicant' });
+        // Preparer !== Applicant && Approver !== Applicant
+        } else if (Preparer !== Applicant && Approver !== Applicant) {
+          console.log('condition 6 (IT0008): Preparer !== Applicant && Applicant !== Applicant');
+          showButtonOptions.showSendToApplicant = true;
+          showButtonOptions.applicantSendTo = 'Applicant';
+          self.requestFormModel.set({ applicantSubmittedTo: 'Applicant' });
+        // Preparer !== Applicant && Approver !== Applicant
+        } else {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Exception case: RuleCode IT0008, unknown situation',
+            type: 'error',
+            title: 'Error'
+          });
+        }
+
+      // ApproverRuleCode !== 'IT0008' !== 'IT0009'
+      } else {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: 'unacceptable rule code: !== (IT0008 || IT0009)',
+          type: 'error',
+          title: 'Error'
+        });
+        showButtonOptions = {
+          showSave: false,
+          showDelete: false
+        };
+      }
+
+      console.log('before role check: ', showButtonOptions);
+
+      /* Check Login user against role, ANSURE THE ABOVE SET BUT UNWANTED BUTTON NOT SHOW */
+      // formstatus is 'Draft'
+      // if (FormStatus === 'Draft') {
+      //   if (me === Applicant) {
+      //     showButtonOptions.showSendToApplicant = false;
+      //   }
+      // // formstatus is 'Review'
+      // } else if (FormStatus === 'Review') {
+      //   /* NO role case to handle, must be applicant */
+      //   showButtonOptions.showReturn = true;
+      //   showButtonOptions.returnTo = 'Preparer';
+      // // formstatus is Return
+      // } else if (FormStatus === 'Return') {
+      //   if (me === Applicant) {
+      //     showButtonOptions.showDelete = false;
+      //     showButtonOptions.showSendToApplicant = false;
+      //     showButtonOptions.showReturn = true;
+      //   } else if (me === Preparer) {
+      //     showButtonOptions.showSendToApprover = false;
+      //     showButtonOptions.showReturn = false;
+      //   }
+      // } else {
+      //   /* no Case to handle, must be applicant */
+      // }
+
+      // console.log('after role check: ', showButtonOptions);
+      // console.groupEnd();
+
+      self.render(showButtonOptions);
+    },
+
+    renderRequestFormButtonByActions: function(actions, defaultOptions) {
+      var options = _.extend({workflowButtons: actions}, defaultOptions);
+      this.render(options);
+    },
+
+    render: function(showButtonOptions) {
+      /* load available buttons */
+
+      this.model.set(_.extend(this.model.defaults, showButtonOptions));
+      // console.log('final button options', this.model.toJSON());
       this.$el.html(this.template(this.model.toJSON()));
     }
 

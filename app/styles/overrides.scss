@@ -456,25 +456,6 @@ div.dataTables_wrapper table {
 }
 // vicosys
 @media screen and (max-width: 768px) {
-  .newrequest-basic-information div[class^="col-xs-"] {
-    padding: 0 10px;
-  }
-
-  .service-catagory-item > .select-service-header {
-    //background-color:#e8e8e8;
-  }
-
-  .buttons-container > .available-buttons {
-    background-color: #e8e8e8;
-  }
-
-  .service-catagory-item > .select-service-header:hover {
-    box-shadow: none;
-  }
-
-  .service-catagory-item > .select-service-header.panel-active {
-    box-shadow: none;
-  }
 
   .footer {
     padding: 0;

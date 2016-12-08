@@ -131,6 +131,96 @@ Hktdc.Views = Hktdc.Views || {};
 
   });
 
+  Hktdc.Views.ServiceTypeReadOnly = Backbone.View.extend({
+
+    template: JST['app/scripts/templates/serviceTypeReadOnly.ejs'],
+
+    className: 'group-details',
+
+    tagName: 'div',
+
+    events: {
+      'click .btn-add': 'addServiceRequest'
+    },
+
+    defaultServiceRequestObject: {},
+
+    initialize: function(props) {
+      _.extend(this, props);
+      this.renderServiceObject();
+      this.model.on('change:needAddBtn', function(model, isNeed) {
+        // console.log('change on needAddBtn');
+        if (isNeed) {
+          $('.btn-add', this.el).show();
+        } else {
+          $('.btn-add', this.el).hide();
+        }
+      }.bind(this));
+    },
+
+    renderServiceObject: function() {
+      /* initialize level 3 service */
+      // console.group('group');
+      // console.log(this.model.toJSON());
+      var selectedServiceRequestList = null;
+      var availableServiceObjectArray = this.model.toJSON().Level3;
+      this.defaultServiceRequestObject = { ControlFlag: availableServiceObjectArray[0].ControlFlag };
+
+      /* service request list in 'read' request mode default is only from RequestDetail data */
+      /* because read mode availableServiceObjectArray direct use the RequestList from API call */
+      if (!this.selectedServiceCatagoryTree) {
+        selectedServiceRequestList = [];
+      } else {
+        var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
+          // TODO: change to GUID
+          return selectedType.Name === this.model.toJSON().Name;
+        }.bind(this));
+        // console.log('selectedServiceTypeTree: ', selectedServiceTypeTree);
+
+        selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
+      }
+      // console.log(selectedServiceRequestList);
+
+      try {
+        this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
+        var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
+          collection: this.childServiceRequestCollection,
+          availableServiceObjectArray: availableServiceObjectArray,
+          requestFormModel: this.requestFormModel,
+          serviceCatagoryModel: this.serviceCatagoryModel,
+          /* the serviceTypeName is used to mapping the service object to it's service type when saving request */
+          serviceTypeModel: this.model
+        });
+        serviceRequestListView.render();
+
+        setTimeout(function() {
+          $('.service-request-container', this.el).html(serviceRequestListView.el);
+        }.bind(this));
+      } catch (e) {
+        // TODO: pop up alert dialog
+        console.error('render level 3 - service request error');
+        console.error(e);
+      }
+      // console.groupEnd();
+    },
+
+    addServiceRequest: function() {
+      // console.log('addServiceRequest in serviceType.js');
+      this.childServiceRequestCollection.add(this.defaultServiceRequestObject);
+    },
+
+    render: function() {
+      // console.log(JSON.stringify(this.model.toJSON(), null, 2));
+      var isActive = (this.requestFormModel.toJSON().ActionTakerServiceType === this.model.toJSON().GUID);
+      var tmpl = this.template({
+        serviceType: this.model.toJSON(),
+        isActive: isActive
+      });
+      $(this.el).html(tmpl);
+    }
+
+  });
+
   Hktdc.Views.ServiceTypeList = Backbone.View.extend({
 
     initialize: function(props) {
@@ -159,20 +249,26 @@ Hktdc.Views = Hktdc.Views || {};
       var hasTree = this.selectedServiceCatagoryTree && _.find(this.selectedServiceCatagoryTree.Level2, function(lv2Service) {
         return lv2Service.Name === model.toJSON().Name;
       });
-      if (
-        this.requestFormModel.toJSON().mode === 'read' ||
-        (String(model.toJSON().Level3[0].ControlFlag) === '2' && hasTree)
-      ) {
-        model.set('needAddBtn', false);
+      if (this.requestFormModel.toJSON().mode === 'read') {
+        var serviceTypeItemView = new Hktdc.Views.ServiceTypeReadOnly({
+          model: model,
+          requestFormModel: this.requestFormModel,
+          selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
+          serviceCatagoryModel: this.serviceCatagoryModel
+        });
       } else {
-        model.set('needAddBtn', true);
+        if (String(model.toJSON().Level3[0].ControlFlag) === '2' && hasTree) {
+          model.set('needAddBtn', false);
+        } else {
+          model.set('needAddBtn', true);
+        }
+        var serviceTypeItemView = new Hktdc.Views.ServiceType({
+          model: model,
+          requestFormModel: this.requestFormModel,
+          selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
+          serviceCatagoryModel: this.serviceCatagoryModel
+        });
       }
-      var serviceTypeItemView = new Hktdc.Views.ServiceType({
-        model: model,
-        requestFormModel: this.requestFormModel,
-        selectedServiceCatagoryTree: this.selectedServiceCatagoryTree,
-        serviceCatagoryModel: this.serviceCatagoryModel
-      });
       serviceTypeItemView.render();
 
       $(this.el).append(serviceTypeItemView.el);

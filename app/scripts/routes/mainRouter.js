@@ -225,7 +225,6 @@ Hktdc.Routers = Hktdc.Routers || {};
           var me = Hktdc.Config.userID;
           /* ----------- IMPORTANT: pre-set the request mode  ----------- */
           var editModeStatus = ['Draft', 'Review', 'Return', 'Rework'];
-
           // var mode = (modeObj) ? modeObj.name : 'read';
           var getMode = function() {
             // 'Draft'
@@ -248,7 +247,6 @@ Hktdc.Routers = Hktdc.Routers || {};
             }
             return 'read';
           };
-
           /* special case for preparer enter the review form */
           // if (
           //   rawData.ApplicantUserID !== Hktdc.Config.userID &&
@@ -266,10 +264,17 @@ Hktdc.Routers = Hktdc.Routers || {};
               UserFullName: rawData.ApplicantFNAME
             })
           });
-          // console.log(requestModel.toJSON());
-          var requestView = new Hktdc.Views.NewRequest({
-            model: requestModel
-          });
+
+          if (getMode() === 'edit') {
+            // console.log(requestModel.toJSON());
+            var requestView = new Hktdc.Views.NewRequest({
+              model: requestModel
+            });
+          } else {
+            var requestView = new Hktdc.Views.ReadRequest({
+              model: requestModel
+            });
+          }
 
           $('#mainContent').empty().html(requestView.el);
 

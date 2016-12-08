@@ -1,4 +1,14 @@
-<span class="service-title-desp" style="margin:0">
-  <%= serviceObject.Name %>
-</span>
-<textarea class="level2 form-control lastnosub" id="lastnosub" rows="3"><%= serviceObject.SValue %></textarea>
+<% if (serviceObject.readonly) { %>
+  <span class="service-title-desp" style="margin:0">
+    <%= serviceObject.Name %>
+  </span>
+  <textarea class="level2 form-control lastnosub" id="lastnosub" rows="3"><%= serviceObject.SValue %></textarea>
+<%} else {%>
+  <div class="service-title-desp">
+    <%= serviceObject.Name %>
+  </div>
+  </div>
+  <div class="service-content">
+    <%= serviceObject.SValue %>
+  </div>
+<%}%>

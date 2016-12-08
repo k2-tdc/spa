@@ -121,7 +121,6 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       var request = this.model.toJSON();
       var isActive = (
-        this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
         this.requestFormModel.toJSON().ActionTakerServiceType &&
         this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID
       );
@@ -134,7 +133,48 @@ Hktdc.Views = Hktdc.Views || {};
       });
       this.$el.html(tmpl);
     }
+  });
 
+  Hktdc.Views.ServiceRequestReadOnly = Backbone.View.extend({
+
+    template: JST['app/scripts/templates/serviceRequestReadOnly.ejs'],
+    tagName: 'div',
+    className: 'Headleve2sub',
+    initialize: function(props) {
+      var self = this;
+      _.extend(this, props);
+      try {
+        var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
+        var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
+          collection: serviceObjectCollection,
+          serviceRequestModel: this.model,
+          requestFormModel: this.requestFormModel
+        });
+        // console.log(serviceObjectListView);
+        serviceObjectListView.render();
+
+        setTimeout(function() {
+          $('.service-object-container', this.el).append(serviceObjectListView.el);
+        }.bind(this));
+      } catch (e) {
+        console.error('service request render error');
+        console.log(e);
+      }
+    },
+
+    render: function() {
+      var request = this.model.toJSON();
+      var isActive = (
+        this.requestFormModel.toJSON().ActionTakerServiceType &&
+        this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID
+      );
+      // console.log(request);
+      var tmpl = this.template({
+        request: request,
+        isActive: isActive
+      });
+      this.$el.html(tmpl);
+    }
   });
 
   Hktdc.Views.ServiceRequestList = Backbone.View.extend({
@@ -196,73 +236,59 @@ Hktdc.Views = Hktdc.Views || {};
         availableServiceObjectArray: this.availableServiceObjectArray,
         parentCollection: this.collection,
         serviceCatagoryModel: this.serviceCatagoryModel,
-        serviceTypeName: this.serviceTypeName
+        serviceTypeName: this.serviceTypeName,
+        readonly: (this.requestFormModel.toJSON().mode === 'read')
       });
 
-      var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
-        model: model,
-        requestFormModel: this.requestFormModel,
-        serviceCatagoryModel: this.serviceCatagoryModel
-      });
+      if (this.requestFormModel.toJSON().mode === 'read') {
+        var serviceRequestItemView = new Hktdc.Views.ServiceRequestReadOnly({
+          model: model,
+          requestFormModel: this.requestFormModel,
+          serviceCatagoryModel: this.serviceCatagoryModel
+        });
+      } else {
+        var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
+          model: model,
+          requestFormModel: this.requestFormModel,
+          serviceCatagoryModel: this.serviceCatagoryModel
+        });
+      }
       serviceRequestItemView.render();
       $(this.el).append(serviceRequestItemView.el);
     },
 
     renderTextServiceRequest: function() {
-      console.log(this.availableServiceObjectArray);
+      // console.log(this.availableServiceObjectArray);
       var model = new Hktdc.Models.ServiceRequest({
         index: 1,
         availableServiceObjectArray: _.extend(this.availableServiceObjectArray, this.collection.toJSON()),
         parentCollection: this.collection,
         serviceTypeName: this.serviceTypeName,
-        serviceCatagoryModel: this.serviceCatagoryModel
+        serviceCatagoryModel: this.serviceCatagoryModel,
+        readonly: (this.requestFormModel.toJSON().mode === 'read')
       });
-
-      var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
-        model: model,
-        requestFormModel: this.requestFormModel
-      });
+      if (this.requestFormModel.toJSON().mode === 'read') {
+        var serviceRequestItemView = new Hktdc.Views.ServiceRequestReadOnly({
+          model: model,
+          requestFormModel: this.requestFormModel,
+          serviceCatagoryModel: this.serviceCatagoryModel
+        });
+      } else {
+        var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
+          model: model,
+          requestFormModel: this.requestFormModel
+        });
+      }
       serviceRequestItemView.render();
       $(this.el).append(serviceRequestItemView.el);
     },
 
-    renderTextServiceObjectList: function(collection) {
-      var serviceObjectCollection = new Hktdc.Collections.ServiceObject(
-        _.extend(this.availableServiceObjectArray, this.collection.toJSON())
-      );
-      // console.log('crash', serviceObjectCollection.toJSON());
-      // console.log('crash', );
-      var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
-        collection: serviceObjectCollection,
-        requestFormModel: this.requestFormModel
-      });
-      // console.log(serviceObjectListView);
-      serviceObjectListView.render();
-
-      // setTimeout(function() {
-      $(this.el).append(serviceObjectListView.el);
-        // console.log(serviceObjectListView.el);
-        // this.initModelChangeHandler();
-      // }.bind(this));
-    },
 
     render: function() {
       if (this.collection.toJSON().length > 0) {
         if (String(this.collection.toJSON()[0].ControlFlag) === '2') {
-          // method 1
-          // this.renderTextServiceObjectList(this.collection);
-
-          // method 2
           this.renderTextServiceRequest();
-
-          // var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
-          //   model: model,
-          //   requestFormModel: this.requestFormModel
-          // });
-          // serviceRequestItemView.render();
-          // $(this.el).append(serviceRequestItemView.el);
         } else {
-          // console.log(this.collection.toJSON());
           this.collection.each(this.renderServiceRequest);
         }
       }

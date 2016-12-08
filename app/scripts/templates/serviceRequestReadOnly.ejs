@@ -1,0 +1,62 @@
+<!--
+  ControlFlag == 1 is drop down
+  ControlFlag == 2 is text area
+-->
+<% if (request.ControlFlag == "1") { %>
+
+<!-- <div class="Headleve2sub"> as container-->
+
+  <!-- START: Repeat Unit = ControlFlag: 1 -->
+
+  <div class="service-request-wrap <% if (isActive) { %>panel-active<% } %>"><!-- old <div class="leve2sub"> -->
+    <div class="row">
+      <div class="service_num" style='padding-left: 20px;'>
+        <span class="select-applicant-step">
+          <%= request.index %>
+        </span>
+      </div>
+
+    <!--col-xs-8 col-sm-10-->
+      <div class="service-request-input">
+        <div class="service-object-container btn-group full-width" style='width:100%'>
+          <%= request.Name %>
+          <!-- level 3: service request contents append here -->
+        </div>
+        <div class="sep-space-sm"></div>
+
+        <div>
+          <%= request.SValue %>
+        </div>
+      </div>
+    </div>
+    <div class="sep-space"></div>
+
+  </div>
+  <!-- END: Repeat Unit = ControlFlag: 1 -->
+
+
+<!-- </div> -->
+
+<%
+} else {
+%>
+
+<div class="row service-request-wrap <% if (isActive) { %>panel-active<% } %>">
+  <div class="service_num" style='padding-left: 20px;'>
+    <span class="select-applicant-step">
+      <%= request.index %>
+    </span>
+  </div>
+
+  <div class="service-request-input select-service-title" style='padding: 0 5px;'>
+
+    <div class="service-object-container">
+      <!-- START: Repeat Unit of the level3: service object -->
+    </div>
+  </div>
+
+</div>
+
+<%
+}
+%>

@@ -19,14 +19,15 @@ Hktdc.Views = Hktdc.Views || {};
       // this.listenTo(this.model, 'change', this.render);
     },
 
-    removeSelectedCCHandler: function(){
+    removeSelectedCCHandler: function() {
       this.collection.remove(this.model);
     },
 
     render: function() {
       this.$el.html(this.template({
         selectedUserId: this.model.toJSON().USERID || this.model.toJSON().UserId,
-        selectedUserName: this.model.toJSON().FULLNAME || this.model.toJSON().UserFullName
+        selectedUserName: this.model.toJSON().FULLNAME || this.model.toJSON().UserFullName,
+        readonly: this.model.toJSON().readonly
       }));
     }
   });
@@ -37,8 +38,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     className: 'seleced-cc-list',
 
-    initialize: function() {
+    initialize: function(props) {
       var self = this;
+      _.extend(this, props);
       _.bindAll(this, 'renderSelectedCCItem');
       this.render();
 
@@ -53,7 +55,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderSelectedCCItem: function(model) {
-
+      model.set({
+        readonly: this.requestFormModel.toJSON().mode === 'read'
+      })
       var selectedCCItemView = new Hktdc.Views.SelectedCC({
         model: model,
         collection: this.collection

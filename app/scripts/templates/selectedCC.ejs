@@ -1,3 +1,4 @@
+<% if (!readonly) { %>
 <button
   type="button"
   eid=<%= selectedUserId %>
@@ -7,3 +8,7 @@
   <span class="glyphicon glyphicon-remove spanremovecc"></span>
   <%= selectedUserName %>
 </button>
+<% } else { %>
+  <span><%= selectedUserName %></span>
+  <span>;</span>
+<% } %>

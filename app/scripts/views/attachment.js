@@ -237,6 +237,9 @@ Hktdc.Views = Hktdc.Views || {};
       var tagName;
       var appendTarget;
       var self = this;
+      model.set({
+        UploadedDate: moment(model.toJSON().UploadedDate).format('DD MMM YYYY')
+      });
       if (this.requestFormModel.toJSON().mode !== 'read') {
         tagName = 'div';
         appendTarget = '#divfilename';
@@ -264,7 +267,10 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template({ insertMode: isInsert }));
       // console.log(this.collection.toJSON());
       this.collection.each(this.renderAttachmentItem);
-      if (!isInsert) {
+      if (this.requestFormModel.toJSON().showFileLog) {
+        this.open();
+      }
+      // if (!isInsert) {
       //   this.bindFileChangeEvent();
       // } else {
         // $('.attachmentTable', this.el).DataTable({
@@ -272,7 +278,7 @@ Hktdc.Views = Hktdc.Views || {};
         //   searching: false,
         //   pageLength: false
         // });
-      }
+      // }
     }
   });
 })();
