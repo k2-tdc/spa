@@ -23,7 +23,15 @@
   }
 }
 
-
+.error-message{
+  color: red;
+  font-size: 12px;
+  padding: 2px 8px;
+  clear: both;
+}
+.error-input{
+  border: 1px solid red;
+}
 .select-applicant > .panel-body {
   padding: 15px;
 }
@@ -63,40 +71,44 @@
   text-align: left;
 }
 
-.select-service-header input[type=checkbox] {
-  -ms-transform: scale(2);
-  /* IE */
-  -moz-transform: scale(2);
-  /* FF */
-  -webkit-transform: scale(2);
-  /* Safari and Chrome */
-  -o-transform: scale(2);
-  /* Opera */
-  float: left;
-  // margin: 8px 20px 0 5px;
-}
+.select-service-header{
+  input[type=checkbox] {
+    -ms-transform: scale(2);
+    /* IE */
+    -moz-transform: scale(2);
+    /* FF */
+    -webkit-transform: scale(2);
+    /* Safari and Chrome */
+    -o-transform: scale(2);
+    /* Opera */
+    float: left;
+    // margin: 8px 20px 0 5px;
+  }
 
-.select-service-header .checkbox-option {
-  line-height: 30px;
-  font-size: 16px;
-  font-weight: bold;
-  text-transform: uppercase;
-  text-align: left;
-  margin-left: 12px;
-  min-width: 210px;
-}
+  .checkbox-option{
+    margin-left: 12px;
+    min-width: 210px;
+  }
 
-.select-service-header .checkbox-option-drop {
-  text-align: right;
-}
+  .checkbox-option, .service-categary-header {
+    line-height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: left;
+  }
 
-.select-service-header .checkbox-option-drop > span {
-  width: 30px;
-  height: 30px;
-  line-height: 28px;
-  border-radius: 50%;
-  border: 2px grey solid;
-  text-align: center;
+  .checkbox-option-drop {
+    text-align: right;
+    & > span {
+      width: 30px;
+      height: 30px;
+      line-height: 28px;
+      border-radius: 50%;
+      border: 2px grey solid;
+      text-align: center;
+    }
+  }
 }
 
 div.newrequest-title {
@@ -255,8 +267,6 @@ span.service-title-desp {
   display: block;
 }
 
-.select-service-header div.newrequest-title {}
-
 // read mode
 #newRequest{
   .select-applicant,
@@ -270,39 +280,55 @@ span.service-title-desp {
     box-shadow: 0 0 10px #f57921;
   }
 
+  .service-request-input {
+    padding: 0 5px;
+  }
+
 }
 #readRequest{
   .sep-space {
     height: 2em;
   }
+  .block-padding{
+    padding: 0 10px;
+  }
   .select-service-header {
     border: 1px rgba(0, 0, 0, .1) solid;
+    border-radius: 0;
     margin-bottom: 0;
   }
-
+  .select-service{
+    border: none;
+  }
   .readrequest-basic-information{
-    padding: 10px 0;
+    // padding: 10px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-
+  .service-categary-header{
+    line-height: 10px;
+  }
+  .service-type-container{
+    padding: 0;
+  }
   .select-applicant {
     border: none;
     border-bottom: 1px solid rgba(0,0,0,0.1);
   }
 
+  .service-request-input {
+    padding: 5px 15px 0 15px;
+  }
 }
 
 
-
-
-
 @media screen and (max-width: 480px) {
-  .select-service-header .checkbox-option {
-    font-size: 15px;
-  }
-
-  .select-service-header input[type=checkbox] {
-    margin: 0;
+  .select-service-header{
+    .checkbox-option {
+      font-size: 15px;
+    }
+    input[type=checkbox] {
+      margin: 0;
+    }
   }
 }
 @media screen and (max-width: 520px) {

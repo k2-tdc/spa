@@ -155,7 +155,6 @@ Hktdc.Views = Hktdc.Views || {};
 
         setTimeout(function() {
           $('.service-object-container', this.el).append(serviceObjectListView.el);
-          this.initModelChangeHandler();
         }.bind(this));
       } catch (e) {
         console.error('service request render error');
@@ -169,7 +168,7 @@ Hktdc.Views = Hktdc.Views || {};
         this.requestFormModel.toJSON().ActionTakerServiceType &&
         this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID
       );
-      console.log(request);
+      // console.log(request);
       var tmpl = this.template({
         request: request,
         isActive: isActive

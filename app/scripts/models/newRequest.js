@@ -99,6 +99,70 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     validate: function(attrs, options) {
+      // console.log(attrs);
+      // console.log(options);
+      // console.log(attrs.Justification);
+      if (options.field) {
+        if (options.field === 'Justification' && !(attrs.Justification && attrs.Justification.trim())) {
+          return {
+            field: 'Justification',
+            messge: 'Please fill the Justification and Important Notes'
+          };
+        } else if (options.field === 'EstimatedCost' && !(attrs.EstimatedCost && attrs.EstimatedCost.trim())) {
+          return {
+            field: 'EstimatedCost',
+            message: 'Please fill the Estimated Cost'
+          };
+        } else if (options.field === 'selectedRecommentModel' && !attrs.selectedRecommentModel) {
+          return {
+            field: 'selectedRecommentModel',
+            message: 'Please select a Recommend By.'
+          };
+        } else {
+          this.trigger('valid', {field: options.field});
+        }
+      } else {
+        if (
+          (attrs.Justification && attrs.Justification.trim()) &&
+          (attrs.EstimatedCost && attrs.EstimatedCost.trim()) &&
+          attrs.selectedRecommentModel
+        ) {
+          this.trigger('valid', {field: 'selectedRecommentModel'});
+        } else {
+          return 'form data not valid';
+        }
+      }
+
+      // if (options.field === 'selectedApplicantModel' && !attrs.selectedApplicantModel) {
+      //   return {
+      //     field: 'selectedApplicant',
+      //     message: 'Please select a Applicant <br />'
+      //   };
+      // } else {
+      //   this.trigger('valid', {field: 'selectedApplicant'});
+      // }
+      //
+
+      // var isValid = true;
+      // var selectedServiceCollection = this.attrs.selectedServiceCollection;
+      // // console.log(selectedServiceCollection);
+      // if (!selectedServiceCollection || selectedServiceCollection.length === 0) {
+      //   isValid = false;
+      // } else {
+      //   selectedServiceCollection.each(function(selectedServiceModel) {
+      //     var selectedService = selectedServiceModel.toJSON();
+      //     console.log(selectedService);
+      //     if (!selectedService.Notes) {
+      //       isValid = false;
+      //     }
+      //   });
+      // }
+      // if (!isValid) {
+      //   return {
+      //     message: 'Please input the request'
+      //
+      //   };
+      // }
     },
 
     parse: function(response, options) {

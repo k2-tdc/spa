@@ -6,10 +6,7 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.Button = Backbone.Model.extend({
-
-
     defaults: {
-      // new / edit mode button
       showSave: false,
       showSendToApplicant: false,
       showSendToApprover: false,
@@ -20,16 +17,8 @@ Hktdc.Models = Hktdc.Models || {};
       approverSendTo: 'Approver', // [Approver, ITS Approval]
       applicantSendTo: 'Applicant',
       returnTo: 'Preparer',
-
-      // read mode button
+      showForwardTo: false,
       workflowButtons: [],
-      // showApprove: false,
-      // showReject: false,
-      // showSendEmail: false,
-      // showComplete: false,
-      // showForward: false,
-      // showCancel: false,
-
       noButton: false
     },
 

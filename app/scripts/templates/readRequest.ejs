@@ -5,66 +5,74 @@
 
   <div id="readRequest">
 
-    <div class="readrequest-basic-information">
+    <div class="readrequest-basic-information block-padding">
       <div class="row">
-        <div class="col-xs-12 col-sm-5 p0m0">
-          <div class="col-xs-1 col-sm-2 newrequest-title text-left text-lg-right refId">Ref ID</div>
-          <div class="col-xs-4 col-sm-8 col-md-2" id="divRefID"><%= request.ReferenceID %></div>
+        <div class="col-xs-5 col-sm-4 p0m0">
+          <div class="col-xs-6 col-sm-4 col-md-4 newrequest-title text-left refId">Ref ID</div>
+          <div class="col-xs-6 col-sm-8 col-md-8" id="divRefID"><%= request.ReferenceID %></div>
         </div>
 
-        <div class="col-xs-12 col-sm-6 p0m0">
-          <div class="col-xs-1 col-sm-2 col-md-2 newrequest-title  text-left text-lg-right">Create Date</div>
+        <div class="col-xs-7 col-sm-7 p0m0">
+          <div class="col-xs-6 col-sm-4 col-md-4 newrequest-title text-left">Create Date</div>
           <div class="col-xs-6 col-sm-8 col-md-8" id="divCreateddate"><%= request.CreatedOn %></div>
         </div>
       </div>
-      <div class="sep-space"></div>
+      <div class="sep-space-sm"></div>
 
       <div class="row">
-        <div class="col-xs-12 col-sm-5 p0m0">
-          <div class="col-xs-1 col-sm-2 newrequest-title text-left text-lg-right">Status</div>
-          <div class="col-xs-8 col-sm-6" id="divStatus">
+        <div class="col-xs-12 col-sm-4 p0m0">
+          <div class="col-xs-4 col-sm-4 col-md-4 newrequest-title text-left">Status</div>
+          <div class="col-xs-8 col-sm-8 col-md-8" id="divStatus">
             <%= request.FormStatus %>
           </div>
+          <div class="sep-space-sm clear"></div>
         </div>
 
-        <div class="col-xs-12 col-sm-6 p0m0">
-          <div class="col-xs-1 col-sm-2 newrequest-title text-left text-lg-right">Prepared by</div>
-          <div class="col-xs-8 col-sm-8 " id="divPreparedby"><%= request.PreparerFNAME %></div>
+        <div class="col-xs-12 col-sm-7 p0m0">
+          <div class="col-xs-4 col-sm-4 col-md-4 newrequest-title text-left">Prepared by</div>
+          <div class="col-xs-8 col-sm-8 col-md-8 " id="divPreparedby"><%= request.PreparerFNAME %></div>
         </div>
       </div>
+      <div class="sep-space-sm"></div>
     </div>
-    <div class="sep-space"></div>
+    <div class="sep-space-sm"></div>
 
 
-    <div class="select-applicant">
+    <div class="select-applicant block-padding">
       <div class="row">
-        <div class="col-xs-2 col-sm-1 newrequest-title text-left">Applicant *</div>
-        <div class="col-xs-8 col-sm-10 col-md-8 btn-group full-width p-r-0 applicant-container form_data">
-          <%= request.selectedApplicantName%>
+        <div class="col-xs-4 col-sm-2 col-md-2 newrequest-title text-left">Applicant</div>
+        <div class="col-xs-8 col-sm-10 col-md-10 btn-group full-width p-r-0 applicant-container form_data">
+          <%= request.ApplicantFNAME%>
         </div>
       </div>
+      <div class="sep-space-sm"></div>
 
       <div class="row">
-        <div class="col-xs-2 col-md-2 newrequest-title text-left">Title</div>
-        <div class="col-xs-10 col-md-10" id="divtitle"><%= request.Title %></div>
+        <div class="col-xs-4 col-sm-2 col-md-2 newrequest-title text-left">Title</div>
+        <div class="col-xs-8 col-sm-2 col-md-10" id="divtitle"><%= request.Title %></div>
       </div>
+      <div class="sep-space-sm"></div>
 
       <div class="row">
-        <div class="col-xs-12 col-md-2 newrequest-title text-left">Office</div>
-        <div class="col-xs-12 col-md-10" id="divoffice"><%= request.Location %></div>
+        <div class="col-xs-4 col-md-2 newrequest-title text-left">Office</div>
+        <div class="col-xs-8 col-md-10" id="divoffice"><%= request.Location %></div>
       </div>
+      <div class="sep-space-sm"></div>
 
       <div class="row">
-        <div class="col-xs-2 col-sm-1 newrequest-title text-left">Department</div>
-        <div class="col-xs-8 col-sm-10 col-md-8 p-r-0" id="divdepartment"><%= request.DEPT %></div>
+        <div class="col-xs-4 col-sm-2 col-md-2 newrequest-title text-left">Department</div>
+        <div class="col-xs-8 col-sm-10 col-md-10" id="divdepartment"><%= request.DEPT %></div>
       </div>
+      <div class="sep-space-sm"></div>
+
     </div>
-    <div class="sep-space"></div>
+    <div class="sep-space-sm"></div>
 
 
     <div class="request-application">
-      <div class="row">
-        <div class="col-xs-10 col-md-10 newrequest-title text-left pl10 pb10">Service Acquired for</div>
+      <div class="sep-space-sm"></div>
+      <div class="block-padding">
+        <div class="newrequest-title text-left">Service Acquired for</div>
       </div>
       <div class="select-service-header" style="border: none;">
         <div class="">
@@ -131,7 +139,7 @@
               <input type="text" class="form-control" id="txtbudgetsum" field="BudgetSum" value="<%= request.BudgetSum %>"/>
             </div>
           </div>
-          <div class="sep-space"></div> -->
+          <div class="sep-space-sm"></div> -->
 
           <div class="row field">
             <div class="col-xs-12 newrequest-title text-left">Recommend By *</div>

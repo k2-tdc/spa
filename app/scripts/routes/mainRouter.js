@@ -154,12 +154,15 @@ Hktdc.Routers = Hktdc.Routers || {};
         CreatedOn: window.moment().format('DD MMM YYYY'),
         mode: 'new',
 
-        /* set the default selected applicant is self */
+      });
+      /* set the default selected applicant is self */
+      newRequestModel.set({
         selectedApplicantModel: new Hktdc.Models.Applicant({
           UserId: Hktdc.Config.userID,
           UserFullName: Hktdc.Config.userName
         })
-      });
+      }, {validate: true, field: 'selectedApplicantModel'});
+      
       var nrView = new Hktdc.Views.NewRequest({
         model: newRequestModel
       });
