@@ -16,6 +16,7 @@ window.Hktdc = {
     refreshToken: '',
     OAuthLoginUrl: '',
     OAuthGetTokenUrl: '',
+    logoutURL: '',
     needAuthHeader: false,
     projectPath: '',
     SPAHomeUrl: '',
@@ -49,6 +50,7 @@ window.Hktdc = {
           base: '/api/request'
         },
         needAuthHeader: false,
+        logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
         // needAuthHeader: true,
         projectPath: '/',
         SPAHomePath: '/'
@@ -64,6 +66,7 @@ window.Hktdc = {
         projectPath: '/vicosysspa/',
         SPAHomePath: '/vicosysspa/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
+        logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
         OAuthLoginPath: '/workflow/oauth2/login',
         OAuthGetTokenPath: '/workflow/oauth2/token',
         OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo'
@@ -80,6 +83,7 @@ window.Hktdc = {
         projectPath: '/chsw/',
         SPAHomePath: '/chsw/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
+        logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
         OAuthLoginPath: '/workflow/oauth2/login',
         OAuthGetTokenPath: '/workflow/oauth2/token',
         OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo'
@@ -105,7 +109,8 @@ window.Hktdc = {
       // if (true) {
       if (env === 'uat' || env === 'chsw') {
         // TODO: prevent user make request when getting token
-        $(document).ajaxStart(function() {
+        $(document).ajaxStart(function(event) {
+          // console.log(event);
           NProgress.start();
         });
         $(document).ajaxComplete(function() {

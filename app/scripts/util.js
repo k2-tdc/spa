@@ -19,6 +19,7 @@ window.utils = {
     Hktdc.Config.SPAHomeUrl = envConfig.SPADomain + envConfig.SPAHomePath;
     Hktdc.Config.OAuthGetUserIDURL = envConfig.SPADomain + envConfig.OAuthGetUserIDPath;
     Hktdc.Config.needAuthHeader = envConfig.needAuthHeader;
+    Hktdc.Config.logoutURL = envConfig.logoutURL;
     // console.log(Hktdc.Config);
     // console.log(Hktdc.Config.apiURL);
   },

@@ -17,7 +17,8 @@ Hktdc.Routers = Hktdc.Routers || {};
       // 'delegation': 'delegationList',
       'draft': 'draft',
       'alltask': 'allTask',
-      'approvaltask': 'approvalTask'
+      'approvaltask': 'approvalTask',
+      'logout': 'logout'
     },
 
     initialize: function() {
@@ -319,6 +320,11 @@ Hktdc.Routers = Hktdc.Routers || {};
       // });
 
       // console.log(delegationPageView.el);
+    },
+
+    logout: function() {
+      var logoutView = new Hktdc.Views.Logout();
+      $('#mainContent').html(logoutView.el);
     }
   });
 })();

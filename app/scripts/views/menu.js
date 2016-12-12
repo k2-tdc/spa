@@ -32,6 +32,27 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('change:activeTab', this.setActiveMenu.bind(this));
     },
 
+    setActiveMenu: function(currentRoute) {
+      // console.log(currentRoute.toJSON().activeTab);
+      // console.log(this.model.toJSON().activeTab);
+      try {
+        // var routename = currentRoute.toJSON().activeTab;
+        var routeName = currentRoute.toJSON().activeTab.toUpperCase();
+        var routeBase = routeName.split('?')[0] || 'HOME';
+        // console.log('routeName', routeName);
+        // console.log('routeBase', routeBase);
+        setTimeout(function() {
+          // console.log($('li[routename="' + routeBase + '"]'));
+          if ($('li[routename="' + routeBase + '"]')) {
+            $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
+          }
+        });
+      } catch (e) {
+        // TODO: pop the error box
+        console.log(e);
+      }
+    },
+
     render: function() {
       // console.log(this.model.toJSON());
       var rawMenu = this.model.toJSON();
@@ -56,6 +77,7 @@ Hktdc.Views = Hktdc.Views || {};
           };
         })
       };
+      // console.log('logouturl: ', Hktdc.Config.logoutURL);
       var UserMenu = {
         Mlink: '#',
         Name: rawMenu.User.UserName,
@@ -75,7 +97,7 @@ Hktdc.Views = Hktdc.Views || {};
           Mlink: '#logout',
           onlyMobileAndTablet: true,
           Name: 'Logout',
-          Route: '/#',
+          Route: '/#logout',
           Scount: null,
           RouteName: 'logout'
         }]
@@ -124,27 +146,6 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       // console.log('rendered menu.js');
-    },
-
-    setActiveMenu: function(currentRoute) {
-      // console.log(currentRoute.toJSON().activeTab);
-      // console.log(this.model.toJSON().activeTab);
-      try {
-        // var routename = currentRoute.toJSON().activeTab;
-        var routeName = currentRoute.toJSON().activeTab.toUpperCase();
-        var routeBase = routeName.split('?')[0] || 'HOME';
-        // console.log('routeName', routeName);
-        // console.log('routeBase', routeBase);
-        setTimeout(function() {
-          // console.log($('li[routename="' + routeBase + '"]'));
-          if ($('li[routename="' + routeBase + '"]')) {
-            $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
-          }
-        });
-      } catch (e) {
-        // TODO: pop the error box
-        console.log(e);
-      }
     }
 
   });
