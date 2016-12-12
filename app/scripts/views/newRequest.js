@@ -163,6 +163,7 @@ Hktdc.Views = Hktdc.Views || {};
         //   type: 'error',
         //   title: 'Error'
         // });
+        self.model.set({ selectedRecommentModel: null });
         $('#recommend-btn', self.el).html('---Select---');
 
         return false;
@@ -187,12 +188,17 @@ Hktdc.Views = Hktdc.Views || {};
             $('.recommend-container', self.el).append(recommendListView.el);
             var selected = null;
             recommendCollection.each(function(approverModel) {
-              if (self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId) {
+              if (
+                self.model.toJSON().selectedRecommentModel &&
+                (self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId)
+              ) {
                 selected = approverModel.toJSON().WorkerFullName;
               }
             });
             if (selected) {
               $('#recommend-btn', self.el).html(selected);
+            } else {
+              self.model.set({ selectedRecommentModel: null });
             }
           },
           error: function() {
@@ -216,6 +222,9 @@ Hktdc.Views = Hktdc.Views || {};
       var updateObject = {};
       updateObject[targetField] = $(ev.target).val();
       this.model.set(updateObject, {validate: true, field: targetField});
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      this.model.set(updateObject);
     },
 
     updateDateModelByEvent: function(ev) {
@@ -329,7 +338,6 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.toJSON().selectedServiceCollection.on('add', function(addedService, newCollection) {
-        // console.log('added service', newCollection.toJSON());
         /* clear the selectedRecommentModel */
         // self.model.set({ selectedRecommentModel: null });
 
@@ -340,16 +348,22 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.toJSON().selectedServiceCollection.on('change', function(changedModel) {
-        // console.log(addedService);
         /* clear the selectedRecommentModel */
-        self.model.set({ selectedRecommentModel: null });
+        // self.model.set({ selectedRecommentModel: null });
+
+        /* get new approver list */
+        self.checkBudgetAndService();
+
         self.renderButtons();
       });
 
       this.model.toJSON().selectedServiceCollection.on('remove', function(changedModel) {
-        // console.log(addedService);
         /* clear the selectedRecommentModel */
-        self.model.set({ selectedRecommentModel: null });
+        // self.model.set({ selectedRecommentModel: null });
+
+        /* get new approver list */
+        self.checkBudgetAndService();
+
         self.renderButtons();
       });
     },
@@ -568,7 +582,8 @@ Hktdc.Views = Hktdc.Views || {};
 
       this.listenTo(buttonModel, 'checkIsValid', function(successCallback) {
         // self.model.validate(self.model, {field: 'Justification'});
-        console.log(self.model.isValid());
+        // console.log(self.model.toJSON().EstimatedCost);
+        // console.error(self.model.isValid());
         if (self.model.isValid()) {
           if (successCallback) {
             successCallback();
@@ -589,8 +604,8 @@ Hktdc.Views = Hktdc.Views || {};
           self.model.set({
             EstimatedCost: self.model.toJSON().EstimatedCost
           }, {validate: true, field: 'EstimatedCost'});
-          // $('#txtjustification', self.el).blur();
-          // $('#txtestimatedcost', self.el).blur();
+          console.log(self.model.toJSON().EstimatedCost);
+
         }
       });
 

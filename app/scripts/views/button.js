@@ -39,17 +39,21 @@ Hktdc.Views = Hktdc.Views || {};
           if (status === 'Review' && self.model.toJSON().showSave) {
             self.saveAndApprover(status, 'approver', function() {
               self.workflowHandler(ev, function() {
+                console.log('workflow handler success');
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
               }, function() {
+                console.log('workflow handler error');
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
               });
             });
           } else {
             self.workflowHandler(ev, function() {
+              console.log('2 workflow handler success');
               Hktdc.Dispatcher.trigger('closeConfirm');
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             }, function() {
+              console.log('2 workflow handler error');
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
           }
@@ -88,7 +92,6 @@ Hktdc.Views = Hktdc.Views || {};
         beforeSend: utils.setAuthHeader,
         success: function(action, response) {
           console.log('ok');
-          // Backbone.history.navigate('alltask', {trigger: true});
           self.successRedirect();
           Hktdc.Dispatcher.trigger('reloadMenu');
           // window.location.href = "alltask.html";
@@ -244,13 +247,12 @@ Hktdc.Views = Hktdc.Views || {};
                 title: 'Confirmation'
               });
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
-
+              Hktdc.Dispatcher.trigger('closeConfirm');
               // Backbone.history.navigate('/', {trigger: true});
               self.successRedirect();
             },
             error: function(action, response) {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
-
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Error on Recall request' + JSON.stringify(response.responseText.Message, null, 2),
                 type: 'error',
