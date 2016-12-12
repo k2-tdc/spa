@@ -9,7 +9,7 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/newRequest.ejs'],
 
     events: {
-      'click #recommend-btn': 'checkBudgetAndService',
+      // 'click #recommend-btn': 'checkBudgetAndService',
       'blur #txtjustification': 'updateNewRequestModel',
       'blur #txtexpectedDD': 'updateDateModelByEvent',
       'blur #txtfrequency': 'updateNewRequestModel',
@@ -158,11 +158,13 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
       // console.log(this.model.toJSON().EstimatedCost);
       if (!(haveSelectService && haveFilledCost)) {
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: 'please select service and filled the cost field',
-          type: 'error',
-          title: 'Error'
-        });
+        // Hktdc.Dispatcher.trigger('openAlert', {
+        //   message: 'please select service and filled the cost field',
+        //   type: 'error',
+        //   title: 'Error'
+        // });
+        $('#recommend-btn', self.el).html('---Select---');
+
         return false;
       } else {
         var recommendCollection = new Hktdc.Collections.Recommend();
@@ -181,12 +183,25 @@ Hktdc.Views = Hktdc.Views || {};
               collection: recommendCollection,
               requestFormModel: self.model
             });
-
             $('.recommend-list', self.el).remove('.recommend-list');
             $('.recommend-container', self.el).append(recommendListView.el);
+            var selected = null;
+            recommendCollection.each(function(approverModel) {
+              if (self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId) {
+                selected = approverModel.toJSON().WorkerFullName;
+              }
+            });
+            if (selected) {
+              $('#recommend-btn', self.el).html(selected);
+            }
           },
           error: function() {
             console.log('error');
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'Can\'t get the recommend user list.',
+              type: 'error',
+              title: 'Error'
+            });
           }
         });
       }
@@ -256,7 +271,10 @@ Hktdc.Views = Hktdc.Views || {};
         var selectedUserName = selectedApplicantModel.toJSON().UserFullName;
         $('.selectedApplicant', self.el).text(selectedUserName);
         /* clear the selectedRecommentModel */
-        self.model.set({ selectedRecommentModel: null });
+        // self.model.set({ selectedRecommentModel: null });
+
+        /* get new approver list */
+        self.checkBudgetAndService();
 
         /* clear the button set to prevent lag button render */
         // self.doRenderButtons({showSave: true});
@@ -272,7 +290,11 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('change:EstimatedCost', function(model, newCost, options) {
         // console.log('change cost');
         /* clear the selectedRecommentModel */
-        self.model.set({ selectedRecommentModel: null });
+        // self.model.set({ selectedRecommentModel: null });
+
+        /* get new approver list */
+        self.checkBudgetAndService();
+
         self.renderButtons();
       });
 
@@ -309,7 +331,11 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.toJSON().selectedServiceCollection.on('add', function(addedService, newCollection) {
         // console.log('added service', newCollection.toJSON());
         /* clear the selectedRecommentModel */
-        self.model.set({ selectedRecommentModel: null });
+        // self.model.set({ selectedRecommentModel: null });
+
+        /* get new approver list */
+        self.checkBudgetAndService();
+
         self.renderButtons();
       });
 
@@ -594,7 +620,8 @@ Hktdc.Views = Hktdc.Views || {};
     renderSelectedCCView: function(input) {
       this.model.set({selectedCCCollection: new Hktdc.Collections.SelectedCC(input)});
       $('.contact-group', this.el).append(new Hktdc.Views.SelectedCCList({
-        collection: this.model.toJSON().selectedCCCollection
+        collection: this.model.toJSON().selectedCCCollection,
+        requestFormModel: this.model
       }).el);
     },
 

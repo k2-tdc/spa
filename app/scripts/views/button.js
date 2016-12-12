@@ -28,9 +28,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     clickWorkflowBtnHandler: function(ev) {
-      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
-      var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
       var self = this;
+      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
+      var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
         message: 'Are you sure want to ' + actionName + '?',
@@ -115,21 +115,21 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       // if (true) {
       this.model.trigger('checkIsValid', function() {
-          var status = this.requestFormModel.toJSON().FormStatus || 'Draft';
-          Hktdc.Dispatcher.trigger('openConfirm', {
-            title: 'confirmation',
-            message: 'Confirm save the Draft?',
-            onConfirm: function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', true);
-              self.saveAndApprover(status, '', function() {
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                Backbone.history.navigate('draft', {trigger: true});
-              }, function() {
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              });
-            }
-          });
+        var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'confirmation',
+          message: 'Confirm save the Draft?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+            self.saveAndApprover(status, '', function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              Backbone.history.navigate('draft', {trigger: true});
+            }, function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+            });
+          }
+        });
       });
     },
 
@@ -775,8 +775,7 @@ Hktdc.Views = Hktdc.Views || {};
     render: function(showButtonOptions) {
       /* load available buttons */
 
-      this.model.set(_.extend(this.model.defaults, showButtonOptions));
-      // console.log('final button options', this.model.toJSON());
+      this.model.set(_.extend({}, this.model.defaults, showButtonOptions));
       this.$el.html(this.template(this.model.toJSON()));
     }
 

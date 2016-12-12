@@ -115,7 +115,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     addServiceRequest: function() {
-      // console.log('addServiceRequest in serviceType.js');
+      console.log('addServiceRequest in serviceType.js');
       this.childServiceRequestCollection.add(this.defaultServiceRequestObject);
     },
 

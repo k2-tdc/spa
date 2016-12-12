@@ -29,6 +29,7 @@ Hktdc.Views = Hktdc.Views || {};
         serviceObjectListView.render();
 
         setTimeout(function() {
+          console.log(serviceObjectListView.el);
           $('.service-object-container', this.el).append(serviceObjectListView.el);
           this.initModelChangeHandler();
         }.bind(this));
@@ -131,6 +132,7 @@ Hktdc.Views = Hktdc.Views || {};
         /* only 'edit' request mode will have delete button */
         needDelBtn: (this.requestFormModel.toJSON().mode !== 'read')
       });
+      // console.log(tmpl);
       this.$el.html(tmpl);
     }
   });
@@ -154,6 +156,7 @@ Hktdc.Views = Hktdc.Views || {};
         serviceObjectListView.render();
 
         setTimeout(function() {
+          console.log(serviceObjectListView.el);
           $('.service-object-container', this.el).append(serviceObjectListView.el);
         }.bind(this));
       } catch (e) {
@@ -228,9 +231,6 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderServiceRequest: function(model, index) {
-      // console.log(this.availableServiceObjectArray.toJSON());
-      // var that = this;
-
       model.set({
         index: index + 1,
         availableServiceObjectArray: this.availableServiceObjectArray,
@@ -276,7 +276,8 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var serviceRequestItemView = new Hktdc.Views.ServiceRequest({
           model: model,
-          requestFormModel: this.requestFormModel
+          requestFormModel: this.requestFormModel,
+          serviceCatagoryModel: this.serviceCatagoryModel
         });
       }
       serviceRequestItemView.render();
@@ -285,6 +286,7 @@ Hktdc.Views = Hktdc.Views || {};
 
 
     render: function() {
+      console.log(this.collection.toJSON());
       if (this.collection.toJSON().length > 0) {
         if (String(this.collection.toJSON()[0].ControlFlag) === '2') {
           this.renderTextServiceRequest();

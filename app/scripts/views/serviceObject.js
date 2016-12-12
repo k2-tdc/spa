@@ -35,6 +35,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
     render: function() {
       // console.log(this.model.toJSON());
+      this.model.set({
+        readonly: (this.requestFormModel.toJSON().mode === 'read')
+      });
       var tmpl = this.template({ serviceObject: this.model.toJSON()});
       this.$el.html(tmpl);
     }
@@ -56,7 +59,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
       console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
-      
+
       // console.log(this.model.toJSON());
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
@@ -71,6 +74,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
+      this.model.set({
+        readonly: (this.requestFormModel.toJSON().mode === 'read')
+      });
       var tmpl = this.template({ serviceObject: this.model.toJSON()});
       this.$el.html(tmpl);
     }

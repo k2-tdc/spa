@@ -16,10 +16,10 @@ Hktdc.Views = Hktdc.Views || {};
       _.extend(this, props);
     },
     clickRecommendHandler: function() {
-      /* if select the  */
+      /* if select the approver */
       this.requestFormModel.set({
         selectedRecommentModel: this.model
-      });
+      }, {validate: true, field: 'selectedRecommentModel'});
     },
 
     render: function() {
