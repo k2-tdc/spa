@@ -300,6 +300,9 @@ div.dataTables_wrapper table {
   text-align: left;
 }
 
+div.dataTables_wrapper div.dataTables_processing{
+  border: 1px solid #ddd;
+}
 #delegationTable > tbody > tr > td:last-child div,
 #statusTable > tbody > tr > td:last-child div {
   text-align: center;

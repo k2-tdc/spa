@@ -172,6 +172,10 @@ Hktdc.Views = Hktdc.Views || {};
         bRetrieve: true,
         order: [0, 'desc'],
         searching: false,
+        processing: true,
+        oLanguage: {
+          sProcessing: '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>'
+        },
         ajax: {
           url: this.getAjaxURL(),
           beforeSend: utils.setAuthHeader,
