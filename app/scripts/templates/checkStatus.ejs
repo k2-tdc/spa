@@ -18,37 +18,46 @@
             </div>
           </div>
         <% } %>
-
-        <div class="form-group">
-          <label for="ref_id" class="col-xs-12 col-sm-2 control-label">Ref. ID</label>
-          <div class="col-xs-12 col-sm-6">
-            <input type="text" id="txtindexrefid" name="ReferID" class="search-field form-control" placeholder="" value="<%= ReferID %>">
+        <div class="advanced-form">
+          <div class="form-group">
+            <label for="ref_id" class="col-xs-12 col-sm-2 control-label">Ref. ID</label>
+            <div class="col-xs-12 col-sm-6">
+              <input type="text" id="txtindexrefid" name="ReferID" class="search-field form-control" placeholder="" value="<%= ReferID %>">
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
-          <div class="create_date_pick1 col-xs-6 col-sm-3">
-            <div class="input-group">
-              <input type="text" id="txtIndexfromdate" name="FDate" class="form-control date" value="<%= FDate %>" placeholder="From Date">
-              <div class="input-group-addon datepicker-toggle-btn">
-                <span class="glyphicon glyphicon-calendar"></span>
+          <div class="form-group">
+            <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
+            <div class="create_date_pick1 col-xs-6 col-sm-3">
+              <div class="input-group">
+                <input type="text" id="txtIndexfromdate" name="FDate" class="form-control date" value="<%= FDate %>" placeholder="From Date">
+                <div class="input-group-addon datepicker-toggle-btn">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </div>
+              </div>
+            </div>
+            <div class="create_date_pick2 col-xs-6 col-sm-3">
+              <div class="input-group">
+                <input type="text" id="txtIndextodate" name="TDate" class="form-control date" value="<%= TDate %>" placeholder="To Date">
+                <div class="input-group-addon datepicker-toggle-btn">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="create_date_pick2 col-xs-6 col-sm-3">
-            <div class="input-group">
-              <input type="text" id="txtIndextodate" name="TDate" class="form-control date" value="<%= TDate %>" placeholder="To Date">
-              <div class="input-group-addon datepicker-toggle-btn">
-                <span class="glyphicon glyphicon-calendar"></span>
-              </div>
+          <div class="form-group">
+            <label for="status" class="col-sm-2 control-label"><%= searchUserType %></label>
+            <div class="col-sm-6 user-container">
+
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="status" class="col-sm-2 control-label"><%= searchUserType %></label>
-          <div class="col-sm-6 user-container">
 
-          </div>
+        <div class="advanced-btn-wrapper">
+          <span class="advanced-btn">
+            <span class="isShow">Show</span>
+            <span class="isHide">Hide</span>
+            Advanced Search
+          </span>
         </div>
 
         <div class="form-group buttons-container">
@@ -56,8 +65,8 @@
             <input type="button" class="btn btn-primary" value="Search" id="btnSearchCheckStatus">
           </div>
         </div>
-      </form>
 
+      </form>
     </div>
   </div>
 </div>

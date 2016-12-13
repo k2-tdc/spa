@@ -118,8 +118,9 @@
 }
 
 div.newrequest-title {
-  color: #006bf0; //  line-height: 35px;
-  line-height: 20px;
+  color: #006bf0;
+  // line-height: 35px;
+  // line-height: 20px;
   .service-title-desp {
     margin-left: 0;
   }
@@ -299,6 +300,9 @@ div.newrequest-title {
 #readRequest{
   .sep-space {
     height: 2em;
+  }
+  .newrequest-title {
+    line-height: 20px;
   }
   .block-padding{
     padding: 0 10px;

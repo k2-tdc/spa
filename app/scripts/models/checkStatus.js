@@ -24,7 +24,8 @@ Hktdc.Models = Hktdc.Models || {};
       UserId: '',
       SUser: '',
       // for detail
-      ProsIncId: ''
+      ProsIncId: '',
+      showAdvanced: false
     },
 
     validate: function(attrs, options) {},
