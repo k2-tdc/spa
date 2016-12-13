@@ -10,10 +10,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       '': 'checkStatus',
       'check_status': 'checkStatus',
       'request': 'newRequest',
-      'request/draft/:requestId': 'editRequest',
-      'request/check/:requestId/:procId': 'editRequest',
-      'request/all/:requestId/:sn': 'editRequest',
-      'request/approval/:requestId/:sn': 'editRequest',
+      // :from = [draft, check, all, approval]
+      'request/:from/:requestId': 'editRequest',
+      'request/:from/:requestId/:snOrProcId': 'editRequest',
       // 'delegation': 'delegationList',
       'draft': 'draft',
       'alltask': 'allTask',
@@ -200,7 +199,7 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     /* this handling 'edit' old request OR 'read' old request */
-    editRequest: function(requestId, snOrProcId) {
+    editRequest: function(from, requestId, snOrProcId) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
       var requestCollection = new Hktdc.Collections.NewRequest();
       var procId = (snOrProcId && snOrProcId.indexOf('_') > 0)
@@ -226,6 +225,12 @@ Hktdc.Routers = Hktdc.Routers || {};
           var me = Hktdc.Config.userID;
           /* ----------- IMPORTANT: pre-set the request mode  ----------- */
           var editModeStatus = ['Draft', 'Review', 'Return', 'Rework'];
+          var subheaderMapping = {
+            draft: 'Draft',
+            check: 'Check Status',
+            all: 'All Tasks',
+            approval: 'Approval Tasks'
+          };
           // var mode = (modeObj) ? modeObj.name : 'read';
           var getMode = function() {
             // 'Draft'
@@ -282,7 +287,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
           var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
             collection: subheaderMenuListCollection,
-            currentPageName: 'Edit Request'
+            currentPageName: subheaderMapping[from]
           });
           subheaderMenuListView.render();
           // console.log($('.subheader-menu-container'));

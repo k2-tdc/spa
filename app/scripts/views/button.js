@@ -127,7 +127,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.saveAndApprover(status, '', function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
-              Backbone.history.navigate('draft', {trigger: true});
+              self.successRedirect();
             }, function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
@@ -147,7 +147,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.saveAndApprover('Review', 'applicant', function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
-              Backbone.history.navigate('', {trigger: true});
+              self.successRedirect();
             }, function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
@@ -167,7 +167,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.saveAndApprover('Approval', 'approver', function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
-              Backbone.history.navigate('', {trigger: true});
+              self.successRedirect();
             }, function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
@@ -200,7 +200,6 @@ Hktdc.Views = Hktdc.Views || {};
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
 
-              // Backbone.history.navigate('draft', {trigger: true});
               self.successRedirect();
             },
             error: function(err) {
@@ -248,7 +247,6 @@ Hktdc.Views = Hktdc.Views || {};
               });
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
-              // Backbone.history.navigate('/', {trigger: true});
               self.successRedirect();
             },
             error: function(action, response) {
