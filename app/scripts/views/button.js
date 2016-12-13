@@ -561,6 +561,10 @@ Hktdc.Views = Hktdc.Views || {};
       var Applicant = (self.requestFormModel.toJSON().selectedApplicantModel)
         ? self.requestFormModel.toJSON().selectedApplicantModel.toJSON().UserId
         : self.requestFormModel.toJSON().ApplicantUserID;
+      var ApplicantRuleCode = self.requestFormModel.toJSON().selectedApplicantModel.toJSON().RuleCode;
+      var Approver = (self.requestFormModel.toJSON().selectedRecommentModel)
+      ? self.requestFormModel.toJSON().selectedRecommentModel.toJSON().WorkerId
+      : self.requestFormModel.toJSON().ApproverUserID;
       // var ActionTaker = self.requestFormModel.toJSON().ActionTakerUserID;
       // var ITSApprover = self.requestFormModel.toJSON().ITSApproverUserID;
       var me = Hktdc.Config.userID;
@@ -572,10 +576,6 @@ Hktdc.Views = Hktdc.Views || {};
       ) {
         console.debug('NEED Check APPLICANT_RULECODE');
         /* load related button set */
-        var ApplicantRuleCode = self.requestFormModel.toJSON().selectedApplicantModel.toJSON().RuleCode;
-        var Approver = (self.requestFormModel.toJSON().selectedRecommentModel)
-          ? self.requestFormModel.toJSON().selectedRecommentModel.toJSON().WorkerId
-          : self.requestFormModel.toJSON().ApproverUserID;
         // var ApproverRuleCode = self.requestFormModel.toJSON().selectedRecommentModel.toJSON().RuleCode;
         console.log('Preparer: ', Preparer);
         console.log('Applicant: ', Applicant);
@@ -610,7 +610,8 @@ Hktdc.Views = Hktdc.Views || {};
         }
 
         if (this.requestFormModel.toJSON().FormStatus === 'Rework' && me === Preparer && this.requestFormModel.toJSON().mode !== 'read') {
-          options.showSave = true;
+          self.renderDraftModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
+          // options.showSave = true;
           // options.showDelete = true;
         }
 
