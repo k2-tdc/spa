@@ -11,7 +11,7 @@ Hktdc.Models = Hktdc.Models || {};
       var qsArr = [
         'UserId=' + Hktdc.Config.userID,
         'ReferID=' + refId
-      ]
+      ];
       return Hktdc.Config.apiURL + '/GetRequestDetails?' + qsArr.join('&');
     },
 

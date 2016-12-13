@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $ */
+/* global Hktdc, Backbone, JST, $, utils, Q */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -29,77 +29,32 @@ Hktdc.Views = Hktdc.Views || {};
         showFileLog: true
       });
 
-      Q.all([
-      //   self.loadServiceCatagory(),
-        self.loadEmployee()
-      //   self.loadFileTypeRules()
-      ])
-      .then(function(results) {
-      /* must sync RequestList to selectedServiceCollection for updating */
-      // var recommend = _.find(results[1], function(employee) {
-      //   return employee.UserId === self.model.toJSON().ApproverUserID;
-      // });
-      self.employeeArray = results[0];
-      // console.log(self.employeeArray);
-      /* need override the workerId and WorkerFullName */
-      // recommend.WorkerId = recommend.UserId;
-      // recommend.WorkerFullName = recommend.UserFullName;
-
-      // self.model.set({
-      //   selectedServiceTree: self.model.toJSON().RequestList,
-      //   selectedRecommentModel: new Hktdc.Models.Recommend(recommend)
-      // });
-
-      console.log(self.model.toJSON().RequestList);
-      setTimeout(function() {
-        self.renderAttachment(self.model.toJSON().Attachments);
-        self.renderSelectedCCView(self.model.toJSON().RequestCC);
-        self.renderWorkflowLog(self.model.toJSON().ProcessLog);
-        self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
-        self.renderButtons();
-      });
-      /* direct put the Request list to collection because no need to change selection */
-
-      // quick hack to do after render
-      // setTimeout(function() {
-      //   $('input, textarea:not(.keepEdit), button', self.el).prop('disabled', 'disabled');
-      /*
-        var FormStatus = self.model.toJSON().FormStatus;
-        var Preparer = self.model.toJSON().PreparerUserID;
-        var Applicant = self.model.toJSON().ApplicantUserID;
-        var Approver = self.model.toJSON().ApproverUserID;
-        var ActionTaker = self.model.toJSON().ActionTakerUserID;
-        var ITSApprover = self.model.toJSON().ITSApproverUserID;
-
-        self.renderRequestFormButton(
-        FormStatus,
-        Preparer,
-        Applicant,
-        Approver,
-        ActionTaker,
-        ITSApprover
-      );
-      */
-      // });
-      })
-      .fail(function(e) {
-        console.error(e);
-      });
-
+      // Q.all([
+      self.loadColleague()
+      // ])
+        .then(function(colleagueCollection) {
+          self.colleagueCollection = colleagueCollection;
+          // console.log(self.model.toJSON().RequestList);
+          setTimeout(function() {
+            self.renderAttachment(self.model.toJSON().Attachments);
+            self.renderSelectedCCView(self.model.toJSON().RequestCC);
+            self.renderWorkflowLog(self.model.toJSON().ProcessLog);
+            self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
+            self.renderButtons();
+          });
+        })
+        .fail(function(e) {
+          console.error(e);
+        });
     },
 
-    loadEmployee: function() {
-      /* employee component */
+    loadColleague: function() {
       var deferred = Q.defer();
-      // var self = this;
-
-      var employeeCollection = new Hktdc.Collections.Employee();
-      employeeCollection.fetch({
+      var colleagueCollection = new Hktdc.Collections.Colleague();
+      colleagueCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
-          // console.log('selectedCCCollection: ', self.model);
-          deferred.resolve(employeeCollection.toJSON());
+          deferred.resolve(colleagueCollection);
         },
         error: function(err) {
           deferred.reject(err);
@@ -132,7 +87,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
       buttonView.renderButtonHandler();
       var toUserView = new Hktdc.Views.ToUserList({
-        collection: new Hktdc.Collections.Employee(this.employeeArray),
+        collection: this.colleagueCollection,
         parentModel: this.model,
         selectFieldName: 'Forward_To_ID'
       });

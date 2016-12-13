@@ -36,10 +36,10 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('change:selectedServiceCount', function(model, newCount) {
         setTimeout(function() {
           if (parseInt(newCount) > 0) {
-            $('.selectedServiceCount', self.el).show();
-            $('.selectedServiceCount', self.el).html('(' + newCount + ')');
+            $('.selected-service-count', self.el).show();
+            $('.selected-service-count', self.el).html('(' + newCount + ')');
           } else {
-            $('.selectedServiceCount', self.el).hide();
+            $('.selected-service-count', self.el).hide();
           }
         });
       });

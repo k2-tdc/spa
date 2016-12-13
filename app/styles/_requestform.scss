@@ -90,7 +90,7 @@
     min-width: 210px;
   }
 
-  .checkbox-option, .service-categary-header {
+  .checkbox-option, .service-category-header {
     line-height: 30px;
     font-size: 16px;
     font-weight: bold;
@@ -111,15 +111,18 @@
   }
 }
 
-div.newrequest-title {
-  color: #006bf0; //  line-height: 35px;
-  line-height: 20px;
-}
-
-span.service-title-desp {
+.service-title-desp {
   text-transform: initial;
   color: grey;
   margin-left: 20px;
+}
+
+div.newrequest-title {
+  color: #006bf0; //  line-height: 35px;
+  line-height: 20px;
+  .service-title-desp {
+    margin-left: 0;
+  }
 }
 
 .select-service {
@@ -192,15 +195,23 @@ span.service-title-desp {
 	left:0;
 }
 
-.selectedServiceCount {
+.selected-service-count {
   padding-left: 6px;
   color: #006bf0;
   // font-size: 14px;
   font-weight: bold;
+  display: inline-block;
 }
 
 .service-catagory-item {
   margin-top: 4px;
+}
+
+.service-category-name{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+  overflow: hidden;
 }
 
 .workflowlog-container {
@@ -262,7 +273,7 @@ span.service-title-desp {
   overflow: hidden;
 }
 
-.onsite-standby-service span.service-title-desp {
+.onsite-standby-service .service-title-desp {
   margin-left: 0;
   display: block;
 }
@@ -304,7 +315,7 @@ span.service-title-desp {
     // padding: 10px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-  .service-categary-header{
+  .service-category-header{
     line-height: 10px;
   }
   .service-type-container{
@@ -361,6 +372,9 @@ span.service-title-desp {
     // border: 0;
   }
 
+  .service-category-name {
+    max-width: 250px;
+  }
   .service-catagory-item .group-header {
     background-color: #e8e8e8;
   }

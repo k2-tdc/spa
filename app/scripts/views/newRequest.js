@@ -31,29 +31,31 @@ Hktdc.Views = Hktdc.Views || {};
 
       /* mode === new */
       if (this.model.toJSON().mode === 'new') {
-        console.log('this is << NEW >> mode');
+        console.debug('this is << NEW >> mode');
 
         /* First load all remote data */
         Q.all([
           self.loadEmployee(),
           self.loadApplicantDetail(),
           self.loadServiceCatagory(),
-          self.loadFileTypeRules()
+          self.loadFileTypeRules(),
+          self.loadColleague()
         ])
-          .then(function(result) {
+          .then(function(results) {
             console.log('load ed resource');
-            self.employeeArray = result[0];
+            self.employeeArray = results[0];
+            self.colleagueCollection = results[4];
             self.model.set({
               selectedServiceCollection: new Hktdc.Collections.SelectedService(),
               selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
-              employeeList: result[0]
+              employeeList: results[0]
             });
 
             /* Render the components below */
-            self.renderApplicantAndCCList(result[0]);
-            self.renderApplicantDetail(result[1], result[0]);
-            self.renderServiceCatagory(result[2]);
-            self.renderAttachment(result[3]);
+            self.renderApplicantAndCCList(results[0]);
+            self.renderApplicantDetail(results[1], results[0]);
+            self.renderServiceCatagory(results[2]);
+            self.renderAttachment(results[3]);
             self.renderSelectedCCView();
             self.initDatePicker();
             /* default render the save button only,
@@ -76,11 +78,13 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadEmployee(),
           self.loadServiceCatagory(),
           self.loadApplicantDetail(),
-          self.loadFileTypeRules()
+          self.loadFileTypeRules(),
+          self.loadColleague()
         ])
           .then(function(results) {
             console.log('loaded resource');
             self.employeeArray = results[0];
+            self.colleagueCollection = results[4];
 
             var recommend = _.find(results[0], function(employee) {
               return employee.UserId === self.model.toJSON().ApproverUserID;
@@ -91,7 +95,7 @@ Hktdc.Views = Hktdc.Views || {};
             recommend.WorkerFullName = recommend.UserFullName;
             var attachmentModelArray = _.map(self.model.toJSON().Attachments, function(attachment) {
               return new Hktdc.Models.Attachment();
-            })
+            });
             self.model.set({
               selectedServiceTree: self.model.toJSON().RequestList,
               /* must sync RequestList to selectedServiceCollection for updating */
@@ -116,21 +120,6 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.initDatePicker();
 
-            // var FormStatus = self.model.toJSON().FormStatus;
-            // var Preparer = self.model.toJSON().PreparerUserID;
-            // var Applicant = self.model.toJSON().ApplicantUserID;
-            // var Approver = self.model.toJSON().ApproverUserID;
-            // var ActionTaker = self.model.toJSON().ActionTakerUserID;
-            // var ITSApprover = self.model.toJSON().ITSApproverUserID;
-            //
-            // self.renderRequestFormButton(
-            //   FormStatus,
-            //   Preparer,
-            //   Applicant,
-            //   Approver,
-            //   ActionTaker,
-            //   ITSApprover
-            // );
             self.renderButtons();
 
             /* init event listener last */
@@ -508,6 +497,22 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
+    loadColleague: function() {
+      var deferred = Q.defer();
+      var colleagueCollection = new Hktdc.Collections.Colleague();
+      colleagueCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(colleagueCollection);
+        },
+        error: function(err) {
+          deferred.reject(err);
+        }
+      });
+
+      return deferred.promise;
+    },
+
     renderApplicantAndCCList: function(employeeArray) {
       var self = this;
       $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
@@ -575,7 +580,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
       buttonView.renderButtonHandler();
       var toUserView = new Hktdc.Views.ToUserList({
-        collection: new Hktdc.Collections.Employee(this.employeeArray),
+        collection: self.colleagueCollection,
         parentModel: this.model,
         selectFieldName: 'Forward_To_ID'
       });

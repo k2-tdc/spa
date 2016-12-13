@@ -1,30 +1,29 @@
 
 <div class="panel panel-default select-service-header">
   <div class="panel-body group-header">
-    <div class="row">
-      <div class="col-xs-10 col-md-10">
-        <table style='border:none;'>
-          <tr>
-            <td><input class="toplevelCheckBox" type="checkbox" style="margin-top:0" /></td>
-            <td>
-              <div class="checkbox-option reset-line-h" id="divHSITservice">
-                <span>
-                  <%= serviceCatagory.Name %>
-                </span>
+    <table style='border:none; width:100%'>
+      <tr>
+        <td><input class="toplevelCheckBox" type="checkbox" style="margin-top:0" /></td>
+        <td style='line-height:1em'>
+          <div class="checkbox-option reset-line-h">
+            <div class='service-category-name'>
+              <%= serviceCatagory.Name %>
+            </div>
 
-                <span class="selectedServiceCount">
-                  (<%= serviceCatagory.selectedServiceCount %>)
-                </span>
+            <div class="service-category-name selected-service-count">
+              (<%= serviceCatagory.selectedServiceCount %>)
+            </div>
 
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="col-xs-2 col-sm-2 checkbox-option-drop">
-        <span class="glyphicon glyphicon-menu-down toggleBtn"></span>
-      </div>
-    </div>
+          </div>
+        </td>
+        <td>
+          <div class="checkbox-option-drop">
+            <span class="glyphicon glyphicon-menu-down toggleBtn"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
   </div>
 
   <div class="group-details service-type-container">
