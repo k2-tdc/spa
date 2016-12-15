@@ -16,6 +16,7 @@ var mountFolder = function(connect, dir) {
 // templateFramework: 'lodash'
 
 module.exports = function(grunt) {
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
   // show elapsed time at the end
   require('time-grunt')(grunt);
@@ -281,6 +282,16 @@ module.exports = function(grunt) {
           ]
         }
       }
+    },
+    compress: {
+      main: {
+        options: {
+          archive: 'dist.zip'
+        },
+        files: [
+          {src: ['<%= yeoman.dist %>/**'], dest: '/'} // includes files in path and its subdirs
+        ]
+      }
     }
   });
 
@@ -357,7 +368,8 @@ module.exports = function(grunt) {
     // 'uglify',
     'copy',
     'rev',
-    'usemin'
+    'usemin',
+    'compress'
   ]);
 
   grunt.registerTask('default', [
