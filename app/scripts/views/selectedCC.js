@@ -44,11 +44,11 @@ Hktdc.Views = Hktdc.Views || {};
       _.bindAll(this, 'renderSelectedCCItem');
       this.render();
 
-      this.collection.on('add', function(addedCC, newCollection){
+      this.collection.on('add', function(addedCC, newCollection) {
         $(self.el).empty();
         self.render();
       });
-      this.collection.on('remove', function(addedCC, newCollection){
+      this.collection.on('remove', function(addedCC, newCollection) {
         $(self.el).empty();
         self.render();
       });
@@ -57,7 +57,7 @@ Hktdc.Views = Hktdc.Views || {};
     renderSelectedCCItem: function(model) {
       model.set({
         readonly: this.requestFormModel.toJSON().mode === 'read'
-      })
+      });
       var selectedCCItemView = new Hktdc.Views.SelectedCC({
         model: model,
         collection: this.collection
@@ -68,10 +68,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       /* the collection share with new request selectedCCCollection */
-      // console.log(this.collection);
-      this.collection.each(this.renderSelectedCCItem);
+      console.log(this.requestFormModel.toJSON());
+      if (this.collection.length || this.requestFormModel.toJSON().mode !== 'read') {
+        this.collection.each(this.renderSelectedCCItem);
+      } else {
+        $(this.el).append('NIL');
+      }
     }
 
   });
-
 })();

@@ -4,6 +4,7 @@
   </div>
 
   <div id="readRequest">
+    <div class="sep-space-sm"></div>
 
     <div class="readrequest-basic-information block-padding">
       <div class="row">
@@ -48,18 +49,6 @@
       <div class="sep-space-sm"></div>
 
       <div class="row">
-        <div class="col-xs-4 col-sm-2 col-md-2 newrequest-title text-left">Title</div>
-        <div class="col-xs-8 col-sm-2 col-md-10" id="divtitle"><%= request.Title %></div>
-      </div>
-      <div class="sep-space-sm"></div>
-
-      <div class="row">
-        <div class="col-xs-4 col-md-2 newrequest-title text-left">Office</div>
-        <div class="col-xs-8 col-md-10" id="divoffice"><%= request.Location %></div>
-      </div>
-      <div class="sep-space-sm"></div>
-
-      <div class="row">
         <div class="col-xs-4 col-sm-2 col-md-2 newrequest-title text-left">Department</div>
         <div class="col-xs-8 col-sm-10 col-md-10" id="divdepartment"><%= request.DEPT %></div>
       </div>
@@ -85,13 +74,17 @@
           <div class="sep-space"></div>
           <div class="row field">
             <div class="col-xs-12 col-md-12 newrequest-title text-left">
-              <span>Justification and Important Notes *</span>
+              <span><span class='red'>* </span>Justification and Important Notes</span>
               <span class="service-title-desp">(Business Value / Descripttion / Reason)</span>
             </div>
           </div>
           <div class="row field">
             <div class="col-md-10 form_data">
-              <%= request.Justification %>
+              <% if (request.Justification) { %>
+                <%= request.Justification %>
+              <% } else { %>
+                NIL
+              <% } %>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -100,7 +93,11 @@
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_data">
-              <%= request.EDeliveryDate %>
+              <% if (request.EDeliveryDate) { %>
+                <%= request.EDeliveryDate %>
+              <% } else { %>
+                NIL
+              <% } %>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -109,16 +106,24 @@
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_data">
-              <%= request.DurationOfUse %>
+              <% if (request.DurationOfUse) { %>
+                <%= request.DurationOfUse %>
+              <% } else { %>
+                NIL
+              <% } %>
             </div>
           </div>
           <div class="sep-space"></div>
           <div class="row field">
-            <div class="col-xs-12 col-md-12 newrequest-title text-left">Estimated Cost (HK$) *</div>
+            <div class="col-xs-12 col-md-12 newrequest-title text-left"><span class='red'>* </span>Estimated Cost (HK$)</div>
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_data">
-              <%= request.EstimatedCost %>
+              <% if (request.EstimatedCost) { %>
+                <%= request.EstimatedCost %>
+              <% } else { %>
+                NIL
+              <% } %>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -128,7 +133,11 @@
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_data">
-              <%= request.BudgetProvided %>
+              <% if (request.BudgetProvided) { %>
+                <%= request.BudgetProvided %>
+              <% } else { %>
+                NIL
+              <% } %>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -143,11 +152,15 @@
           <div class="sep-space-sm"></div> -->
 
           <div class="row field">
-            <div class="col-xs-12 newrequest-title text-left">Recommend By *</div>
+            <div class="col-xs-12 newrequest-title text-left"><span class='red'>* </span>Recommend By</div>
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width recommend-container form_data">
-              <%= request.ApproverFNAME %>
+              <% if (request.ApproverFNAME) { %>
+                <%= request.ApproverFNAME %>
+              <% } else { %>
+                NIL
+              <% } %>
             </div>
           </div>
           <div class="sep-space"></div>
@@ -165,7 +178,12 @@
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 col-md-8 form_data">
-              <%= request.Remark %>
+              <% if (request.Remark) { %>
+                <%= request.Remark %>
+              <% } else { %>
+                NIL
+              <% } %>
+
             </div>
           </div>
           <div class="sep-space"></div>

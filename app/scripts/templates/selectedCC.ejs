@@ -1,13 +1,13 @@
 <% if (!readonly) { %>
-<button
-  type="button"
-  eid=<%= selectedUserId %>
-  style="text-decoration:none;margin-right:5px;margin-top:5px;"
-  class="btn btn-default spncc"
->
-  <span class="glyphicon glyphicon-remove spanremovecc"></span>
-  <%= selectedUserName %>
-</button>
+  <button
+    type="button"
+    eid=<%= selectedUserId %>
+    style="text-decoration:none;margin-right:5px;margin-top:5px;"
+    class="btn btn-default spncc"
+  >
+    <span class="glyphicon glyphicon-remove spanremovecc"></span>
+    <%= selectedUserName %>
+  </button>
 <% } else { %>
   <span><%= selectedUserName %></span>
   <span>;</span>

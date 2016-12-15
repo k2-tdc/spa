@@ -116,17 +116,15 @@ textarea {
   // z-index: 1;
 }
 
-#mainContent {
-  max-width: 700px;
-}
-
 #page {
   // z-index: 1 ;
   // z-index: 2;
   pointer-events: none !important;
 }
 
-
+#mainContent.compress {
+  max-width: 700px;
+}
 
 #content,
 #footer,
@@ -168,7 +166,7 @@ textarea {
 
 .panel-default > .panel-heading {
   background-color: white;
-  padding: 8px;
+  padding: 0px;
   border-bottom: none;
   & > div {
 
@@ -320,6 +318,18 @@ div.dataTables_wrapper div.dataTables_processing{
 @import 'delegation';
 @import 'checkstatus';
 @import 'subheader';
+
+
+/* START -- app web view */
+#content{
+  &.app-web-view{
+    padding-top: 70px;
+    .headingOne{
+      display: none;
+    }
+  }
+}
+/* END -- app web view */
 
 
 @media screen and (max-width: 767px) {
@@ -486,12 +496,6 @@ div.dataTables_wrapper div.dataTables_processing{
     padding-left: 0;
     padding-right: 0;
     overflow: hidden;
-    &.app-web-view{
-      padding-top: 70px;
-      .headingOne{
-        display: none;
-      }
-    }
   }
 
 	.refId{

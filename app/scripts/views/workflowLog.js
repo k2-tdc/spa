@@ -82,7 +82,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderWrokflowLogItem: function(model) {
       model.set({
-        CreatedOn: moment(model.toJSON().CreatedOn).format('DD MMM YYYY')
+        CreatedOn: moment(model.toJSON().CreatedOn).format('DD MMM YYYY HH:mm:ss')
       });
       // console.log(model.toJSON());
       var workflowLogItemView = new Hktdc.Views.WorkflowLog({

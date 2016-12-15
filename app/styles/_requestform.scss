@@ -8,7 +8,7 @@
 }
 
 .newrequest-basic-information {
-  padding: 20px 0;
+  // padding: 20px 0;
   width: 100%;
   margin: 0;
   max-width: 900px;
@@ -109,12 +109,6 @@
       text-align: center;
     }
   }
-}
-
-.service-title-desp {
-  text-transform: initial;
-  color: grey;
-  margin-left: 20px;
 }
 
 div.newrequest-title {
@@ -274,11 +268,6 @@ div.newrequest-title {
   overflow: hidden;
 }
 
-.onsite-standby-service .service-title-desp {
-  margin-left: 0;
-  display: block;
-}
-
 // read mode
 #newRequest{
   .select-applicant,
@@ -296,10 +285,17 @@ div.newrequest-title {
     padding: 0 5px;
   }
 
+  .service-title-desp {
+    text-transform: initial;
+    color: grey;
+    margin-left: 20px;
+  }
+
 }
 #readRequest{
   .sep-space {
     height: 2em;
+    clear:both;
   }
   .newrequest-title {
     line-height: 20px;
@@ -333,6 +329,14 @@ div.newrequest-title {
   .service-request-input {
     padding: 5px 15px 0 15px;
   }
+  .service-title-desp {
+    text-transform: initial;
+  }
+
+  .service-content{
+    text-transform: none;
+  }
+
 }
 
 

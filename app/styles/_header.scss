@@ -193,6 +193,26 @@
     }
   }
 }
+
+/* START -- app web view */
+#header_main {
+  .btn-group.nav-header-main.app-web-view {
+    display: none;
+  }
+  .subheader-menu-container.app-web-view {
+    display: table-cell;
+  }
+}
+
+#header.app-web-view {
+  height: 60px;
+
+  #header_top {
+    display: none;
+  }
+}
+/* END -- app web view */
+
 @media (max-width: 767px) {
   .nav-header-subheader {
     color: black;
@@ -209,26 +229,13 @@
       }
     }
 
-    .btn-group.nav-header-main.app-web-view {
-      display: none;
-    }
 
     .subheader-menu-container {
       display: none;
     }
 
-    .subheader-menu-container.app-web-view {
-      display: table-cell;
-    }
   }
 
-  #header.app-web-view {
-    height: 60px;
-
-    #header_top {
-      display: none;
-    }
-  }
 }
 @media (max-width: 991px) {
   #header_main{

@@ -149,7 +149,7 @@ Hktdc.Routers = Hktdc.Routers || {};
     /* this handling insert new */
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-
+      $('#mainContent').addClass('compress');
       var referenceIdModel = new Hktdc.Models.ReferenceId();
       referenceIdModel.fetch({
         beforeSend: utils.setAuthHeader,
@@ -201,6 +201,8 @@ Hktdc.Routers = Hktdc.Routers || {};
     /* this handling 'edit' old request OR 'read' old request */
     editRequest: function(from, requestId, snOrProcId) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
+      $('#mainContent').addClass('compress');
+
       var requestCollection = new Hktdc.Collections.NewRequest();
       var procId = (snOrProcId && snOrProcId.indexOf('_') > 0)
         ? snOrProcId.split('_')[0]

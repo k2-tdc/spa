@@ -21,6 +21,8 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       // console.debug('[ views/checkStatus.js ] - Initizing check status views');
       // this.listenTo(this.model, 'change', this.render);
+      $('#mainContent').removeClass('compress');
+
       var self = this;
       // _.extend(this, props);
       this.render();
@@ -101,7 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
             selectedStatus: self.model.toJSON().CStat
           });
 
-          console.log(userListView.el);
+          // console.log(userListView.el);
           $('.user-container', self.el).html(userListView.el);
           // console.log(statusListView.el);
           $('.status-container', self.el).html(statusListView.el);
@@ -320,7 +322,6 @@ Hktdc.Views = Hktdc.Views || {};
           }
         });
       } else {
-
         var applicantCollection = new Hktdc.Collections.Applicant();
         applicantCollection.url = applicantCollection.url(this.model.toJSON().mode);
         applicantCollection.fetch({
@@ -389,6 +390,18 @@ Hktdc.Views = Hktdc.Views || {};
         return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
       } else if (status === 'ProcessTasks') {
         return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
+      } else if (status === 'Return') {
+        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
+      } else if (status === 'Reject') {
+        return formStatusDisplay;
+      } else if (status === 'Completed') {
+        return formStatusDisplay;
+      } else if (status === 'Cancelled') {
+        return formStatusDisplay;
+      } else if (status === 'Deleted') {
+        return formStatusDisplay;
+      } else if (status === 'Recall') {
+        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
       } else if (status === 'ITSApproval') {
         return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
       } else {
