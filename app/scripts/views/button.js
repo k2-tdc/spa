@@ -219,10 +219,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickRecallBtnHandler: function() {
       var self = this;
-      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure want to Recall the Form: ' + actionName + ' ?',
+        message: 'Are you sure want to Recall the Form: ' + self.requestFormModel.toJSON().FormID + ' ?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
 
@@ -537,9 +536,12 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    successRedirect: function() {
+    successRedirect: function(forceRedirect) {
       var baseURL = Backbone.history.getHash().split('?')[0];
-      if (/\/check\//.test(baseURL)) {
+
+      if (forceRedirect || forceRedirect === '') {
+        Backbone.history.navigate(forceRedirect, {trigger: true});
+      } else if (/\/check\//.test(baseURL)) {
         Backbone.history.navigate('', {trigger: true});
       } else if (/\/draft\//.test(baseURL)) {
         Backbone.history.navigate('draft', {trigger: true});

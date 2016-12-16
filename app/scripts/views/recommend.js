@@ -39,7 +39,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       this.$el.html(this.template({user: this.model.toJSON()}));
-      this.$el.attr('value', this.model.toJSON().UserId);
+      this.$el.attr('value', this.model.toJSON().WorkerId);
       if (this.selectedRecommend === this.model.toJSON().UserId) {
         this.$el.prop('selected', true);
       }

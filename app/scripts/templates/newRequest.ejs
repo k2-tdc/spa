@@ -182,8 +182,11 @@
 
           <div class="row field">
             <div class="col-xs-12 col-sm-3 newrequest-title text-right mobile-text-align-left text-lg-right"><span class='red'>* </span>Recommend By</div>
-            <div class="col-xs-12 col-sm-9 col-md-9 btn-group full-width recommend-container form_input">
-              <button type="button" class="btn btn-default recommend" field="selectedRecommentModel" data-toggle="dropdown" id="recommend-btn">
+            <div class="col-xs-12 col-sm-9 col-md-9 btn-group full-width form_input">
+              <div class="recommend-container">
+                Please select service and filled the cost field
+              </div>
+              <!-- <button type="button" class="btn btn-default recommend" field="selectedRecommentModel" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>
                   <%= request.ApproverFNAME %>
                 <% } else { %>
@@ -193,7 +196,7 @@
               <button type="button" class="btn btn-default dropdown-toggle recommend" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
                 <span class="sr-only">Toggle Dropdown</span>
-              </button>
+              </button> -->
               <div class="error-message hidden">Please choose one</div>
 
               <!-- <ul id="ulrecommend" style="height:250px;overflow-y:scroll" class="dropdown-menu">
