@@ -219,9 +219,10 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickRecallBtnHandler: function() {
       var self = this;
+      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure want to ' + self.requestFormModel.toJSON().FormID + '?',
+        message: 'Are you sure want to Recall the Form: ' + actionName + ' ?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
 
@@ -619,12 +620,6 @@ Hktdc.Views = Hktdc.Views || {};
         }
 
         if (self.requestFormModel.toJSON().actions) {
-          if (_.find(self.requestFormModel.toJSON().actions, function(action) {
-            return action.Action === 'Forward';
-          })) {
-            options.showForwardTo = true;
-          }
-
           self.renderRequestFormButtonByActions(self.requestFormModel.toJSON().actions, options);
         } else {
           self.render(options);

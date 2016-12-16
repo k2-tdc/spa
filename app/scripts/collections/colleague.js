@@ -1,7 +1,7 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
+/* this list is including all employee except self */
 
 Hktdc.Collections = Hktdc.Collections || {};
-
 (function () {
   'use strict';
 
@@ -11,9 +11,9 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     getQueryParams: function() {
       return {
-        RuleID: Hktdc.Config.RuleCode,
-        UserId: '',
-        WorkId: Hktdc.Config.userID
+        // RuleID: Hktdc.Config.RuleCode,
+        // WorkId: Hktdc.Config.userID,
+        UserId: Hktdc.Config.userID
       };
     },
 

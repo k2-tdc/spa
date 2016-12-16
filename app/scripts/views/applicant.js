@@ -61,16 +61,31 @@ Hktdc.Views = Hktdc.Views || {};
       _.bindAll(this, 'renderApplicantItem', 'renderApplicantOption');
       this.render();
     },
+
     events: {
-      'select': 'selectApplcantHandler'
+      'change': 'selectApplcantHandler'
     },
 
     selectApplcantHandler: function() {
-      /* The new request model will handle the change */
-
+      // console.log($('option:selected', this.el).val());
+      // console.log(this.collection.get($('option:selected', this.el).val()));
       this.requestFormModel.set({
-        selectedApplicantModel: this.model
+        selectedApplicantModel: this.collection.get($('option:selected', this.el).val())
       });
+    },
+    searchUser: function(e) {
+      // console.log(e);
+      var self = this;
+      var children = self.el.children();
+      children.removeClass('active');
+      for (var i = 0; i < children.length; i++) {
+        var letter = String.fromCharCode(e.which);
+        var charat = children[i].textContent.replace(/\s+/, '').charAt(0);
+        if (charat === letter) {
+          children[i].className += ' active';
+          self.el[0].scrollTop = children[i].offsetTop;
+        }
+      }
     },
 
     renderApplicantItem: function(model) {
@@ -97,7 +112,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       // this.$el.html(this.template(this.model.toJSON()));
-      console.log(this.selectedApplicant);
+      // console.log(this.selectedApplicant);
       if (this.tagName === 'ul') {
         this.collection.each(this.renderApplicantItem);
       } else {

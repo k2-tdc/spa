@@ -9,7 +9,7 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/newRequest.ejs'],
 
     events: {
-      // 'click #recommend-btn': 'checkBudgetAndService',
+      'click #recommend-btn': 'popUpAlertIfNeccessary',
       'blur #txtjustification': 'updateNewRequestModel',
       'blur #txtexpectedDD': 'updateDateModelByEvent',
       'blur #txtfrequency': 'updateNewRequestModel',
@@ -52,10 +52,11 @@ Hktdc.Views = Hktdc.Views || {};
             });
 
             /* Render the components below */
-            self.renderApplicantAndCCList(results[0]);
+            self.renderApplicant(results[0]);
             self.renderApplicantDetail(results[1], results[0]);
             self.renderServiceCatagory(results[2]);
             self.renderAttachment(results[3]);
+            self.renderCCList(results[4]);
             self.renderSelectedCCView();
             self.initDatePicker();
             /* default render the save button only,
@@ -111,12 +112,13 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log(self.model.toJSON().selectedServiceCollection.toJSON());
 
             /* Render the components below */
-            self.renderApplicantAndCCList(results[0]);
+            self.renderApplicant(results[0]);
             self.renderServiceCatagory(results[1]);
             self.renderApplicantDetail(results[2], results[0]);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
             self.renderAttachment(results[3], self.model.toJSON().Attachments);
+            self.renderCCList(results[4]);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.initDatePicker();
 
@@ -134,6 +136,21 @@ Hktdc.Views = Hktdc.Views || {};
       /* else no matched mode */
       } else {
         console.error('no available request mode');
+      }
+    },
+
+    popUpAlertIfNeccessary: function() {
+      // var self = this;
+      var haveSelectService = !!this.model.toJSON().selectedServiceCollection.toJSON().length;
+      var haveFilledCost = !!this.model.toJSON().EstimatedCost;
+      if (!(haveSelectService && haveFilledCost)) {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: 'please select service and filled the cost field',
+          type: 'error',
+          title: 'Error'
+        });
+      } else {
+        this.checkBudgetAndService();
       }
     },
 
@@ -292,7 +309,6 @@ Hktdc.Views = Hktdc.Views || {};
 
         /* get new approver list */
         self.checkBudgetAndService();
-
         self.renderButtons();
       });
 
@@ -513,11 +529,15 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    renderApplicantAndCCList: function(employeeArray) {
+    renderApplicant: function(employeeArray) {
       var self = this;
+      console.log(self.model.toJSON().ApplicantUserID);
       $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
         // TODO: may not use Applicant Collection here
         collection: new Hktdc.Collections.Applicant(employeeArray),
+        tagName: 'select',
+        className: 'form-control user-select',
+        selectedApplicant: self.model.toJSON().ApplicantUserID || Hktdc.Config.userID,
         requestFormModel: this.model
       }).el);
 
@@ -526,23 +546,20 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.model.ApplicantUserID === Hktdc.Config.userID) {
         $('.applicant-container', this.el).find('button').prop('disabled', true);
       }
-      // $('.cc-container', this.el).append(new Hktdc.Views.CCList({
-      //   collection: new Hktdc.Collections.CC(employeeArray),
-      //   requestFormModel: this.model
-      // }).el);
+    },
 
-      // console.log($('.cc-picker', this.el));
-      // console.log(employeeArray);
+    renderCCList: function(fullEmployeeList) {
+      var self = this;
       var $input = $('.cc-picker', this.el);
       // console.log($input);
-      var newEmployeeArray = _.map(employeeArray, function(employee) {
+      var newEmployeeArray = _.map(fullEmployeeList.toJSON(), function(employee) {
         employee.label = employee.UserFullName;
         return employee;
       });
       $input.autocomplete({
         source: newEmployeeArray,
         select: function(ev, ui) {
-          console.log(ui);
+          // console.log(ui);
           var existing = _.find(self.model.toJSON().selectedCCCollection.toJSON(), function(cc) {
             return (cc.UserId === ui.item.UserId);
           });
@@ -579,11 +596,6 @@ Hktdc.Views = Hktdc.Views || {};
         requestFormModel: this.model
       });
       buttonView.renderButtonHandler();
-      var toUserView = new Hktdc.Views.ToUserList({
-        collection: self.colleagueCollection,
-        parentModel: this.model,
-        selectFieldName: 'Forward_To_ID'
-      });
 
       this.listenTo(buttonModel, 'checkIsValid', function(successCallback) {
         // self.model.validate(self.model, {field: 'Justification'});
@@ -614,7 +626,6 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
 
-      $('.forwardToUser', buttonView.el).html(toUserView.el);
       // console.log(buttonView.el);
       $('.buttons-container', this.el).html(buttonView.el);
     },
@@ -657,7 +668,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderAttachment: function(rulesModel, attachmentList) {
       var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
-      console.log(rulesModel);
+      // console.log(rulesModel);
       var attachmentListView = new Hktdc.Views.AttachmentList({
         collection: attachmentCollections,
         requestFormModel: this.model,

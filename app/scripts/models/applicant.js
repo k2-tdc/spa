@@ -6,7 +6,8 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.Applicant = Backbone.Model.extend({
-    // idAttribute: "Id",
+    idAttribute: 'UserId',
+    
     defaults: {
       UserId: '',
       UserFullName: '',

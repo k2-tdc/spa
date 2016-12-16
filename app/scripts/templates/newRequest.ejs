@@ -56,7 +56,7 @@
         <div class="row">
           <div class="col-xs-2 col-sm-2 text-left newrequest-title">Applicant</div>
           <div class="col-xs-8 col-sm-10 col-md-8 btn-group full-width p-r-0 applicant-container form_input">
-            <button type="button" class="btn btn-default btnapplicant selectedApplicant" field="selectedApplicant" data-toggle="dropdown">
+            <!-- <button type="button" class="btn btn-default btnapplicant selectedApplicant" field="selectedApplicant" data-toggle="dropdown">
               <% if (request.selectedApplicantName){ %>
                 <%= request.selectedApplicantName%>
               <% } else { %>
@@ -66,7 +66,7 @@
             <button type="button" class="btn btn-default dropdown-toggle btnapplicant" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="caret"></span>
               <span class="sr-only">Toggle Dropdown</span>
-            </button>
+            </button> -->
             <!-- applicant list here -->
             <div class="error-message hidden">Please choose one</div>
 
@@ -181,8 +181,8 @@
           <div class="sep-space"></div>
 
           <div class="row field">
-            <div class="col-xs-12 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right"><span class='red'>* </span>Recommend By</div>
-            <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width recommend-container form_input">
+            <div class="col-xs-12 col-sm-3 newrequest-title text-right mobile-text-align-left text-lg-right"><span class='red'>* </span>Recommend By</div>
+            <div class="col-xs-12 col-sm-9 col-md-9 btn-group full-width recommend-container form_input">
               <button type="button" class="btn btn-default recommend" field="selectedRecommentModel" data-toggle="dropdown" id="recommend-btn">
                 <% if (request.ApproverFNAME) { %>
                   <%= request.ApproverFNAME %>
@@ -204,14 +204,14 @@
           <div class="sep-space"></div>
 
           <div class="row field">
-            <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">CC</div>
-            <div class="col-xs-12 col-sm-10 col-md-8 contact-group"></div>
+            <div class="col-xs-10 col-sm-3 newrequest-title text-right mobile-text-align-left text-lg-right">CC</div>
+            <div class="col-xs-12 col-sm-9 col-md-9 contact-group"></div>
           </div>
           <div class="sep-space"></div>
 
           <div class="row field">
-            <div class="col-xs-2 col-sm-2 hidden-xs newrequest-title text-lg-right  ">&nbsp;</div>
-            <div class="col-xs-12 col-sm-10 col-md-8 btn-group full-width cc-container form_input">
+            <div class="col-xs-2 col-sm-3 hidden-xs newrequest-title text-lg-right  ">&nbsp;</div>
+            <div class="col-xs-12 col-sm-9 col-md-9 btn-group full-width cc-container form_input">
               <input type="text" class="cc-picker form-control" data-provide="typeahead" autocomplete="off"/>
               <!-- <button type="button" class="btn btn-default btncc selectedCC" data-toggle="dropdown">--Select--</button>
               <button type="button" class="btn btn-default dropdown-toggle btncc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -225,8 +225,8 @@
           <div class="sep-space"></div>
 
           <div class="row field">
-            <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Remark</div>
-            <div class="col-xs-12 col-sm-10 col-md-8 form_input">
+            <div class="col-xs-10 col-sm-3 newrequest-title text-right mobile-text-align-left text-lg-right">Remark</div>
+            <div class="col-xs-12 col-sm-9 col-md-9 form_input">
               <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
             </div>
           </div>
@@ -246,8 +246,8 @@
 
             <div class="sep-space"></div>
             <div class="row field">
-              <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Comment</div>
-              <div class="col-xs-12 col-sm-10 col-md-8 form_input">
+              <div class="col-xs-10 col-sm-3 newrequest-title text-right mobile-text-align-left text-lg-right">Comment</div>
+              <div class="col-xs-12 col-sm-9 col-md-9 form_input">
                 <textarea class="form-control keepEdit" rows="3" id="txtcomment" field="Comment"></textarea>
               </div>
             </div>

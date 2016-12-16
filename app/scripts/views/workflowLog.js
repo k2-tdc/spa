@@ -55,6 +55,12 @@ Hktdc.Views = Hktdc.Views || {};
           self.close();
         }
       });
+      // this.requestFormModel.set({
+      //   showLog: (
+      //     (this.requestFormModel.toJSON().ProcessLog) &&
+      //     (this.requestFormModel.toJSON().ProcessLog.length > 0)
+      //   )
+      // });
     },
 
     clickToggleButton: function() {

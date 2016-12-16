@@ -23,6 +23,15 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
 
       self.setCommentBlock();
+      // self.setCommentBlock();
+      if (_.find(this.model.toJSON().actions, function(action) {
+        return action.Action === 'Forward';
+      })) {
+        this.model.set({
+          showForwardTo: true
+        });
+      }
+
       self.render();
 
       this.model.set({
@@ -41,6 +50,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
             self.renderButtons();
+            self.renderForwardUserList();
           });
         })
         .fail(function(e) {
@@ -80,18 +90,22 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
+    renderForwardUserList: function() {
+      var toUserView = new Hktdc.Views.ToUserList({
+        collection: this.colleagueCollection,
+        parentModel: this.model,
+        selectFieldName: 'Forward_To_ID'
+      });
+      // $('.forwardToUser', buttonView.el).html(toUserView.el);
+      $('.forwardToUser', this.el).html(toUserView.el);
+    },
+
     renderButtons: function() {
       var buttonView = new Hktdc.Views.Button({
         model: new Hktdc.Models.Button(),
         requestFormModel: this.model
       });
       buttonView.renderButtonHandler();
-      var toUserView = new Hktdc.Views.ToUserList({
-        collection: this.colleagueCollection,
-        parentModel: this.model,
-        selectFieldName: 'Forward_To_ID'
-      });
-      $('.forwardToUser', buttonView.el).html(toUserView.el);
       // console.log(buttonView.el);
       $('.buttons-container', this.el).html(buttonView.el);
     },

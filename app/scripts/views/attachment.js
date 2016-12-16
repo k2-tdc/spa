@@ -130,6 +130,14 @@ Hktdc.Views = Hktdc.Views || {};
           self.close();
         }
       });
+
+      this.requestFormModel.set({
+        showFileLog: (
+          (this.requestFormModel.toJSON().Attachments) &&
+          (this.requestFormModel.toJSON().Attachments.length > 0)
+        )
+      });
+
       this.collection.on('remove', function(model, collection, options) {
         console.log('on remove file collectin', model.toJSON());
         $('#divfilename', self.el).empty();

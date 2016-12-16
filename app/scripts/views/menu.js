@@ -32,12 +32,19 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('change:activeTab', this.setActiveMenu.bind(this));
     },
 
-    setActiveMenu: function(currentRoute) {
+    setActiveMenu: function(currentRoute, route) {
       // console.log(currentRoute.toJSON().activeTab);
       // console.log(this.model.toJSON().activeTab);
+      var routeMap = {
+        ALL: 'ALLTASK',
+        APPROVAL: 'APPROVALTASK',
+        CHECK: 'HOME'
+      };
+
       try {
         // var routename = currentRoute.toJSON().activeTab;
-        var routeName = currentRoute.toJSON().activeTab.toUpperCase();
+        // console.log(route.split('/')[1].toUpperCase());
+        var routeName = (route.indexOf('request/') >= 0) ? routeMap[route.split('/')[1].toUpperCase()] : route.toUpperCase();
         var routeBase = routeName.split('?')[0] || 'HOME';
         // console.log('routeName', routeName);
         // console.log('routeBase', routeBase);
