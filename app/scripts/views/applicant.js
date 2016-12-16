@@ -13,16 +13,15 @@ Hktdc.Views = Hktdc.Views || {};
       'click': 'clickApplcantHandler'
     },
 
+    initialize: function(props) {
+      _.extend(this, props);
+    },
+
     clickApplcantHandler: function() {
       /* The new request model will handle the change */
-
       this.requestFormModel.set({
         selectedApplicantModel: this.model
       });
-    },
-
-    initialize: function(props) {
-      _.extend(this, props);
     },
 
     render: function() {
@@ -72,20 +71,6 @@ Hktdc.Views = Hktdc.Views || {};
       this.requestFormModel.set({
         selectedApplicantModel: this.collection.get($('option:selected', this.el).val())
       });
-    },
-    searchUser: function(e) {
-      // console.log(e);
-      var self = this;
-      var children = self.el.children();
-      children.removeClass('active');
-      for (var i = 0; i < children.length; i++) {
-        var letter = String.fromCharCode(e.which);
-        var charat = children[i].textContent.replace(/\s+/, '').charAt(0);
-        if (charat === letter) {
-          children[i].className += ' active';
-          self.el[0].scrollTop = children[i].offsetTop;
-        }
-      }
     },
 
     renderApplicantItem: function(model) {
