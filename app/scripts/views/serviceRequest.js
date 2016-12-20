@@ -120,8 +120,8 @@ Hktdc.Views = Hktdc.Views || {};
 
       this.listenTo(self.model, 'changePlaceholder', function(selectServiceModel) {
         // console.log(selectServiceModel.toJSON());
-        console.log(selectServiceModel.toJSON().Placeholder);
-        console.log($('.service-notes', self.el).find('textarea'));
+        // console.log(selectServiceModel.toJSON().Placeholder);
+        // console.log($('.service-notes', self.el).find('textarea'));
         $('.service-notes', self.el).attr('placeholder', selectServiceModel.toJSON().Placeholder);
       });
     },

@@ -29,7 +29,7 @@ Hktdc.Views = Hktdc.Views || {};
       self.doToggleAdvanceMode(this.model.toJSON().showAdvanced);
       // console.log($('.date', this.el));
       this.model.on('change:showAdvanced', function(model, isShow) {
-        console.log('changed showAdvanced: ', isShow);
+        // console.log('changed showAdvanced: ', isShow);
         self.doToggleAdvanceMode(isShow);
       });
       $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
@@ -137,7 +137,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.set({
         showAdvanced: !this.model.toJSON().showAdvanced
       });
-      console.log(this.model.toJSON().showAdvanced);
+      // console.log(this.model.toJSON().showAdvanced);
     },
 
     doToggleAdvanceMode: function(isShow) {
@@ -145,10 +145,14 @@ Hktdc.Views = Hktdc.Views || {};
         $('.advanced-form', this.el).show();
         $('.advanced-btn .isHide', this.el).show();
         $('.advanced-btn .isShow', this.el).hide();
+        $('.advanced-btn-wrapper .closeBtn', this.el).css('display', 'inline-block');
+        $('.advanced-btn-wrapper .openBtn', this.el).hide();
       } else {
         $('.advanced-form', this.el).hide();
         $('.advanced-btn .isHide', this.el).hide();
         $('.advanced-btn .isShow', this.el).show();
+        $('.advanced-btn-wrapper .openBtn', this.el).css('display', 'inline-block');
+        $('.advanced-btn-wrapper .closeBtn', this.el).hide();
       }
     },
 

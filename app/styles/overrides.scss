@@ -132,6 +132,10 @@ textarea {
   pointer-events: auto !important;
 }
 /* OVERRIDES LIBRARY'S STYLE START */
+.headingOne{
+  position: relative;
+}
+
 .modal-content{
   padding: 3px;
   border-radius: 2px;

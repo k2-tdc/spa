@@ -10,12 +10,25 @@
 .create_date_pick2 {
   padding-left: 5px;
 }
-
+.toggle-btn{
+  width: 20px;
+  height: 20px;
+  line-height: 18px;
+  font-size: 12px;
+  display: inline-block;
+  border-radius: 50%;
+  border: 2px #999 solid;
+  color: #999;
+  text-align: center;
+}
 .advanced-btn-wrapper{
   text-align: center;
-  padding: 8px 0px;
+  // padding: 8px 0px;
+  position: absolute;
+  top: 10px;
+  right: 18px;
   .advanced-btn{
     cursor: pointer;
-    color: #006bf0;
+    color: #666;
   }
 }
