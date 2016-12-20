@@ -26,6 +26,14 @@ Hktdc.Views = Hktdc.Views || {};
       /* *** Some model data is pre-set in the main router *** */
 
       /* must render the parent content first */
+    //   return moment(date).format('DD MMM YYYY');
+    // },
+    // toValue: function(date, format, language) {
+    //   return moment(date).format('MM/DD/YYYY');
+
+      self.model.set({
+        EDeliveryDate: moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+      });
       self.setCommentBlock();
       self.render();
 
@@ -158,11 +166,23 @@ Hktdc.Views = Hktdc.Views || {};
       //   return false;
       // }
       var self = this;
-      var haveSelectService = !!this.model.toJSON().selectedServiceCollection.toJSON().length;
+      var haveSelectService = function() {
+        var valid = true;
+        if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0) {
+          valid = false;
+        }
+        self.model.toJSON().selectedServiceCollection.each(function(service) {
+          // console.log(service.toJSON());
+          if (!service.toJSON().Notes) {
+            valid = false;
+          }
+        });
+        return valid;
+      };
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
       // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
       // console.log(this.model.toJSON().EstimatedCost);
-      if (!(haveSelectService && haveFilledCost)) {
+      if (!(haveSelectService() && haveFilledCost)) {
         if (isOpenAlert) {
           isOpenAlert.preventDefault();
           // isOpenAlert.stopPropagation();
@@ -202,6 +222,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
       obj[field] = value;
 
+      this.model.set(obj, {validate: true, field: 'EDeliveryDate'});
       this.model.set(obj);
     },
 
@@ -350,11 +371,24 @@ Hktdc.Views = Hktdc.Views || {};
           $target.datepicker('show');
         }
       });
+      // console.group('time');
       // console.log(new Date());
+      // console.log(self.model.toJSON().CreatedOn);
+      // console.log(moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY'));
+      // console.log(moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').format('ddd MMM DD YYYY HH:mm:ss Z'));
+      // console.log(moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').utc());
+      // console.groupEnd();
+      var createdOn = {
+        year: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').year(),
+        month: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').month(),
+        day: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').date()
+      };
+      // console.log(createdOn);
       $('.date', self.el)
         .datepicker({
           autoclose: true,
-          startDate: new Date(),
+          startDate: new Date(createdOn.year, createdOn.month, createdOn.day),
+          // startDate: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').format('MM/DD/YYYY'),
           format: {
             toDisplay: function(date, format, language) {
               return moment(date).format('DD MMM YYYY');
@@ -370,7 +404,7 @@ Hktdc.Views = Hktdc.Views || {};
           var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
           var obj = {};
           obj[fieldName] = val;
-          self.model.set(obj);
+          self.model.set(obj, {validate: true, field: 'EDeliveryDate'});
         })
         .on('show', function() {
           $(this).data('open', true);
@@ -573,7 +607,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         } else {
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Please fill / choose all the mandatory field',
+            message: 'Input is not valid',
             title: 'Input invalid',
             type: 'error'
           });
@@ -587,8 +621,9 @@ Hktdc.Views = Hktdc.Views || {};
           self.model.set({
             EstimatedCost: self.model.toJSON().EstimatedCost
           }, {validate: true, field: 'EstimatedCost'});
-          console.log(self.model.toJSON().EstimatedCost);
-
+          self.model.set({
+            EDeliveryDate: self.model.toJSON().EDeliveryDate
+          }, {validate: true, field: 'EDeliveryDate'});
         }
       });
 
@@ -623,13 +658,15 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderWorkflowLog: function(workflowLogList) {
-      var workflowLogCollections = new Hktdc.Collections.WorkflowLog(workflowLogList);
-      var workflowLogListView = new Hktdc.Views.WorkflowLogList({
-        collection: workflowLogCollections,
-        requestFormModel: this.model
-      });
-      workflowLogListView.render();
-      $('#workflowlog-container').html(workflowLogListView.el);
+      if (this.model.toJSON().ProcessLog && this.model.toJSON().ProcessLog.length > 0) {
+        var workflowLogCollections = new Hktdc.Collections.WorkflowLog(workflowLogList);
+        var workflowLogListView = new Hktdc.Views.WorkflowLogList({
+          collection: workflowLogCollections,
+          requestFormModel: this.model
+        });
+        workflowLogListView.render();
+        $('#workflowlog-container').html(workflowLogListView.el);
+      }
     },
 
     renderAttachment: function(rulesModel, attachmentList) {

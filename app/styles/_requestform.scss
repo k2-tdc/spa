@@ -198,14 +198,6 @@ div.newrequest-title {
   display: inline-block;
 }
 
-.service-catagory-item {
-  margin-top: 0px;
-}
-
-.service-catagory-item:first-child {
-  margin-top: 4px;
-}
-
 .service-category-name{
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -247,6 +239,11 @@ div.newrequest-title {
   border: 1px rgba(0, 0, 0, .1) solid;
   border-radius: 4px;
 }
+.filelogmain, .workflowmain {
+  border: 1px rgba(0, 0, 0, .1) solid;
+  border-radius: 0;
+  margin-bottom: 0;
+}
 
 .service-type-container > div > .group-details:last-child .select-service {
   // border: 0px;
@@ -281,6 +278,10 @@ div.newrequest-title {
     margin-bottom: 0;
   }
 
+  .service-catagory-item {
+    margin-top: 4px;
+  }
+
   .service-catagory-item > .select-service-header:hover {
     box-shadow: 0 0 10px #f57921;
   }
@@ -308,16 +309,19 @@ div.newrequest-title {
     padding-left: 10px;
     padding-right: 10px;
   }
-  .filelogmain, .workflowmain {
-    border: 1px rgba(0, 0, 0, .1) solid;
-    border-radius: 0;
-    margin-bottom: 0;
-  }
   .select-service-header {
     border: 1px rgba(0, 0, 0, .1) solid;
     border-bottom: none;
     border-radius: 0;
     margin-bottom: 0;
+  }
+
+  .service-catagory-item {
+    margin-top: 0px;
+  }
+
+  .service-catagory-item:first-child {
+    margin-top: 4px;
   }
   .service-catagory-item:last-child .select-service-header{
     border-bottom: 1px rgba(0, 0, 0, .1) solid;

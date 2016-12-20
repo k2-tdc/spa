@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone, moment */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -102,30 +102,59 @@ Hktdc.Models = Hktdc.Models || {};
       // console.log(attrs);
       // console.log(options);
       // console.log(attrs.Justification);
+      var justificationIsValid = function() {
+        return (attrs.Justification && attrs.Justification.trim());
+      };
+      var costIsValid = function() {
+        return (attrs.EstimatedCost && attrs.EstimatedCost.trim());
+      };
+      var approverIsValid = function() {
+        return !!attrs.selectedRecommentModel;
+      };
+      var EDDateIsValid = function() {
+        // console.log(attrs.EDeliveryDate);
+        var eDateTimestamp = moment(attrs.EDeliveryDate, 'MM/DD/YYYY').unix();
+        var createDateTimestamp = moment(attrs.CreatedOn, 'DD MMM YYYY').unix();
+        console.group('time');
+        console.log('e', attrs.EDeliveryDate);
+        console.log('c', attrs.CreatedOn);
+        console.log('e', moment(attrs.EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY'));
+        console.log('c', moment(attrs.CreatedOn, 'DD MMM YYYY').format('DD MMM YYYY'));
+        console.log('e: ', eDateTimestamp);
+        console.log('c: ', createDateTimestamp);
+        console.groupEnd();
+        return eDateTimestamp >= createDateTimestamp;
+      };
       if (options.field) {
-        if (options.field === 'Justification' && !(attrs.Justification && attrs.Justification.trim())) {
+        if (options.field === 'Justification' && !justificationIsValid()) {
           return {
             field: 'Justification',
             messge: 'Please fill the Justification and Important Notes'
           };
-        } else if (options.field === 'EstimatedCost' && !(attrs.EstimatedCost && attrs.EstimatedCost.trim())) {
+        } else if (options.field === 'EstimatedCost' && !costIsValid()) {
           return {
             field: 'EstimatedCost',
             message: 'Please fill the Estimated Cost'
           };
-        } else if (options.field === 'selectedRecommentModel' && !attrs.selectedRecommentModel) {
+        } else if (options.field === 'selectedRecommentModel' && !approverIsValid()) {
           return {
             field: 'selectedRecommentModel',
             message: 'Please select a Recommend By.'
+          };
+        } else if (options.field === 'EDeliveryDate' && !EDDateIsValid()) {
+          return {
+            field: 'EDeliveryDate',
+            message: 'Estimated date must be after create date'
           };
         } else {
           this.trigger('valid', {field: options.field});
         }
       } else {
         if (
-          (attrs.Justification && attrs.Justification.trim()) &&
-          (attrs.EstimatedCost && attrs.EstimatedCost.trim()) &&
-          attrs.selectedRecommentModel
+          justificationIsValid() &&
+          costIsValid() &&
+          approverIsValid() &&
+          EDDateIsValid()
         ) {
           this.trigger('valid', {field: 'selectedRecommentModel'});
         } else {
