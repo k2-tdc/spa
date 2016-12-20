@@ -228,12 +228,15 @@ Hktdc.Views = Hktdc.Views || {};
     toggleInvalidMessage: function(field, isShow) {
       var self = this;
       var $target = $('[field=' + field + ']', self.el);
-      console.log($target);
+      // console.log($target);
+      var $errorContainer = ($target.parent().find('.error-message').length)
+        ? $target.parent().find('.error-message')
+        : $target.parent().siblings('.error-message');
       if (isShow) {
-        $target.parent().find('.error-message').removeClass('hidden');
+        $errorContainer.removeClass('hidden');
         $target.addClass('error-input');
       } else {
-        $target.parent().find('.error-message').addClass('hidden');
+        $errorContainer.addClass('hidden');
         $target.removeClass('error-input');
       }
     },
@@ -690,7 +693,7 @@ Hktdc.Views = Hktdc.Views || {};
           } else {
           //   console.log('b');
             $('.recommend-select option:eq(0)', self.el).prop('selected', true);
-            // self.model.set({ selectedRecommentModel: null });
+            self.model.set({ selectedRecommentModel: null });
           }
         },
         error: function() {
