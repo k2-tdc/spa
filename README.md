@@ -1,0 +1,2 @@
+# spa
+Single Page App
