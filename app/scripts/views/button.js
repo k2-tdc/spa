@@ -127,7 +127,11 @@ Hktdc.Views = Hktdc.Views || {};
             self.saveAndApprover(status, '', function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect();
+              if (status === 'Draft') {
+                self.successRedirect('draft');
+              } else {
+                self.successRedirect();
+              }
             }, function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
@@ -147,7 +151,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.saveAndApprover('Review', 'applicant', function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect();
+              self.successRedirect('');
             }, function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
@@ -167,7 +171,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.saveAndApprover('Approval', 'approver', function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
               Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect();
+              self.successRedirect('');
             }, function() {
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
@@ -219,10 +223,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickRecallBtnHandler: function() {
       var self = this;
-      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'confirmation',
-        message: 'Are you sure want to Recall the Form: ' + actionName + ' ?',
+        message: 'Are you sure want to Recall the Form: ' + self.requestFormModel.toJSON().ReferenceID + ' ?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
 
@@ -266,10 +269,20 @@ Hktdc.Views = Hktdc.Views || {};
     saveAndApprover: function(status, submitTo, redirectCallback, failCallback) {
       /* set the request object */
       var realSubmitTo = this.requestFormModel.toJSON().applicantSubmittedTo;
+      var submitToString = '';
       var self = this;
       if (submitTo) {
         realSubmitTo = this.requestFormModel.toJSON()[submitTo + 'SubmittedTo'];
       }
+
+      if (submitTo === 'approver' && this.requestFormModel.toJSON().ApproverFNAME) {
+        submitToString += ' to ' + this.requestFormModel.toJSON().ApproverFNAME;
+      } else if (submitTo === 'applicant' && this.requestFormModel.toJSON().ApplicantFNAME) {
+        submitToString += ' to ' + this.requestFormModel.toJSON().ApplicantFNAME;
+      } else {
+        submitToString += ' to ' + submitTo;
+      }
+
       // console.log(realSubmitTo);
       var insertServiceResponse;
       Q.fcall(this.setRequestObject.bind(this, status, realSubmitTo))
@@ -309,7 +322,7 @@ Hktdc.Views = Hktdc.Views || {};
               });
             } else {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Your request is confirmed and sent to ' + realSubmitTo + '.<br /> The ref. code is ' + insertServiceResponse.FormID,
+                message: 'Your request is confirmed and sent' + submitToString + '.<br /> The ref. code is ' + insertServiceResponse.FormID,
                 title: 'Success',
                 type: 'success'
               });
@@ -387,50 +400,9 @@ Hktdc.Views = Hktdc.Views || {};
         ActionTakerRuleCode: this.getActionTaker(this.requestFormModel.toJSON().selectedServiceCollection.toJSON()),
 
         Service_AcquireFor: this.requestFormModel.toJSON().selectedServiceCollection.toJSON()
-        // Service_AcquireFor: this.getAcquireFor(this.requestFormModel)
       });
       console.log('final return:', sendRequestModel.toJSON());
       return sendRequestModel;
-    },
-
-    getAcquireFor: function(model) {
-      /* !!!Dreprecated!!! */
-
-      var requestFormData = model.toJSON();
-      console.log('requestFormData: ', requestFormData);
-      // console.log(model.toJSON().selectedCCCollection);
-      // console.log(model.toJSON().selectedCCCollection.toJSON());
-      var basicData = {
-        Justification_Importand_Notes: requestFormData.Justification,
-        Expected_Dalivery_Date: requestFormData.EDeliveryDate,
-        Frequency_Duration_of_Use: requestFormData.DurationOfUse,
-        Estimated_Cost: requestFormData.EstimatedCost,
-        Budget_Provided: requestFormData.BudgetProvided,
-        // Budgeted_Sum: requestFormData.BudgetSum,
-        Recommend_By: (requestFormData.selectedRecommentModel)
-          ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
-          : null,
-        Recommend_By_ID: (requestFormData.selectedRecommentModel)
-          ? requestFormData.selectedRecommentModel.toJSON().WorkerId
-          : null,
-        cc: _.map(model.toJSON().selectedCCCollection.toJSON(), function(ccData) {
-          return {
-            Name: ccData.UserFullName,
-            UserID: ccData.UserId
-          };
-        }),
-        Remark: requestFormData.Remark,
-        SubmittedTo: requestFormData.submittedTo,
-        ActionTakerRuleCode: this.getActionTaker(model.toJSON().selectedServiceCollection.toJSON())
-          // TODO:
-          // Attachments: this.getFileName(),
-      };
-      console.log('selectedServiceCollection', model.toJSON().selectedServiceCollection.toJSON());
-      var serviceData = this.getServiceData(model.toJSON().selectedServiceCollection.toJSON());
-      console.log('serviceData', serviceData);
-      _.extend(basicData, serviceData);
-      // console.log('final send output: ', basicData);
-      return basicData;
     },
 
     getActionTaker: function(selectedServiceCollectionArray) {
@@ -537,9 +509,12 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    successRedirect: function() {
+    successRedirect: function(forceRedirect) {
       var baseURL = Backbone.history.getHash().split('?')[0];
-      if (/\/check\//.test(baseURL)) {
+
+      if (forceRedirect || forceRedirect === '') {
+        Backbone.history.navigate(forceRedirect, {trigger: true});
+      } else if (/\/check\//.test(baseURL)) {
         Backbone.history.navigate('', {trigger: true});
       } else if (/\/draft\//.test(baseURL)) {
         Backbone.history.navigate('draft', {trigger: true});
@@ -547,6 +522,8 @@ Hktdc.Views = Hktdc.Views || {};
         Backbone.history.navigate('alltask', {trigger: true});
       } else if (/\/approval\//.test(baseURL)) {
         Backbone.history.navigate('approvaltask', {trigger: true});
+      // } else if (/\/request\//.test(baseURL)) {
+      //   Backbone.history.navigate('draft', {trigger: true});
       } else {
         Backbone.history.navigate('', {trigger: true});
       }

@@ -38,6 +38,7 @@ Hktdc.Views = Hktdc.Views || {};
       var routeMap = {
         ALL: 'ALLTASK',
         APPROVAL: 'APPROVALTASK',
+        DRAFT: 'DRAFT',
         CHECK: 'HOME'
       };
 

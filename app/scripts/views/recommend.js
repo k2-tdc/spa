@@ -59,6 +59,10 @@ Hktdc.Views = Hktdc.Views || {};
       this.render();
     },
 
+    attributes: {
+      field: 'selectedRecommentModel'
+    },
+
     events: {
       'change': 'selectRecommendHandler'
     },
@@ -66,6 +70,9 @@ Hktdc.Views = Hktdc.Views || {};
     selectRecommendHandler: function() {
       // console.log($('option:selected', this.el).val());
       // console.log(this.collection.get($('option:selected', this.el).val()));
+      this.requestFormModel.set({
+        selectedRecommentModel: this.collection.get($('option:selected', this.el).val())
+      }, {validate: true, field: 'selectedRecommentModel'});
       this.requestFormModel.set({
         selectedRecommentModel: this.collection.get($('option:selected', this.el).val())
       });
