@@ -58,7 +58,8 @@ Hktdc.Views = Hktdc.Views || {};
         selectedServiceObject: true
       });
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
-      console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      // console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      this.serviceRequestModel.trigger('changePlaceholder', this.model);
 
       // console.log(this.model.toJSON());
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());

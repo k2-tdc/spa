@@ -2,7 +2,7 @@
   <span class="service-title-desp" style="margin:0">
     <%= serviceObject.Name %>
   </span>
-  <textarea class="level2 form-control lastnosub" id="lastnosub" rows="3"><%= serviceObject.SValue %></textarea>
+  <textarea class="level2 form-control lastnosub" id="lastnosub" rows="3" placeholder="<%= serviceObject.Placeholder %>"><%= serviceObject.SValue %></textarea>
 <%} else {%>
   <div class="service-title-desp">
     <%= serviceObject.Name %>

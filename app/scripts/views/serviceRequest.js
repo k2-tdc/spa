@@ -29,12 +29,11 @@ Hktdc.Views = Hktdc.Views || {};
         serviceObjectListView.render();
 
         setTimeout(function() {
-          console.log(serviceObjectListView.el);
+          // console.log(serviceObjectListView.el);
           $('.service-object-container', this.el).append(serviceObjectListView.el);
           this.initModelChangeHandler();
         }.bind(this));
 
-        this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));
         // this.listenTo('clearServiceRequest', this.deleteRequestObject.bind(this));
       } catch (e) {
         console.error('service request render error');
@@ -116,6 +115,14 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('change:selectedServiceObject', function(selectedReq, isSelected) {
         console.log('selectedServiceObject: ', isSelected);
         $('.service-notes', self.el).prop('disabled', !isSelected);
+      });
+      this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));
+
+      this.listenTo(self.model, 'changePlaceholder', function(selectServiceModel) {
+        // console.log(selectServiceModel.toJSON());
+        console.log(selectServiceModel.toJSON().Placeholder);
+        console.log($('.service-notes', self.el).find('textarea'));
+        $('.service-notes', self.el).attr('placeholder', selectServiceModel.toJSON().Placeholder);
       });
     },
 
