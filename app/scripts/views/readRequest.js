@@ -49,10 +49,6 @@ Hktdc.Views = Hktdc.Views || {};
 
       self.render();
 
-      this.model.set({
-        showFileLog: true
-      });
-
       // Q.all([
       self.loadColleague()
       // ])
@@ -146,13 +142,18 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderAttachment: function(attachmentList) {
-      var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
-      var attachmentListView = new Hktdc.Views.AttachmentList({
-        collection: attachmentCollections,
-        requestFormModel: this.model
-      });
-      attachmentListView.render();
-      $('#attachment-container').html(attachmentListView.el);
+      if (
+        (this.model.toJSON().Attachments) &&
+        (this.model.toJSON().Attachments.length > 0)
+      ) {
+        var attachmentCollections = new Hktdc.Collections.Attachment(attachmentList);
+        var attachmentListView = new Hktdc.Views.AttachmentList({
+          collection: attachmentCollections,
+          requestFormModel: this.model
+        });
+        attachmentListView.render();
+        $('#attachment-container').html(attachmentListView.el);
+      }
     },
 
     renderServiceCatagory: function(serviceCatagoryCollections) {

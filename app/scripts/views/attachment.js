@@ -277,6 +277,8 @@ Hktdc.Views = Hktdc.Views || {};
       this.collection.each(this.renderAttachmentItem);
       if (this.requestFormModel.toJSON().showFileLog) {
         this.open();
+      } else {
+        this.close();
       }
       // if (!isInsert) {
       //   this.bindFileChangeEvent();
