@@ -199,6 +199,10 @@ div.newrequest-title {
 }
 
 .service-catagory-item {
+  margin-top: 0px;
+}
+
+.service-catagory-item:first-child {
   margin-top: 4px;
 }
 
@@ -301,12 +305,22 @@ div.newrequest-title {
     line-height: 20px;
   }
   .block-padding{
-    padding: 0 10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
-  .select-service-header {
+  .filelogmain, .workflowmain {
     border: 1px rgba(0, 0, 0, .1) solid;
     border-radius: 0;
     margin-bottom: 0;
+  }
+  .select-service-header {
+    border: 1px rgba(0, 0, 0, .1) solid;
+    border-bottom: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+  .service-catagory-item:last-child .select-service-header{
+    border-bottom: 1px rgba(0, 0, 0, .1) solid;
   }
   .select-service{
     border: none;

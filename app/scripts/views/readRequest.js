@@ -15,7 +15,22 @@ Hktdc.Views = Hktdc.Views || {};
 
     className: '',
 
-    events: {},
+    events: {
+      'blur #txtcomment': 'updateNewRequestModel'
+    },
+
+    updateNewRequestModel: function(ev) {
+      var targetField = $(ev.target).attr('field');
+      // if (this.model.toJSON().mode === 'read' && targetField !== 'Comment') {
+      //   return false;
+      // }
+      var updateObject = {};
+      updateObject[targetField] = $(ev.target).val();
+      this.model.set(updateObject, {validate: true, field: targetField});
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      this.model.set(updateObject);
+    },
 
     initialize: function() {
       /* mode === read */
