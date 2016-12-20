@@ -364,8 +364,16 @@ Hktdc.Views = Hktdc.Views || {};
         _.each(Level1.Level2, function(Level2) {
           summary += ' <div><strong><span>' + Level2.Name + ' </span></strong></div>';
           _.each(Level2.Level3, function(Level3) {
-            if (Level3.Name) {
-              summary += '<div><span>-</span><span>&nbsp;' + Level3.Name + ' </span></div> ';
+            console.log(Level3.ControlFlag);
+            if (String(Level3.ControlFlag) === '2') {
+              var lv3Content = (Level3.SValue) ? '<span>&nbsp;' + Level3.SValue + '</span>' : '';
+              summary += '<div><span>-</span>' + lv3Content + '</div> ';
+            } else {
+              var lv3Title = '<span>&nbsp;' + Level3.Name + ' </span>';
+              var lv3Content = (Level3.SValue) ? '<span>: ' + Level3.SValue + '</span>' : '';
+              if (Level3.Name) {
+                summary += '<div><span>-</span>' + lv3Title + lv3Content + '</div> ';
+              }
             }
           });
         });
