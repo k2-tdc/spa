@@ -350,9 +350,11 @@ Hktdc.Views = Hktdc.Views || {};
           $target.datepicker('show');
         }
       });
+      // console.log(new Date());
       $('.date', self.el)
         .datepicker({
           autoclose: true,
+          startDate: new Date(),
           format: {
             toDisplay: function(date, format, language) {
               return moment(date).format('DD MMM YYYY');
