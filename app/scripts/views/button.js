@@ -116,7 +116,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickSaveHandler: function() {
       var self = this;
-      // if (true) {
       this.model.trigger('checkIsValid', function() {
         var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
         Hktdc.Dispatcher.trigger('openConfirm', {
@@ -363,6 +362,25 @@ Hktdc.Views = Hktdc.Views || {};
 
     setRequestObject: function(status, realSubmitTo) {
       var requestFormData = this.requestFormModel.toJSON();
+      var serviceGroup = _.groupBy(requestFormData.selectedServiceCollection.toJSON(), 'GUID');
+      var serviceList = _.map(serviceGroup, function(group, key) {
+        if (group.length > 0) {
+          group = _.sortBy(group, 'index');
+          var finalService = group[0];
+          var finalNameArr = [];
+          var finalNoteArr = [];
+          _.each(group, function(service) {
+            finalNameArr.push(service.Name);
+            finalNoteArr.push(service.Notes || '');
+          });
+          finalService.Name = finalNameArr.join('#*#');
+          finalService.Notes = finalNoteArr.join('#*#');
+          return finalService;
+        }
+        return group;
+      });
+      // console.log(serviceList);
+
       var sendRequestModel = new Hktdc.Models.SendRequest({
         Req_Status: status,
         Prepared_By: requestFormData.PreparerFNAME,
@@ -399,7 +417,8 @@ Hktdc.Views = Hktdc.Views || {};
         SubmittedTo: realSubmitTo,
         ActionTakerRuleCode: this.getActionTaker(this.requestFormModel.toJSON().selectedServiceCollection.toJSON()),
 
-        Service_AcquireFor: this.requestFormModel.toJSON().selectedServiceCollection.toJSON()
+        Service_AcquireFor: serviceList
+        // Service_AcquireFor: this.requestFormModel.toJSON().selectedServiceCollection.toJSON()
       });
       console.log('final return:', sendRequestModel.toJSON());
       return sendRequestModel;

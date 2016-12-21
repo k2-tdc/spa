@@ -102,7 +102,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderServiceObjectItem: function(model) {
       // console.log(model.toJSON());
-
+      var self = this;
       model.set({
         serviceTypeName: this.serviceRequestModel.toJSON().serviceTypeName
       });
@@ -112,18 +112,28 @@ Hktdc.Views = Hktdc.Views || {};
           requestFormModel: this.requestFormModel,
           serviceRequestModel: this.serviceRequestModel
         });
+        serviceObjectItemView.render();
+        $(this.el).append(serviceObjectItemView.el);
       } else {
-        var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
-          model: model,
-          requestFormModel: this.requestFormModel,
-          serviceRequestCollection: this.serviceRequestCollection
+        var objNames = (model.toJSON().Name) ? model.toJSON().Name.split('#*#') : '';
+        var objValues = (model.toJSON().SValue) ? model.toJSON().SValue.split('#*#') : '';
+        // console.log();
+        _.each(objNames, function(objName, idx) {
+          var newModel = new Hktdc.Models.ServiceObject(_.extend(model.toJSON(), {
+            Name: objName,
+            SValue: objValues[idx],
+            index: idx
+          }));
+          // console.log(newModel.toJSON());
+          var serviceObjectItemView = new Hktdc.Views.ServiceObjectText({
+            model: newModel,
+            requestFormModel: self.requestFormModel,
+            serviceRequestCollection: self.serviceRequestCollection
+          });
+          serviceObjectItemView.render();
+          $(self.el).append(serviceObjectItemView.el);
         });
       }
-
-      serviceObjectItemView.render();
-      // setTimeout(function() {
-        $(this.el).append(serviceObjectItemView.el);
-      // }, 500);
     },
 
     render: function() {
