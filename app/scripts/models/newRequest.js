@@ -123,7 +123,7 @@ Hktdc.Models = Hktdc.Models || {};
         // console.log('e: ', eDateTimestamp);
         // console.log('c: ', createDateTimestamp);
         // console.groupEnd();
-        return eDateTimestamp >= createDateTimestamp;
+        return (eDateTimestamp >= createDateTimestamp || !eDateTimestamp);
       };
       if (options.field) {
         if (options.field === 'Justification' && !justificationIsValid()) {
