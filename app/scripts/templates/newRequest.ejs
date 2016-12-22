@@ -35,8 +35,8 @@
         <div class="col-xs-12 col-sm-4 p0m0">
           <div class="col-xs-6 col-sm-4 col-md-4 newrequest-title text-left">Status</div>
           <div class="col-xs-6 col-sm-8 col-md-8" id="divStatus">
-            <% if (request.FormStatus) { %>
-              <%= request.FormStatus %>
+            <% if (request.DisplayStatus) { %>
+              <%= request.DisplayStatus %>
             <% } else { %>
               New
             <% } %>
@@ -121,7 +121,7 @@
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_input">
               <div class="input-group">
-                <input type="text" class="form-control date" id="txtexpectedDD" field="EDeliveryDate" value="<%= request.EDeliveryDate %>"/>
+                <input type="text" class="form-control date" id="txtexpectedDD" field="EDeliveryDate" value="<% if (request.EDeliveryDate) { %><%= request.EDeliveryDate %><% } %>"/>
                 <div class="input-group-addon datepicker-toggle-btn">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </div>

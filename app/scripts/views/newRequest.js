@@ -26,13 +26,15 @@ Hktdc.Views = Hktdc.Views || {};
       /* *** Some model data is pre-set in the main router *** */
 
       /* must render the parent content first */
-    //   return moment(date).format('DD MMM YYYY');
-    // },
-    // toValue: function(date, format, language) {
-    //   return moment(date).format('MM/DD/YYYY');
+      //   return moment(date).format('DD MMM YYYY');
+      // },
+      // toValue: function(date, format, language) {
+      //   return moment(date).format('MM/DD/YYYY');
 
       self.model.set({
-        EDeliveryDate: moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+        EDeliveryDate: (self.model.toJSON().EDeliveryDate)
+          ? moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+          : null
       });
       self.setCommentBlock();
       self.render();
@@ -49,38 +51,38 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadFileTypeRules(),
           self.loadColleague()
         ])
-          .then(function(results) {
-            console.log('load ed resource');
-            self.employeeArray = results[0];
-            self.colleagueCollection = results[4];
-            self.model.set({
-              selectedServiceCollection: new Hktdc.Collections.SelectedService(),
-              selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
-              employeeList: results[0]
-            });
-
-            /* Render the components below */
-            self.renderApplicant(results[0]);
-            self.renderApplicantDetail(results[1], results[0]);
-            self.renderServiceCatagory(results[2]);
-            self.renderAttachment(results[3]);
-            self.renderCCList(results[4]);
-            self.renderSelectedCCView();
-            self.initDatePicker();
-            self.checkAndLoadRecommend();
-            /* default render the save button only,
-             after change the approver(recommend by), render other button */
-            self.renderButtons();
-            /* init event listener last */
-            setTimeout(function() {
-              self.initModelChange();
-            }, 500);
-          })
-          .fail(function(e) {
-            console.error(e);
+        .then(function(results) {
+          console.log('load ed resource');
+          self.employeeArray = results[0];
+          self.colleagueCollection = results[4];
+          self.model.set({
+            selectedServiceCollection: new Hktdc.Collections.SelectedService(),
+            selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(),
+            employeeList: results[0]
           });
 
-      /* mode === edit */
+          /* Render the components below */
+          self.renderApplicant(results[0]);
+          self.renderApplicantDetail(results[1], results[0]);
+          self.renderServiceCatagory(results[2]);
+          self.renderAttachment(results[3]);
+          self.renderCCList(results[4]);
+          self.renderSelectedCCView();
+          self.initDatePicker();
+          self.checkAndLoadRecommend();
+          /* default render the save button only,
+           after change the approver(recommend by), render other button */
+          self.renderButtons();
+          /* init event listener last */
+          setTimeout(function() {
+            self.initModelChange();
+          }, 500);
+        })
+        .fail(function(e) {
+          console.error(e);
+        });
+
+        /* mode === edit */
       } else if (this.model.toJSON().mode === 'edit') {
         console.debug('This is << EDIT >> mode');
         Q.all([
@@ -90,59 +92,59 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadFileTypeRules(),
           self.loadColleague()
         ])
-          .then(function(results) {
-            console.log('loaded resource');
-            self.employeeArray = results[0];
-            self.colleagueCollection = results[4];
+        .then(function(results) {
+          console.log('loaded resource');
+          self.employeeArray = results[0];
+          self.colleagueCollection = results[4];
 
-            var recommend = _.find(results[0], function(employee) {
-              return employee.UserId === self.model.toJSON().ApproverUserID;
-            });
-
-            /* need override the workerId and WorkerFullName */
-            recommend.WorkerId = recommend.UserId;
-            recommend.WorkerFullName = recommend.UserFullName;
-            var attachmentModelArray = _.map(self.model.toJSON().Attachments, function(attachment) {
-              return new Hktdc.Models.Attachment();
-            });
-            self.model.set({
-              selectedServiceTree: self.model.toJSON().RequestList,
-              /* must sync RequestList to selectedServiceCollection for updating */
-              selectedServiceCollection: new Hktdc.Collections.SelectedService(
-                self.getAllRequestArray(self.model.toJSON().RequestList)
-              ),
-              selectedRecommentModel: new Hktdc.Models.Recommend(recommend),
-              selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(attachmentModelArray),
-              deleteAttachmentIdArray: [],
-              selectedCCCollection: new Hktdc.Collections.SelectedCC(self.model.toJSON().RequestCC)
-
-            });
-            // console.log(self.model.toJSON().selectedServiceCollection.toJSON());
-
-            /* Render the components below */
-            self.renderApplicant(results[0]);
-            self.renderServiceCatagory(results[1]);
-            self.renderApplicantDetail(results[2], results[0]);
-            self.renderWorkflowLog(self.model.toJSON().ProcessLog);
-            // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
-            self.renderAttachment(results[3], self.model.toJSON().Attachments);
-            self.renderCCList(results[4]);
-            self.renderSelectedCCView(self.model.toJSON().RequestCC);
-            self.checkAndLoadRecommend();
-            self.initDatePicker();
-
-            self.renderButtons();
-
-            /* init event listener last */
-            setTimeout(function() {
-              self.initModelChange();
-            }, 500);
-          })
-          .fail(function(e) {
-            console.error(e);
+          var recommend = _.find(results[0], function(employee) {
+            return employee.UserId === self.model.toJSON().ApproverUserID;
           });
 
-      /* else no matched mode */
+          /* need override the workerId and WorkerFullName */
+          recommend.WorkerId = recommend.UserId;
+          recommend.WorkerFullName = recommend.UserFullName;
+          var attachmentModelArray = _.map(self.model.toJSON().Attachments, function(attachment) {
+            return new Hktdc.Models.Attachment();
+          });
+          self.model.set({
+            selectedServiceTree: self.model.toJSON().RequestList,
+            /* must sync RequestList to selectedServiceCollection for updating */
+            selectedServiceCollection: new Hktdc.Collections.SelectedService(
+              self.getAllRequestArray(self.model.toJSON().RequestList)
+            ),
+            selectedRecommentModel: new Hktdc.Models.Recommend(recommend),
+            selectedAttachmentCollection: new Hktdc.Collections.SelectedAttachment(attachmentModelArray),
+            deleteAttachmentIdArray: [],
+            selectedCCCollection: new Hktdc.Collections.SelectedCC(self.model.toJSON().RequestCC)
+
+          });
+          // console.log(self.model.toJSON().selectedServiceCollection.toJSON());
+
+          /* Render the components below */
+          self.renderApplicant(results[0]);
+          self.renderServiceCatagory(results[1]);
+          self.renderApplicantDetail(results[2], results[0]);
+          self.renderWorkflowLog(self.model.toJSON().ProcessLog);
+          // self.renderServiceCatagory(self.mergeServiceCollection(results[1].toJSON(), self.model.toJSON().RequestList));
+          self.renderAttachment(results[3], self.model.toJSON().Attachments);
+          self.renderCCList(results[4]);
+          self.renderSelectedCCView(self.model.toJSON().RequestCC);
+          self.checkAndLoadRecommend();
+          self.initDatePicker();
+
+          self.renderButtons();
+
+          /* init event listener last */
+          setTimeout(function() {
+            self.initModelChange();
+          }, 500);
+        })
+        .fail(function(e) {
+          console.error(e);
+        });
+
+        /* else no matched mode */
       } else {
         console.error('no available request mode');
       }
@@ -193,7 +195,9 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Error'
           });
         }
-        self.model.set({ selectedRecommentModel: null });
+        self.model.set({
+          selectedRecommentModel: null
+        });
         return false;
       }
       return true;
@@ -207,7 +211,10 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var updateObject = {};
       updateObject[targetField] = $(ev.target).val();
-      this.model.set(updateObject, {validate: true, field: targetField});
+      this.model.set(updateObject, {
+        validate: true,
+        field: targetField
+      });
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
       this.model.set(updateObject);
@@ -222,7 +229,10 @@ Hktdc.Views = Hktdc.Views || {};
       }
       obj[field] = value;
 
-      this.model.set(obj, {validate: true, field: 'EDeliveryDate'});
+      this.model.set(obj, {
+        validate: true,
+        field: 'EDeliveryDate'
+      });
       this.model.set(obj);
     },
 
@@ -250,9 +260,9 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var $target = $('[field=' + field + ']', self.el);
       // console.log($target);
-      var $errorContainer = ($target.parent().find('.error-message').length)
-        ? $target.parent().find('.error-message')
-        : $target.parent().siblings('.error-message');
+      var $errorContainer = ($target.parent().find('.error-message').length) ?
+        $target.parent().find('.error-message') :
+        $target.parent().siblings('.error-message');
       if (isShow) {
         $errorContainer.removeClass('hidden');
         $target.addClass('error-input');
@@ -383,18 +393,23 @@ Hktdc.Views = Hktdc.Views || {};
         month: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').month(),
         day: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').date()
       };
-      // console.log(createdOn);
+      // console.log(new Date(createdOn.year, createdOn.month, createdOn.day));
       $('.date', self.el)
         .datepicker({
           autoclose: true,
           startDate: new Date(createdOn.year, createdOn.month, createdOn.day),
+          // keepEmptyValues: true,
           // startDate: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').format('MM/DD/YYYY'),
           format: {
             toDisplay: function(date, format, language) {
-              return moment(date).format('DD MMM YYYY');
+              // console.log(date);
+              // console.log(moment(date).format('DD MMM YYYY'));
+              return (date) ? moment(date).format('DD MMM YYYY') : '';
             },
             toValue: function(date, format, language) {
-              return moment(date).format('MM/DD/YYYY');
+              // console.log(date);
+              // console.log(moment(date).format('MM/DD/YYYY'));
+              return (date) ? moment(date).format('MM/DD/YYYY') : '';
             }
           }
         })
@@ -402,9 +417,13 @@ Hktdc.Views = Hktdc.Views || {};
           var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
           var fieldName = $input.attr('field');
           var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
+          console.log(val);
           var obj = {};
           obj[fieldName] = val;
-          self.model.set(obj, {validate: true, field: 'EDeliveryDate'});
+          self.model.set(obj, {
+            validate: true,
+            field: 'EDeliveryDate'
+          });
         })
         .on('show', function() {
           $(this).data('open', true);
@@ -415,7 +434,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getGroupedRequestList: function(RequestList) {
-      var groupedRequestList = _.each(RequestList, function(serviceObj){
+      var groupedRequestList = _.each(RequestList, function(serviceObj) {
         // TODO: change to GUID
         return serviceObj.Name;
       });
@@ -579,7 +598,7 @@ Hktdc.Views = Hktdc.Views || {};
       var preparer = this.model.toJSON().PreparerUserID;
       if (
         ((this.model.toJSON().FormStatus && this.model.toJSON().FormStatus !== 'Draft') ||
-         (this.model.toJSON().FormStatus === 'Approval' && me !== preparer)) &&
+          (this.model.toJSON().FormStatus === 'Approval' && me !== preparer)) &&
         (this.model.toJSON().actions)
       ) {
         this.model.set({
@@ -614,16 +633,28 @@ Hktdc.Views = Hktdc.Views || {};
 
           self.model.set({
             Justification: self.model.toJSON().Justification
-          }, {validate: true, field: 'Justification'});
+          }, {
+            validate: true,
+            field: 'Justification'
+          });
           self.model.set({
             selectedRecommentModel: self.model.toJSON().selectedRecommentModel
-          }, {validate: true, field: 'selectedRecommentModel'});
+          }, {
+            validate: true,
+            field: 'selectedRecommentModel'
+          });
           self.model.set({
             EstimatedCost: self.model.toJSON().EstimatedCost
-          }, {validate: true, field: 'EstimatedCost'});
+          }, {
+            validate: true,
+            field: 'EstimatedCost'
+          });
           self.model.set({
             EDeliveryDate: self.model.toJSON().EDeliveryDate
-          }, {validate: true, field: 'EDeliveryDate'});
+          }, {
+            validate: true,
+            field: 'EDeliveryDate'
+          });
         }
       });
 
@@ -643,14 +674,16 @@ Hktdc.Views = Hktdc.Views || {};
         DEPT: applicant.Depart,
         Title: applicant.Title,
         Location: applicant.Office
-        // RuleCode: target.RuleCode
+          // RuleCode: target.RuleCode
       });
       console.log(this.model.toJSON());
       $('#divdepartment', this.el).text(applicant.Depart);
     },
 
     renderSelectedCCView: function(input) {
-      this.model.set({selectedCCCollection: new Hktdc.Collections.SelectedCC(input)});
+      this.model.set({
+        selectedCCCollection: new Hktdc.Collections.SelectedCC(input)
+      });
       $('.contact-group', this.el).append(new Hktdc.Views.SelectedCCList({
         collection: this.model.toJSON().selectedCCCollection,
         requestFormModel: this.model
@@ -698,7 +731,7 @@ Hktdc.Views = Hktdc.Views || {};
         return selectedService.Approver;
       });
       var ruleCode = _.uniq(ruleCodeArr).join(';');
-      // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
+      console.log('ruleCode:::::::', this.model.toJSON().selectedApplicantModel.toJSON());
       var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
       var cost = this.model.toJSON().EstimatedCost;
       recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
@@ -730,9 +763,11 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log('a');
             $('.recommend-select option[value="' + selected.WorkerId + '"]', self.el).prop('selected', true);
           } else {
-          //   console.log('b');
+            //   console.log('b');
             $('.recommend-select option:eq(0)', self.el).prop('selected', true);
-            self.model.set({ selectedRecommentModel: null });
+            self.model.set({
+              selectedRecommentModel: null
+            });
           }
         },
         error: function() {
@@ -753,7 +788,9 @@ Hktdc.Views = Hktdc.Views || {};
         selectedApplicantName: this.model.toJSON().selectedApplicantModel.toJSON().UserFullName
       });
 
-      this.$el.html(this.template({request: this.model.toJSON()}));
+      this.$el.html(this.template({
+        request: this.model.toJSON()
+      }));
     }
   });
 })();
