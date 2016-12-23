@@ -149,11 +149,11 @@ Hktdc.Routers = Hktdc.Routers || {};
     /* this handling insert new */
     newRequest: function() {
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
-      $('#mainContent').addClass('compress');
       var referenceIdModel = new Hktdc.Models.ReferenceId();
       referenceIdModel.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
+          $('#mainContent').addClass('compress');
           var newRequestModel = new Hktdc.Models.NewRequest({
             ReferenceID: referenceIdModel.toJSON().ReferenceID,
             PreparerFNAME: Hktdc.Config.userName,
@@ -201,7 +201,6 @@ Hktdc.Routers = Hktdc.Routers || {};
     /* this handling 'edit' old request OR 'read' old request */
     editRequest: function(from, requestId, snOrProcId) {
       console.debug('[ routes/mainRouter.js ] - editRequest route handler');
-      $('#mainContent').addClass('compress');
 
       var requestCollection = new Hktdc.Collections.NewRequest();
       var procId = (snOrProcId && snOrProcId.indexOf('_') > 0)
@@ -221,6 +220,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       requestCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function(result, response) {
+          $('#mainContent').addClass('compress');
           var rawData = response[0];
           var requestModel = new Hktdc.Models.NewRequest(rawData);
           var FormStatus = requestModel.toJSON().FormStatus;

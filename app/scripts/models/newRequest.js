@@ -113,6 +113,7 @@ Hktdc.Models = Hktdc.Models || {};
       };
       var EDDateIsValid = function() {
         // console.log(attrs.EDeliveryDate);
+        var todayTimestamp = moment().minute(0).hour(0).second(0).unix();
         var eDateTimestamp = moment(attrs.EDeliveryDate, 'MM/DD/YYYY').unix();
         var createDateTimestamp = moment(attrs.CreatedOn, 'DD MMM YYYY').unix();
         // console.group('time');
@@ -120,10 +121,17 @@ Hktdc.Models = Hktdc.Models || {};
         // console.log('c', attrs.CreatedOn);
         // console.log('e', moment(attrs.EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY'));
         // console.log('c', moment(attrs.CreatedOn, 'DD MMM YYYY').format('DD MMM YYYY'));
-        // console.log('e: ', eDateTimestamp);
-        // console.log('c: ', createDateTimestamp);
+        // console.log('edate: ', eDateTimestamp);
+        // console.log('today: ', todayTimestamp);
+        // console.log('cdate: ', createDateTimestamp);
         // console.groupEnd();
-        return (eDateTimestamp >= createDateTimestamp || !eDateTimestamp);
+        return (
+          (
+            eDateTimestamp >= createDateTimestamp &&
+            eDateTimestamp >= todayTimestamp
+          ) ||
+          !eDateTimestamp
+        );
       };
       if (options.field) {
         if (options.field === 'Justification' && !justificationIsValid()) {

@@ -25,13 +25,15 @@ Hktdc.Views = Hktdc.Views || {};
 
       var self = this;
       // _.extend(this, props);
-      this.render();
-      self.doToggleAdvanceMode(this.model.toJSON().showAdvanced);
-      // console.log($('.date', this.el));
-      this.model.on('change:showAdvanced', function(model, isShow) {
-        // console.log('changed showAdvanced: ', isShow);
+      self.render();
+      self.doToggleAdvanceMode(self.model.toJSON().showAdvanced);
+      self.model.on('change:showAdvanced', function(model, isShow) {
         self.doToggleAdvanceMode(isShow);
       });
+      self.listenTo(Hktdc.Dispatcher, 'reloadCheckStatus', function(isLock) {
+        self.statusDataTable.ajax.reload();
+      });
+
       $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
         ev.stopPropagation();
         // $(this).prev().data('open');

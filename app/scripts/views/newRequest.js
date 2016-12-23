@@ -393,11 +393,14 @@ Hktdc.Views = Hktdc.Views || {};
         month: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').month(),
         day: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').date()
       };
+      var createdDate = new Date(createdOn.year, createdOn.month, createdOn.day);
+      var today = new Date();
+      var startDate = (today > createdDate) ? today : createdDate;
       // console.log(new Date(createdOn.year, createdOn.month, createdOn.day));
       $('.date', self.el)
         .datepicker({
           autoclose: true,
-          startDate: new Date(createdOn.year, createdOn.month, createdOn.day),
+          startDate: startDate,
           // keepEmptyValues: true,
           // startDate: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').format('MM/DD/YYYY'),
           format: {
@@ -417,7 +420,6 @@ Hktdc.Views = Hktdc.Views || {};
           var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
           var fieldName = $input.attr('field');
           var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
-          console.log(val);
           var obj = {};
           obj[fieldName] = val;
           self.model.set(obj, {

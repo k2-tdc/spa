@@ -9,56 +9,17 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/menu.ejs'],
 
-
-    // getLinkMap: function() {
-    //   return {
-    //     'NEW_REQUEST': Hktdc.Config.projectPath + '/#new_request',
-    //     'DRAFT_LIST': Hktdc.Config.projectPath + '/#draft',
-    //     'ALL_TASKS': Hktdc.Config.projectPath + '/#',
-    //     'APPROVAL_TASKS': Hktdc.Config.projectPath + '/#',
-    //     'CHECK_STATUS': Hktdc.Config.projectPath + '/#check_status',
-    //     'USAGE_REPORT': Hktdc.Config.projectPath + '/#usage_report',
-    //     'QUICK_USER_GUIDE': Hktdc.Config.projectPath + '/#'
-    //   };
-    // },
-
     initialize: function() {
-      console.debug('Initiating side menu');
+      console.debug('[ views/menu.js ] - initialize');
       this.render();
+      this.on('route', function(){
+        // console.log('on route');
+      });
       // var this.model = new this.Models['Menu']();
       // this.listenTo(this.model, 'change', this.render);
       // console.log(JSON.stringify(this.model, null, 2));
 
       this.model.on('change:activeTab', this.setActiveMenu.bind(this));
-    },
-
-    setActiveMenu: function(currentRoute, route) {
-      // console.log(currentRoute.toJSON().activeTab);
-      // console.log(this.model.toJSON().activeTab);
-      var routeMap = {
-        ALL: 'ALLTASK',
-        APPROVAL: 'APPROVALTASK',
-        DRAFT: 'DRAFT',
-        CHECK: 'HOME'
-      };
-
-      try {
-        // var routename = currentRoute.toJSON().activeTab;
-        // console.log(route.split('/')[1].toUpperCase());
-        var routeName = (route.indexOf('request/') >= 0) ? routeMap[route.split('/')[1].toUpperCase()] : route.toUpperCase();
-        var routeBase = routeName.split('?')[0] || 'HOME';
-        // console.log('routeName', routeName);
-        // console.log('routeBase', routeBase);
-        setTimeout(function() {
-          // console.log($('li[routename="' + routeBase + '"]'));
-          if ($('li[routename="' + routeBase + '"]')) {
-            $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
-          }
-        });
-      } catch (e) {
-        // TODO: pop the error box
-        console.log(e);
-      }
     },
 
     render: function() {
@@ -143,18 +104,64 @@ Hktdc.Views = Hktdc.Views || {};
       $('nav#menu').mmenu({
         // options
         slidingSubmenus: false
-        // offCanvas: false
+          // offCanvas: false
       });
       // console.log($('nav#menu'));
       if ($(window).width() <= 991) {
-      // if ($(window).width() <= 767) {
+        // if ($(window).width() <= 767) {
         $('nav#menu').data('mmenu').close();
       } else {
         $('nav#menu').data('mmenu').open();
       }
+    },
 
-      // console.log('rendered menu.js');
-    }
+    events: {
+      'click li': 'onClickMenu'
+    },
+
+    onClickMenu: function(ev) {
+      var $target = $(ev.target);
+      if ($(ev.target).is('a')){
+        $target = $(ev.target).parent('li');
+      }
+      console.log($target.attr('routename'));
+      if (
+        $target.attr('routename') === 'HOME' ||
+        $target.attr('routename') === 'APPROVALTASK' ||
+        $target.attr('routename') === 'ALLTASK'
+      ) {
+        Hktdc.Dispatcher.trigger('reloadCheckStatus');
+      }
+    },
+
+    setActiveMenu: function(currentRoute, route) {
+      // console.log(currentRoute.toJSON().activeTab);
+      // console.log(this.model.toJSON().activeTab);
+      var routeMap = {
+        ALL: 'ALLTASK',
+        APPROVAL: 'APPROVALTASK',
+        DRAFT: 'DRAFT',
+        CHECK: 'HOME'
+      };
+
+      try {
+        // var routename = currentRoute.toJSON().activeTab;
+        // console.log(route.split('/')[1].toUpperCase());
+        var routeName = (route.indexOf('request/') >= 0) ? routeMap[route.split('/')[1].toUpperCase()] : route.toUpperCase();
+        var routeBase = routeName.split('?')[0] || 'HOME';
+        // console.log('routeName', routeName);
+        // console.log('routeBase', routeBase);
+        setTimeout(function() {
+          // console.log($('li[routename="' + routeBase + '"]'));
+          if ($('li[routename="' + routeBase + '"]')) {
+            $('nav#menu').data('mmenu').setSelected($('li[routename="' + routeBase + '"]'));
+          }
+        });
+      } catch (e) {
+        // TODO: pop the error box
+        console.log(e);
+      }
+    },
 
   });
 })();

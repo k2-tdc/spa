@@ -132,7 +132,6 @@ window.Hktdc = {
             self.setupMasterPageComponent(function(menuModel) {
               var mainRouter = new self.Routers.Main();
               mainRouter.on('route', function(route, params) {
-                // console.log(route);
                 menuModel.set('activeTab', Backbone.history.getHash());
               });
               Backbone.history.start();
