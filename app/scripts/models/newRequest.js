@@ -65,9 +65,6 @@ Hktdc.Models = Hktdc.Models || {};
       // BudgetSum: null,
       Remark: null,
 
-      /* the Comment field leads the /SubmitRequest fail */
-      // Comment: null,
-
       actions: [],
       selectedServiceTree: null,
       selectedServiceCollection: null,
@@ -84,7 +81,7 @@ Hktdc.Models = Hktdc.Models || {};
       applicantSubmittedTo: null,
       approverSubmittedTo: null,
 
-      showComment: false,
+      showRemark: false,
       showLog: false,
       showFileLog: false,
 
@@ -113,24 +110,31 @@ Hktdc.Models = Hktdc.Models || {};
       };
       var EDDateIsValid = function() {
         // console.log(attrs.EDeliveryDate);
-        var todayTimestamp = moment().minute(0).hour(0).second(0).unix();
-        var eDateTimestamp = moment(attrs.EDeliveryDate, 'MM/DD/YYYY').unix();
-        var createDateTimestamp = moment(attrs.CreatedOn, 'DD MMM YYYY').unix();
-        // console.group('time');
-        // console.log('e', attrs.EDeliveryDate);
-        // console.log('c', attrs.CreatedOn);
-        // console.log('e', moment(attrs.EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY'));
-        // console.log('c', moment(attrs.CreatedOn, 'DD MMM YYYY').format('DD MMM YYYY'));
-        // console.log('edate: ', eDateTimestamp);
-        // console.log('today: ', todayTimestamp);
-        // console.log('cdate: ', createDateTimestamp);
+        var today = moment().minute(0).hour(0).second(0);
+        var eDate = (moment(attrs.EDeliveryDate, 'MM/DD/YYYY', true).isValid())
+          ? moment(attrs.EDeliveryDate, 'MM/DD/YYYY')
+          : moment(attrs.EDeliveryDate, 'DD MMM YYYY');
+        var createDate = moment(attrs.CreatedOn, 'DD MMM YYYY');
+        // console.group(new Date());
+        // console.log('attrs.CreatedOn: ', attrs.CreatedOn);
+        // console.log('attrs.EDeliveryDate: ', attrs.EDeliveryDate);
+        // console.log('today: ', today);
+        // console.log('cdate: ', createDate);
+        // console.log('edate: ', eDate);
+        // console.log('today.unix: ', today.unix());
+        // console.log('cdate.unix: ', createDate.unix());
+        // console.log('edate.unix: ', eDate.unix());
+        // console.log('eDate.unix() >= createDate.unix()', eDate.unix() >= createDate.unix());
+        // console.log('eDate.unix() >= today.unix()', eDate.unix() >= today.unix());
+        // console.log('isNaN(eDate)', isNaN(eDate));
         // console.groupEnd();
+        // console.log(eDate);
         return (
           (
-            eDateTimestamp >= createDateTimestamp &&
-            eDateTimestamp >= todayTimestamp
+            eDate.unix() >= createDate.unix() &&
+            eDate.unix() >= today.unix()
           ) ||
-          !eDateTimestamp
+          !attrs.EDeliveryDate
         );
       };
       if (options.field) {

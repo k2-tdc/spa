@@ -16,7 +16,7 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtestimatedcost': 'updateNewRequestModel',
       'blur #txtbudgetprovided': 'updateNewRequestModel',
       // 'blur #txtbudgetsum': 'updateNewRequestModel',
-      'blur #txtcomment': 'updateNewRequestModel',
+      'blur #txtRemark': 'updateNewRequestModel',
       'blur #txtremark': 'updateNewRequestModel'
     },
 
@@ -31,11 +31,6 @@ Hktdc.Views = Hktdc.Views || {};
       // toValue: function(date, format, language) {
       //   return moment(date).format('MM/DD/YYYY');
 
-      self.model.set({
-        EDeliveryDate: (self.model.toJSON().EDeliveryDate)
-          ? moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
-          : null
-      });
       self.setCommentBlock();
       self.render();
 
@@ -82,7 +77,7 @@ Hktdc.Views = Hktdc.Views || {};
           console.error(e);
         });
 
-        /* mode === edit */
+      /* mode === edit */
       } else if (this.model.toJSON().mode === 'edit') {
         console.debug('This is << EDIT >> mode');
         Q.all([
@@ -150,6 +145,21 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
+    render: function() {
+      /* selectedApplicantModel is from mainRouter */
+      // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
+      this.model.set({
+        selectedApplicantName: this.model.toJSON().selectedApplicantModel.toJSON().UserFullName,
+        EDeliveryDate: (self.model.toJSON().EDeliveryDate)
+          ? moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+          : null
+      });
+
+      this.$el.html(this.template({
+        request: this.model.toJSON()
+      }));
+    }
+
     checkAndLoadRecommend: function(isOpenAlert) {
       // var isOpenAlert = false;
       // if (typeof evOrFlag === 'object') {
@@ -206,7 +216,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     updateNewRequestModel: function(ev) {
       var targetField = $(ev.target).attr('field');
-      if (this.model.toJSON().mode === 'read' && targetField !== 'Comment') {
+      if (this.model.toJSON().mode === 'read' && targetField !== 'Remark') {
         return false;
       }
       var updateObject = {};
@@ -604,7 +614,7 @@ Hktdc.Views = Hktdc.Views || {};
         (this.model.toJSON().actions)
       ) {
         this.model.set({
-          showComment: true
+          showRemark: true
         });
       }
     },
@@ -782,17 +792,5 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
     },
-
-    render: function() {
-      /* selectedApplicantModel is from mainRouter */
-      // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
-      this.model.set({
-        selectedApplicantName: this.model.toJSON().selectedApplicantModel.toJSON().UserFullName
-      });
-
-      this.$el.html(this.template({
-        request: this.model.toJSON()
-      }));
-    }
   });
 })();

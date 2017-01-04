@@ -17,7 +17,7 @@ Hktdc.Models = Hktdc.Models || {};
       UserId: Hktdc.Config.userID,
       SN: '',
       ActionName: '',
-      Comment: '',
+      Remark: '',
       Forward_To_ID: ''
     },
 

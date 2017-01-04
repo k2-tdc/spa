@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, utils, Q */
+/* global Hktdc, Backbone, JST, $, _, utils, Q, moment */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -78,7 +78,7 @@ Hktdc.Views = Hktdc.Views || {};
         UserId: Hktdc.Config.userID,
         SN: sn,
         ActionName: actionName,
-        Comment: this.requestFormModel.toJSON().Comment
+        Remark: this.requestFormModel.toJSON().Remark
       };
       if ($(ev.target).attr('workflowAction') === 'Forward') {
         body.Forward_To_ID = this.requestFormModel.toJSON().Forward_To_ID;
@@ -238,7 +238,7 @@ Hktdc.Views = Hktdc.Views || {};
             UserId: Hktdc.Config.userID,
             ProcInstID: self.requestFormModel.toJSON().ProcInstID,
             ActionName: 'Recall',
-            Comment: self.requestFormModel.toJSON().Comment
+            Remark: self.requestFormModel.toJSON().Remark
           });
           action.save({}, {
             beforeSend: utils.setAuthHeader,
@@ -316,13 +316,13 @@ Hktdc.Views = Hktdc.Views || {};
             if (!submitTo) {
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Your Draft has been saved. <br /> The request ID is ' + insertServiceResponse.FormID,
-                title: 'Success',
+                title: 'Confirmation',
                 type: 'success'
               });
             } else {
               Hktdc.Dispatcher.trigger('openAlert', {
                 message: 'Your request is confirmed and sent' + submitToString + '.<br /> The ref. code is ' + insertServiceResponse.FormID,
-                title: 'Success',
+                title: 'Confirmation',
                 type: 'success'
               });
             }
@@ -379,7 +379,8 @@ Hktdc.Views = Hktdc.Views || {};
         }
         return group;
       });
-      // console.log(serviceList);
+      console.log('raw date: ', requestFormData.EDeliveryDate);
+      console.log('date is valid: ', moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid());
 
       var sendRequestModel = new Hktdc.Models.SendRequest({
         Req_Status: status,
@@ -395,7 +396,9 @@ Hktdc.Views = Hktdc.Views || {};
         Forward_To_ID: requestFormData.Forward_To_ID,
 
         Justification_Importand_Notes: requestFormData.Justification,
-        Expected_Dalivery_Date: requestFormData.EDeliveryDate,
+        Expected_Dalivery_Date: (moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid())
+          ? moment(requestFormData.EDeliveryDate, 'DD MMM YYYY').format('MM/DD/YYYY')
+          : requestFormData.EDeliveryDate,
         Frequency_Duration_of_Use: requestFormData.DurationOfUse,
         Estimated_Cost: requestFormData.EstimatedCost,
         Budget_Provided: requestFormData.BudgetProvided,

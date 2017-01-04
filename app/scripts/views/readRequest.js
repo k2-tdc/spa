@@ -16,14 +16,11 @@ Hktdc.Views = Hktdc.Views || {};
     className: '',
 
     events: {
-      'blur #txtcomment': 'updateNewRequestModel'
+      'blur #txtRemark': 'updateNewRequestModel'
     },
 
     updateNewRequestModel: function(ev) {
       var targetField = $(ev.target).attr('field');
-      // if (this.model.toJSON().mode === 'read' && targetField !== 'Comment') {
-      //   return false;
-      // }
       var updateObject = {};
       updateObject[targetField] = $(ev.target).val();
       this.model.set(updateObject, {validate: true, field: targetField});
@@ -96,7 +93,7 @@ Hktdc.Views = Hktdc.Views || {};
         (this.model.toJSON().actions)
       ) {
         this.model.set({
-          showComment: true
+          showRemark: true
         });
       }
     },
