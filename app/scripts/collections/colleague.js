@@ -2,7 +2,7 @@
 /* this list is including all employee except self */
 
 Hktdc.Collections = Hktdc.Collections || {};
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Collections.Colleague = Backbone.Collection.extend({
@@ -26,5 +26,4 @@ Hktdc.Collections = Hktdc.Collections || {};
     }
 
   });
-
 })();

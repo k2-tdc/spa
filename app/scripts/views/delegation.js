@@ -63,7 +63,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       // this.$el.html(this.template(this.model.toJSON()));
-      console.log(this.selectedDelegation);
+      // console.log(this.selectedDelegation);
       if (this.tagName === 'ul') {
         this.collection.each(this.renderDelegationItem);
       } else {

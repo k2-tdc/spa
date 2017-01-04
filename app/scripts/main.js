@@ -162,7 +162,6 @@ window.Hktdc = {
           mainRouter.on('route', function(route, params) {
             menuModel.set('activeTab', Backbone.history.getHash());
           });
-
           Backbone.history.start();
         });
       }

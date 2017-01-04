@@ -183,9 +183,12 @@ module.exports = function(grunt) {
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
       options: {
+        /* override default to not uglify -- start */
+
+        /* if need uglify */
         // dest: '<%= yeoman.dist %>'
 
-        /* override default to not uglify -- start */
+        /* else if no need uglify */
         flow: {
           steps: {
             js: ['concat'],
@@ -193,6 +196,8 @@ module.exports = function(grunt) {
           },
           post: {}
         }
+        /* end if */
+
         /* override default to not uglify -- end */
       }
     },
@@ -226,7 +231,7 @@ module.exports = function(grunt) {
     htmlmin: {
       dist: {
         options: {
-          /*removeCommentsFromCDATA: true,
+          /* removeCommentsFromCDATA: true,
           // https://github.com/yeoman/grunt-usemin/issues/44
           //collapseWhitespace: true,
           collapseBooleanAttributes: true,
@@ -234,7 +239,7 @@ module.exports = function(grunt) {
           removeRedundantAttributes: true,
           useShortDoctype: true,
           removeEmptyAttributes: true,
-          removeOptionalTags: true*/
+          removeOptionalTags: true */
         },
         files: [{
           expand: true,
@@ -255,7 +260,7 @@ module.exports = function(grunt) {
             '*.{ico,txt}',
             'images/{,*/}*.{webp,gif}',
             'styles/fonts/{,*/}*.*',
-            'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*.*',
+            'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*.*'
           ]
         }, {
           src: 'node_modules/apache-server-configs/dist/.htaccess',

@@ -29,9 +29,6 @@ Hktdc.Models = Hktdc.Models || {};
       Department: '',
       Forward_To_ID: '',
 
-      /* the Comment field leads the /SubmitRequest fail */
-      // Comment: '',
-
       Service_AcquireFor: {
         Hardware_Software_IT_Service: {
           Software_Service: [],
