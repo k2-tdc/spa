@@ -175,7 +175,6 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       var request = this.model.toJSON();
       var isActive = (
-        this.requestFormModel.toJSON().FormStatus === 'ProcessTasks' &&
         this.requestFormModel.toJSON().ActionTakerServiceType &&
         this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID
       );

@@ -9,12 +9,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     template: JST['app/scripts/templates/menu.ejs'],
 
+    events: {
+      'click li': 'onClickMenu'
+    },
+
     initialize: function() {
       console.debug('[ views/menu.js ] - initialize');
       this.render();
-      this.on('route', function(){
-        // console.log('on route');
-      });
       // var this.model = new this.Models['Menu']();
       // this.listenTo(this.model, 'change', this.render);
       // console.log(JSON.stringify(this.model, null, 2));
@@ -82,17 +83,17 @@ Hktdc.Views = Hktdc.Views || {};
             // var upperLodash = subMenuRaw.Name.trim().toUpperCase().replace(' ', '_');
             // console.log(upperLodash);
             subMenuRaw.Route = Hktdc.Config.projectPath + subMenuRaw.Mlink || '/#';
-            subMenuRaw.RouteName = upperLodash || 'HOME';
+            subMenuRaw.RouteName = upperLodash || 'CHECK_STATUS';
           });
         } else {
           var upperLodash = raw.Mlink.trim().toUpperCase().replace('#', '');
           // var upperLodash = raw.Name.trim().toUpperCase().replace(' ', '_');
           raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
-          raw.RouteName = upperLodash || 'HOME';
+          raw.RouteName = upperLodash || 'CHECK_STATUS';
         }
         // console.log(upperLodash);
         // raw.Route = Hktdc.Config.projectPath + raw.Mlink || '/#';
-        // raw.RouteName = upperLodash || 'HOME';
+        // raw.RouteName = upperLodash || 'CHECK_STATUS';
       });
 
       // console.log(menu);
@@ -115,23 +116,12 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    events: {
-      'click li': 'onClickMenu'
-    },
-
     onClickMenu: function(ev) {
       var $target = $(ev.target);
-      if ($(ev.target).is('a')){
+      if ($(ev.target).is('a')) {
         $target = $(ev.target).parent('li');
       }
-      console.log($target.attr('routename'));
-      if (
-        $target.attr('routename') === 'HOME' ||
-        $target.attr('routename') === 'APPROVALTASK' ||
-        $target.attr('routename') === 'ALLTASK'
-      ) {
-        Hktdc.Dispatcher.trigger('reloadCheckStatus');
-      }
+      Hktdc.Dispatcher.trigger('reloadRoute', $target.attr('routename').toLowerCase());
     },
 
     setActiveMenu: function(currentRoute, route) {
@@ -141,14 +131,14 @@ Hktdc.Views = Hktdc.Views || {};
         ALL: 'ALLTASK',
         APPROVAL: 'APPROVALTASK',
         DRAFT: 'DRAFT',
-        CHECK: 'HOME'
+        CHECK: 'CHECK_STATUS'
       };
 
       try {
         // var routename = currentRoute.toJSON().activeTab;
         // console.log(route.split('/')[1].toUpperCase());
         var routeName = (route.indexOf('request/') >= 0) ? routeMap[route.split('/')[1].toUpperCase()] : route.toUpperCase();
-        var routeBase = routeName.split('?')[0] || 'HOME';
+        var routeBase = routeName.split('?')[0] || 'CHECK_STATUS';
         // console.log('routeName', routeName);
         // console.log('routeBase', routeBase);
         setTimeout(function() {

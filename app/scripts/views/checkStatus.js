@@ -30,9 +30,6 @@ Hktdc.Views = Hktdc.Views || {};
       self.model.on('change:showAdvanced', function(model, isShow) {
         self.doToggleAdvanceMode(isShow);
       });
-      self.listenTo(Hktdc.Dispatcher, 'reloadCheckStatus', function(isLock) {
-        self.statusDataTable.ajax.reload();
-      });
 
       $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
         ev.stopPropagation();
@@ -115,7 +112,7 @@ Hktdc.Views = Hktdc.Views || {};
     updateModel: function(field, value) {
       var newObject = {};
       newObject[field] = value;
-      console.log(newObject);
+      // console.log(newObject);
       this.model.set(newObject);
     },
 

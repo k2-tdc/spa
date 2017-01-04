@@ -10,7 +10,7 @@
           %>
 
           <li routename='<%= items.RouteName %>'>
-            <a href='<%= items.Route %>'>
+            <a>
               <%= items.Name %>
               <% if (items.Scount && String(items.Scount) !== '0') { %>
               <span class='menu-index-value outline'><%=items.Scount%></span>
@@ -34,7 +34,7 @@
           %>
 
           <li routename='<%= submenu.RouteName %>' <% if (items.onlyMobileAndTablet) { %>class='visible-xs-block visible-sm-block'<% } %>>
-            <a href='<%= submenu.Route %>'>
+            <a>
               <%= submenu.Name %>
               <% if(submenu.Scount && String(submenu.Scount) !== '0') { %>
               <span class='menu-index-value outline'><%=submenu.Scount%></span>
