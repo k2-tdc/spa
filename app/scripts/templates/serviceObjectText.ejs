@@ -1,7 +1,7 @@
 <% if (!serviceObject.readonly) { %>
-  <span class="service-title-desp" style="margin:0">
+  <div class="service-title-desp" style="margin:0">
     <%= serviceObject.Name %>
-  </span>
+  </div>
   <textarea class="level2 form-control lastnosub" id="lastnosub" rows="3" placeholder="<%= serviceObject.Placeholder %>"><%= serviceObject.SValue %></textarea>
 <%} else {%>
   <div class="service-title-desp">

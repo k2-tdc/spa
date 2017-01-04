@@ -269,6 +269,13 @@ div.newrequest-title {
   overflow: hidden;
 }
 
+.service-object-container{
+  .service-title-desp{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
 // read mode
 #newRequest{
   .select-applicant,

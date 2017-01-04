@@ -228,17 +228,17 @@
         left: 0;
       }
     }
-
-
     .subheader-menu-container {
       display: none;
     }
-
   }
-
 }
-@media (max-width: 991px) {
+
+@media (min-width: 767px) and (max-width: 991px) {
   #header_main{
+    .subheader-menu-container.app-web-view{
+      line-height: 60px;
+    }
     .btn-group.nav-header-main {
       ul.dropdown-menu {
         left: 0px;

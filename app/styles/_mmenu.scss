@@ -24,6 +24,7 @@ div.mm-vertical > .mm-listview > li > div.mm-vertical > .mm-listview > li {
 
 .mm-menu .mm-listview > li a {
   text-decoration: none;
+  cursor: pointer;
 }
 
 .mm-menu .mm-listview > li:not(.mm-opened):hover {
