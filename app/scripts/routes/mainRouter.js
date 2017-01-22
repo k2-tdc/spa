@@ -14,6 +14,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'request/:from/:requestId': 'editRequest',
       'request/:from/:requestId/:snOrProcId': 'editRequest',
       // 'delegation': 'delegationList',
+      'report': 'report',
       'draft': 'draft',
       'alltask': 'allTask',
       'approvaltask': 'approvalTask',
@@ -24,10 +25,12 @@ Hktdc.Routers = Hktdc.Routers || {};
       var self = this;
       var footerView = new Hktdc.Views.Footer();
       self.listenTo(Hktdc.Dispatcher, 'reloadRoute', function(route) {
-        console.debug('reloading route: ', route);
+        console.debug('reloadRoute: ', route);
         Backbone.history.navigate(route, true);
-        Backbone.history.loadUrl(route, {trigger: true});
-      })
+        Backbone.history.loadUrl(route, {
+          trigger: true
+        });
+      });
     },
 
     checkStatus: function() {
@@ -45,7 +48,9 @@ Hktdc.Routers = Hktdc.Routers || {};
         Appl: utils.getParameterByName('Appl')
       });
 
-      checkStatusModel.set({ mode: 'CHECK STATUS' });
+      checkStatusModel.set({
+        mode: 'CHECK STATUS'
+      });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -75,7 +80,9 @@ Hktdc.Routers = Hktdc.Routers || {};
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-      checkStatusModel.set({ mode: 'DRAFT' });
+      checkStatusModel.set({
+        mode: 'DRAFT'
+      });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -105,7 +112,9 @@ Hktdc.Routers = Hktdc.Routers || {};
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-      checkStatusModel.set({ mode: 'ALL TASKS' });
+      checkStatusModel.set({
+        mode: 'ALL TASKS'
+      });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -135,7 +144,9 @@ Hktdc.Routers = Hktdc.Routers || {};
         TDate: utils.getParameterByName('TDate'),
         Appl: utils.getParameterByName('Appl')
       });
-      checkStatusModel.set({ mode: 'APPROVAL TASKS' });
+      checkStatusModel.set({
+        mode: 'APPROVAL TASKS'
+      });
       var csView = new Hktdc.Views.CheckStatus({
         model: checkStatusModel
       });
@@ -188,8 +199,7 @@ Hktdc.Routers = Hktdc.Routers || {};
 
           $('.subheader-menu-container').html(subheaderMenuListView.el);
         },
-        error: function(err) {
-        }
+        error: function(err) {}
       });
 
 
@@ -245,11 +255,11 @@ Hktdc.Routers = Hktdc.Routers || {};
             if (FormStatus === 'Draft') {
               return 'edit';
 
-            // other status
+              // other status
             } else if ((!(_.contains(editModeStatus, FormStatus)) || !rawData.actions)) {
               return 'read';
 
-            // ['Review', 'Return', 'Rework']
+              // ['Review', 'Return', 'Rework']
             } else {
               if (FormStatus === 'Review' && requestModel.toJSON().ApplicantUserID === me) {
                 return 'edit';
@@ -333,6 +343,26 @@ Hktdc.Routers = Hktdc.Routers || {};
       // });
 
       // console.log(delegationPageView.el);
+    },
+
+    report: function() {
+      try {
+        var reportView = new Hktdc.Views.Report({
+          model: new Hktdc.Models.Report()
+        });
+        $('#mainContent').html(reportView.el);
+
+        var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+        var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+          collection: subheaderMenuListCollection,
+          currentPageName: 'Usage Report'
+        });
+        subheaderMenuListView.render();
+
+        $('.subheader-menu-container').html(subheaderMenuListView.el);
+      } catch (e) {
+        console.error(e);
+      }
     },
 
     logout: function() {

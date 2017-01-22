@@ -4,7 +4,7 @@
 describe('Applicant View', function() {
 
     beforeEach(function() {
-        this.ApplicantView = new Hktdc.Views.Applicant();
+        this.ApplicantView = new Hktdc.Views.ApplicantItem();
     });
 
 });

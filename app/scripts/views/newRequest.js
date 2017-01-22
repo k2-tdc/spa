@@ -31,6 +31,11 @@ Hktdc.Views = Hktdc.Views || {};
       // toValue: function(date, format, language) {
       //   return moment(date).format('MM/DD/YYYY');
 
+      self.model.set({
+        EDeliveryDate: (self.model.toJSON().EDeliveryDate)
+          ? moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+          : null
+      });
       self.setCommentBlock();
       self.render();
 
@@ -149,16 +154,13 @@ Hktdc.Views = Hktdc.Views || {};
       /* selectedApplicantModel is from mainRouter */
       // console.log(this.model.toJSON().selectedApplicantModel.toJSON());
       this.model.set({
-        selectedApplicantName: this.model.toJSON().selectedApplicantModel.toJSON().UserFullName,
-        EDeliveryDate: (self.model.toJSON().EDeliveryDate)
-          ? moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
-          : null
+        selectedApplicantName: this.model.toJSON().selectedApplicantModel.toJSON().UserFullName
       });
 
       this.$el.html(this.template({
         request: this.model.toJSON()
       }));
-    }
+    },
 
     checkAndLoadRecommend: function(isOpenAlert) {
       // var isOpenAlert = false;

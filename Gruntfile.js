@@ -262,9 +262,6 @@ module.exports = function(grunt) {
             'styles/fonts/{,*/}*.*',
             'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*.*'
           ]
-        }, {
-          src: 'node_modules/apache-server-configs/dist/.htaccess',
-          dest: '<%= yeoman.dist %>/.htaccess'
         }]
       }
     },
