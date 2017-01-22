@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $ */
+/* global Hktdc, Backbone, utils, _, $, NProgress */
 
 Hktdc.Routers = Hktdc.Routers || {};
 
@@ -236,6 +236,14 @@ Hktdc.Routers = Hktdc.Routers || {};
       requestCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function(result, response) {
+          if (result.length === 0) {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'Record not found or no permission to access the record',
+              title: 'error',
+              type: 'error'
+            });
+            NProgress.done();
+          }
           $('#mainContent').addClass('compress');
           var rawData = response[0];
           var requestModel = new Hktdc.Models.NewRequest(rawData);
@@ -314,7 +322,14 @@ Hktdc.Routers = Hktdc.Routers || {};
         },
 
         error: function(err) {
-          console.log(err);
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Error on getting the record.',
+            title: 'error',
+            type: 'error'
+          });
+          NProgress.done();
+
+          console.error('error on getting the request: ', err);
         }
       });
     },

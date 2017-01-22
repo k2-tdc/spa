@@ -204,7 +204,7 @@ Hktdc.Views = Hktdc.Views || {};
         searching: false,
         processing: true,
         oLanguage: {
-          sProcessing: '<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>'
+          sProcessing: '<div class="data-table-loader"></div>'
         },
         ajax: {
           url: this.getAjaxURL(),

@@ -115,6 +115,9 @@ textarea {
   pointer-events: none !important;
 }
 
+#mainContent{
+  max-width: 1000px;
+}
 #mainContent.compress {
   max-width: 700px;
 }

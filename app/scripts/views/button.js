@@ -120,7 +120,7 @@ Hktdc.Views = Hktdc.Views || {};
         var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
         Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'confirmation',
-          message: 'Confirm save the Draft?',
+          message: 'Confirm save the ' + status + ' form?',
           onConfirm: function() {
             Hktdc.Dispatcher.trigger('toggleLockButton', true);
             self.saveAndApprover(status, '', function() {
@@ -315,7 +315,7 @@ Hktdc.Views = Hktdc.Views || {};
             // window.location.href = Hktdc.Config.projectPath + '#draft';
             if (!submitTo) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Your Draft has been saved. <br /> The request ID is ' + insertServiceResponse.FormID,
+                message: 'Your ' + status + ' form has been saved. <br /> The request ID is ' + insertServiceResponse.FormID,
                 title: 'Confirmation',
                 type: 'success'
               });

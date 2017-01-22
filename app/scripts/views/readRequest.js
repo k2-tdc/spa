@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, utils, Q */
+/* global Hktdc, Backbone, JST, $, utils, Q, moment */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -33,6 +33,10 @@ Hktdc.Views = Hktdc.Views || {};
       /* mode === read */
       console.debug('This is << READ >> mode');
       var self = this;
+
+      this.model.set({
+        EDeliveryDate: moment(this.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+      });
 
       self.setCommentBlock();
       // self.setCommentBlock();

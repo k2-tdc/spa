@@ -46,21 +46,46 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     events: {
+      'mousedown input[type="checkbox"]': 'onCheckboxMouseDown',
       'click input[type="checkbox"]': 'onCheckboxClick',
       'click .toggleBtn': 'onToggleButtonClick'
     },
 
+    onCheckboxMouseDown: function(ev) {
+      console.log('onCheckbox Mousedown');
+
+      var self = this;
+      // console.log($(ev.currentTarget).prop('checked'));
+      // current is checked = will be uncheck and vice versa
+      if ($(ev.target).prop('checked') && self.model.toJSON().selectedServiceCount > 0) {
+        ev.preventDefault();
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'confirmation',
+          message: 'Are you sure to clear all of the ' + self.model.toJSON().Name + ' item(s)?',
+          onConfirm: function() {
+            $(ev.target).prop('checked', false);
+            self.model.trigger('clearServiceRequest', self.model.toJSON());
+            self.model.set({
+              checked: false,
+              open: false
+            });
+            Hktdc.Dispatcher.trigger('closeConfirm');
+          }
+        });
+      }
+    },
+
     onCheckboxClick: function(ev) {
-      console.log('onCheckboxClick');
+      console.log('onCheckbox click');
       this.model.set({
         checked: $(ev.currentTarget).is(':checked'),
         open: $(ev.currentTarget).is(':checked')
       });
-      if (!$(ev.currentTarget).is(':checked')) {
-        // console.log($('.btn-del', this.el));
-        this.model.trigger('clearServiceRequest', this.model.toJSON());
-        // $('.btn-del', this.el).trigger('click');
-      }
+      // if (!$(ev.currentTarget).is(':checked')) {
+      //   // console.log($('.btn-del', this.el));
+      //   this.model.trigger('clearServiceRequest', this.model.toJSON());
+      //   // $('.btn-del', this.el).trigger('click');
+      // }
     },
 
     onToggleButtonClick: function(ev) {

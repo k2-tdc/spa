@@ -9,7 +9,7 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/newRequest.ejs'],
 
     events: {
-      'mousedown .recommend-select': 'checkBudgetAndService',
+      'mousedown .recommend-select': 'mousedownRecommendSelect',
       'blur #txtjustification': 'updateNewRequestModel',
       'blur #txtexpectedDD': 'updateDateModelByEvent',
       'blur #txtfrequency': 'updateNewRequestModel',
@@ -69,7 +69,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderCCList(results[4]);
           self.renderSelectedCCView();
           self.initDatePicker();
-          self.checkAndLoadRecommend();
+          self.checkAndLoadRecommend(true);
           /* default render the save button only,
            after change the approver(recommend by), render other button */
           self.renderButtons();
@@ -130,7 +130,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderAttachment(results[3], self.model.toJSON().Attachments);
           self.renderCCList(results[4]);
           self.renderSelectedCCView(self.model.toJSON().RequestCC);
-          self.checkAndLoadRecommend();
+          self.checkAndLoadRecommend(true);
           self.initDatePicker();
 
           self.renderButtons();
@@ -162,20 +162,25 @@ Hktdc.Views = Hktdc.Views || {};
       }));
     },
 
-    checkAndLoadRecommend: function(isOpenAlert) {
+    mousedownRecommendSelect: function(ev) {
+      return this.checkBudgetAndService(false, ev);
+    },
+
+    checkAndLoadRecommend: function(allowEmptyNotes) {
       // var isOpenAlert = false;
       // if (typeof evOrFlag === 'object') {
       //   isOpenAlert = evOrFlag;
       //   // return false;
       // }
-      // console.log('isOpenAlert', isOpenAlert);
+      // console.log('checkAndLoadRecommend');
       var self = this;
-      if (self.checkBudgetAndService(isOpenAlert)) {
+      if (self.checkBudgetAndService(allowEmptyNotes)) {
+        // console.log('checkBudgetAndService = true');
         self.renderRecommendList();
       }
     },
 
-    checkBudgetAndService: function(isOpenAlert) {
+    checkBudgetAndService: function(allowEmptyNotes, ev) {
       // if (this.model.toJSON().mode === 'read') {
       //   return false;
       // }
@@ -185,21 +190,29 @@ Hktdc.Views = Hktdc.Views || {};
         if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0) {
           valid = false;
         }
-        self.model.toJSON().selectedServiceCollection.each(function(service) {
-          // console.log(service.toJSON());
-          if (!service.toJSON().Notes) {
-            valid = false;
-          }
-        });
+        if (!allowEmptyNotes) {
+          self.model.toJSON().selectedServiceCollection.each(function(service) {
+            // console.log(service.toJSON());
+            if (!service.toJSON().Notes) {
+              valid = false;
+            }
+          });
+        }
+        // console.log('haveSelectService = ', valid);
         return valid;
       };
+
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
       // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
       // console.log(this.model.toJSON().EstimatedCost);
+      // console.log('haveFilledCost: ', haveFilledCost);
+      // console.log('!(haveSelectService() && haveFilledCost) = ', !(haveSelectService() && haveFilledCost));
       if (!(haveSelectService() && haveFilledCost)) {
-        if (isOpenAlert) {
-          isOpenAlert.preventDefault();
-          // isOpenAlert.stopPropagation();
+        // if it is fired by the click event
+        if (ev) {
+          if (ev.preventDefault) {
+            ev.preventDefault();
+          }
 
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'Please select service and filled the cost field',
@@ -207,9 +220,14 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Error'
           });
         }
-        self.model.set({
-          selectedRecommentModel: null
-        });
+        // if (condition) {
+        //
+        // } else {
+        //
+        // }
+        // self.model.set({
+        //   selectedRecommentModel: null
+        // });
         return false;
       }
       return true;
@@ -295,7 +313,7 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
 
         /* get new approver list */
-        self.checkAndLoadRecommend();
+        self.checkAndLoadRecommend(true);
 
         /* clear the button set to prevent lag button render */
         // self.doRenderButtons({showSave: true});
@@ -314,7 +332,7 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
 
         /* get new approver list */
-        self.checkAndLoadRecommend();
+        self.checkAndLoadRecommend(true);
         self.renderButtons();
       });
 
@@ -352,9 +370,9 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.toJSON().selectedServiceCollection.on('add', function(addedService, newCollection) {
         /* clear the selectedRecommentModel */
         // self.model.set({ selectedRecommentModel: null });
-
+        // console.log('add<><><>');
         /* get new approver list */
-        self.checkAndLoadRecommend();
+        self.checkAndLoadRecommend(true);
 
         self.renderButtons();
       });
@@ -362,9 +380,9 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.toJSON().selectedServiceCollection.on('change', function(changedModel) {
         /* clear the selectedRecommentModel */
         // self.model.set({ selectedRecommentModel: null });
-
+        // console.log('change{}{}{}{}');
         /* get new approver list */
-        self.checkAndLoadRecommend();
+        self.checkAndLoadRecommend(true);
 
         self.renderButtons();
       });
@@ -374,7 +392,7 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
 
         /* get new approver list */
-        self.checkAndLoadRecommend();
+        self.checkAndLoadRecommend(true);
 
         self.renderButtons();
       });
@@ -634,6 +652,16 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.validate(self.model, {field: 'Justification'});
         // console.log(self.model.toJSON().EstimatedCost);
         // console.error(self.model.isValid());
+
+        if (!self.checkBudgetAndService(false)) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Request service notes must be filled',
+            title: 'Input invalid',
+            type: 'error'
+          });
+          return false;
+        }
+
         if (self.model.isValid()) {
           if (successCallback) {
             successCallback();
@@ -793,6 +821,6 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }
       });
-    },
+    }
   });
 })();

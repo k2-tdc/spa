@@ -2,6 +2,13 @@
   color: red;
 }
 
+.data-table-loader{
+  background: url('../images/ajax-loader.gif') no-repeat;
+  width: 18px;
+  height: 18px;
+  margin: 0 auto;
+}
+
 .glyphicon-refresh-animate {
    -webkit-animation-name: rotateThis;
    -webkit-animation-duration: 2s;
