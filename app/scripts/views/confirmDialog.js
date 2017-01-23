@@ -31,6 +31,9 @@ Hktdc.Views = Hktdc.Views || {};
         show: false
       });
 
+      this.$el.on('show.bs.modal', function() {
+        console.log($(this.$el).height());
+      });
       this.$el.on('hidden.bs.modal', function() {
         self.model.set({ open: false });
       });

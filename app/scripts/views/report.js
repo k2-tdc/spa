@@ -169,6 +169,12 @@ Hktdc.Views = Hktdc.Views || {};
       var queryParams = _.omit(this.model.toJSON(), 'departmentCollection', 'applicantCollection');
       var url = Hktdc.Config.apiURL.replace('/api/request', '') + '/applications/computer-app/reports/chsw001' + utils.getQueryString(queryParams);
       var xhr = new XMLHttpRequest();
+      xhr.addEventListener('loadstart', function() {
+        NProgress.start();
+      });
+      xhr.addEventListener('loadend', function() {
+        NProgress.done();
+      });
 
       xhr.open('GET', url, true);
       xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);

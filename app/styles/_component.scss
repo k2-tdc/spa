@@ -1,8 +1,8 @@
-.red{
+.red {
   color: red;
 }
 
-.data-table-loader{
+.data-table-loader {
   background: url('../images/ajax-loader.gif') no-repeat;
   width: 18px;
   height: 18px;
@@ -10,19 +10,20 @@
 }
 
 .glyphicon-refresh-animate {
-   -webkit-animation-name: rotateThis;
-   -webkit-animation-duration: 2s;
-   -webkit-animation-iteration-count: infinite;
-   -webkit-animation-timing-function: linear;
+  -webkit-animation-name: rotateThis;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
 }
 
 @-webkit-keyframes "rotateThis" {
- from {
-        -webkit-transform: rotate( 0deg );
-    }
- to  {
-        -webkit-transform: rotate( 360deg );
-    }
+  from {
+    -webkit-transform: rotate( 0deg );
+  }
+
+  to {
+    -webkit-transform: rotate( 360deg );
+  }
 }
 
 .sep-space {
@@ -31,16 +32,15 @@
 
 .sep-space-sm {
   height: 8px;
-  clear:both;
+  clear: both;
 }
 
 .sep-space-db-border {
   height: 4px;
-  clear:both;
+  clear: both;
   border-top: 1px #ddd solid;
   border-bottom: 1px #ddd solid;
 }
-
 
 .btn-orange {
   color: white;
@@ -60,6 +60,6 @@
   background: #fffeb3;
 }
 
-.datepicker-toggle-btn{
+.datepicker-toggle-btn {
   cursor: pointer;
 }

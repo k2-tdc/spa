@@ -22,14 +22,18 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       var self = this;
-      this.render();
+      self.render();
 
-      this.$el.modal({
+      self.$el.modal({
         backdrop: true,
         show: false
       });
 
-      this.$el.on('hidden.bs.modal', function() {
+      self.$el.on('shown.bs.modal', function() {
+        console.log(self.$el.height());
+      });
+
+      self.$el.on('hidden.bs.modal', function() {
         self.model.set({open: false});
       });
       // self.$el.modal('show');

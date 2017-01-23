@@ -23,6 +23,9 @@ Hktdc.Collections = Hktdc.Collections || {};
       });
 
       return Hktdc.Config.apiURL + '/GetForwardEmployee?' + qsArr.join('&');
+
+      // TODO: new api change to:
+      // applications/computer-app/service-providers[?applicant]
     }
 
   });

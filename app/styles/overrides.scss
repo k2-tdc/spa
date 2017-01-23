@@ -132,12 +132,25 @@ textarea {
   position: relative;
 }
 
+@media (min-width: 768px){
+  .modal-dialog {
+    width: 450px;
+    margin: 30px auto;
+  }
+}
+.modal{
+  top: calc(50% - 120px;);
+}
 .modal-content{
+
   padding: 3px;
   border-radius: 2px;
   .modal-header{
     background: #F7A36B;
     border: 1px #aaa solid;
+    &.confirm-header{
+      background: #ccc;
+    }
   }
   .modal-body{
     border: 1px #aaa solid;
@@ -149,7 +162,8 @@ textarea {
       padding: 20px;
       padding-bottom: 8px;
       button{
-        min-width: 120px;
+        min-width: 110px;
+        font-weight: bold;
       }
     }
   }
