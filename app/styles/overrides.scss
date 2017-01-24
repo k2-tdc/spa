@@ -139,7 +139,10 @@ textarea {
   }
 }
 .modal{
-  top: calc(50% - 120px;);
+  top: calc(50% - 120px);
+  .model-title{
+    text-transform: none;
+  }
 }
 .modal-content{
 

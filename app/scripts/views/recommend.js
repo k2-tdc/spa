@@ -114,9 +114,6 @@ Hktdc.Views = Hktdc.Views || {};
         $(this.el).append('<option value="">-- Select --</option>');
         this.collection.each(this.renderRecommendOption);
       }
-
     }
   });
-
-
 })();

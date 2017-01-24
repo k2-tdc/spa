@@ -32,7 +32,7 @@ Hktdc.Views = Hktdc.Views || {};
       var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
       var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: 'Confirmation',
         message: 'Are you sure want to ' + actionName + '?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
@@ -119,7 +119,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.trigger('checkIsValid', function() {
         var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
         Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
+          title: 'Confirmation',
           message: 'Confirm save the ' + status + ' form?',
           onConfirm: function() {
             Hktdc.Dispatcher.trigger('toggleLockButton', true);
@@ -163,7 +163,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       this.model.trigger('checkIsValid', function() {
         Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
+          title: 'Confirmation',
           message: 'Are you sure you want to send to approver?',
           onConfirm: function() {
             Hktdc.Dispatcher.trigger('toggleLockButton', true);
@@ -182,7 +182,7 @@ Hktdc.Views = Hktdc.Views || {};
     clickDeleteBtnHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: 'Confirmation',
         message: 'Are you sure to delete the request?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
@@ -223,7 +223,7 @@ Hktdc.Views = Hktdc.Views || {};
     clickRecallBtnHandler: function() {
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'confirmation',
+        title: 'Confirmation',
         message: 'Are you sure want to Recall the Form: ' + self.requestFormModel.toJSON().ReferenceID + ' ?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);

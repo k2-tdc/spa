@@ -169,7 +169,7 @@ Hktdc.Views = Hktdc.Views || {};
       $('#delegationTable tbody', this.el).on('click', '.btn-del', function(ev) {
         ev.stopPropagation();
         Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
+          title: 'Confirmation',
           message: 'Are you sure to delete delegation?',
           onConfirm: function() {
             Hktdc.Dispatcher.trigger('toggleLockButton', true);

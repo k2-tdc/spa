@@ -60,7 +60,7 @@ Hktdc.Views = Hktdc.Views || {};
       if ($(ev.target).prop('checked') && self.model.toJSON().selectedServiceCount > 0) {
         ev.preventDefault();
         Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'confirmation',
+          title: 'Confirmation',
           message: 'Are you sure to clear all of the ' + self.model.toJSON().Name + ' item(s)?',
           onConfirm: function() {
             $(ev.target).prop('checked', false);
