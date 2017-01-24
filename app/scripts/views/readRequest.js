@@ -51,10 +51,10 @@ Hktdc.Views = Hktdc.Views || {};
       self.render();
 
       // Q.all([
-      self.loadColleague()
+      self.loadForwardUser()
       // ])
-        .then(function(colleagueCollection) {
-          self.colleagueCollection = colleagueCollection;
+        .then(function(forwardUserCollection) {
+          self.forwardUserCollection = forwardUserCollection;
           // console.log(self.model.toJSON().RequestList);
           setTimeout(function() {
             self.renderAttachment(self.model.toJSON().Attachments);
@@ -70,13 +70,14 @@ Hktdc.Views = Hktdc.Views || {};
         });
     },
 
-    loadColleague: function() {
+    loadForwardUser: function() {
       var deferred = Q.defer();
-      var colleagueCollection = new Hktdc.Collections.Colleague();
-      colleagueCollection.fetch({
+      var forwardUserCollection = new Hktdc.Collections.ForwardUser();
+      forwardUserCollection.url = forwardUserCollection.url(this.model.toJSON().ApplicantUserID);
+      forwardUserCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          deferred.resolve(colleagueCollection);
+          deferred.resolve(forwardUserCollection);
         },
         error: function(err) {
           deferred.reject(err);
@@ -104,7 +105,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderForwardUserList: function() {
       var toUserView = new Hktdc.Views.ToUserList({
-        collection: this.colleagueCollection,
+        collection: this.forwardUserCollection,
         parentModel: this.model,
         selectFieldName: 'Forward_To_ID'
       });

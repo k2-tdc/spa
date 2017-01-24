@@ -18,14 +18,14 @@ Hktdc.Collections = Hktdc.Collections || {};
     },
 
     url: function() {
-      var qsArr = _.map(this.getQueryParams(), function(val, key) {
-        return key + '=' + val;
-      });
+      // var qsArr = _.map(this.getQueryParams(), function(val, key) {
+      //   return key + '=' + val;
+      // });
 
-      return Hktdc.Config.apiURL + '/GetForwardEmployee?' + qsArr.join('&');
+      // return Hktdc.Config.apiURL + '/GetForwardEmployee?' + qsArr.join('&');
 
       // TODO: new api change to:
-      // applications/computer-app/service-providers[?applicant]
+      return Hktdc.Config.apiURL.replace('workflowdev', 'workflow').replace('/api/request', '') + '/admin/users';
     }
 
   });

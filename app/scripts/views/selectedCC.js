@@ -26,7 +26,7 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
       this.$el.html(this.template({
         selectedUserId: this.model.toJSON().USERID || this.model.toJSON().UserId,
-        selectedUserName: this.model.toJSON().FULLNAME || this.model.toJSON().UserFullName,
+        selectedUserName: this.model.toJSON().FULLNAME || this.model.toJSON().FullName,
         readonly: this.model.toJSON().readonly
       }));
     }

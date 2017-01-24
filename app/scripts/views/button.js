@@ -411,8 +411,8 @@ Hktdc.Views = Hktdc.Views || {};
           : null,
         cc: _.map(this.requestFormModel.toJSON().selectedCCCollection.toJSON(), function(ccData) {
           return {
-            Name: ccData.UserFullName || ccData.FULLNAME,
-            UserID: ccData.UserId || ccData.USERID
+            Name: ccData.FullName || ccData.FULLNAME,
+            UserID: ccData.UserID || ccData.USERID
           };
         }),
         Remark: requestFormData.Remark,

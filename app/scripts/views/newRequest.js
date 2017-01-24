@@ -362,8 +362,8 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.toJSON().selectedCCCollection.on('add', function(addedCC, newCollection) {
-        var selectedUserName = addedCC.toJSON().UserFullName;
-        // var selectedUserId = addedCC.toJSON().UserId;
+        var selectedUserName = addedCC.toJSON().FullName;
+        // var selectedUserId = addedCC.toJSON().UserID;
         $('.selectedCC', this.el).text(selectedUserName);
       });
 
@@ -604,7 +604,7 @@ Hktdc.Views = Hktdc.Views || {};
       var $input = $('.cc-picker', this.el);
       // console.log($input);
       var newEmployeeArray = _.map(fullEmployeeList.toJSON(), function(employee) {
-        employee.label = employee.UserFullName;
+        employee.label = employee.FullName;
         return employee;
       });
       $input.autocomplete({
@@ -612,14 +612,14 @@ Hktdc.Views = Hktdc.Views || {};
         select: function(ev, ui) {
           // console.log(ui);
           var existing = _.find(self.model.toJSON().selectedCCCollection.toJSON(), function(cc) {
-            return (cc.UserId === ui.item.UserId);
+            return (cc.UserID === ui.item.UserId);
           });
           if (!existing) {
             self.model.toJSON().selectedCCCollection.add(new Hktdc.Models.CC(ui.item));
           }
         },
         close: function(ev, ui) {
-          console.log($(ev.target).val());
+          // console.log($(ev.target).val());
           $(ev.target).val('');
         }
       });
