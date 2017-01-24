@@ -170,6 +170,7 @@ window.utils = {
         var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
         if (!xhr) {
           onError('CORS not supported');
+          window.location.href = oauthUrl;
           return false;
         }
         xhr.setRequestHeader('X-REFRESH-TOKEN', refreshToken);
@@ -186,7 +187,7 @@ window.utils = {
         xhr.onerror = function() {
           var text = xhr.responseText;
           onError(text);
-          // alert(text);
+          window.location.href = oauthUrl;
         };
 
         xhr.send();
