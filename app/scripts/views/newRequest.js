@@ -163,24 +163,21 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     mousedownRecommendSelect: function(ev) {
-      return this.checkBudgetAndService(false, ev);
+      return this.haveBudgetAndService(false, ev);
     },
 
     checkAndLoadRecommend: function(allowEmptyNotes) {
-      // var isOpenAlert = false;
-      // if (typeof evOrFlag === 'object') {
-      //   isOpenAlert = evOrFlag;
-      //   // return false;
-      // }
-      // console.log('checkAndLoadRecommend');
       var self = this;
-      if (self.checkBudgetAndService(allowEmptyNotes)) {
-        // console.log('checkBudgetAndService = true');
+      if (self.haveBudgetAndService(allowEmptyNotes)) {
         self.renderRecommendList();
+      } else {
+        self.model.set({
+          selectedRecommentModel: null
+        });
       }
     },
 
-    checkBudgetAndService: function(allowEmptyNotes, ev) {
+    haveBudgetAndService: function(allowEmptyNotes, ev) {
       // if (this.model.toJSON().mode === 'read') {
       //   return false;
       // }
@@ -205,12 +202,13 @@ Hktdc.Views = Hktdc.Views || {};
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
       // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
       // console.log(this.model.toJSON().EstimatedCost);
+      // console.log('haveSelectService(): ', haveSelectService());
       // console.log('haveFilledCost: ', haveFilledCost);
       // console.log('!(haveSelectService() && haveFilledCost) = ', !(haveSelectService() && haveFilledCost));
       if (!(haveSelectService() && haveFilledCost)) {
         // if it is fired by the click event
         if (ev) {
-          if (ev.preventDefault) {
+          if (ev && ev.preventDefault) {
             ev.preventDefault();
           }
 
@@ -220,14 +218,6 @@ Hktdc.Views = Hktdc.Views || {};
             title: 'Error'
           });
         }
-        // if (condition) {
-        //
-        // } else {
-        //
-        // }
-        // self.model.set({
-        //   selectedRecommentModel: null
-        // });
         return false;
       }
       return true;
@@ -389,11 +379,9 @@ Hktdc.Views = Hktdc.Views || {};
 
       this.model.toJSON().selectedServiceCollection.on('remove', function(changedModel) {
         /* clear the selectedRecommentModel */
-        // self.model.set({ selectedRecommentModel: null });
-
         /* get new approver list */
+        // console.log('remove selected service');
         self.checkAndLoadRecommend(true);
-
         self.renderButtons();
       });
     },
@@ -518,8 +506,6 @@ Hktdc.Views = Hktdc.Views || {};
       employeeCollection.fetch({
         beforeSend: utils.setAuthHeader,
         success: function() {
-          // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
-          // console.log('selectedCCCollection: ', self.model);
           deferred.resolve(employeeCollection.toJSON());
         },
         error: function(err) {
@@ -653,7 +639,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(self.model.toJSON().EstimatedCost);
         // console.error(self.model.isValid());
 
-        if (!self.checkBudgetAndService(false)) {
+        if (!self.haveBudgetAndService(false)) {
           Hktdc.Dispatcher.trigger('openAlert', {
             message: 'Request service notes must be filled',
             title: 'Input invalid',
@@ -767,15 +753,15 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderRecommendList: function() {
       var self = this;
-      // console.log('selectedRecommentModel', self.model.toJSON().selectedRecommentModel.toJSON());
       var recommendCollection = new Hktdc.Collections.Recommend();
       var ruleCodeArr = _.map(this.model.toJSON().selectedServiceCollection.toJSON(), function(selectedService) {
         return selectedService.Approver;
       });
       var ruleCode = _.uniq(ruleCodeArr).join(';');
-      console.log('ruleCode:::::::', this.model.toJSON().selectedApplicantModel.toJSON());
+      // console.log('ruleCode:::::::', this.model.toJSON().selectedApplicantModel.toJSON());
       var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
       var cost = this.model.toJSON().EstimatedCost;
+      // console.log('selectedRecommend:', self.model.toJSON().ApproverUserID);
       recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
       recommendCollection.fetch({
         beforeSend: utils.setAuthHeader,
@@ -799,7 +785,6 @@ Hktdc.Views = Hktdc.Views || {};
               selected = approverModel.toJSON();
             }
           });
-          // console.log(selected.WorkerId);
           if (selected) {
             // console.log($('.recommend-select option[value="' + selected.WorkerId + '"]', self.el));
             // console.log('a');

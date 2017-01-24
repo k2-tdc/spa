@@ -80,8 +80,8 @@ Hktdc.Views = Hktdc.Views || {};
             _.each(model.toJSON().availableServiceObjectArray, function(service) {
               console.log('service ID: ', service.GUID);
               self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedServiceModel) {
-                console.log('current: ', selectedServiceModel.toJSON().GUID);
-                if (selectedServiceModel.toJSON().GUID === service.GUID) {
+                // console.log('current: ', selectedServiceModel.toJSON().GUID);
+                if (selectedServiceModel && selectedServiceModel.toJSON().GUID === service.GUID) {
                   console.log('found: ', selectedServiceModel.toJSON().GUID);
                   self.requestFormModel.toJSON().selectedServiceCollection.remove(selectedServiceModel);
                 }
