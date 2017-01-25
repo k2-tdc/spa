@@ -411,7 +411,8 @@ Hktdc.Views = Hktdc.Views || {};
       } else if (status === 'Deleted') {
         return formStatusDisplay;
       } else if (status === 'Recall') {
-        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
+        return formStatusDisplay;
+        // return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
       } else if (status === 'ITSApproval') {
         return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
       } else {
