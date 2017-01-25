@@ -14,7 +14,9 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'input-group',
 
     events: {
+      'blur input.date': 'updateDateModelByEvent',
       'mousedown .datepicker-toggle-btn': 'mousedownHandler'
+
     },
 
     initialize: function(props) {
@@ -25,10 +27,11 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var self = this;
-
+      console.log(self.model.toJSON());
       self.$el.html(self.template(self.model.toJSON()));
       $('.date', self.el).datepicker({
         autoclose: true,
+        startDate: self.startDate,
         format: {
           toDisplay: function(date, format, language) {
             return moment(date).format('DD MMM YYYY');
@@ -62,6 +65,14 @@ Hktdc.Views = Hktdc.Views || {};
         $target.datepicker('hide');
       } else {
         $target.datepicker('show');
+      }
+    },
+
+    updateDateModelByEvent: function(ev) {
+      var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
+
+      if (this.onBlur) {
+        this.onBlur(val);
       }
     }
 

@@ -11,7 +11,7 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'mousedown .recommend-select': 'mousedownRecommendSelect',
       'blur #txtjustification': 'updateNewRequestModel',
-      'blur #txtexpectedDD': 'updateDateModelByEvent',
+      // 'blur #txtexpectedDD': 'updateDateModelByEvent',
       'blur #txtfrequency': 'updateNewRequestModel',
       'blur #txtestimatedcost': 'updateNewRequestModel',
       'blur #txtbudgetprovided': 'updateNewRequestModel',
@@ -277,12 +277,13 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     toggleInvalidMessage: function(field, isShow) {
+      console.log('toggleInvalidMessage: ', field);
       var self = this;
       var $target = $('[field=' + field + ']', self.el);
       // console.log($target);
-      var $errorContainer = ($target.parent().find('.error-message').length) ?
-        $target.parent().find('.error-message') :
-        $target.parent().siblings('.error-message');
+      var $errorContainer = ($target.parent().find('.error-message').length)
+        ? $target.parent().find('.error-message')
+        : $target.parent().siblings('.error-message');
       if (isShow) {
         $errorContainer.removeClass('hidden');
         $target.addClass('error-input');
@@ -388,24 +389,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     initDatePicker: function() {
       var self = this;
-      $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
-        ev.stopPropagation();
-        // $('.date', self.el).data('open');
-        var $target = $(ev.target).parents('.input-group').find('.date');
-        var open = $target.data('open');
-        if (open) {
-          $target.datepicker('hide');
-        } else {
-          $target.datepicker('show');
-        }
-      });
-      // console.group('time');
-      // console.log(new Date());
-      // console.log(self.model.toJSON().CreatedOn);
-      // console.log(moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY'));
-      // console.log(moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').format('ddd MMM DD YYYY HH:mm:ss Z'));
-      // console.log(moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').utc());
-      // console.groupEnd();
       var createdOn = {
         year: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').year(),
         month: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').month(),
@@ -414,43 +397,37 @@ Hktdc.Views = Hktdc.Views || {};
       var createdDate = new Date(createdOn.year, createdOn.month, createdOn.day);
       var today = new Date();
       var startDate = (today > createdDate) ? today : createdDate;
-      // console.log(new Date(createdOn.year, createdOn.month, createdOn.day));
-      $('.date', self.el)
-        .datepicker({
-          autoclose: true,
-          startDate: startDate,
-          // keepEmptyValues: true,
-          // startDate: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').format('MM/DD/YYYY'),
-          format: {
-            toDisplay: function(date, format, language) {
-              // console.log(date);
-              // console.log(moment(date).format('DD MMM YYYY'));
-              return (date) ? moment(date).format('DD MMM YYYY') : '';
-            },
-            toValue: function(date, format, language) {
-              // console.log(date);
-              // console.log(moment(date).format('MM/DD/YYYY'));
-              return (date) ? moment(date).format('MM/DD/YYYY') : '';
-            }
-          }
-        })
-        .on('changeDate', function(ev) {
-          var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var fieldName = $input.attr('field');
-          var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
-          var obj = {};
-          obj[fieldName] = val;
-          self.model.set(obj, {
+
+      var deliveryDateView = new Hktdc.Views.DatePicker({
+        model: new Hktdc.Models.DatePicker({
+          placeholder: '',
+          field: 'EDeliveryDate',
+          value: self.model.toJSON().EDeliveryDate
+        }),
+        startDate: startDate,
+        onSelect: function(val) {
+          self.model.set({
+            EDeliveryDate: val
+          }, {
             validate: true,
             field: 'EDeliveryDate'
           });
-        })
-        .on('show', function() {
-          $(this).data('open', true);
-        })
-        .on('hide', function() {
-          $(this).data('open', false);
-        });
+        },
+        onBlur: function(val) {
+          this.model.set({
+            EDeliveryDate: val
+          }, {
+            validate: true,
+            field: 'EDeliveryDate'
+          });
+
+          this.model.set({
+            EDeliveryDate: val
+          });
+        }
+      });
+
+      $('.delivery-datepicker-container', self.el).prepend(deliveryDateView.el);
     },
 
     getGroupedRequestList: function(RequestList) {

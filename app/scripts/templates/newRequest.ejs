@@ -120,13 +120,9 @@
           </div>
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_input">
-              <div class="input-group">
-                <input type="text" class="form-control date" id="txtexpectedDD" field="EDeliveryDate" value="<% if (request.EDeliveryDate) { %><%= request.EDeliveryDate %><% } %>"/>
-                <div class="input-group-addon datepicker-toggle-btn">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </div>
+              <div class="delivery-datepicker-container">
+                <div class="error-message hidden">Expected Delivery Date should be after or equal to current date</div>
               </div>
-              <div class="error-message hidden">Expected Delivery Date should be after or equal to current date</div>
             </div>
           </div>
           <div class="sep-space"></div>
