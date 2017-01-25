@@ -15,6 +15,7 @@ Hktdc.Models = Hktdc.Models || {};
     defaults: {
       canChooseStatus: true,
       searchUserType: '',
+      showAdvanced: false,
 
       CStat: '',
       ReferID: '',
@@ -23,9 +24,9 @@ Hktdc.Models = Hktdc.Models || {};
       Appl: '',
       UserId: '',
       SUser: '',
+
       // for detail
-      ProsIncId: '',
-      showAdvanced: false
+      ProsIncId: ''
     },
 
     validate: function(attrs, options) {},

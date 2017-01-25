@@ -18,6 +18,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'draft': 'draft',
       'alltask': 'allTask',
       'approvaltask': 'approvalTask',
+      'history': 'approvalHistory',
       'logout': 'logout'
     },
 
@@ -100,7 +101,7 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     allTask: function() {
-      console.debug('[ routes/mainRouter.js ] - draft route handler');
+      console.debug('[ routes/mainRouter.js ] - all task route handler');
       var checkStatusModel = new Hktdc.Models.CheckStatus({
         searchUserType: 'Sharing User',
         canChooseStatus: true,
@@ -132,7 +133,7 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     approvalTask: function() {
-      console.debug('[ routes/mainRouter.js ] - draft route handler');
+      console.debug('[ routes/mainRouter.js ] - approval task route handler');
       var checkStatusModel = new Hktdc.Models.CheckStatus({
         canChooseStatus: true,
         searchUserType: 'Sharing User',
@@ -161,6 +162,45 @@ Hktdc.Routers = Hktdc.Routers || {};
       subheaderMenuListView.render();
 
       $('.subheader-menu-container').html(subheaderMenuListView.el);
+    },
+
+    approvalHistory: function() {
+      console.debug('[ routes/mainRouter.js ] - approval history route handler');
+      try {
+        var approvalHistoryModel = new Hktdc.Models.ApprovalHistory({
+          canChooseStatus: true,
+          userid: Hktdc.Config.userID,
+          employeeid: Hktdc.Config.employeeID,
+          applicant: utils.getParameterByName('applicant'),
+          'approval-start-date': utils.getParameterByName('approval-start-date'),
+          'approval-end-date': utils.getParameterByName('approval-end-date'),
+          status: utils.getParameterByName('status'),
+          refid: utils.getParameterByName('refid'),
+          'create-start-date': utils.getParameterByName('create-start-date'),
+          'create-end-date': utils.getParameterByName('create-end-date'),
+          keyword: utils.getParameterByName('keyword')
+        });
+        approvalHistoryModel.set({
+          mode: 'APPROVAL HISTORY'
+        });
+        var approvalHistoryView = new Hktdc.Views.ApprovalHistory({
+          model: approvalHistoryModel
+        });
+
+        $('#mainContent').empty().html(approvalHistoryView.el);
+
+        var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+        var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+          collection: subheaderMenuListCollection,
+          currentPageName: 'Approval History'
+        });
+        subheaderMenuListView.render();
+
+        $('.subheader-menu-container').html(subheaderMenuListView.el);
+
+      } catch (e) {
+        console.error(e);
+      }
     },
 
     /* this handling insert new */
