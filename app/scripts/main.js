@@ -105,7 +105,7 @@ window.Hktdc = {
         parent: '#page',
         showSpinner: false
       });
-
+      $.fn.dataTable.moment('DD MMM YYYY');
       // if (true) {
       if (env === 'uat' || env === 'chsw') {
         // TODO: prevent user make request when getting token
