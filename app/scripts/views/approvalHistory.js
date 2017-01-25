@@ -71,7 +71,10 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var createDateFromView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
-          placeholder: 'From Date'
+          placeholder: 'From Date',
+          value: (self.model.toJSON()['create-start-date'])
+            ? moment(self.model.toJSON()['create-start-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            : null
         }),
         onSelect: function(val) {
           console.log(val);
@@ -82,7 +85,10 @@ Hktdc.Views = Hktdc.Views || {};
       });
       var createDateToView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
-          placeholder: 'To Date'
+          placeholder: 'To Date',
+          value: (self.model.toJSON()['create-end-date'])
+            ? moment(self.model.toJSON()['create-end-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            : null
         }),
         onSelect: function(val) {
           self.model.set({
@@ -92,7 +98,10 @@ Hktdc.Views = Hktdc.Views || {};
       });
       var approvalDateFromView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
-          placeholder: 'From Date'
+          placeholder: 'From Date',
+          value: (self.model.toJSON()['approval-start-date'])
+            ? moment(self.model.toJSON()['approval-start-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            : null
         }),
         onSelect: function(val) {
           self.model.set({
@@ -102,7 +111,10 @@ Hktdc.Views = Hktdc.Views || {};
       });
       var approvalDateToView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
-          placeholder: 'To Date'
+          placeholder: 'To Date',
+          value: (self.model.toJSON()['approval-end-date'])
+            ? moment(self.model.toJSON()['approval-end-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            : null
         }),
         onSelect: function(val) {
           self.model.set({
