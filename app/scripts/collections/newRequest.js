@@ -25,6 +25,10 @@ Hktdc.Collections = Hktdc.Collections || {};
       } else if (type === 'Draft') {
         qsArr.push('ReferID=' + refId);
         return Hktdc.Config.apiURL + '/GetDraftDetails?' + qsArr.join('&');
+      } else if (type === 'History') {
+        qsArr = [];
+        qsArr.push('ProInstID=' + procId);
+        return Hktdc.Config.apiURL.replace('/api/request', '').replace('workflowdev', 'workflow') + '/users/' + Hktdc.Config.userID + '/approval-history/computer-app/' + refId + '?' + qsArr.join('&');
       } else {
         qsArr.push('ReferID=' + refId);
         qsArr.push('ProInstID=' + procId);

@@ -131,7 +131,8 @@ Hktdc.Views = Hktdc.Views || {};
         ALL: 'ALLTASK',
         APPROVAL: 'APPROVALTASK',
         DRAFT: 'DRAFT',
-        CHECK: 'CHECK_STATUS'
+        CHECK: 'CHECK_STATUS',
+        HISTORY: 'HISTORY'
       };
 
       try {

@@ -189,25 +189,10 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#approvalHistoryTable tbody', self.el).on('click', 'tr', function(ev) {
         var rowData = self.approvalHistoryDataTable.row(this).data();
-        var SNOrProcIdPath = '';
-        if ((rowData.SN)) {
-          SNOrProcIdPath = '/' + rowData.SN;
-        } else {
-          if (rowData.ProcInstID) {
-            SNOrProcIdPath = '/' + rowData.ProcInstID;
-          }
-        }
-        var typePath;
-        if (self.model.toJSON().mode === 'APPROVAL TASKS') {
-          typePath = '/approval/';
-        } else if (self.model.toJSON().mode === 'ALL TASKS') {
-          typePath = '/all/';
-        } else if (self.model.toJSON().mode === 'DRAFT') {
-          typePath = '/draft/';
-        } else {
-          typePath = '/check/';
-        }
-        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath, {
+        var ProcInstIDPath = '/' + rowData.ProcInstID;
+        var typePath = '/history/';
+
+        Backbone.history.navigate('request' + typePath + rowData.refId + ProcInstIDPath, {
           trigger: true
         });
       });
@@ -333,41 +318,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getStatusFrowRow: function(row) {
-      var formStatusDisplay = row.DisplayStatus;
-      var status = row.FormStatus;
-
-      // if (true) {
-      if (status === 'Draft') {
-        return 'Draft <br /> by: ' + Hktdc.Config.userName;
-        // return '<div><button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button></div>';
-      } else if (status === 'Submitted') {
-        return 'Submitted<br /> by: ' + Hktdc.Config.userName;
-      } else if (status === 'Review') {
-        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
-      } else if (status === 'Approval') {
-        return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
-      } else if (status === 'ProcessTasks') {
-        return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
-      } else if (status === 'Return') {
-        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
-      } else if (status === 'Reject') {
-        return formStatusDisplay;
-      } else if (status === 'Completed') {
-        return formStatusDisplay;
-      } else if (status === 'Cancelled') {
-        return formStatusDisplay;
-      } else if (status === 'Deleted') {
-        return formStatusDisplay;
-      } else if (status === 'Recalled') {
-        return formStatusDisplay;
-        // return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
-      } else if (status === 'ITSApproval') {
-        return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
-      } else {
-        return formStatusDisplay + '<br /> by: ' + row.LastUser;
-      }
-
-      // return status + '<br />' + formStatusDisplay + '<br /> by: ' + approver;
+      return row.DisplayStatus + '<br /> by: ' + row.ActionTakerFullName;
     }
 
   });

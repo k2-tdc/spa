@@ -269,6 +269,8 @@ Hktdc.Routers = Hktdc.Routers || {};
         type = 'Worklist';
       } else if (/\/check\//.test(Backbone.history.getHash())) {
         type = 'Check';
+      } else if (/\/history\//.test(Backbone.history.getHash())) {
+        type = 'History';
       } else {
         type = 'Draft';
       }
@@ -295,7 +297,8 @@ Hktdc.Routers = Hktdc.Routers || {};
             draft: 'Draft',
             check: 'Check Status',
             all: 'All Tasks',
-            approval: 'Approval Tasks'
+            approval: 'Approval Tasks',
+            history: 'Approval History'
           };
           // var mode = (modeObj) ? modeObj.name : 'read';
           var getMode = function() {

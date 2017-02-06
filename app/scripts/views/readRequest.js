@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, utils, Q, moment */
+/* global Hktdc, Backbone, JST, $, utils, Q, moment, _ */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -39,7 +39,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       self.setCommentBlock();
-      // self.setCommentBlock();
+
       if (_.find(this.model.toJSON().actions, function(action) {
         return action.Action === 'Forward';
       })) {
@@ -47,22 +47,19 @@ Hktdc.Views = Hktdc.Views || {};
           showForwardTo: true
         });
       }
-
       self.render();
 
-      // Q.all([
       self.loadForwardUser()
-      // ])
         .then(function(forwardUserCollection) {
           self.forwardUserCollection = forwardUserCollection;
           // console.log(self.model.toJSON().RequestList);
           setTimeout(function() {
+            self.renderButtons();
+            self.renderForwardUserList();
             self.renderAttachment(self.model.toJSON().Attachments);
             self.renderSelectedCCView(self.model.toJSON().RequestCC);
             self.renderWorkflowLog(self.model.toJSON().ProcessLog);
             self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
-            self.renderButtons();
-            self.renderForwardUserList();
           });
         })
         .fail(function(e) {

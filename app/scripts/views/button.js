@@ -17,6 +17,7 @@ Hktdc.Views = Hktdc.Views || {};
       'click #btnapprover': 'clickApproverHandler',
       'click #btndelete': 'clickDeleteBtnHandler',
       'click #btnrecall': 'clickRecallBtnHandler',
+      'click #btnresend': 'clickResendBtnHandler',
       'click .workflow-btn': 'clickWorkflowBtnHandler'
     },
 
@@ -259,6 +260,50 @@ Hktdc.Views = Hktdc.Views || {};
                 type: 'error',
                 title: 'Error'
               });
+            }
+          });
+        }
+      });
+    },
+
+    clickResendBtnHandler: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure resend email notification?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+
+          Backbone.emulateHTTP = true;
+          Backbone.emulateJSON = true;
+          var formId = self.requestFormModel.toJSON().FormID;
+          var ResendEmailModel = Backbone.Model.extend({
+            url: Hktdc.Config.apiURL
+              .replace('/api/request', '')
+              .replace('workflowdev', 'workflow') +
+              '/users/' + Hktdc.Config.userID + '/work-list/computer-app/resend-email'
+          });
+          var ResendEmailModelInstance = new ResendEmailModel();
+          ResendEmailModelInstance.save({ FormID: formId }, {
+            beforeSend: utils.setAuthHeader,
+            success: function(model, response) {
+              // console.log('success: ', a);
+              // console.log(b);
+              Hktdc.Dispatcher.trigger('reloadMenu');
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+
+              self.successRedirect();
+            },
+            error: function(err) {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'server error on delete: ' + err,
+                type: 'error',
+                title: 'Error'
+              });
+              console.log(err);
+              // console.log(b);
             }
           });
         }
