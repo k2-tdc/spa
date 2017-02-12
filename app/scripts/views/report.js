@@ -86,10 +86,10 @@ Hktdc.Views = Hktdc.Views || {};
         var self = this;
         var departmentSelectView = new Hktdc.Views.DepartmentSelect({
           collection: self.model.toJSON().departmentCollection,
-          selectedDepartment: self.model.toJSON().deptcode,
+          selectedDepartment: self.model.toJSON().department,
           onSelect: function(departmentId) {
             self.model.set({
-              deptcode: departmentId
+              department: departmentId
             });
           }
         });
@@ -110,7 +110,7 @@ Hktdc.Views = Hktdc.Views || {};
         onSelect: function(val) {
           console.log(val);
           self.model.set({
-            'createdatestart': val
+            'create-date-start': val
           });
         }
       });
@@ -118,7 +118,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({ placeholder: 'To Date' }),
         onSelect: function(val) {
           self.model.set({
-            'createdateend': val
+            'create-date-end': val
           });
         }
       });
@@ -126,7 +126,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({ placeholder: 'From Date' }),
         onSelect: function(val) {
           self.model.set({
-            'completiondatestart': val
+            'completion-date-start': val
           });
         }
       });
@@ -134,7 +134,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({ placeholder: 'To Date' }),
         onSelect: function(val) {
           self.model.set({
-            'completiondateend': val
+            'completion-date-end': val
           });
         }
       });
@@ -150,10 +150,10 @@ Hktdc.Views = Hktdc.Views || {};
         var self = this;
         var applicantSelectView = new Hktdc.Views.ApplicantSelect({
           collection: self.model.toJSON().applicantCollection,
-          selectedApplicant: self.model.toJSON()['applicantemployeeid'],
+          selectedApplicant: self.model.toJSON().applicant,
           onSelect: function(applicantId) {
             self.model.set({
-              'applicantemployeeid': applicantId
+              applicant: applicantId
             });
           }
         });

@@ -545,16 +545,16 @@ Hktdc.Views = Hktdc.Views || {};
 
     renderApplicant: function(employeeArray) {
       var self = this;
-      // console.log(self.model.toJSON().ApplicantUserID);
-      $('.applicant-container', this.el).append(new Hktdc.Views.ApplicantList({
-        // TODO: may not use Applicant Collection here
+      var applicantSelectView = new Hktdc.Views.ApplicantSelect({
         collection: new Hktdc.Collections.Applicant(employeeArray),
-        tagName: 'select',
-        className: 'form-control user-select',
         selectedApplicant: self.model.toJSON().ApplicantUserID || Hktdc.Config.userID,
-        requestFormModel: this.model
-      }).el);
-
+        onSelect: function(val) {
+          this.model.set({ applicant: val });
+        }
+      });
+      applicantSelectView.render();
+      
+      $('.applicant-container', this.el).append(applicantSelectView.el);
       /* check me === formModel.applicant => disabled applicant button because preparer prepare form to applicant */
       /* this.model.ApplicantUserID present means it's not from new form */
       if (this.model.ApplicantUserID === Hktdc.Config.userID) {

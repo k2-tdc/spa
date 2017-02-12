@@ -6,8 +6,8 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.DeleteFile = Backbone.Model.extend({
-    url: function() {
-      return Hktdc.Config.apiURL + '/attachments/';
+    url: function(guid) {
+      return Hktdc.Config.apiURL + '/attachments/?process=CHSW&guid=' + guid;
     }
   });
 })();

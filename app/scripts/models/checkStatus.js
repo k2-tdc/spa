@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Models = Hktdc.Models || {};
 
@@ -6,11 +6,6 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.CheckStatus = Backbone.Model.extend({
-
-    initialize: function() {
-      // url: function() { return '' + Config.DomainName + '/api/request/GetRequestDetails?CStat=' + $("#ddindexstatus").val() + '&ReferID=' + $('#txtindexrefid').val() + '&FDate=' + $('#txtIndexfromdate').val() + '&TDate=' + $('#txtIndextodate').val() + '&Appl=' + $('#ddIndexapplicant').val() + '&UserId=' + Userid; },
-      // this.defaults.filters.UserId = 'Hktdc.Config.userID';
-    },
 
     defaults: {
       canChooseStatus: true,
@@ -20,10 +15,12 @@ Hktdc.Models = Hktdc.Models || {};
       refid: '',
       'start-date': '',
       'end-date': '',
-      offset: 10,
-      limit: 99999,
-      CStat: '',
+      offset: 0,
+      limit: 999999,
+      sort: '+lastactiontime',
+      status: '',
       applicant: '',
+
       UserId: '',
       SUser: '',
 

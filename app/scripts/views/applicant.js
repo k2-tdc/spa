@@ -17,18 +17,6 @@ Hktdc.Views = Hktdc.Views || {};
       this.render();
     },
 
-    events: {
-      'change': 'selectApplcantHandler'
-    },
-
-    selectApplcantHandler: function() {
-      // console.log($('option:selected', this.el).val());
-      // console.log(this.collection.get($('option:selected', this.el).val()));
-      this.requestFormModel.set({
-        selectedApplicantModel: this.collection.get($('option:selected', this.el).val())
-      });
-    },
-
     renderApplicantItem: function(model) {
       var applicantItemView = new Hktdc.Views.ApplicantItem({
         model: model,
@@ -39,27 +27,8 @@ Hktdc.Views = Hktdc.Views || {};
       $(this.el).append(applicantItemView.el);
     },
 
-    renderApplicantOption: function(model) {
-      var applicantOptionView = new Hktdc.Views.ApplicantOption({
-        model: model,
-        requestFormModel: this.requestFormModel,
-        selectedApplicant: this.selectedApplicant
-      });
-
-      applicantOptionView.render();
-      // console.log(applicantOptionView.el);
-      $(this.el).append(applicantOptionView.el);
-    },
-
     render: function() {
-      // this.$el.html(this.template(this.model.toJSON()));
-      // console.log(this.selectedApplicant);
-      if (this.tagName === 'ul') {
-        this.collection.each(this.renderApplicantItem);
-      } else {
-        $(this.el).append('<option value="">-- Select --</option>');
-        this.collection.each(this.renderApplicantOption);
-      }
+      this.collection.each(this.renderApplicantItem);
     }
   });
 
@@ -89,9 +58,12 @@ Hktdc.Views = Hktdc.Views || {};
 
   Hktdc.Views.ApplicantSelect = Backbone.View.extend({
     tagName: 'select',
-    className: 'form-control',
+    className: 'form-control user-select',
     events: {
       'change': 'selectApplicantHandler'
+    },
+    attributes: {
+      name: 'applicant'
     },
     initialize: function(props) {
       console.debug('[ views/applicant.js ] initialize: ApplicantSelect');

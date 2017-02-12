@@ -21,7 +21,7 @@
     <div class="panel-body">
 
       <form class="form-horizontal">
-        <% if (canChooseStatus) { %>
+        <% if (filter.canChooseStatus) { %>
           <div class="form-group row">
             <label for="status" class="col-sm-2 control-label">Status</label>
             <div class="col-sm-6 status-container">
@@ -33,14 +33,14 @@
           <div class="form-group">
             <label for="ref_id" class="col-xs-12 col-sm-2 control-label">Ref. ID</label>
             <div class="col-xs-12 col-sm-6">
-              <input type="text" id="txtindexrefid" name="ReferID" class="search-field form-control" placeholder="" value="<%= ReferID %>">
+              <input type="text" id="txtindexrefid" name="refid" class="search-field form-control" placeholder="" value="<%= filter.refid %>">
             </div>
           </div>
           <div class="form-group">
             <label for="create_date" class="col-xs-12 col-sm-2 control-label">Create Date</label>
             <div class="create_date_pick1 col-xs-6 col-sm-3">
               <div class="input-group">
-                <input type="text" id="txtIndexfromdate" name="FDate" class="form-control date" value="<%= FDate %>" placeholder="From Date">
+                <input type="text" id="txtIndexfromdate" name="start-date" class="form-control date" value="<%= filter['start-date'] %>" placeholder="From Date">
                 <div class="input-group-addon datepicker-toggle-btn">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </div>
@@ -48,7 +48,7 @@
             </div>
             <div class="create_date_pick2 col-xs-6 col-sm-3">
               <div class="input-group">
-                <input type="text" id="txtIndextodate" name="TDate" class="form-control date" value="<%= TDate %>" placeholder="To Date">
+                <input type="text" id="txtIndextodate" name="end-date" class="form-control date" value="<%= filter['end-date'] %>" placeholder="To Date">
                 <div class="input-group-addon datepicker-toggle-btn">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </div>
@@ -56,7 +56,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="status" class="col-sm-2 control-label"><%= searchUserType %></label>
+            <label for="status" class="col-sm-2 control-label"><%= filter.searchUserType %></label>
             <div class="col-sm-6 user-container">
 
             </div>

@@ -17,7 +17,6 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     url: function() {
       // return Hktdc.Config.apiURL + '/GetForwardEmployee?' + qsArr.join('&');
-      // TODO: new api change to:
       return Hktdc.Config.apiURL + '/admin/users';
     }
 

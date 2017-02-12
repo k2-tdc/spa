@@ -45,19 +45,17 @@ Hktdc.Views = Hktdc.Views || {};
           var userCollection = results[0];
           var statusCollection = results[1];
 
-          var userListView = new Hktdc.Views.ApplicantList({
-            tagName: 'select',
-            className: 'form-control user-select',
-            attributes: {
-              name: 'Appl'
-            },
+          var userListView = new Hktdc.Views.ApplicantSelect({
             collection: userCollection,
-            selectedApplicant: self.model.toJSON().Appl
+            selectedApplicant: self.model.toJSON().applicant,
+            onSelect: function(val) {
+              self.model.set({ applicant: val });
+            }
           });
-
+          userListView.render();
           var statusListView = new Hktdc.Views.StatusList({
             collection: statusCollection,
-            selectedStatus: self.model.toJSON().CStat
+            selectedStatus: self.model.toJSON().status
           });
 
           // console.log(userListView.el);
@@ -289,7 +287,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     getAjaxURL: function() {
       var usefulData = _.pick(this.model.toJSON(), 'userid', 'employeeid', 'applicant', 'approval-start-date', 'approval-end-date', 'status', 'refid', 'create-start-date', 'create-end-date', 'keyword');
-      var statusApiURL = Hktdc.Config.apiURL.replace('/api/request', '') + '/applications/computer-app/approval-history' + utils.getQueryString(usefulData);
+      var statusApiURL = Hktdc.Config.apiURL + '/applications/computer-app/approval-history' + utils.getQueryString(usefulData);
       return statusApiURL;
     },
 

@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Department = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL.replace('/api/request', '') + '/departments';
+      return Hktdc.Config.apiURL + '/departments';
     },
 
     model: Hktdc.Models.Department

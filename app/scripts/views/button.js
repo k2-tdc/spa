@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, utils, Q, moment */
+/* global Hktdc, Backbone, JST, $, _, utils, Q, moment, FormData */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -149,8 +149,8 @@ Hktdc.Views = Hktdc.Views || {};
       ];
 
       return _.find(mapping, function(obj) {
-        return obj.ActionID === actionId;
-      }).URL;
+        return String(obj.ActionID) === String(actionId);
+      }).URI;
     },
 
     clickSaveHandler: function() {
@@ -318,10 +318,7 @@ Hktdc.Views = Hktdc.Views || {};
           Backbone.emulateJSON = true;
           var formId = self.requestFormModel.toJSON().FormID;
           var ResendEmailModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL
-              .replace('/api/request', '')
-              .replace('workflowdev', 'workflow') +
-              '/users/' + Hktdc.Config.userID + '/work-list/computer-app/resend-email'
+            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/resend-email'
           });
           var ResendEmailModelInstance = new ResendEmailModel();
           ResendEmailModelInstance.save({ FormID: formId }, {
@@ -354,7 +351,7 @@ Hktdc.Views = Hktdc.Views || {};
       /* set the request object */
       var realSubmitTo = this.requestFormModel.toJSON().applicantSubmittedTo;
       var submitToString = '';
-      var self = this;
+      // var self = this;
       if (submitTo) {
         realSubmitTo = this.requestFormModel.toJSON()[submitTo + 'SubmittedTo'];
       }
@@ -389,7 +386,11 @@ Hktdc.Views = Hktdc.Views || {};
         .then(function(data) {
           /* delete file */
           console.log('end send attachment');
-          return this.deleteAttachment(this.requestFormModel.toJSON().deleteAttachmentIdArray);
+          var self = this;
+          return Q.all(_.map(this.requestFormModel.toJSON().deleteAttachmentIdArray, function(guid) {
+            return self.deleteAttachment(guid);
+          }));
+          // return this.deleteAttachment();
         }.bind(this))
 
         .then(function() {
@@ -525,7 +526,7 @@ Hktdc.Views = Hktdc.Views || {};
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
 
-      sendRequestModel.url = sendRequestModel.url('save');
+      sendRequestModel.url = sendRequestModel.url(this.requestFormModel.toJSON().FormID);
       sendRequestModel.save({}, {
         beforeSend: utils.setAuthHeader,
         success: function(mymodel, response) {
@@ -565,10 +566,13 @@ Hktdc.Views = Hktdc.Views || {};
         return (file.file) && file.file.name;
       });
       // console.log(filename);
-      sendAttachmentModel.url = sendAttachmentModel.url(refId, filename);
-
+      sendAttachmentModel.url = sendAttachmentModel.url();
+      sendAttachmentModel.set({
+        refid: refId,
+        filename: filename
+      });
       _.each(files, function(file, i) {
-        console.log(file.file);
+        // console.log(file.file);
         data.append('file' + i, file.file);
       });
 
@@ -590,25 +594,26 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    deleteAttachment: function(deleteAttachmentIdArray) {
+    deleteAttachment: function(AttachmentGUID) {
       var deferred = Q.defer();
-      if (!deleteAttachmentIdArray || (deleteAttachmentIdArray && deleteAttachmentIdArray.length <= 0)) {
-        deferred.resolve();
-        return;
-      }
+      // if (!deleteAttachmentIdArray || (deleteAttachmentIdArray && deleteAttachmentIdArray.length <= 0)) {
+      //   deferred.resolve();
+      //   return;
+      // }
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
       var delFileModel = new Hktdc.Models.DeleteFile();
-      delFileModel.set({
-        files: _.map(deleteAttachmentIdArray, function(AttachmentGUID) {
-          return {GUID: AttachmentGUID};
-        })
-      });
+      // delFileModel.set({
+      //   files: _.map(deleteAttachmentIdArray, function(AttachmentGUID) {
+      //     return {GUID: AttachmentGUID};
+      //   })
+      // });
+      delFileModel.url = delFileModel.url(AttachmentGUID);
       delFileModel.save({}, {
         beforeSend: utils.setAuthHeader,
         type: 'DELETE',
         success: function() {
-          deferred.resolve(deleteAttachmentIdArray);
+          deferred.resolve(AttachmentGUID);
         },
         error: function(e) {
           deferred.reject('Delete File Error' + JSON.stringify(e, null, 2));
@@ -852,6 +857,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       actions = _.map(actions, function(action) {
         action.uri = self.getWorklistURI(action.ActionID);
+        return action;
       });
       console.log('actions', actions);
       var options = _.extend({workflowButtons: actions}, defaultOptions);

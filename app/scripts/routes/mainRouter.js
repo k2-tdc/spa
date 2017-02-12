@@ -42,11 +42,11 @@ Hktdc.Routers = Hktdc.Routers || {};
         searchUserType: 'Applicant',
         UserId: Hktdc.Config.userID,
         EmployeeId: Hktdc.Config.employeeID,
-        CStat: utils.getParameterByName('CStat'),
-        ReferID: utils.getParameterByName('ReferID'),
-        FDate: utils.getParameterByName('FDate'),
-        TDate: utils.getParameterByName('TDate'),
-        Appl: utils.getParameterByName('Appl')
+        status: utils.getParameterByName('status'),
+        refid: utils.getParameterByName('refid'),
+        'start-date': utils.getParameterByName('start-date'),
+        'end-date': utils.getParameterByName('end-date'),
+        applicant: utils.getParameterByName('applicant')
       });
 
       checkStatusModel.set({
@@ -75,11 +75,11 @@ Hktdc.Routers = Hktdc.Routers || {};
         searchUserType: 'Applicant',
         UserId: Hktdc.Config.userID,
         EmployeeId: Hktdc.Config.employeeID,
-        CStat: utils.getParameterByName('CStat'),
-        ReferID: utils.getParameterByName('ReferID'),
-        FDate: utils.getParameterByName('FDate'),
-        TDate: utils.getParameterByName('TDate'),
-        Appl: utils.getParameterByName('Appl')
+        status: utils.getParameterByName('status'),
+        refid: utils.getParameterByName('refid'),
+        'start-date': utils.getParameterByName('start-date'),
+        'end-date': utils.getParameterByName('end-date'),
+        applicant: utils.getParameterByName('applicant')
       });
       checkStatusModel.set({
         mode: 'DRAFT'
@@ -107,11 +107,11 @@ Hktdc.Routers = Hktdc.Routers || {};
         canChooseStatus: true,
         UserId: Hktdc.Config.userID,
         EmployeeId: Hktdc.Config.employeeID,
-        CStat: utils.getParameterByName('CStat'),
-        ReferID: utils.getParameterByName('ReferID'),
-        FDate: utils.getParameterByName('FDate'),
-        TDate: utils.getParameterByName('TDate'),
-        Appl: utils.getParameterByName('Appl')
+        status: utils.getParameterByName('status'),
+        refid: utils.getParameterByName('refid'),
+        'start-date': utils.getParameterByName('start-date'),
+        'end-date': utils.getParameterByName('end-date'),
+        applicant: utils.getParameterByName('applicant')
       });
       checkStatusModel.set({
         mode: 'ALL TASKS'
@@ -139,11 +139,11 @@ Hktdc.Routers = Hktdc.Routers || {};
         searchUserType: 'Sharing User',
         UserId: Hktdc.Config.userID,
         EmployeeId: Hktdc.Config.employeeID,
-        CStat: utils.getParameterByName('CStat'),
-        ReferID: utils.getParameterByName('ReferID'),
-        FDate: utils.getParameterByName('FDate'),
-        TDate: utils.getParameterByName('TDate'),
-        Appl: utils.getParameterByName('Appl')
+        status: utils.getParameterByName('status'),
+        refid: utils.getParameterByName('refid'),
+        'start-date': utils.getParameterByName('start-date'),
+        'end-date': utils.getParameterByName('end-date'),
+        applicant: utils.getParameterByName('applicant')
       });
       checkStatusModel.set({
         mode: 'APPROVAL TASKS'
@@ -209,6 +209,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       var referenceIdModel = new Hktdc.Models.ReferenceId();
       referenceIdModel.fetch({
         beforeSend: utils.setAuthHeader,
+        type: 'POST',
         success: function() {
           $('#mainContent').addClass('compress');
           var newRequestModel = new Hktdc.Models.NewRequest({
@@ -241,7 +242,6 @@ Hktdc.Routers = Hktdc.Routers || {};
         },
         error: function(err) {}
       });
-
 
       /* var referenceIdModel = new Hktdc.Models.ReferenceId();
       referenceIdModel.fetch({

@@ -11,12 +11,12 @@ Hktdc.Models = Hktdc.Models || {};
 
     defaults: {
       refid: '',
-      deptcode: '',
-      'applicantemployeeid': '',
-      'createdatestart': '',
-      'createdateend': '',
-      'completiondatestart': '',
-      'completiondateend': '',
+      department: '',
+      'applicant': '',
+      'create-date-start': '',
+      'create-date-end': '',
+      'completion-date-start': '',
+      'completion-date-end': '',
       'keyword': '',
       'sort': '+dept,+applicant',
 
@@ -30,5 +30,4 @@ Hktdc.Models = Hktdc.Models || {};
       return response;
     }
   });
-
 })();

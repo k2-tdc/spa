@@ -7,13 +7,12 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.SendRequest = Backbone.Model.extend({
 
-    url: function(){
-      return Hktdc.Config.apiURL + '/applications/computer-app';
+    url: function(refId) {
+      return Hktdc.Config.apiURL + '/applications/computer-app?process=CHSW&refid=' + refId;
       // return Hktdc.Config.apiURL + '/SubmitRequests';
     },
 
-    initialize: function() {
-    },
+    initialize: function() {},
 
     defaults: {
       // TODO: pass to applicant => "Review"
@@ -58,12 +57,10 @@ Hktdc.Models = Hktdc.Models || {};
       }
     },
 
-    validate: function(attrs, options) {
-    },
+    validate: function(attrs, options) {},
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });
-
 })();

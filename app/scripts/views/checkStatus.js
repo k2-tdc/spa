@@ -75,7 +75,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       // this.$el.html(this.template(this.model.toJSON()));
-      this.$el.html(this.template(this.model.toJSON()));
+      this.$el.html(this.template({ filter: this.model.toJSON() }));
       this.renderDataTable();
     },
 
@@ -134,7 +134,21 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var usefulData = _.pick(this.model.toJSON(), 'CStat', 'ReferID', 'FDate', 'TDate', 'Appl', 'UserId', 'SUser', 'ProsIncId', 'EmployeeId');
+      var usefulData = _.pick(this.model.toJSON(),
+        'offset',
+        'limit',
+        'sort',
+        'status',
+        'start-date',
+        'end-date',
+        'refid',
+        'applicant',
+
+        // 'UserId',
+        'SUser',
+        'ProsIncId',
+        'EmployeeId'
+      );
       var filterArr = _.map(usefulData, function(val, filter) {
         var value = (_.isNull(val)) ? '' : val;
         return filter + '=' + value;
@@ -258,7 +272,7 @@ Hktdc.Views = Hktdc.Views || {};
       var applicants = _.map(records, function(record) {
         return {
           UserId: record.ApplicantUserId,
-          UserFullName: record.ApplicantUserFNAME
+          UserFullName: record.ApplicantFNAME
         };
       });
       var distinctApplicants = _.uniq(applicants, function(applicant) {
@@ -276,15 +290,18 @@ Hktdc.Views = Hktdc.Views || {};
           selectedDelegation: self.model.toJSON().SUser
         });
       } else {
-        userListView = new Hktdc.Views.ApplicantList({
-          tagName: 'select',
-          className: 'form-control user-select',
-          attributes: {
-            name: 'Appl'
-          },
+        userListView = new Hktdc.Views.ApplicantSelect({
           collection: applicantCollection,
-          selectedApplicant: self.model.toJSON().Appl
+          selectedApplicant: self.model.toJSON().applicant,
+          onSelect: function(val) {
+            if (String(val) !== '0') {
+              self.model.set({ applicant: val });
+            } else {
+              self.model.set({ applicant: '' });
+            }
+          }
         });
+        userListView.render();
       }
 
       $('.user-container', self.el).html(userListView.el);
@@ -299,13 +316,13 @@ Hktdc.Views = Hktdc.Views || {};
         };
       });
       var distinctStatus = _.uniq(allStatus, function(status) {
-        return status.UserId;
+        return status.ReferenceID;
       });
 
       var statusCollection = new Hktdc.Collections.Status(distinctStatus);
       var statusListView = new Hktdc.Views.StatusList({
         collection: statusCollection,
-        selectedStatus: self.model.toJSON().CStat
+        selectedStatus: self.model.toJSON().status
       });
 
       $('.status-container', self.el).html(statusListView.el);

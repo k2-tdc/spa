@@ -30,7 +30,7 @@ Hktdc.Views = Hktdc.Views || {};
   Hktdc.Views.StatusList = Backbone.View.extend({
     tagName: 'select',
     className: 'form-control status-select',
-    attributes: {name: 'CStat'},
+    attributes: {name: 'status'},
     initialize: function(props) {
       _.extend(this, props);
       _.bindAll(this, 'renderStatusItemView');

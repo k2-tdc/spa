@@ -100,9 +100,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     addNotesToServiceObject: function(ev) {
-      // console.log($(ev.target).val());
+      var selectedServiceModel = this.requestFormModel.toJSON().selectedServiceCollection.get(this.model.toJSON().GUID);
       this.model.set({
-        // sl
+        Notes: $(ev.target).val().trim()
+      });
+      selectedServiceModel.set({
         Notes: $(ev.target).val().trim()
       });
     },
@@ -290,7 +292,6 @@ Hktdc.Views = Hktdc.Views || {};
       serviceRequestItemView.render();
       $(this.el).append(serviceRequestItemView.el);
     },
-
 
     render: function() {
       // console.log(this.collection.toJSON());

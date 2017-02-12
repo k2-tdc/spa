@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.ReportApplicant = Backbone.Collection.extend({
 
     url: function() {
-      return Hktdc.Config.apiURL.replace('/api/request', '') + '/users';
+      return Hktdc.Config.apiURL + '/users';
     },
 
     model: Hktdc.Models.Applicant
