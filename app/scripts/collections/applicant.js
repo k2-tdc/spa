@@ -19,6 +19,7 @@ Hktdc.Collections = Hktdc.Collections || {};
       };
     },
 
+    /* This API request is deprecated as the list is get from the distinct users of the results */
     url: function(type) {
       /* type is the listing page mode */
       var validProperties = _.omit(this.getQueryParams(type), function(val, key) {
@@ -30,11 +31,7 @@ Hktdc.Collections = Hktdc.Collections || {};
         return key + '=' + val;
       });
 
-      if (type) {
-        return Hktdc.Config.apiURL + '/GetApplicantList?' + qsArr.join('&');
-      } else {
-        return Hktdc.Config.apiURL + '/GetEmployee?' + qsArr.join('&');
-      }
+      return Hktdc.Config.apiURL + '/GetApplicantList?' + qsArr.join('&');
     }
   });
 })();

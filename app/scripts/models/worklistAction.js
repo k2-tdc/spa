@@ -7,8 +7,8 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.WorklistAction = Backbone.Model.extend({
 
-    url: function() {
-      return Hktdc.Config.apiURL + '/WorklistAction';
+    url: function(action) {
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/' + action;
     },
 
     initialize: function() {},

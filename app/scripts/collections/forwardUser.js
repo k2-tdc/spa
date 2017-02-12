@@ -10,7 +10,7 @@ Hktdc.Collections = Hktdc.Collections || {};
     model: Hktdc.Models.Employee,
 
     url: function(applicant) {
-      return Hktdc.Config.apiURL.replace('workflowdev', 'workflow').replace('/api/request', '') + '/applications/computer-app/service-providers?applicant=' + (applicant || '');
+      return Hktdc.Config.apiURL + '/applications/computer-app/service-providers?applicant=' + (applicant || '');
     }
 
   });

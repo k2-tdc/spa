@@ -11,21 +11,14 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     getQueryParams: function() {
       return {
-        // RuleID: Hktdc.Config.RuleCode,
-        // WorkId: Hktdc.Config.userID,
         UserId: Hktdc.Config.userID
       };
     },
 
     url: function() {
-      // var qsArr = _.map(this.getQueryParams(), function(val, key) {
-      //   return key + '=' + val;
-      // });
-
       // return Hktdc.Config.apiURL + '/GetForwardEmployee?' + qsArr.join('&');
-
       // TODO: new api change to:
-      return Hktdc.Config.apiURL.replace('workflowdev', 'workflow').replace('/api/request', '') + '/admin/users';
+      return Hktdc.Config.apiURL + '/admin/users';
     }
 
   });

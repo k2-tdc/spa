@@ -12,27 +12,20 @@ Hktdc.Collections = Hktdc.Collections || {};
         'UserId=' + Hktdc.Config.userID
       ];
 
-      if (type === 'Approval') {
+      if (type === 'Approval' || type === 'Worklist') {
         qsArr.push('ProsIncId=' + procId);
         qsArr.push('ReferID=' + refId);
-        qsArr.push('SN=' + sn);
-        return Hktdc.Config.apiURL + '/GetApproveDetails?' + qsArr.join('&');
-      } else if (type === 'Worklist') {
-        qsArr.push('ReferID=' + refId);
-        qsArr.push('ProsIncId=' + procId);
-        qsArr.push('SN=' + sn);
-        return Hktdc.Config.apiURL + '/GetWorklistDetails?' + qsArr.join('&');
+        return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/' + sn + '?' + qsArr.join('&');
       } else if (type === 'Draft') {
         qsArr.push('ReferID=' + refId);
-        return Hktdc.Config.apiURL + '/GetDraftDetails?' + qsArr.join('&');
+        return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app/' + refId + '?' + qsArr.join('&');
       } else if (type === 'History') {
         qsArr = [];
         qsArr.push('ProInstID=' + procId);
-        return Hktdc.Config.apiURL.replace('/api/request', '').replace('workflowdev', 'workflow') + '/users/' + Hktdc.Config.userID + '/approval-history/computer-app/' + refId + '?' + qsArr.join('&');
+        return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/approval-history/computer-app/' + refId + '?' + qsArr.join('&');
       } else {
-        qsArr.push('ReferID=' + refId);
         qsArr.push('ProInstID=' + procId);
-        return Hktdc.Config.apiURL + '/GetRequestDetails?' + qsArr.join('&');
+        return Hktdc.Config.apiURL + '/applications/computer-app/' + refId + '?' + qsArr.join('&');
       }
     },
 

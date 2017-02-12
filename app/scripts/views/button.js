@@ -89,6 +89,7 @@ Hktdc.Views = Hktdc.Views || {};
       Backbone.emulateJSON = true;
       var worklistModel = new Hktdc.Models.WorklistAction();
       worklistModel.set(body);
+      worklistModel.url = worklistModel.url($(ev.target).attr('uri'));
       worklistModel.save({}, {
         beforeSend: utils.setAuthHeader,
         success: function(action, response) {
@@ -113,6 +114,43 @@ Hktdc.Views = Hktdc.Views || {};
           }
         }
       });
+    },
+
+    getWorklistURI: function(actionId) {
+      var mapping = [
+        { ActionID: '3', URI: 'approve'},
+        { ActionID: '4', URI: 'reject'},
+        { ActionID: '5', URI: 'return-to-applicant'},
+        // { ActionID: '26', URI: 'recall'},
+        { ActionID: '1', URI: 'send-to-approver'},
+        { ActionID: '2', URI: 'return-to-prepare'},
+        { ActionID: '28', URI: 'delete'},
+        { ActionID: '7', URI: 'reject'},
+        { ActionID: '8', URI: 'complete'},
+        { ActionID: '9', URI: 'forward'},
+        { ActionID: '10', URI: 'cancel'},
+        { ActionID: '11', URI: 'send-to-its'},
+        { ActionID: '22', URI: 'send-to-applicant'},
+        { ActionID: '23', URI: 'delete'},
+        { ActionID: '12', URI: 'recommend'},
+        { ActionID: '13', URI: 'reject'},
+        { ActionID: '14', URI: 'reject'},
+        { ActionID: '15', URI: 'complete'},
+        { ActionID: '16', URI: 'forward'},
+        { ActionID: '17', URI: 'cancel'},
+        { ActionID: '18', URI: 'reject'},
+        { ActionID: '19', URI: 'complete'},
+        { ActionID: '20', URI: 'forward'},
+        { ActionID: '21', URI: 'cancel'},
+        { ActionID: '24', URI: 'send-to-approver'},
+        { ActionID: '25', URI: 'return-to-prepare'}
+        // { ActionID: '6', Action: 'Recall', ButtonName: 'Recall', URI: 'recall'},
+        // { ActionID: '29', Action: 'Submit', ButtonName: 'Submitted', URI: 'submitted'},
+      ];
+
+      return _.find(mapping, function(obj) {
+        return obj.ActionID === actionId;
+      }).URL;
     },
 
     clickSaveHandler: function() {
@@ -192,11 +230,13 @@ Hktdc.Views = Hktdc.Views || {};
           Backbone.emulateJSON = true;
           var refId = self.requestFormModel.toJSON().ReferenceID;
           var DeleteRequestModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
+            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app?ReferID=' + refId
+            // url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
           });
           var DeleteRequestModelInstance = new DeleteRequestModel();
           DeleteRequestModelInstance.save(null, {
             beforeSend: utils.setAuthHeader,
+            type: 'DELETE',
             success: function(model, response) {
               // console.log('success: ', a);
               // console.log(b);
@@ -232,7 +272,7 @@ Hktdc.Views = Hktdc.Views || {};
           Backbone.emulateHTTP = true;
           Backbone.emulateJSON = true;
           var ActionModel = Backbone.Model.extend({
-            urlRoot: Hktdc.Config.apiURL + '/RecallAction'
+            urlRoot: Hktdc.Config.apiURL + '/applications/computer-app/' + self.requestFormModel.toJSON().ReferenceID + '/recall'
           });
           var action = new ActionModel();
           action.set({
@@ -566,6 +606,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
       delFileModel.save({}, {
         beforeSend: utils.setAuthHeader,
+        type: 'DELETE',
         success: function() {
           deferred.resolve(deleteAttachmentIdArray);
         },
@@ -808,6 +849,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderRequestFormButtonByActions: function(actions, defaultOptions) {
+      var self = this;
+      actions = _.map(actions, function(action) {
+        action.uri = self.getWorklistURI(action.ActionID);
+      });
+      console.log('actions', actions);
       var options = _.extend({workflowButtons: actions}, defaultOptions);
       this.render(options);
     },

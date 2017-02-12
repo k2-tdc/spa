@@ -17,11 +17,13 @@ Hktdc.Models = Hktdc.Models || {};
       searchUserType: '',
       showAdvanced: false,
 
+      refid: '',
+      'start-date': '',
+      'end-date': '',
+      offset: 10,
+      limit: 99999,
       CStat: '',
-      ReferID: '',
-      FDate: '',
-      TDate: '',
-      Appl: '',
+      applicant: '',
       UserId: '',
       SUser: '',
 

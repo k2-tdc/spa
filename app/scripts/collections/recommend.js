@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
@@ -10,13 +10,13 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     url: function(ApproverRuleCode, applicantUserId, cost) {
       var WorkerId = '';
-      return Hktdc.Config.apiURL + '/GetApprover?RuleID=' + ApproverRuleCode +
-      '&WorkId=' + WorkerId +
-      '&UserId=' + Hktdc.Config.userID +
-      '&Applicant=' + applicantUserId +
-      '&EstCost=' + cost;
+      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/workers/?' +
+        'rule=' + ApproverRuleCode +
+        '&WorkId=' + WorkerId +
+        '&UserId=' + Hktdc.Config.userID +
+        '&Applicant=' + applicantUserId +
+        '&EstCost=' + cost;
       // return Hktdc.Config.apiURL + '/GetEmployee?RuleID=' + ApproverRuleCode + '&WorkId=&UserId=' + $('#divapplicant').attr("eid") + '&EstCost=' + $('#txtestimatedcost').val() + ''
     }
   });
-
 })();

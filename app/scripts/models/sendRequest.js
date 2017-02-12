@@ -8,7 +8,8 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.SendRequest = Backbone.Model.extend({
 
     url: function(){
-      return Hktdc.Config.apiURL + '/SubmitRequests';
+      return Hktdc.Config.apiURL + '/applications/computer-app';
+      // return Hktdc.Config.apiURL + '/SubmitRequests';
     },
 
     initialize: function() {

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _ */
+/* global Hktdc, Backbone */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
@@ -9,22 +9,9 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     model: Hktdc.Models.Employee,
 
-    getQueryParams: function() {
-      return {
-        RuleID: Hktdc.Config.RuleCode,
-        UserId: '',
-        WorkId: Hktdc.Config.userID
-      };
-    },
-
     url: function() {
-      var qsArr = _.map(this.getQueryParams(), function(val, key) {
-        return key + '=' + val;
-      });
-
-      return Hktdc.Config.apiURL + '/GetEmployee?' + qsArr.join('&');
+      // return Hktdc.Config.apiURL + '/GetEmployee?' + qsArr.join('&');
+      return Hktdc.Config.apiURL + '/admin/workers/' + Hktdc.Config.userID + '/owners?rule=' + Hktdc.Config.RuleCode;
     }
-
   });
-
 })();

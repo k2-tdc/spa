@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, utils, _, moment, Q */
+/* global Hktdc, Backbone, JST, $, utils, _, NProgress, Q, Blob, BlobBuilder, XMLHttpRequest */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -167,7 +167,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     exportHandler: function() {
       var queryParams = _.omit(this.model.toJSON(), 'departmentCollection', 'applicantCollection');
-      var url = Hktdc.Config.apiURL.replace('/api/request', '') + '/applications/computer-app/reports/chsw001' + utils.getQueryString(queryParams);
+      var url = Hktdc.Config.apiURL + '/applications/computer-app/usage-report' + utils.getQueryString(queryParams);
       var xhr = new XMLHttpRequest();
       xhr.addEventListener('loadstart', function() {
         NProgress.start();

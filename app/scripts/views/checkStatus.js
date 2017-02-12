@@ -71,42 +71,12 @@ Hktdc.Views = Hktdc.Views || {};
           $(ev.target).data('open', false);
         });
 
-      Q.all([
-        this.loadSelectUserList(),
-        this.loadStatus()
-      ])
-        .then(function(results) {
-          var userCollection = results[0];
-          var statusCollection = results[1];
-          // console.log(self.model.toJSON().mode);
-          if (self.model.toJSON().mode === 'APPROVAL TASKS' || self.model.toJSON().mode === 'ALL TASKS') {
-            var userListView = new Hktdc.Views.DelegationList({
-              tagName: 'select',
-              className: 'form-control user-select',
-              attributes: {name: 'SUser'},
-              collection: userCollection,
-              selectedDelegation: self.model.toJSON().SUser
-            });
-          } else {
-            var userListView = new Hktdc.Views.ApplicantList({
-              tagName: 'select',
-              className: 'form-control user-select',
-              attributes: {name: 'Appl'},
-              collection: userCollection,
-              selectedApplicant: self.model.toJSON().Appl
-            });
-          }
+    },
 
-          var statusListView = new Hktdc.Views.StatusList({
-            collection: statusCollection,
-            selectedStatus: self.model.toJSON().CStat
-          });
-
-          // console.log(userListView.el);
-          $('.user-container', self.el).html(userListView.el);
-          // console.log(statusListView.el);
-          $('.status-container', self.el).html(statusListView.el);
-        });
+    render: function() {
+      // this.$el.html(this.template(this.model.toJSON()));
+      this.$el.html(this.template(this.model.toJSON()));
+      this.renderDataTable();
     },
 
     updateModel: function(field, value) {
@@ -173,16 +143,18 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.);
       switch (this.model.toJSON().mode) {
         case 'DRAFT':
-          statusApiURL = Hktdc.Config.apiURL + '/GetDraftList?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app?' + filterArr.join('&');
           break;
         case 'ALL TASKS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetWorklist?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app?' + filterArr.join('&');
           break;
         case 'APPROVAL TASKS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetApproveList?' + filterArr.join('&');
+          // statusApiURL = Hktdc.Config.apiURL + '/GetApproveList?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/approval-work-list/computer-app?' + filterArr.join('&');
           break;
         case 'CHECK STATUS':
-          statusApiURL = Hktdc.Config.apiURL + '/GetRequestList?' + filterArr.join('&');
+          // statusApiURL = Hktdc.Config.apiURL + '/GetRequestList?' + filterArr.join('&');
+          statusApiURL = Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/applications/computer-app?' + filterArr.join('&');
           break;
         default:
           console.log('mode error');
@@ -191,11 +163,8 @@ Hktdc.Views = Hktdc.Views || {};
       return statusApiURL;
     },
 
-    render: function() {
-      // this.$el.html(this.template(this.model.toJSON()));
+    renderDataTable: function() {
       var self = this;
-      this.$el.html(this.template(this.model.toJSON()));
-
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable funciton */
       this.statusDataTable = $('#statusTable', this.el).DataTable({
@@ -227,7 +196,9 @@ Hktdc.Views = Hktdc.Views || {};
           }
         },
         createdRow: function(row, data, index) {
-          $(row).css({cursor: 'pointer'});
+          $(row).css({
+            cursor: 'pointer'
+          });
           $(row).hover(function() {
             $(this).addClass('highlight');
           }, function() {
@@ -247,7 +218,12 @@ Hktdc.Views = Hktdc.Views || {};
           data: 'summary'
         }, {
           data: 'status'
-        }]
+        }],
+        initComplete: function(settings, records) {
+          self.renderUserFilter(records);
+          self.renderStatusFilter(records);
+        }
+
       });
 
       $('#statusTable tbody', this.el).on('click', 'tr', function(ev) {
@@ -270,94 +246,69 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           typePath = '/check/';
         }
-        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath, {trigger: true});
-      });
-
-      $('#statusTable tbody', this.el).on('click', '.btn-del', function(ev) {
-        var isConfirm = confirm("Are you sure to delete draft?");
-        if (isConfirm) {
-          Backbone.emulateHTTP = true;
-          Backbone.emulateJSON = true;
-          ev.stopPropagation();
-          var rowData = self.statusDataTable.row($(this).parents('tr')).data();
-          var refId = rowData.refId;
-          var DeleteRequestModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
-          });
-          var DeleteRequestModelInstance = new DeleteRequestModel();
-          DeleteRequestModelInstance.save(null, {
-            beforeSend: utils.setAuthHeader,
-            success: function(model, response) {
-              // console.log('success: ', a);
-              // console.log(b);
-              self.statusDataTable.ajax.reload();
-              Hktdc.Dispatcher.trigger('reloadMenu');
-            },
-            error: function(err) {
-              console.log(err);
-              // console.log(b);
-            }
-          });
-        } else {
-          ev.stopPropagation();
-          return false;
-        }
-        // var rowData = self.statusDataTable.row(this).data();
-        // Backbone.history.navigate('request/' + rowData.refId, {trigger: true});
+        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath, {
+          trigger: true
+        });
       });
     },
 
-    loadSelectUserList: function() {
-      /* employee component */
-      var deferred = Q.defer();
-      // var self = this;
-      if (this.model.toJSON().mode === 'ALL TASKS' || this.model.toJSON().mode === 'APPROVAL TASKS') {
-        var delegationCollection = new Hktdc.Collections.Delegation();
-        delegationCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
-            // console.log('selectedCCCollection: ', self.model);
-            deferred.resolve(delegationCollection);
+    renderUserFilter: function(records) {
+      var self = this;
+      var userListView;
+      var applicants = _.map(records, function(record) {
+        return {
+          UserId: record.ApplicantUserId,
+          UserFullName: record.ApplicantUserFNAME
+        };
+      });
+      var distinctApplicants = _.uniq(applicants, function(applicant) {
+        return applicant.UserId;
+      });
+      var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
+      if (self.model.toJSON().mode === 'APPROVAL TASKS' || self.model.toJSON().mode === 'ALL TASKS') {
+        userListView = new Hktdc.Views.DelegationList({
+          tagName: 'select',
+          className: 'form-control user-select',
+          attributes: {
+            name: 'SUser'
           },
-          error: function(err) {
-            deferred.reject(err);
-          }
+          collection: applicantCollection,
+          selectedDelegation: self.model.toJSON().SUser
         });
       } else {
-        var applicantCollection = new Hktdc.Collections.Applicant();
-        applicantCollection.url = applicantCollection.url(this.model.toJSON().mode);
-        applicantCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
-            // console.log('selectedCCCollection: ', self.model);
-            deferred.resolve(applicantCollection);
+        userListView = new Hktdc.Views.ApplicantList({
+          tagName: 'select',
+          className: 'form-control user-select',
+          attributes: {
+            name: 'Appl'
           },
-          error: function(err) {
-            deferred.reject(err);
-          }
+          collection: applicantCollection,
+          selectedApplicant: self.model.toJSON().Appl
         });
       }
 
-      return deferred.promise;
+      $('.user-container', self.el).html(userListView.el);
     },
 
-    loadStatus: function() {
-      var deferred = Q.defer();
-      var statusCollection = new Hktdc.Collections.Status();
-      var task = this.model.toJSON().mode;
-      statusCollection.url = statusCollection.url(task);
-      statusCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(statusCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
+    renderStatusFilter: function(records) {
+      var self = this;
+      var allStatus = _.map(records, function(record) {
+        return {
+          ReferenceName: record.DisplayStatus,
+          ReferenceID: record.FormStatus
+        };
       });
-      return deferred.promise;
+      var distinctStatus = _.uniq(allStatus, function(status) {
+        return status.UserId;
+      });
+
+      var statusCollection = new Hktdc.Collections.Status(distinctStatus);
+      var statusListView = new Hktdc.Views.StatusList({
+        collection: statusCollection,
+        selectedStatus: self.model.toJSON().CStat
+      });
+
+      $('.status-container', self.el).html(statusListView.el);
     },
 
     getSummaryFromRow: function(formID, requestList) {
@@ -367,12 +318,13 @@ Hktdc.Views = Hktdc.Views || {};
         _.each(Level1.Level2, function(Level2) {
           summary += ' <div><strong><span>' + Level2.Name + ' </span></strong></div>';
           _.each(Level2.Level3, function(Level3) {
+            var lv3Content;
             if (String(Level3.ControlFlag) === '2') {
-              var lv3Content = (Level3.SValue) ? '<span>&nbsp;' + Level3.SValue.split('#*#')[0] + '</span>' : '';
+              lv3Content = (Level3.SValue) ? '<span>&nbsp;' + Level3.SValue.split('#*#')[0] + '</span>' : '';
               summary += '<div><span>-</span>' + lv3Content + '</div> ';
             } else {
               var lv3Title = '<span>&nbsp;' + Level3.Name + ' </span>';
-              var lv3Content = (Level3.SValue) ? '<span>: ' + Level3.SValue + '</span>' : '';
+              lv3Content = (Level3.SValue) ? '<span>: ' + Level3.SValue + '</span>' : '';
               if (Level3.Name) {
                 summary += '<div><span>-</span>' + lv3Title + lv3Content + '</div> ';
               }
