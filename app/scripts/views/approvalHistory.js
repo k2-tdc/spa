@@ -36,33 +36,6 @@ Hktdc.Views = Hktdc.Views || {};
       self.doToggleAdvanceMode(self.model.toJSON().showAdvanced);
       self.renderDatePicker();
       self.renderDataTable();
-
-      Q.all([
-        self.loadSelectUserList(),
-        self.loadStatus()
-      ])
-        .then(function(results) {
-          var userCollection = results[0];
-          var statusCollection = results[1];
-
-          var userListView = new Hktdc.Views.ApplicantSelect({
-            collection: userCollection,
-            selectedApplicant: self.model.toJSON().applicant,
-            onSelect: function(val) {
-              self.model.set({ applicant: val });
-            }
-          });
-          userListView.render();
-          var statusListView = new Hktdc.Views.StatusList({
-            collection: statusCollection,
-            selectedStatus: self.model.toJSON().status
-          });
-
-          // console.log(userListView.el);
-          $('.user-container', self.el).html(userListView.el);
-          // console.log(statusListView.el);
-          $('.status-container', self.el).html(statusListView.el);
-        });
     },
 
     renderDatePicker: function() {
@@ -159,6 +132,10 @@ Hktdc.Views = Hktdc.Views || {};
             // return { data: modData, recordsTotal: modData.length };
           }
         },
+        initComplete: function(settings, records) {
+          self.renderUserFilter(records);
+          self.renderStatusFilter(records);
+        },
         createdRow: function(row, data, index) {
           $(row).css({
             cursor: 'pointer'
@@ -194,6 +171,49 @@ Hktdc.Views = Hktdc.Views || {};
           trigger: true
         });
       });
+    },
+
+    renderUserFilter: function(records) {
+      var self = this;
+      var applicants = _.map(records, function(record) {
+        return {
+          UserId: record.ApplicantUserId,
+          UserFullName: record.ApplicantFNAME
+        };
+      });
+      var distinctApplicants = _.uniq(applicants, function(applicant) {
+        return applicant.UserId;
+      });
+      var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
+      var userListView = new Hktdc.Views.ApplicantSelect({
+        collection: applicantCollection,
+        selectedApplicant: self.model.toJSON().applicant,
+        onSelect: function(val) {
+          self.model.set({ applicant: val });
+        }
+      });
+      userListView.render();
+      $('.user-container', self.el).html(userListView.el);
+    },
+
+    renderStatusFilter: function(records) {
+      var self = this;
+      var allStatus = _.map(records, function(record) {
+        return {
+          ReferenceName: record.DisplayStatus,
+          ReferenceID: record.FormStatus
+        };
+      });
+      var distinctStatus = _.uniq(allStatus, function(status) {
+        return status.ReferenceID;
+      });
+      var statusCollection = new Hktdc.Collections.Status(distinctStatus);
+
+      var statusListView = new Hktdc.Views.StatusList({
+        collection: statusCollection,
+        selectedStatus: self.model.toJSON().status
+      });
+      $('.status-container', self.el).html(statusListView.el);
     },
 
     loadSelectUserList: function() {

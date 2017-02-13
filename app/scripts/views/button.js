@@ -565,15 +565,13 @@ Hktdc.Views = Hktdc.Views || {};
         // return file.toJSON().file.name;
         return (file.file) && file.file.name;
       });
-      // console.log(filename);
-      sendAttachmentModel.url = sendAttachmentModel.url();
-      sendAttachmentModel.set({
-        refid: refId,
-        filename: filename
-      });
+
+      sendAttachmentModel.url = sendAttachmentModel.url(refId);
+
       _.each(files, function(file, i) {
-        // console.log(file.file);
         data.append('file' + i, file.file);
+        // data.append('refid', refId);
+        // data.append('process', 'CHSW');
       });
 
       // console.log('final data: ', data);
