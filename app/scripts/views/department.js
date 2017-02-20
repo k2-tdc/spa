@@ -14,7 +14,7 @@ Hktdc.Views = Hktdc.Views || {};
       console.debug('[ views/department.js ] initialize: DepartmentSelect');
       _.bindAll(this, 'renderDepartmentItem');
       _.extend(this, props);
-      this.listenTo(this.collection, 'change', this.render);
+      // this.listenTo(this.collection, 'change', this.render);
     },
 
     render: function() {

@@ -10,7 +10,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     url: function(ApproverRuleCode, applicantUserId, cost) {
       var WorkerId = '';
-      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID + '/workers/?' +
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/workers/?' +
         'rule=' + ApproverRuleCode +
         '&WorkId=' + WorkerId +
         '&UserId=' + Hktdc.Config.userID +

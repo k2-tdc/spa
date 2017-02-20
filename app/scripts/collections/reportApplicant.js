@@ -11,7 +11,7 @@ Hktdc.Collections = Hktdc.Collections || {};
       return Hktdc.Config.apiURL + '/users';
     },
 
-    model: Hktdc.Models.Applicant
+    model: Hktdc.Models.ReportApplicant
 
   });
 })();

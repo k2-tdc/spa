@@ -104,9 +104,11 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.set({
         Notes: $(ev.target).val().trim()
       });
-      selectedServiceModel.set({
-        Notes: $(ev.target).val().trim()
-      });
+      if (selectedServiceModel) {
+        selectedServiceModel.set({
+          Notes: $(ev.target).val().trim()
+        });
+      }
     },
 
     initModelChangeHandler: function() {

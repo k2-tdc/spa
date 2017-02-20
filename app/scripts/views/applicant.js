@@ -69,7 +69,7 @@ Hktdc.Views = Hktdc.Views || {};
       console.debug('[ views/applicant.js ] initialize: ApplicantSelect');
       _.bindAll(this, 'renderApplicantItem');
       _.extend(this, props);
-      this.listenTo(this.collection, 'change', this.render);
+      // this.listenTo(this.collection, 'change', this.render);
     },
 
     render: function() {
@@ -77,6 +77,10 @@ Hktdc.Views = Hktdc.Views || {};
       this.collection.unshift({
         UserFullName: '-- Select --',
         UserId: 0
+        
+        // in some collection (e.g. report applicant) may be:
+        // FullName: '-- Select --',
+        // UserID: 0
       });
       this.collection.each(this.renderApplicantItem);
       setTimeout(function() {
@@ -86,7 +90,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     selectApplicantHandler: function(ev) {
       if (this.onSelect) {
-        this.onSelect($(ev.target).find('option:selected').val());
+        this.onSelect(this.collection.get($(ev.target).find('option:selected').val()));
       }
     },
 
@@ -112,8 +116,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       this.$el.html(this.template({user: this.model.toJSON()}));
-      this.$el.attr('value', this.model.toJSON().UserId);
-      if (this.selectedApplicant === this.model.toJSON().UserId) {
+      this.$el.attr('value', this.model.toJSON().UserId || this.model.toJSON().UserID);
+      if ((this.selectedApplicant === this.model.toJSON().UserId) || this.selectedApplicant === this.model.toJSON().UserID) {
         this.$el.prop('selected', true);
       }
     }

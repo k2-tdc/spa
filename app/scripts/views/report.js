@@ -148,10 +148,12 @@ Hktdc.Views = Hktdc.Views || {};
     renderApplicantSelect: function() {
       try {
         var self = this;
-        var applicantSelectView = new Hktdc.Views.ApplicantSelect({
+        // console.log(self.model.toJSON().applicantCollection.toJSON());
+        var applicantSelectView = new Hktdc.Views.ReportApplicantSelect({
           collection: self.model.toJSON().applicantCollection,
           selectedApplicant: self.model.toJSON().applicant,
-          onSelect: function(applicantId) {
+          onSelect: function(model) {
+            var applicantId = model.toJSON().UserID;
             self.model.set({
               applicant: applicantId
             });

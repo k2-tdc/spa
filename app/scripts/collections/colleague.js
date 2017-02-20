@@ -17,7 +17,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     url: function() {
       // return Hktdc.Config.apiURL + '/GetForwardEmployee?' + qsArr.join('&');
-      return Hktdc.Config.apiURL + '/admin/users';
+      return Hktdc.Config.apiURL + '/users';
     }
 
   });

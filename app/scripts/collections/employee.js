@@ -11,7 +11,7 @@ Hktdc.Collections = Hktdc.Collections || {};
 
     url: function() {
       // return Hktdc.Config.apiURL + '/GetEmployee?' + qsArr.join('&');
-      return Hktdc.Config.apiURL + '/admin/workers/' + Hktdc.Config.userID + '/owners?rule=' + Hktdc.Config.RuleCode;
+      return Hktdc.Config.apiURL + '/workers/' + Hktdc.Config.userID + '/owners?rule=' + Hktdc.Config.RuleCode;
     }
   });
 })();

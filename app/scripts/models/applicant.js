@@ -15,7 +15,7 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     url: function() {
-      return Hktdc.Config.apiURL + '/admin/users/' + Hktdc.Config.userID +
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID +
         '?Applicant=' + this.attributes.UserId;
       // return Hktdc.Config.apiURL + '/GetApplicant?UserId=' + Hktdc.Config.userID + '&Applicant=' + this.attributes.UserId;
     }

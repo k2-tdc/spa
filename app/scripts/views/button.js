@@ -37,7 +37,7 @@ Hktdc.Views = Hktdc.Views || {};
         message: 'Are you sure want to ' + actionName + '?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
-          if (status === 'Review' && self.model.toJSON().showSave) {
+          if (self.model.toJSON().showSave && (status === 'Review' || status === 'Return' || status === 'Rework')) {
             self.saveAndApprover(status, 'approver', function() {
               self.workflowHandler(ev, function() {
                 console.log('workflow handler success');
@@ -526,7 +526,7 @@ Hktdc.Views = Hktdc.Views || {};
       Backbone.emulateHTTP = true;
       Backbone.emulateJSON = true;
 
-      sendRequestModel.url = sendRequestModel.url(this.requestFormModel.toJSON().FormID);
+      sendRequestModel.url = sendRequestModel.url(this.requestFormModel.toJSON().ReferenceID);
       sendRequestModel.save({}, {
         beforeSend: utils.setAuthHeader,
         success: function(mymodel, response) {

@@ -9,14 +9,13 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/newRequest.ejs'],
 
     events: {
-      'mousedown .recommend-select': 'mousedownRecommendSelect',
+      // 'mousedown .recommend-select': 'mousedownRecommendSelect',
       'blur #txtjustification': 'updateNewRequestModel',
       // 'blur #txtexpectedDD': 'updateDateModelByEvent',
       'blur #txtfrequency': 'updateNewRequestModel',
       'blur #txtestimatedcost': 'updateNewRequestModel',
       'blur #txtbudgetprovided': 'updateNewRequestModel',
       // 'blur #txtbudgetsum': 'updateNewRequestModel',
-      'blur #txtRemark': 'updateNewRequestModel',
       'blur #txtremark': 'updateNewRequestModel'
     },
 
@@ -517,7 +516,6 @@ Hktdc.Views = Hktdc.Views || {};
         success: function() {
           deferred.resolve(fileRuleModel);
           // console.log(fileRuleModel.toJSON());
-
         },
         error: function(err) {
           deferred.reject(err);
@@ -548,12 +546,17 @@ Hktdc.Views = Hktdc.Views || {};
       var applicantSelectView = new Hktdc.Views.ApplicantSelect({
         collection: new Hktdc.Collections.Applicant(employeeArray),
         selectedApplicant: self.model.toJSON().ApplicantUserID || Hktdc.Config.userID,
-        onSelect: function(val) {
-          this.model.set({ applicant: val });
+        onSelect: function(model) {
+          // console.log(model.toJSON());
+          var val = model.toJSON().UserId;
+          self.model.set({
+            applicant: val,
+            selectedApplicantModel: model
+          });
         }
       });
       applicantSelectView.render();
-      
+
       $('.applicant-container', this.el).append(applicantSelectView.el);
       /* check me === formModel.applicant => disabled applicant button because preparer prepare form to applicant */
       /* this.model.ApplicantUserID present means it's not from new form */
@@ -592,9 +595,12 @@ Hktdc.Views = Hktdc.Views || {};
       var me = Hktdc.Config.userID;
       var preparer = this.model.toJSON().PreparerUserID;
       if (
-        ((this.model.toJSON().FormStatus && this.model.toJSON().FormStatus !== 'Draft') ||
-          (this.model.toJSON().FormStatus === 'Approval' && me !== preparer)) &&
-        (this.model.toJSON().actions)
+        this.model.toJSON().mode === 'read' &&
+        (
+          (this.model.toJSON().FormStatus && this.model.toJSON().FormStatus !== 'Draft') ||
+          (this.model.toJSON().FormStatus === 'Approval' && me !== preparer)
+        ) &&
+        this.model.toJSON().actions
       ) {
         this.model.set({
           showRemark: true

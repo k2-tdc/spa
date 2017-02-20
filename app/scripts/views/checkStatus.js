@@ -293,7 +293,8 @@ Hktdc.Views = Hktdc.Views || {};
         userListView = new Hktdc.Views.ApplicantSelect({
           collection: applicantCollection,
           selectedApplicant: self.model.toJSON().applicant,
-          onSelect: function(val) {
+          onSelect: function(model) {
+            var val = model.toJSON().UserId;
             if (String(val) !== '0') {
               self.model.set({ applicant: val });
             } else {
