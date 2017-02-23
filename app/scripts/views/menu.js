@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _ */
+/* global Hktdc, Backbone, JST, $, _, utils */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -121,11 +121,39 @@ Hktdc.Views = Hktdc.Views || {};
       if ($(ev.target).is('a')) {
         $target = $(ev.target).parent('li');
       }
-      if (Backbone.history.getHash().indexOf(pagePath) >= 0) {
-        Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
-      } else {
-        Backbone.history.navigate(pagePath, true);
-      }
+
+      var pagePath = $target.attr('routename').toLowerCase();
+      var menuObj = _.find(this.model.toJSON().Menu, function(menu) {
+        return menu.RouteName === $target.attr('routename');
+      });
+      var pageGUID = menuObj.MenuId;
+      var checkPagePermissionModel = new Hktdc.Models.Menu();
+      checkPagePermissionModel.url = checkPagePermissionModel.url(pageGUID);
+      checkPagePermissionModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function(model, data) {
+          if (data.EmployeeNo) {
+            if (Backbone.history.getHash().indexOf(pagePath) >= 0) {
+              Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
+            } else {
+              Backbone.history.navigate(pagePath, true);
+            }
+          } else {
+            Hktdc.Dispatcher.trigger('openAlert', {
+              message: 'Permission denied for accessing this page',
+              title: 'error',
+              type: 'error'
+            });
+          }
+        },
+        error: function() {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Permission denied for accessing this page',
+            title: 'error',
+            type: 'error'
+          });
+        }
+      });
     },
 
     setActiveMenu: function(currentRoute, route) {
@@ -156,7 +184,6 @@ Hktdc.Views = Hktdc.Views || {};
         // TODO: pop the error box
         console.log(e);
       }
-    },
-
+    }
   });
 })();

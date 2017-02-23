@@ -46,7 +46,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         refid: utils.getParameterByName('refid'),
         'start-date': utils.getParameterByName('start-date'),
         'end-date': utils.getParameterByName('end-date'),
-        applicant: utils.getParameterByName('applicant')
+        applicant: utils.getParameterByName('applicant') || ''
       });
 
       checkStatusModel.set({
@@ -79,7 +79,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         refid: utils.getParameterByName('refid'),
         'start-date': utils.getParameterByName('start-date'),
         'end-date': utils.getParameterByName('end-date'),
-        applicant: utils.getParameterByName('applicant')
+        applicant: utils.getParameterByName('applicant') || ''
       });
       checkStatusModel.set({
         mode: 'DRAFT'
@@ -111,7 +111,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         refid: utils.getParameterByName('refid'),
         'start-date': utils.getParameterByName('start-date'),
         'end-date': utils.getParameterByName('end-date'),
-        applicant: utils.getParameterByName('applicant')
+        applicant: utils.getParameterByName('applicant') || ''
       });
       checkStatusModel.set({
         mode: 'ALL TASKS'
@@ -143,7 +143,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         refid: utils.getParameterByName('refid'),
         'start-date': utils.getParameterByName('start-date'),
         'end-date': utils.getParameterByName('end-date'),
-        applicant: utils.getParameterByName('applicant')
+        applicant: utils.getParameterByName('applicant') || ''
       });
       checkStatusModel.set({
         mode: 'APPROVAL TASKS'
@@ -171,7 +171,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           canChooseStatus: true,
           userid: Hktdc.Config.userID,
           employeeid: Hktdc.Config.employeeID,
-          applicant: utils.getParameterByName('applicant'),
+          applicant: utils.getParameterByName('applicant') || '',
           'approval-start-date': utils.getParameterByName('approval-start-date'),
           'approval-end-date': utils.getParameterByName('approval-end-date'),
           status: utils.getParameterByName('status'),
