@@ -123,7 +123,14 @@ Hktdc.Views = Hktdc.Views || {};
       }
 
       var pagePath = $target.attr('routename').toLowerCase();
-      var menuObj = _.find(this.model.toJSON().Menu, function(menu) {
+      var allMainMenu = _.filter(this.model.toJSON().Menu, function(menu) {
+        return menu.MenuId;
+      });
+      var allSubMenu = _.flatten(_.pluck(_.reject(this.model.toJSON().Menu, function(menu) {
+        return menu.MenuId;
+      }), 'sumenu'));
+      var allMenu = allMainMenu.concat(allSubMenu);
+      var menuObj = _.find(allMenu, function(menu) {
         return menu.RouteName === $target.attr('routename');
       });
       var pageGUID = menuObj.MenuId;

@@ -741,7 +741,7 @@ Hktdc.Views = Hktdc.Views || {};
       var ruleCodeArr = _.map(this.model.toJSON().selectedServiceCollection.toJSON(), function(selectedService) {
         return selectedService.Approver;
       });
-      var ruleCode = _.uniq(ruleCodeArr).join(';');
+      var ruleCode = _.uniq(ruleCodeArr).join(',');
       // console.log('ruleCode:::::::', this.model.toJSON().selectedApplicantModel.toJSON());
       var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
       var cost = this.model.toJSON().EstimatedCost;

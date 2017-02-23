@@ -9,13 +9,9 @@ Hktdc.Collections = Hktdc.Collections || {};
     model: Hktdc.Models.Recommend,
 
     url: function(ApproverRuleCode, applicantUserId, cost) {
-      var WorkerId = '';
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/workers/?' +
+      return Hktdc.Config.apiURL + '/users/' + applicantUserId + '/workers/computer-app?' +
         'rule=' + ApproverRuleCode +
-        '&WorkId=' + WorkerId +
-        '&UserId=' + Hktdc.Config.userID +
-        '&Applicant=' + applicantUserId +
-        '&EstCost=' + cost;
+        '&cost=' + cost;
       // return Hktdc.Config.apiURL + '/GetEmployee?RuleID=' + ApproverRuleCode + '&WorkId=&UserId=' + $('#divapplicant').attr("eid") + '&EstCost=' + $('#txtestimatedcost').val() + ''
     }
   });
