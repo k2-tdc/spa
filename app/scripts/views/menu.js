@@ -121,7 +121,11 @@ Hktdc.Views = Hktdc.Views || {};
       if ($(ev.target).is('a')) {
         $target = $(ev.target).parent('li');
       }
-      Hktdc.Dispatcher.trigger('reloadRoute', $target.attr('routename').toLowerCase());
+      if (Backbone.history.getHash().indexOf(pagePath) >= 0) {
+        Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
+      } else {
+        Backbone.history.navigate(pagePath, true);
+      }
     },
 
     setActiveMenu: function(currentRoute, route) {
