@@ -67,6 +67,8 @@ Hktdc.Views = Hktdc.Views || {};
     },
     initialize: function(props) {
       console.debug('[ views/applicant.js ] initialize: ApplicantSelect');
+      // default allowEmpty to true
+      this.allowEmpty = true;
       _.bindAll(this, 'renderApplicantItem');
       _.extend(this, props);
       // this.listenTo(this.collection, 'change', this.render);
@@ -74,14 +76,12 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var self = this;
-      this.collection.unshift({
-        UserFullName: '-- Select --',
-        UserId: 0
-        
-        // in some collection (e.g. report applicant) may be:
-        // FullName: '-- Select --',
-        // UserID: 0
-      });
+      if (self.allowEmpty) {
+        this.collection.unshift({
+          UserFullName: '-- Select --',
+          UserId: ''
+        });
+      }
       this.collection.each(this.renderApplicantItem);
       setTimeout(function() {
         self.$el.find('option[value="' + self.selectedApplicant + '"]').prop('selected', true);
@@ -90,7 +90,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     selectApplicantHandler: function(ev) {
       if (this.onSelect) {
-        this.onSelect(this.collection.get($(ev.target).find('option:selected').val()));
+        // 0 for index of -- Select --
+        this.onSelect(this.collection.get($(ev.target).val() || 0));
       }
     },
 
@@ -116,7 +117,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       this.$el.html(this.template({user: this.model.toJSON()}));
-      this.$el.attr('value', this.model.toJSON().UserId || this.model.toJSON().UserID);
+      this.$el.attr('value', this.model.toJSON().UserId || '');
       if ((this.selectedApplicant === this.model.toJSON().UserId) || this.selectedApplicant === this.model.toJSON().UserID) {
         this.$el.prop('selected', true);
       }
