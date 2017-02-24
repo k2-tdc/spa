@@ -15,12 +15,22 @@ Hktdc.Views = Hktdc.Views || {};
 
     initialize: function() {
       console.debug('[ views/menu.js ] - initialize');
-      this.render();
-      // var this.model = new this.Models['Menu']();
-      // this.listenTo(this.model, 'change', this.render);
-      // console.log(JSON.stringify(this.model, null, 2));
-
-      this.model.on('change:activeTab', this.setActiveMenu.bind(this));
+      var self = this;
+      self.render();
+      // self.listenTo(self.model, 'change', self.render);
+      self.listenTo(Hktdc.Dispatcher, 'checkPagePermission', function(onSuccess) {
+        var path = Backbone.history.getHash().split('?')[0];
+        self.checkPagePermission(path, function() {
+          onSuccess();
+        }, function() {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Permission denied for accessing this page',
+            title: 'error',
+            type: 'error'
+          });
+        });
+      });
+      self.model.on('change:activeTab', self.setActiveMenu.bind(self));
     },
 
     render: function() {
@@ -116,13 +126,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    onClickMenu: function(ev) {
-      var $target = $(ev.target);
-      if ($(ev.target).is('a')) {
-        $target = $(ev.target).parent('li');
-      }
-
-      var pagePath = $target.attr('routename').toLowerCase();
+    checkPagePermission: function(path, onSuccess, onError) {
       var allMainMenu = _.filter(this.model.toJSON().Menu, function(menu) {
         return menu.MenuId;
       });
@@ -131,7 +135,7 @@ Hktdc.Views = Hktdc.Views || {};
       }), 'sumenu'));
       var allMenu = allMainMenu.concat(allSubMenu);
       var menuObj = _.find(allMenu, function(menu) {
-        return menu.RouteName === $target.attr('routename');
+        return menu.RouteName.toLowerCase() === path;
       });
       var pageGUID = menuObj.MenuId;
       var checkPagePermissionModel = new Hktdc.Models.Menu();
@@ -140,26 +144,37 @@ Hktdc.Views = Hktdc.Views || {};
         beforeSend: utils.setAuthHeader,
         success: function(model, data) {
           if (data.EmployeeNo) {
-            if (Backbone.history.getHash().indexOf(pagePath) >= 0) {
-              Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
-            } else {
-              Backbone.history.navigate(pagePath, true);
-            }
+            onSuccess();
           } else {
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'Permission denied for accessing this page',
-              title: 'error',
-              type: 'error'
-            });
+            onError();
           }
         },
         error: function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Permission denied for accessing this page',
-            title: 'error',
-            type: 'error'
-          });
+          onError();
         }
+      });
+    },
+
+    onClickMenu: function(ev) {
+      var $target = $(ev.target);
+      if ($(ev.target).is('a')) {
+        $target = $(ev.target).parent('li');
+      }
+
+      var pagePath = $target.attr('routename').toLowerCase();
+
+      this.checkPagePermission(pagePath, function() {
+        if (Backbone.history.getHash().indexOf(pagePath) >= 0) {
+          Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
+        } else {
+          Backbone.history.navigate(pagePath, true);
+        }
+      }, function() {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: 'Permission denied for accessing this page',
+          title: 'error',
+          type: 'error'
+        });
       });
     },
 

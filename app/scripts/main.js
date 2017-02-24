@@ -110,7 +110,6 @@ window.Hktdc = {
       if (env === 'uat' || env === 'chsw') {
         // TODO: prevent user make request when getting token
         $(document).ajaxStart(function(event) {
-          // console.log(event);
           NProgress.start();
         });
         $(document).ajaxComplete(function() {
@@ -251,8 +250,9 @@ window.Hktdc = {
         headerModel.set({
           processList: menuModel.toJSON().PList
         });
-
-        onSuccess(menuModel);
+        Hktdc.Dispatcher.trigger('checkPagePermission', function() {
+          onSuccess(menuModel);
+        });
       });
   },
 
