@@ -145,8 +145,6 @@ Hktdc.Views = Hktdc.Views || {};
         'applicant',
 
         // 'UserId',
-        'SUser',
-        'ProsIncId',
         'EmployeeId'
       );
       var filterArr = _.map(usefulData, function(val, filter) {

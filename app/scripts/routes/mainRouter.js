@@ -26,7 +26,6 @@ Hktdc.Routers = Hktdc.Routers || {};
       var self = this;
       var footerView = new Hktdc.Views.Footer();
       self.listenTo(Hktdc.Dispatcher, 'reloadRoute', function(route) {
-        console.debug('reloadRoute: ', route);
         Backbone.history.navigate(route, true);
         Backbone.history.loadUrl(route, {
           trigger: true

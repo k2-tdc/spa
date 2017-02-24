@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.SendRequest = Backbone.Model.extend({
 
     url: function(refId) {
-      return Hktdc.Config.apiURL + '/applications/computer-app?process=CHSW&refid=' + refId;
+      return Hktdc.Config.apiURL + '/applications/computer-app';
       // return Hktdc.Config.apiURL + '/SubmitRequests';
     },
 
