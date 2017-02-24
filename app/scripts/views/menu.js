@@ -135,6 +135,9 @@ Hktdc.Views = Hktdc.Views || {};
       }), 'sumenu'));
       var allMenu = allMainMenu.concat(allSubMenu);
       var menuObj = _.find(allMenu, function(menu) {
+        if (path === '') {
+          return menu.RouteName.toLowerCase() === 'check_status';
+        }
         return menu.RouteName.toLowerCase() === path;
       });
       var pageGUID = menuObj.MenuId;
