@@ -44,7 +44,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({
           placeholder: 'From Date',
           value: (self.model.toJSON()['create-start-date'])
-            ? moment(self.model.toJSON()['create-start-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            ? moment(self.model.toJSON()['create-start-date'], 'YYYYMMDD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
@@ -58,7 +58,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({
           placeholder: 'To Date',
           value: (self.model.toJSON()['create-end-date'])
-            ? moment(self.model.toJSON()['create-end-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            ? moment(self.model.toJSON()['create-end-date'], 'YYYYMMDD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
@@ -71,7 +71,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({
           placeholder: 'From Date',
           value: (self.model.toJSON()['approval-start-date'])
-            ? moment(self.model.toJSON()['approval-start-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            ? moment(self.model.toJSON()['approval-start-date'], 'YYYYMMDD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
@@ -84,7 +84,7 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({
           placeholder: 'To Date',
           value: (self.model.toJSON()['approval-end-date'])
-            ? moment(self.model.toJSON()['approval-end-date'], 'MM/DD/YYYY').format('DD MMM YYYY')
+            ? moment(self.model.toJSON()['approval-end-date'], 'YYYYMMDD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
@@ -267,7 +267,7 @@ Hktdc.Views = Hktdc.Views || {};
       var field = $(ev.target).attr('name');
       var value = '';
       if ($(ev.target).val()) {
-        value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('YYYYMMDD');
       }
 
       this.updateModel(field, value);

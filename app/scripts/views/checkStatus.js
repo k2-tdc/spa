@@ -27,49 +27,10 @@ Hktdc.Views = Hktdc.Views || {};
       // _.extend(this, props);
       self.render();
       self.doToggleAdvanceMode(self.model.toJSON().showAdvanced);
+      self.renderDatePicker();
       self.model.on('change:showAdvanced', function(model, isShow) {
         self.doToggleAdvanceMode(isShow);
       });
-
-      $('.datepicker-toggle-btn', self.el).mousedown(function(ev) {
-        ev.stopPropagation();
-        // $(this).prev().data('open');
-        // console.log($(ev.target));
-        var $target = $(ev.target).parents('.input-group').find('.date');
-        var open = $target.data('open');
-        // console.log(open);
-        if (open) {
-          $target.datepicker('hide');
-        } else {
-          $target.datepicker('show');
-        }
-      });
-      $('.date', self.el)
-        .datepicker({
-          autoclose: true,
-          format: {
-            toDisplay: function(date, format, language) {
-              return moment(date).format('DD MMM YYYY');
-            },
-            toValue: function(date, format, language) {
-              return moment(date).format('MM/DD/YYYY');
-            }
-          }
-        })
-        .on('changeDate', function(ev) {
-          var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var fieldName = $input.attr('name');
-          var val = moment($(this).datepicker('getDate')).format('MM/DD/YYYY');
-          // console.log(fieldName);
-          // console.log(val);
-          self.updateModel(fieldName, val);
-        })
-        .on('show', function(ev) {
-          $(ev.target).data('open', true);
-        })
-        .on('hide', function(ev) {
-          $(ev.target).data('open', false);
-        });
 
     },
 
@@ -96,7 +57,7 @@ Hktdc.Views = Hktdc.Views || {};
       var field = $(ev.target).attr('name');
       var value = '';
       if ($(ev.target).val()) {
-        value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('YYYYMMDD');
       }
 
       this.updateModel(field, value);
@@ -321,6 +282,39 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       $('.status-container', self.el).html(statusListView.el);
+    },
+
+    renderDatePicker: function() {
+      var self = this;
+      var createDateFromView = new Hktdc.Views.DatePicker({
+        model: new Hktdc.Models.DatePicker({
+          placeholder: 'From Date',
+          value: (self.model.toJSON()['create-start-date'])
+            ? moment(self.model.toJSON()['create-start-date'], 'YYYYMMDD').format('DD MMM YYYY')
+            : null
+        }),
+        onSelect: function(val) {
+          self.model.set({
+            'start-date': val
+          });
+        }
+      });
+      var createDateToView = new Hktdc.Views.DatePicker({
+        model: new Hktdc.Models.DatePicker({
+          placeholder: 'To Date',
+          value: (self.model.toJSON()['create-end-date'])
+            ? moment(self.model.toJSON()['create-end-date'], 'YYYYMMDD').format('DD MMM YYYY')
+            : null
+        }),
+        onSelect: function(val) {
+          self.model.set({
+            'end-date': val
+          });
+        }
+      });
+
+      $('.create-from-datepicker-container', self.el).html(createDateFromView.el);
+      $('.create-to-datepicker-container', self.el).html(createDateToView.el);
     },
 
     getSummaryFromRow: function(formID, requestList) {

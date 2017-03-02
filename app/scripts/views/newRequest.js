@@ -28,11 +28,11 @@ Hktdc.Views = Hktdc.Views || {};
       //   return moment(date).format('DD MMM YYYY');
       // },
       // toValue: function(date, format, language) {
-      //   return moment(date).format('MM/DD/YYYY');
+      //   return moment(date).format('YYYYMMDD');
 
       self.model.set({
         EDeliveryDate: (self.model.toJSON().EDeliveryDate)
-          ? moment(self.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+          ? moment(self.model.toJSON().EDeliveryDate, 'YYYYMMDD').format('DD MMM YYYY')
           : null
       });
       self.setCommentBlock();
@@ -244,7 +244,7 @@ Hktdc.Views = Hktdc.Views || {};
       var value = '';
       var obj = {};
       if ($(ev.target).val()) {
-        value = moment($(ev.target).val(), 'DD MMM YYYY').format('MM/DD/YYYY');
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('YYYYMMDD');
       }
       obj[field] = value;
 

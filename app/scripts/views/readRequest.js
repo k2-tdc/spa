@@ -35,7 +35,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
 
       this.model.set({
-        EDeliveryDate: moment(this.model.toJSON().EDeliveryDate, 'MM/DD/YYYY').format('DD MMM YYYY')
+        EDeliveryDate: moment(this.model.toJSON().EDeliveryDate, 'YYYYMMDD').format('DD MMM YYYY')
       });
 
       self.setCommentBlock();
