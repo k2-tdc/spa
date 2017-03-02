@@ -132,7 +132,7 @@ window.utils = {
     if ('withCredentials' in xhr) {
       // XHR for Chrome/Firefox/Opera/Safari.
       xhr.open(method, url, true);
-    } else if (typeof XDomainRequest != 'undefined') {
+    } else if (typeof XDomainRequest !== 'undefined') {
       // XDomainRequest for IE.
       xhr = new XDomainRequest();
       xhr.open(method, url);
@@ -186,7 +186,9 @@ window.utils = {
 
         xhr.onerror = function() {
           var text = xhr.responseText;
-          onError(text);
+          if (onError && typeof onError === 'function') {
+            onError(text);
+          }
           window.location.href = oauthUrl;
         };
 

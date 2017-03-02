@@ -106,8 +106,14 @@ window.Hktdc = {
         showSpinner: false
       });
       $.fn.dataTable.moment('DD MMM YYYY');
-      // if (true) {
+
       if (env === 'uat' || env === 'chsw') {
+        $(document).ajaxError(function(xhr, status, err) {
+          if (/4\d{2}$/.test(status.status)) {
+            window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+          }
+        });
+
         // TODO: prevent user make request when getting token
         $(document).ajaxStart(function(event) {
           NProgress.start();
