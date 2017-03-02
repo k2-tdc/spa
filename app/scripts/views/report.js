@@ -81,7 +81,7 @@ Hktdc.Views = Hktdc.Views || {};
       return deferred.promise;
     },
 
-    renderDepartmentSelect: function(departmentCollection) {
+    renderDepartmentSelect: function() {
       try {
         var self = this;
         var departmentSelectView = new Hktdc.Views.DepartmentSelect({

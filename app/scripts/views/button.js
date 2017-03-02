@@ -34,7 +34,7 @@ Hktdc.Views = Hktdc.Views || {};
       var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure want to ' + actionName + '?',
+        message: 'Are you sure to ' + actionName + '?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
           if (self.model.toJSON().showSave && (status === 'Review' || status === 'Return' || status === 'Rework')) {
@@ -183,7 +183,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.trigger('checkIsValid', function() {
         Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'Comfirmation',
-          message: 'Are you sure you want to send to applicant?',
+          message: 'Are you sure  to send to applicant?',
           onConfirm: function() {
             Hktdc.Dispatcher.trigger('toggleLockButton', true);
             self.saveAndApprover('Review', 'applicant', function() {
@@ -203,7 +203,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.trigger('checkIsValid', function() {
         Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'Confirmation',
-          message: 'Are you sure you want to send to approver?',
+          message: 'Are you sure to send to approver?',
           onConfirm: function() {
             Hktdc.Dispatcher.trigger('toggleLockButton', true);
             self.saveAndApprover('Approval', 'approver', function() {
@@ -230,11 +230,11 @@ Hktdc.Views = Hktdc.Views || {};
           Backbone.emulateJSON = true;
           var refId = self.requestFormModel.toJSON().ReferenceID;
           var DeleteRequestModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app?ReferID=' + refId
+            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app'
             // url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
           });
           var DeleteRequestModelInstance = new DeleteRequestModel();
-          DeleteRequestModelInstance.save(null, {
+          DeleteRequestModelInstance.save({data: [{ReferenceID: refId}]}, {
             beforeSend: utils.setAuthHeader,
             type: 'DELETE',
             success: function(model, response) {
@@ -265,7 +265,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure want to Recall the Form: ' + self.requestFormModel.toJSON().ReferenceID + ' ?',
+        message: 'Are you sure to Recall the Form: ' + self.requestFormModel.toJSON().ReferenceID + ' ?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
 
@@ -310,7 +310,7 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
-        message: 'Are you sure resend email notification?',
+        message: 'Are you sure to resend email notification?',
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
 
