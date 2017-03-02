@@ -186,16 +186,16 @@ module.exports = function(grunt) {
         /* override default to not uglify -- start */
 
         /* if need uglify */
-        // dest: '<%= yeoman.dist %>'
+        dest: '<%= yeoman.dist %>'
 
         /* else if no need uglify */
-        flow: {
-          steps: {
-            js: ['concat'],
-            css: ['concat', 'cssmin']
-          },
-          post: {}
-        }
+        // flow: {
+        //   steps: {
+        //     js: ['concat'],
+        //     css: ['concat', 'cssmin']
+        //   },
+        //   post: {}
+        // }
         /* end if */
 
         /* override default to not uglify -- end */
@@ -367,7 +367,7 @@ module.exports = function(grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    // 'uglify',
+    'uglify',
     'copy',
     'rev',
     'usemin',
