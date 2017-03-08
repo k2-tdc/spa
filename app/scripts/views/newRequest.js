@@ -576,6 +576,8 @@ Hktdc.Views = Hktdc.Views || {};
       });
       $input.autocomplete({
         source: newEmployeeArray,
+        minLength: 2,
+        delay: 500,
         select: function(ev, ui) {
           // console.log(ui);
           var existing = _.find(self.model.toJSON().selectedCCCollection.toJSON(), function(cc) {
