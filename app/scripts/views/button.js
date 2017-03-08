@@ -40,21 +40,21 @@ Hktdc.Views = Hktdc.Views || {};
           if (self.model.toJSON().showSave && (status === 'Review' || status === 'Return' || status === 'Rework')) {
             self.saveAndApprover(status, 'approver', function() {
               self.workflowHandler(ev, function() {
-                console.log('workflow handler success');
+                // console.log('workflow handler success');
                 Hktdc.Dispatcher.trigger('closeConfirm');
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
               }, function() {
-                console.log('workflow handler error');
+                // console.log('workflow handler error');
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
               });
             });
           } else {
             self.workflowHandler(ev, function() {
-              console.log('2 workflow handler success');
+              // console.log('2 workflow handler success');
               Hktdc.Dispatcher.trigger('closeConfirm');
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             }, function() {
-              console.log('2 workflow handler error');
+              // console.log('2 workflow handler error');
               Hktdc.Dispatcher.trigger('toggleLockButton', false);
             });
           }
@@ -93,7 +93,6 @@ Hktdc.Views = Hktdc.Views || {};
       worklistModel.save({}, {
         beforeSend: utils.setAuthHeader,
         success: function(action, response) {
-          console.log('ok');
           self.successRedirect();
           Hktdc.Dispatcher.trigger('reloadMenu');
           // window.location.href = "alltask.html";
@@ -123,7 +122,7 @@ Hktdc.Views = Hktdc.Views || {};
         { ActionID: '5', URI: 'return-to-applicant'},
         // { ActionID: '26', URI: 'recall'},
         { ActionID: '1', URI: 'send-to-approver'},
-        { ActionID: '2', URI: 'return-to-prepare'},
+        { ActionID: '2', URI: 'return-to-preparer'},
         { ActionID: '28', URI: 'delete'},
         { ActionID: '7', URI: 'reject'},
         { ActionID: '8', URI: 'complete'},
@@ -143,7 +142,7 @@ Hktdc.Views = Hktdc.Views || {};
         { ActionID: '20', URI: 'forward'},
         { ActionID: '21', URI: 'cancel'},
         { ActionID: '24', URI: 'send-to-approver'},
-        { ActionID: '25', URI: 'return-to-prepare'}
+        { ActionID: '25', URI: 'return-to-preparer'}
         // { ActionID: '6', Action: 'Recall', ButtonName: 'Recall', URI: 'recall'},
         // { ActionID: '29', Action: 'Submit', ButtonName: 'Submitted', URI: 'submitted'},
       ];
