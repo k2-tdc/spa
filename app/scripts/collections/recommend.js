@@ -9,7 +9,7 @@ Hktdc.Collections = Hktdc.Collections || {};
     model: Hktdc.Models.Recommend,
 
     url: function(ApproverRuleCode, applicantUserId, cost) {
-      return Hktdc.Config.apiURL + '/users/' + applicantUserId + '/workers/computer-app?' +
+      return Hktdc.Config.apiURL + '/users/' + applicantUserId + '/approvers/computer-app?' +
         'rule=' + ApproverRuleCode +
         '&cost=' + cost;
       // return Hktdc.Config.apiURL + '/GetEmployee?RuleID=' + ApproverRuleCode + '&WorkId=&UserId=' + $('#divapplicant').attr("eid") + '&EstCost=' + $('#txtestimatedcost').val() + ''

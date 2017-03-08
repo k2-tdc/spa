@@ -233,8 +233,9 @@ Hktdc.Views = Hktdc.Views || {};
             url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app'
             // url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
           });
-          var DeleteRequestModelInstance = new DeleteRequestModel();
-          DeleteRequestModelInstance.save({data: [{ReferenceID: refId}]}, {
+          var DeleteRequestModelInstance = new DeleteRequestModel({data: [{ReferenceID: refId}]});
+
+          DeleteRequestModelInstance.save(null, {
             beforeSend: utils.setAuthHeader,
             type: 'DELETE',
             success: function(model, response) {

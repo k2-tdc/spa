@@ -26,7 +26,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       var self = this;
       var footerView = new Hktdc.Views.Footer();
       self.listenTo(Hktdc.Dispatcher, 'reloadRoute', function(route) {
-        Backbone.history.navigate(route, true);
+        // Backbone.history.navigate(route, true);
         Backbone.history.loadUrl(route, {
           trigger: true
         });
@@ -426,7 +426,7 @@ Hktdc.Routers = Hktdc.Routers || {};
             currentPageName: 'Usage Report'
           });
           subheaderMenuListView.render();
-          
+
           $('.subheader-menu-container').html(subheaderMenuListView.el);
         });
       } catch (e) {

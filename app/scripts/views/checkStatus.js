@@ -346,38 +346,39 @@ Hktdc.Views = Hktdc.Views || {};
       var formStatusDisplay = row.DisplayStatus;
       var status = row.FormStatus;
 
-      // if (true) {
-      if (status === 'Draft') {
-        return 'Draft <br /> by: ' + Hktdc.Config.userName;
-        // return '<div><button class="btn btn-primary btn-del"><span class="glyphicon glyphicon-remove"></span></button></div>';
-      } else if (status === 'Submitted') {
-        return 'Submitted<br /> by: ' + Hktdc.Config.userName;
-      } else if (status === 'Review') {
-        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
-      } else if (status === 'Approval') {
-        return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
-      } else if (status === 'ProcessTasks') {
-        return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
-      } else if (status === 'Return') {
-        return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
-      } else if (status === 'Reject') {
-        return formStatusDisplay;
-      } else if (status === 'Completed') {
-        return formStatusDisplay;
-      } else if (status === 'Cancelled') {
-        return formStatusDisplay;
-      } else if (status === 'Deleted') {
-        return formStatusDisplay;
-      } else if (status === 'Recalled') {
-        return formStatusDisplay;
-        // return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
-      } else if (status === 'ITSApproval') {
-        return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
-      } else {
-        return formStatusDisplay + '<br /> by: ' + row.LastUser;
-      }
+      switch (status) {
+        case 'Draft':
+          return 'Draft <br /> by: ' + Hktdc.Config.userName;
 
-      // return status + '<br />' + formStatusDisplay + '<br /> by: ' + approver;
+        case 'Submitted':
+          return 'Submitted<br /> by: ' + Hktdc.Config.userName;
+
+        case 'Approval':
+          return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
+
+        case 'ProcessTasks':
+        case 'ApprovedbyITS':
+        case 'RejectedbyITS':
+          return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
+
+        case 'Review':
+        case 'Return':
+          return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
+
+        case 'Reject':
+        case 'Completed':
+        case 'Cancelled':
+        case 'Deleted':
+        case 'Recalled':
+          return formStatusDisplay;
+
+        case 'ITSApproval':
+          return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
+
+        default:
+          return formStatusDisplay + '<br /> by: ' + row.LastUser;
+
+      }
     }
 
   });

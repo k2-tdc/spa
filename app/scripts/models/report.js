@@ -18,7 +18,7 @@ Hktdc.Models = Hktdc.Models || {};
       'completion-date-start': '',
       'completion-date-end': '',
       'keyword': '',
-      'sort': '+dept,+applicant',
+      'sort': '+applicant,-lastactiontime',
 
       departmentCollection: null,
       applicantCollection: null
