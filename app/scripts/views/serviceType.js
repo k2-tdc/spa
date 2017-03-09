@@ -91,12 +91,7 @@ Hktdc.Views = Hktdc.Views || {};
             selectedServiceRequestList = [];
 
         }
-        // console.log(selectedServiceRequestList);
-        var hashedSelectedServiceRequestList = _.map(selectedServiceRequestList, function(request) {
-          request.hashId = utils.makeId();
-          return request;
-        });
-        this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(hashedSelectedServiceRequestList);
+        this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
           collection: this.childServiceRequestCollection,
           availableServiceObjectArray: availableServiceObjectArray,
@@ -177,14 +172,12 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
           // TODO: change to GUID
-          return selectedType.Name === this.model.toJSON().Name;
+          return selectedType.GUID === this.model.toJSON().GUID;
         }.bind(this));
         // console.log('selectedServiceTypeTree: ', selectedServiceTypeTree);
 
         selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
       }
-      // console.log(selectedServiceRequestList);
-
       try {
         this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({

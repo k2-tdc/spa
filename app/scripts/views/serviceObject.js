@@ -53,10 +53,13 @@ Hktdc.Views = Hktdc.Views || {};
     selectServiceHandler: function() {
       /* save the selected request to the upper level so that can delete request form collection by selected model */
       // this.serviceRequestModel.set();
+      // console.log(this.serviceRequestModel.toJSON());
       this.serviceRequestModel.set({
         selectedRequestModel: this.model,
         selectedServiceObject: true
       });
+      // console.log(this.serviceRequestModel.toJSON().ServiceGUID);
+      this.requestFormModel.toJSON().selectedServiceCollection.remove(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
       // console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
       this.serviceRequestModel.trigger('changePlaceholder', this.model);
