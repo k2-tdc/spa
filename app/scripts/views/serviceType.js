@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _ */
+/* global Hktdc, Backbone, JST, $, _, utils */
 /**
  * This file contains:
  * = level 2
@@ -92,7 +92,11 @@ Hktdc.Views = Hktdc.Views || {};
 
         }
         // console.log(selectedServiceRequestList);
-        this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
+        var hashedSelectedServiceRequestList = _.map(selectedServiceRequestList, function(request) {
+          request.hashId = utils.makeId();
+          return request;
+        });
+        this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(hashedSelectedServiceRequestList);
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
           collection: this.childServiceRequestCollection,
           availableServiceObjectArray: availableServiceObjectArray,

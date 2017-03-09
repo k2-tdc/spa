@@ -449,12 +449,12 @@ Hktdc.Views = Hktdc.Views || {};
     setRequestObject: function(status, realSubmitTo) {
       var requestFormData = this.requestFormModel.toJSON();
       var serviceGroup = _.groupBy(requestFormData.selectedServiceCollection.toJSON(), 'GUID');
-      var serviceList = _.map(serviceGroup, function(group, key) {
-        if (group.length > 0) {
-          group = _.sortBy(group, 'index');
-          var finalService = group[0];
-          var finalNameArr = [];
-          var finalNoteArr = [];
+      var serviceList = _.flatten(_.map(serviceGroup, function(group, key) {
+        group = _.sortBy(group, 'index');
+        var finalService = group[0];
+        var finalNameArr = [];
+        var finalNoteArr = [];
+        if (group.length > 0 && String(finalService.ControlFlag) === '2') {
           _.each(group, function(service) {
             finalNameArr.push(service.Name);
             finalNoteArr.push(service.Notes || '');
@@ -464,7 +464,7 @@ Hktdc.Views = Hktdc.Views || {};
           return finalService;
         }
         return group;
-      });
+      }));
       console.log('raw date: ', requestFormData.EDeliveryDate);
       console.log('date is valid: ', moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid());
 
