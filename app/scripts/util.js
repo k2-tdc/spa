@@ -97,6 +97,17 @@ window.utils = {
     $('.help-inline', controlGroup).html('');
   },
 
+  makeId(length) {
+    var text = '';
+    length = length || 10;
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (var i = 0; i < 5; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+  },
+
   // showAlert: function(title, text, klass) {
   //   $('.alert').removeClass('alert-error alert-warning alert-success alert-info');
   //   $('.alert').addClass(klass);
@@ -158,7 +169,7 @@ window.utils = {
       // console.log(oauthUrl);
       window.location.href = oauthUrl;
 
-    // else have refresh token
+      // else have refresh token
     } else {
       accessToken = self.getCookie('ACCESS-TOKEN');
       console.log('accessToken:' + accessToken);
@@ -193,7 +204,7 @@ window.utils = {
         };
 
         xhr.send();
-      // access token is valid
+        // access token is valid
       } else {
         console.debug('use existing token: ', accessToken);
         // window.location.href = oauthUrl;

@@ -54,7 +54,7 @@ Hktdc.Views = Hktdc.Views || {};
       console.log('selectedServiceCollection collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
-      if (this.model.toJSON().GUID || String(this.model.toJSON().ControlFlag) === '1') {
+      if (this.model.toJSON().ServiceGUID || String(this.model.toJSON().ControlFlag) === '1') {
         collection.remove(this.model);
         /* insert mode use selectedRequestModel */
         /* edit mode use this.model */
@@ -69,7 +69,7 @@ Hktdc.Views = Hktdc.Views || {};
         /* also delete the collection */
         this.requestFormModel.toJSON().selectedServiceCollection.remove(targetModel);
 
-      /* not have GUID = (ControlFlag = 2) */
+      /* not have ServiceGUID = (ControlFlag = 2) */
       } else {
         // console.log('condition b');
         console.log('this.model', this.model.toJSON());
@@ -78,11 +78,11 @@ Hktdc.Views = Hktdc.Views || {};
           // when 'new' mode
           if (model.toJSON().availableServiceObjectArray) {
             _.each(model.toJSON().availableServiceObjectArray, function(service) {
-              console.log('service ID: ', service.GUID);
+              console.log('service ID: ', service.ServiceGUID);
               self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedServiceModel) {
-                // console.log('current: ', selectedServiceModel.toJSON().GUID);
-                if (selectedServiceModel && selectedServiceModel.toJSON().GUID === service.GUID) {
-                  console.log('found: ', selectedServiceModel.toJSON().GUID);
+                // console.log('current: ', selectedServiceModel.toJSON().ServiceGUID);
+                if (selectedServiceModel && selectedServiceModel.toJSON().ServiceGUID === service.ServiceGUID) {
+                  console.log('found: ', selectedServiceModel.toJSON().ServiceGUID);
                   self.requestFormModel.toJSON().selectedServiceCollection.remove(selectedServiceModel);
                 }
               });
@@ -100,7 +100,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     addNotesToServiceObject: function(ev) {
-      var selectedServiceModel = this.requestFormModel.toJSON().selectedServiceCollection.get(this.model.toJSON().GUID);
+      var selectedServiceModel = this.requestFormModel.toJSON().selectedServiceCollection.get(this.model.toJSON().ServiceGUID);
       this.model.set({
         Notes: $(ev.target).val().trim()
       });

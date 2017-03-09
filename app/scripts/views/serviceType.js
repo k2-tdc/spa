@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _ */
+/* global Hktdc, Backbone, JST, $, _, utils */
 /**
  * This file contains:
  * = level 2
@@ -91,7 +91,6 @@ Hktdc.Views = Hktdc.Views || {};
             selectedServiceRequestList = [];
 
         }
-        // console.log(selectedServiceRequestList);
         this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
           collection: this.childServiceRequestCollection,
@@ -173,14 +172,12 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
           // TODO: change to GUID
-          return selectedType.Name === this.model.toJSON().Name;
+          return selectedType.GUID === this.model.toJSON().GUID;
         }.bind(this));
         // console.log('selectedServiceTypeTree: ', selectedServiceTypeTree);
 
         selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
       }
-      // console.log(selectedServiceRequestList);
-
       try {
         this.childServiceRequestCollection = new Hktdc.Collections.ServiceRequest(selectedServiceRequestList);
         var serviceRequestListView = new Hktdc.Views.ServiceRequestList({
