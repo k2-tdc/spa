@@ -159,7 +159,7 @@ window.Hktdc = {
           console.log('OAuth Error', error);
         });
       } else {
-        Hktdc.Config.userID = 'aachen';
+        Hktdc.Config.userID = 'dewang';
         // userName set in menu
         // Hktdc.Config.userName = 'Aaron Chen (ITS - Testing account)';
         self.setupMasterPageComponent(function(menuModel) {
