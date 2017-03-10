@@ -336,7 +336,42 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getStatusFrowRow: function(row) {
-      return row.DisplayStatus + '<br /> by: ' + row.ActionTakerFullName;
+      var formStatusDisplay = row.DisplayStatus;
+      var status = row.FormStatus;
+
+      switch (status) {
+        case 'Draft':
+          return 'Draft <br /> by: ' + Hktdc.Config.userName;
+
+        case 'Submitted':
+          return 'Submitted<br /> by: ' + Hktdc.Config.userName;
+
+        case 'Approval':
+          return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
+
+        case 'ProcessTasks':
+        case 'ApprovedbyITS':
+        case 'RejectedbyITS':
+          return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
+
+        case 'Review':
+        case 'Return':
+          return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
+
+        case 'Reject':
+        case 'Completed':
+        case 'Cancelled':
+        case 'Deleted':
+        case 'Recalled':
+          return formStatusDisplay;
+
+        case 'ITSApproval':
+          return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
+
+        default:
+          return formStatusDisplay + '<br /> by: ' + row.LastUser;
+
+      }
     }
 
   });
