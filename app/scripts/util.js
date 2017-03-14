@@ -71,7 +71,7 @@ window.utils = {
   setAuthHeader: function(xhr) {
     if (Hktdc.Config.needAuthHeader) {
       // console.log('needAuthHeader: ', true);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + this.getCookie('ACCESS-TOKEN'));
     }
   },
   // Asynchronously load templates located in separate .html files
@@ -97,7 +97,7 @@ window.utils = {
     $('.help-inline', controlGroup).html('');
   },
 
-  makeId(length) {
+  makeId: function(length) {
     var text = '';
     length = length || 10;
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

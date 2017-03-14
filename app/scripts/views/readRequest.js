@@ -49,22 +49,30 @@ Hktdc.Views = Hktdc.Views || {};
       }
       self.render();
 
-      self.loadForwardUser()
-        .then(function(forwardUserCollection) {
-          self.forwardUserCollection = forwardUserCollection;
-          // console.log(self.model.toJSON().RequestList);
-          setTimeout(function() {
-            self.renderButtons();
-            self.renderForwardUserList();
-            self.renderAttachment(self.model.toJSON().Attachments);
-            self.renderSelectedCCView(self.model.toJSON().RequestCC);
-            self.renderWorkflowLog(self.model.toJSON().ProcessLog);
-            self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
+      if (this.model.toJSON().showForwardTo) {
+        self.loadForwardUser()
+          .then(function(forwardUserCollection) {
+            self.forwardUserCollection = forwardUserCollection;
+            // console.log(self.model.toJSON().RequestList);
+            setTimeout(function() {
+              self.renderForwardUserList();
+              self.renderButtons();
+              self.renderAttachment(self.model.toJSON().Attachments);
+              self.renderSelectedCCView(self.model.toJSON().RequestCC);
+              self.renderWorkflowLog(self.model.toJSON().ProcessLog);
+              self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
+            });
+          })
+          .fail(function(e) {
+            console.error(e);
           });
-        })
-        .fail(function(e) {
-          console.error(e);
-        });
+      } else {
+        self.renderButtons();
+        self.renderAttachment(self.model.toJSON().Attachments);
+        self.renderSelectedCCView(self.model.toJSON().RequestCC);
+        self.renderWorkflowLog(self.model.toJSON().ProcessLog);
+        self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
+      }
     },
 
     loadForwardUser: function() {
