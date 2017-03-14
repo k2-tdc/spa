@@ -41,7 +41,6 @@ Hktdc.Views = Hktdc.Views || {};
           self.$el.empty();
           self.render();
         });
-
       }
     },
     events: {

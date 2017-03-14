@@ -17,7 +17,6 @@ Hktdc.Models = Hktdc.Models || {};
       approverSendTo: 'Approver', // [Approver, ITS Approval]
       applicantSendTo: 'Applicant',
       returnTo: 'Preparer',
-      showForwardTo: false,
       workflowButtons: [],
       noButton: false
     },
