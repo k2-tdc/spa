@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, _ */
+/* global Hktdc, _, utils */
 /* all application level methods should be placed here */
 
 window.utils = {
@@ -71,7 +71,7 @@ window.utils = {
   setAuthHeader: function(xhr) {
     if (Hktdc.Config.needAuthHeader) {
       // console.log('needAuthHeader: ', true);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + this.getCookie('ACCESS-TOKEN'));
+      xhr.setRequestHeader('Authorization', 'Bearer ' + utils.getCookie('ACCESS-TOKEN'));
     }
   },
   // Asynchronously load templates located in separate .html files
