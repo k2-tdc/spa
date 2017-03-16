@@ -100,7 +100,7 @@ window.Hktdc = {
     Hktdc.Config.environment = env;
     try {
       var self = this;
-      globalConfig(env);
+      this.globalConfig(env);
 
       if (env === 'uat' || env === 'chsw') {
         /* check auth */
@@ -324,34 +324,6 @@ window.Hktdc = {
         window.location.href = window.Hktdc.Config.OAuthLoginUrl;
       }
     });
-
-    Backbone.Model.extend({
-      // Overwrite save function
-      save: function(attrs, options) {
-        utils.getAccessToken(function() {
-          console.log('pass!');
-          Backbone.Model.prototype.save.call(this, attrs, options);
-        }, function() {
-          console.log('fail! redirect to login page in 5 second');
-          setTimeout(function() {
-            window.location.href = window.Hktdc.Config.OAuthLoginUrl;
-          }, 5000);
-        });
-      },
-
-      fetch: function(attrs, options) {
-        utils.getAccessToken(function() {
-          console.log('pass!');
-          Backbone.Model.prototype.save.call(this, attrs, options);
-        }, function() {
-          console.log('fail! redirect to login page in 5 second');
-          setTimeout(function() {
-            window.location.href = window.Hktdc.Config.OAuthLoginUrl;
-          }, 5000);
-        });
-      }
-    });
-
   }
 };
 
