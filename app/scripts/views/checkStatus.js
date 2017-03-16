@@ -12,7 +12,6 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click #btnSearchCheckStatus': 'doSearch',
       'click .advanced-btn': 'toggleAdvanceMode',
-      'change .user-select': 'updateModelByEvent',
       'change .status-select': 'updateModelByEvent',
       'blur .search-field': 'updateModelByEvent',
       'blur .date': 'updateDateModelByEvent'
