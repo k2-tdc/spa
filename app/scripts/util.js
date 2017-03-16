@@ -1,4 +1,4 @@
-/* global Hktdc, _, utils */
+/* global Hktdc, _, Cookies */
 /* all application level methods should be placed here */
 
 window.utils = {
@@ -71,7 +71,7 @@ window.utils = {
   setAuthHeader: function(xhr) {
     if (Hktdc.Config.needAuthHeader) {
       // console.log('needAuthHeader: ', true);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + utils.getCookie('ACCESS-TOKEN'));
+      xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get('ACCESS-TOKEN'));
     }
   },
   // Asynchronously load templates located in separate .html files
@@ -122,22 +122,6 @@ window.utils = {
   /* =============================================>>>>>
   = OAuth Login =
   ===============================================>>>>> */
-
-  getCookie: function(cname) {
-    var name = cname + '=';
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return '';
-  },
-
   createCORSRequest: function(method, url) {
     var xhr = new XMLHttpRequest();
     if ('withCredentials' in xhr) {
@@ -158,29 +142,30 @@ window.utils = {
   getAccessToken: function(onSuccess, onError) {
     var self = this;
     var accessToken = '';
-    var refreshToken = self.getCookie('REFRESH-TOKEN');
+    var refreshToken = Cookies.get('REFRESH-TOKEN');
 
     var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
     // var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
 
-    // if no refresh token
+    /* if no refresh token */
     if (!refreshToken) {
-      // Initiate OAuth login flow
-      // console.log(oauthUrl);
+
+      /* Initiate OAuth login flow */
       window.location.href = oauthUrl;
 
-      // else have refresh token
+    /* else have refresh token */
     } else {
-      accessToken = self.getCookie('ACCESS-TOKEN');
-      console.log('accessToken:' + accessToken);
+      accessToken = Cookies.get('ACCESS-TOKEN');
 
-      // if access token is invalid: no accessToken OR accessToken is expiried
-      if (!accessToken || accessToken === '' || accessToken === undefined) {
-        // Send GET request to token endpoint for getting access token through AJAX
-        console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
+      /* if access token is invalid: no accessToken OR accessToken is expiried */
+      if (!accessToken) {
+        console.log('access token empty:' + accessToken);
+        console.log('OAuth refresh token.');
+        /* Send GET request to token endpoint for getting access token through AJAX */
+
         var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
         if (!xhr) {
-          onError('CORS not supported');
+          alert('Please use another browser that supports CORS.');
           window.location.href = oauthUrl;
           return false;
         }
@@ -188,26 +173,22 @@ window.utils = {
 
         // Response handlers.
         xhr.onload = function() {
-          var text = xhr.responseText;
-          console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
-
-          accessToken = self.getCookie('ACCESS-TOKEN');
+          console.log('Refreshed Token, new access token:' + accessToken);
+          accessToken = Cookies.get('ACCESS-TOKEN');
           onSuccess(accessToken);
         };
 
         xhr.onerror = function() {
-          var text = xhr.responseText;
           if (onError && typeof onError === 'function') {
-            onError(text);
+            onError('Can\'t get new access token by refresh token.');
           }
-          window.location.href = oauthUrl;
         };
 
         xhr.send();
-        // access token is valid
+
+      /* access token is valid */
       } else {
         console.debug('use existing token: ', accessToken);
-        // window.location.href = oauthUrl;
         onSuccess(accessToken);
       }
     }

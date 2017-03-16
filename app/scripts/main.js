@@ -100,29 +100,9 @@ window.Hktdc = {
     Hktdc.Config.environment = env;
     try {
       var self = this;
-      utils.setURL(env);
-      NProgress.configure({
-        parent: '#page',
-        showSpinner: false
-      });
-      $.fn.dataTable.moment('DD MMM YYYY');
+      this.globalConfig(env);
 
       if (env === 'uat' || env === 'chsw') {
-        $(document).ajaxError(function(xhr, status, err) {
-          if (/4\d{2}$/.test(status.status)) {
-            window.location.href = window.Hktdc.Config.OAuthLoginUrl;
-          }
-        });
-
-        // TODO: prevent user make request when getting token
-        $(document).ajaxStart(function(event) {
-          NProgress.start();
-        });
-        $(document).ajaxComplete(function() {
-          NProgress.done();
-          // NProgress.remove();
-        });
-
         /* check auth */
         utils.getAccessToken(function(accessToken) {
           console.debug('[ main.js ] - setting up application...');
@@ -143,20 +123,23 @@ window.Hktdc = {
             });
 
             /* to prevent token expiry when using the SPA */
-            setInterval(function() {
-              Hktdc.Config.gettingToken = true;
-              utils.getAccessToken(function(accessToken) {
-                Hktdc.Config.gettingToken = false;
-                Hktdc.Config.accessToken = accessToken;
-                console.log('refreshed the access token: ', accessToken);
-              });
-            }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
+            // setInterval(function() {
+            //   Hktdc.Config.gettingToken = true;
+            //   utils.getAccessToken(function(accessToken) {
+            //     Hktdc.Config.gettingToken = false;
+            //     Hktdc.Config.accessToken = accessToken;
+            //     console.log('refreshed the access token: ', accessToken);
+            //   });
+            // }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
-            console.log('Error on getting userID', error);
+            console.error('Error on getting user info by access token', error);
           });
         }, function(error) {
           /* else */
-          console.log('OAuth Error', error);
+          console.error('OAuth Error', error);
+          setTimeout(() => {
+            window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+          }, 3000);
         });
       } else {
         Hktdc.Config.userID = 'aachen';
@@ -319,6 +302,27 @@ window.Hktdc = {
       confirmDialogView.model.set({
         lockConfirmBtn: isLock
       });
+    });
+  },
+
+  globalConfig: function(env) {
+    utils.setURL(env);
+    NProgress.configure({
+      parent: '#page',
+      showSpinner: false
+    });
+    $.fn.dataTable.moment('DD MMM YYYY');
+    $(document).ajaxStart(function(event) {
+      NProgress.start();
+    });
+    $(document).ajaxComplete(function() {
+      NProgress.done();
+      // NProgress.remove();
+    });
+    $(document).ajaxError(function(xhr, status, err) {
+      if (/4\d{2}$/.test(status.status)) {
+        window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+      }
     });
   }
 };

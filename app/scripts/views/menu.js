@@ -23,11 +23,14 @@ Hktdc.Views = Hktdc.Views || {};
         self.checkPagePermission(path, function() {
           onSuccess();
         }, function() {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Permission denied for accessing this page',
-            title: 'error',
-            type: 'error'
-          });
+          // Hktdc.Dispatcher.trigger('openAlert', {
+          //   message: 'Permission denied for accessing this page',
+          //   title: 'error',
+          //   type: 'error'
+          // });
+          var noPermissionView = new Hktdc.Views.NoPermission();
+          noPermissionView.render();
+          $('#mainContent').empty().html(noPermissionView.el);
         });
       });
       self.model.on('change:activeTab', self.setActiveMenu.bind(self));
