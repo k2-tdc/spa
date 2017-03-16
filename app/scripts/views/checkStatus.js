@@ -254,7 +254,6 @@ Hktdc.Views = Hktdc.Views || {};
           collection: applicantCollection,
           selectedApplicant: self.model.toJSON().applicant,
           onSelect: function(model) {
-            console.log(model.toJSON());
             var val = (model) ? model.toJSON().EmployeeID : '';
             self.model.set({ applicant: val });
           }

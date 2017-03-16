@@ -236,7 +236,7 @@ Hktdc.Views = Hktdc.Views || {};
 
           DeleteRequestModelInstance.save(null, {
             beforeSend: utils.setAuthHeader,
-            type: 'DELETE',
+            type: 'POST',
             success: function(model, response) {
               // console.log('success: ', a);
               // console.log(b);
