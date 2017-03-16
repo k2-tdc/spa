@@ -123,14 +123,14 @@ window.Hktdc = {
             });
 
             /* to prevent token expiry when using the SPA */
-            // setInterval(function() {
-            //   Hktdc.Config.gettingToken = true;
-            //   utils.getAccessToken(function(accessToken) {
-            //     Hktdc.Config.gettingToken = false;
-            //     Hktdc.Config.accessToken = accessToken;
-            //     console.log('refreshed the access token: ', accessToken);
-            //   });
-            // }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
+            setInterval(function() {
+              Hktdc.Config.gettingToken = true;
+              utils.getAccessToken(function(accessToken) {
+                Hktdc.Config.gettingToken = false;
+                Hktdc.Config.accessToken = accessToken;
+                console.log('refreshed the access token: ', accessToken);
+              });
+            }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
             console.error('Error on getting user info by access token', error);
           });
