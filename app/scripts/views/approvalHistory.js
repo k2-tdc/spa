@@ -12,7 +12,6 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click #btnSearchCheckStatus': 'doSearch',
       'click .advanced-btn': 'toggleAdvanceMode',
-      'change .user-select': 'updateModelByEvent',
       'change .status-select': 'updateModelByEvent',
       'blur .search-field': 'updateModelByEvent'
     },
@@ -178,7 +177,8 @@ Hktdc.Views = Hktdc.Views || {};
       var applicants = _.map(records, function(record) {
         return {
           UserId: record.ApplicantUserId,
-          UserFullName: record.ApplicantFNAME
+          UserFullName: record.ApplicantFNAME,
+          EmployeeID: record.ApplicantEMP
         };
       });
       var distinctApplicants = _.uniq(applicants, function(applicant) {
@@ -189,7 +189,7 @@ Hktdc.Views = Hktdc.Views || {};
         collection: applicantCollection,
         selectedApplicant: self.model.toJSON().applicant,
         onSelect: function(model) {
-          self.model.set({ applicant: model.toJSON().UserId });
+          self.model.set({ applicant: model.toJSON().EmployeeID });
         }
       });
       userListView.render();
