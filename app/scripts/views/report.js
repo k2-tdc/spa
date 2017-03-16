@@ -154,8 +154,10 @@ Hktdc.Views = Hktdc.Views || {};
           selectedApplicant: self.model.toJSON().applicant,
           onSelect: function(model) {
             var applicantId = model.toJSON().UserID;
+            var employeeID = model.toJSON().EmployeeID;
             self.model.set({
-              applicant: applicantId
+              applicant: applicantId,
+              'applicant-employee-id': employeeID
             });
           }
         });

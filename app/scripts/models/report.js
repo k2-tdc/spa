@@ -13,6 +13,7 @@ Hktdc.Models = Hktdc.Models || {};
       refid: '',
       department: '',
       'applicant': '',
+      'applicant-employee-id': '',
       'create-date-start': '',
       'create-date-end': '',
       'completion-date-start': '',
