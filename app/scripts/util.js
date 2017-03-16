@@ -163,24 +163,25 @@ window.utils = {
     var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
     // var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
 
-    // if no refresh token
+    /* if no refresh token */
     if (!refreshToken) {
-      // Initiate OAuth login flow
-      // console.log(oauthUrl);
+
+      /* Initiate OAuth login flow */
       window.location.href = oauthUrl;
 
-      // else have refresh token
+    /* else have refresh token */
     } else {
       accessToken = self.getCookie('ACCESS-TOKEN');
-      console.log('accessToken:' + accessToken);
 
-      // if access token is invalid: no accessToken OR accessToken is expiried
+      /* if access token is invalid: no accessToken OR accessToken is expiried */
       if (!accessToken || accessToken === '' || accessToken === undefined) {
-        // Send GET request to token endpoint for getting access token through AJAX
-        console.log('oauth get token url:', window.Hktdc.Config.OAuthGetTokenUrl);
+        console.log('access token empty:' + accessToken);
+        console.log('OAuth refresh token.');
+
+        /* Send GET request to token endpoint for getting access token through AJAX */
         var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
         if (!xhr) {
-          onError('CORS not supported');
+          alert('Please use another browser that supports CORS.');
           window.location.href = oauthUrl;
           return false;
         }
@@ -188,26 +189,22 @@ window.utils = {
 
         // Response handlers.
         xhr.onload = function() {
-          var text = xhr.responseText;
-          console.log('After AJAX, result:' + text + ',  accessToken:' + accessToken);
-
           accessToken = self.getCookie('ACCESS-TOKEN');
+          console.log('Refreshed Token, new access token:' + accessToken);
           onSuccess(accessToken);
         };
 
         xhr.onerror = function() {
-          var text = xhr.responseText;
           if (onError && typeof onError === 'function') {
-            onError(text);
+            onError('Can\'t get new access token by refresh token.');
           }
-          window.location.href = oauthUrl;
         };
 
         xhr.send();
-        // access token is valid
+
+      /* access token is valid */
       } else {
         console.debug('use existing token: ', accessToken);
-        // window.location.href = oauthUrl;
         onSuccess(accessToken);
       }
     }
