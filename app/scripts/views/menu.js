@@ -29,6 +29,7 @@ Hktdc.Views = Hktdc.Views || {};
           //   type: 'error'
           // });
           var noPermissionView = new Hktdc.Views.NoPermission();
+          noPermissionView.render();
           $('#mainContent').empty().html(noPermissionView.el);
         });
       });

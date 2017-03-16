@@ -1,4 +1,4 @@
-/* global Hktdc, _, utils */
+/* global Hktdc, _, Cookies */
 /* all application level methods should be placed here */
 
 window.utils = {
@@ -71,7 +71,7 @@ window.utils = {
   setAuthHeader: function(xhr) {
     if (Hktdc.Config.needAuthHeader) {
       // console.log('needAuthHeader: ', true);
-      xhr.setRequestHeader('Authorization', 'Bearer ' + utils.getCookie('ACCESS-TOKEN'));
+      xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get('ACCESS-TOKEN'));
     }
   },
   // Asynchronously load templates located in separate .html files
@@ -122,22 +122,6 @@ window.utils = {
   /* =============================================>>>>>
   = OAuth Login =
   ===============================================>>>>> */
-
-  getCookie: function(cname) {
-    var name = cname + '=';
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return '';
-  },
-
   createCORSRequest: function(method, url) {
     var xhr = new XMLHttpRequest();
     if ('withCredentials' in xhr) {
@@ -158,7 +142,7 @@ window.utils = {
   getAccessToken: function(onSuccess, onError) {
     var self = this;
     var accessToken = '';
-    var refreshToken = self.getCookie('REFRESH-TOKEN');
+    var refreshToken = Cookies.get('REFRESH-TOKEN');
 
     var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
     // var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
@@ -171,14 +155,14 @@ window.utils = {
 
     /* else have refresh token */
     } else {
-      accessToken = self.getCookie('ACCESS-TOKEN');
+      accessToken = Cookies.get('ACCESS-TOKEN');
 
       /* if access token is invalid: no accessToken OR accessToken is expiried */
-      if (!accessToken || accessToken === '' || accessToken === undefined) {
+      if (!accessToken) {
         console.log('access token empty:' + accessToken);
         console.log('OAuth refresh token.');
-
         /* Send GET request to token endpoint for getting access token through AJAX */
+
         var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
         if (!xhr) {
           alert('Please use another browser that supports CORS.');
@@ -189,8 +173,8 @@ window.utils = {
 
         // Response handlers.
         xhr.onload = function() {
-          accessToken = self.getCookie('ACCESS-TOKEN');
           console.log('Refreshed Token, new access token:' + accessToken);
+          accessToken = Cookies.get('ACCESS-TOKEN');
           onSuccess(accessToken);
         };
 
