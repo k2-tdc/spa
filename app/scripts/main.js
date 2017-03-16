@@ -214,17 +214,19 @@ window.Hktdc = {
         menuView.listenTo(window.Hktdc.Dispatcher, 'reloadMenu', function() {
           self.loadMenu()
             .then(function(newMenuModel) {
+              /* remove the old menu view to prevent duplicated event listener */
+              menuView.remove();
               var newMenu = newMenuModel.toJSON();
               newMenuModel.set({
                 Menu: newMenu.Menu,
                 PList: newMenu.PList,
                 User: { UserName: newMenu.UserName, UserID: newMenu.UserID }
               });
-              var menuView = new Hktdc.Views.Menu({
+              var newMenuView = new Hktdc.Views.Menu({
                 model: newMenuModel
               });
               newMenuModel.set('activeTab', Backbone.history.getHash());
-              $('#menu').html(menuView.el);
+              $('#menu').html(newMenuView.el);
             });
         });
         // console.log(Hktdc.Config.environments[Hktdc.Config.environment].SPAHomePath);
