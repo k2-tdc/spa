@@ -129,6 +129,10 @@ window.Hktdc = {
                 Hktdc.Config.gettingToken = false;
                 Hktdc.Config.accessToken = accessToken;
                 console.log('refreshed the access token: ', accessToken);
+              }, function(error) {
+                /* else */
+                console.error('OAuth Error', error);
+                window.location.href = window.Hktdc.Config.OAuthLoginUrl;
               });
             }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
@@ -137,9 +141,7 @@ window.Hktdc = {
         }, function(error) {
           /* else */
           console.error('OAuth Error', error);
-          setTimeout(() => {
-            window.location.href = window.Hktdc.Config.OAuthLoginUrl;
-          }, 3000);
+          window.location.href = window.Hktdc.Config.OAuthLoginUrl;
         });
       } else {
         Hktdc.Config.userID = 'aachen';

@@ -156,10 +156,10 @@ window.utils = {
     /* else have refresh token */
     } else {
       accessToken = Cookies.get('ACCESS-TOKEN');
+      console.log('access token:' + accessToken);
 
       /* if access token is invalid: no accessToken OR accessToken is expiried */
       if (!accessToken) {
-        console.log('access token empty:' + accessToken);
         console.log('OAuth refresh token.');
         /* Send GET request to token endpoint for getting access token through AJAX */
 
@@ -173,9 +173,13 @@ window.utils = {
 
         // Response handlers.
         xhr.onload = function() {
-          console.log('Refreshed Token, new access token:' + accessToken);
           accessToken = Cookies.get('ACCESS-TOKEN');
-          onSuccess(accessToken);
+          console.log('Refreshed Token, new access token:' + accessToken);
+          if (accessToken) {
+            onSuccess(accessToken);
+          } else {
+            onError('Access token empty after refresh.');
+          }
         };
 
         xhr.onerror = function() {
