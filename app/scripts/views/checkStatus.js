@@ -231,7 +231,8 @@ Hktdc.Views = Hktdc.Views || {};
       var applicants = _.map(records, function(record) {
         return {
           UserId: record.ApplicantUserId,
-          UserFullName: record.ApplicantFNAME
+          UserFullName: record.ApplicantFNAME,
+          EmployeeID: record.ApplicantEMP
         };
       });
       var distinctApplicants = _.uniq(applicants, function(applicant) {
@@ -253,7 +254,7 @@ Hktdc.Views = Hktdc.Views || {};
           collection: applicantCollection,
           selectedApplicant: self.model.toJSON().applicant,
           onSelect: function(model) {
-            var val = (model) ? model.toJSON().UserId : '';
+            var val = (model) ? model.toJSON().EmployeeID : '';
             self.model.set({ applicant: val });
           }
         });

@@ -570,7 +570,10 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var $input = $('.cc-picker', this.el);
       // console.log($input);
-      var newEmployeeArray = _.map(fullEmployeeList.toJSON(), function(employee) {
+      var employeeExceptSelf = _.reject(fullEmployeeList.toJSON(), function(employee) {
+        return employee.UserID === Hktdc.Config.userID;
+      });
+      var newEmployeeArray = _.map(employeeExceptSelf, function(employee) {
         employee.label = employee.FullName;
         return employee;
       });
