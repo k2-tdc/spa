@@ -11,13 +11,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: 'div',
 
-    initialize: function() {
-      var self = this;
-      self.listenTo(window.Hktdc.Dispatcher, 'noPermission', function() {
-        self.render();
-        $('#mainContent').empty().html(self.el);
-      });
-    },
+    initialize: function() {},
 
     render: function() {
       this.$el.html(this.template());

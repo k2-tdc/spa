@@ -287,7 +287,9 @@ Hktdc.Routers = Hktdc.Routers || {};
           beforeSend: utils.setAuthHeader,
           success: function(result, response) {
             if (result.length === 0) {
-              Hktdc.Dispatcher.trigger('noPermission');
+              var noPermissionView = new Hktdc.Views.NoPermission();
+              noPermissionView.render();
+              $('#mainContent').empty().html(noPermissionView.el);
               // Hktdc.Dispatcher.trigger('openAlert', {
               //   message: 'Record not found or no permission to access the record',
               //   title: 'error',
@@ -375,7 +377,9 @@ Hktdc.Routers = Hktdc.Routers || {};
           },
 
           error: function(err) {
-            Hktdc.Dispatcher.trigger('noPermission');
+            var noPermissionView = new Hktdc.Views.NoPermission();
+            noPermissionView.render();
+            $('#mainContent').empty().html(noPermissionView.el);
             // Hktdc.Dispatcher.trigger('openAlert', {
             //   message: 'Error on getting the record.',
             //   title: 'error',
