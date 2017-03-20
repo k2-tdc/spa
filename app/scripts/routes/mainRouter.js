@@ -287,12 +287,14 @@ Hktdc.Routers = Hktdc.Routers || {};
           beforeSend: utils.setAuthHeader,
           success: function(result, response) {
             if (result.length === 0) {
+              Hktdc.Dispatcher.trigger('noPermission');
               // Hktdc.Dispatcher.trigger('openAlert', {
               //   message: 'Record not found or no permission to access the record',
               //   title: 'error',
               //   type: 'error'
               // });
               NProgress.done();
+              return;
             }
             $('#mainContent').addClass('compress');
             var rawData = response[0];
@@ -373,6 +375,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           },
 
           error: function(err) {
+            Hktdc.Dispatcher.trigger('noPermission');
             // Hktdc.Dispatcher.trigger('openAlert', {
             //   message: 'Error on getting the record.',
             //   title: 'error',

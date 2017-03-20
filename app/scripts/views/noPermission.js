@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone, JST*/
+/* global Hktdc, Backbone, JST, $ */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -11,7 +11,13 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: 'div',
 
-    initialize: function() {},
+    initialize: function() {
+      var self = this;
+      self.listenTo(window.Hktdc.Dispatcher, 'noPermission', function() {
+        self.render();
+        $('#mainContent').empty().html(self.el);
+      });
+    },
 
     render: function() {
       this.$el.html(this.template());
