@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $ */
+/* global Hktdc, Backbone, JST */
 
 Hktdc.Views = Hktdc.Views || {};
 

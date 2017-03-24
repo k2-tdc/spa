@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
@@ -10,5 +10,4 @@ Hktdc.Collections = Hktdc.Collections || {};
     model: Hktdc.Models.Attachment
 
   });
-
 })();

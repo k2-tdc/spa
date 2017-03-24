@@ -9,8 +9,7 @@ Hktdc.Models = Hktdc.Models || {};
 
     idAttribute: 'FileName',
 
-    initialize: function() {
-    },
+    initialize: function() {},
 
     defaults: {
       // new add:
@@ -27,10 +26,9 @@ Hktdc.Models = Hktdc.Models || {};
       UploadedDate: ''
     },
 
-    validate: function(attrs, options) {
-    },
+    validate: function(attrs, options) {},
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

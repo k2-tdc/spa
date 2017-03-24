@@ -582,9 +582,8 @@ Hktdc.Views = Hktdc.Views || {};
         minLength: 2,
         delay: 500,
         select: function(ev, ui) {
-          // console.log(ui);
           var existing = _.find(self.model.toJSON().selectedCCCollection.toJSON(), function(cc) {
-            return (cc.UserID === ui.item.UserId);
+            return (cc.UserID === ui.item.UserID);
           });
           if (!existing) {
             self.model.toJSON().selectedCCCollection.add(new Hktdc.Models.CC(ui.item));

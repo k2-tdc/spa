@@ -10,14 +10,7 @@ Hktdc.Views = Hktdc.Views || {};
     template: JST['app/scripts/templates/attachment.ejs'],
 
     tagName: 'tr',
-    // tagName: function(mode) {
-    //   console.log('tagname', mode);
-    //   if (mode === 'new') {
-    //     return 'div';
-    //   } else {
-    //     return 'tr';
-    //   }
-    // },
+
     className: 'filename-container',
 
     events: {
@@ -26,14 +19,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     clickDeleteFileBtn: function(e) {
-      // console.log(this.parentCollection.toJSON());
-      // console.log(this.model.toJSON().name);
-      // console.log(this.parentCollection.get(this.model.toJSON().name));
       this.parentCollection.remove(this.model);
     },
 
     clickDownloadFile: function() {
-      // console.log(this.model.toJSON());
       if (this.requestFormModel.toJSON().mode === 'new') {
         return false;
       }
@@ -41,7 +30,6 @@ Hktdc.Views = Hktdc.Views || {};
       var fGID = this.model.toJSON().AttachmentGUID;
       var fID = this.requestFormModel.toJSON().FormID;
       var url = Hktdc.Config.apiURL + '/attachments?process=CHSW&guid=' + fGID;
-      // console.log(url);
       this.downloadFile(url, filename);
     },
 
