@@ -276,7 +276,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     toggleInvalidMessage: function(field, isShow) {
-      console.log('toggleInvalidMessage: ', field);
+      // console.log('toggleInvalidMessage: ', field);
       var self = this;
       var $target = $('[field=' + field + ']', self.el);
       // console.log($target);

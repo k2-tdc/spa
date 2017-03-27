@@ -126,7 +126,6 @@ Hktdc.Views = Hktdc.Views || {};
       if (self.requestFormModel.toJSON().FormStatus) {
         showButtonOptions.showDelete = true;
       }
-      // console.group('check condition');
       // for submitted to
 
       // ApproverRuleCode !== 'IT0009'
@@ -268,9 +267,11 @@ Hktdc.Views = Hktdc.Views || {};
         onConfirm: function() {
           Hktdc.Dispatcher.trigger('toggleLockButton', true);
           var saveData;
+          // console.log('statas:', status, 'actionname: ', actionName, 'mode: ', self.requestFormModel.toJSON().mode);
           if (
             // means = the form is editable
             self.requestFormModel.toJSON().mode === 'edit' &&
+            actionName !== 'Delete' &&
 
             // seems useless
             (status === 'Review' || status === 'Return' || status === 'Rework')
@@ -281,13 +282,13 @@ Hktdc.Views = Hktdc.Views || {};
                 return self.workflowHandler(ev);
               })
               .then(function() {
-                  // console.log('workflow handler success');
-                  self.openAlertDialog('send', { submitTo: saveData.submitTo, refId: saveData.refId });
-                  Hktdc.Dispatcher.trigger('closeConfirm');
+                // console.log('workflow handler success');
+                self.openAlertDialog('send', { submitTo: saveData.submitTo, refId: saveData.refId });
+                Hktdc.Dispatcher.trigger('closeConfirm');
               })
               .fail(function(err) {
-                  console.error(err);
-                  // console.log('workflow handler error');
+                console.error(err);
+                // console.log('workflow handler error');
               })
               .fin(function() {
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
@@ -306,7 +307,7 @@ Hktdc.Views = Hktdc.Views || {};
               .fail(function(err) {
                 console.error(err);
               })
-              .fin(function(){
+              .fin(function() {
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
               });
           }
@@ -623,12 +624,13 @@ Hktdc.Views = Hktdc.Views || {};
           // FormID = ReferenceID and FormID
           // if (true) {
           if (insertServiceResponse.FormID) {
+            /* reload the menu for new counts */
+            Hktdc.Dispatcher.trigger('reloadMenu');
+
             return {
               refId: insertServiceResponse.FormID,
               submitTo: submitToString
             };
-            /* reload the menu for new counts */
-            Hktdc.Dispatcher.trigger('reloadMenu');
           } else {
             throw new Error('server not return FormID');
           }
@@ -796,10 +798,10 @@ Hktdc.Views = Hktdc.Views || {};
       // var files = $('#Fileattach').get(0).files;
       var data = new FormData();
       var sendAttachmentModel = new Hktdc.Models.SendAttachment();
-      var filename = _.map(files, function(file) {
-        // return file.toJSON().file.name;
-        return (file.file) && file.file.name;
-      });
+      // var filename = _.map(files, function(file) {
+      //   // return file.toJSON().file.name;
+      //   return (file.file) && file.file.name;
+      // });
 
       sendAttachmentModel.url = sendAttachmentModel.url(refId);
 
@@ -879,21 +881,29 @@ Hktdc.Views = Hktdc.Views || {};
       switch (type) {
         case 'save':
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Your ' + data.formType + ' form has been saved. <br /> The request ID is ' + data.refId,
+            message: 'Your ' +
+              data.formType +
+              ' form has been saved. <br /> The request ID is ' +
+              data.refId,
             title: 'Confirmation',
             type: 'success'
           });
           break;
         case 'send':
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Your request is confirmed and sent to ' + data.submitTo + '.<br /> The ref. code is ' + data.refId,
+            message: 'Your request is confirmed and sent to ' +
+              data.submitTo +
+              '.<br /> The ref. code is ' +
+              data.refId,
             title: 'Confirmation',
             type: 'success'
           });
           break;
         case 'delete':
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'The record : ' + data.refId + ' is deleted.',
+            message: 'The record : ' +
+              data.refId +
+              ' is deleted.',
             title: 'Confirmation',
             type: 'success'
           });
