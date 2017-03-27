@@ -16,7 +16,6 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'blur .date': 'updateDateModelByEvent',
       'mousedown .datepicker-toggle-btn': 'mousedownHandler'
-
     },
 
     initialize: function(props) {
@@ -31,6 +30,7 @@ Hktdc.Views = Hktdc.Views || {};
       $('.date', self.el).datepicker({
         autoclose: true,
         startDate: self.startDate,
+        forceParse: false,
         format: {
           toDisplay: function(date, format, language) {
             return moment(date).format('DD MMM YYYY');
@@ -41,11 +41,12 @@ Hktdc.Views = Hktdc.Views || {};
         }
       })
         .on('changeDate', function(ev) {
-          // var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var val = moment($(this).datepicker('getDate')).format('YYYY-MM-DD');
-          // console.log(val);
+          var datePickerValue = $(this).datepicker('getDate');
+          var parseVal = (moment(datePickerValue).isValid())
+            ? moment(datePickerValue).format('YYYY-MM-DD')
+            : '';
           if (self.onSelect) {
-            self.onSelect(val);
+            self.onSelect(parseVal);
           }
         })
         .on('show', function(ev) {
@@ -68,7 +69,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateDateModelByEvent: function(ev) {
-      var datePickerValue = $('.date', this.el).datepicker('getDate');
+      // not use below as the date will reture null
+      // var datePickerValue = $('.date', this.el).datepicker('getDate');
+
+      var datePickerValue = $('.date', this.el).val();
       var parseVal = (moment(datePickerValue).isValid())
         ? moment(datePickerValue).format('YYYY-MM-DD')
         : '';
