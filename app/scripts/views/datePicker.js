@@ -68,11 +68,11 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     updateDateModelByEvent: function(ev) {
-      // console.log(ev);
-      var val = moment($('.date', this.el).datepicker('getDate')).format('YYYYMMDD');
-      if (this.onBlur) {
-        // console.log('crash');
-        this.onBlur(val);
+      var datePickerValue = $('.date', this.el).datepicker('getDate');
+      console.log(datePickerValue);
+      var parseVal = (moment(datePickerValue).isValid()) ? moment(datePickerValue).format('MM/DD/YYYY') : '';
+      if (this.onSelect) {
+        this.onSelect(parseVal);
       }
     }
 

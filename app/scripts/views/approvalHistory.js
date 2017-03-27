@@ -189,7 +189,10 @@ Hktdc.Views = Hktdc.Views || {};
         collection: applicantCollection,
         selectedApplicant: self.model.toJSON().applicant,
         onSelect: function(model) {
-          self.model.set({ applicant: model.toJSON().EmployeeID });
+          var data = (model.toJSON().UserId === '0')
+            ? { applicant: '', 'applicant-employee-id': '' }
+            : { applicant: model.toJSON().UserId, 'applicant-employee-id': model.toJSON().EmployeeID }
+          self.model.set(data);
         }
       });
       userListView.render();
@@ -297,7 +300,18 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     doSearch: function() {
-      var queryParams = _.pick(this.model.toJSON(), 'userid', 'employeeid', 'applicant', 'approval-start-date', 'approval-end-date', 'status', 'refid', 'create-start-date', 'create-end-date', 'keyword');
+      var queryParams = _.pick(this.model.toJSON(),
+        'userid',
+        'applicant-employee-id',
+        'applicant',
+        'approval-start-date',
+        'approval-end-date',
+        'status',
+        'refid',
+        'create-start-date',
+        'create-end-date',
+        'keyword'
+      );
 
       // console.log(Backbone.history.getHash().split('?')[0]);
       var currentBase = Backbone.history.getHash().split('?')[0];
@@ -306,7 +320,18 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     getAjaxURL: function() {
-      var usefulData = _.pick(this.model.toJSON(), 'userid', 'employeeid', 'applicant', 'approval-start-date', 'approval-end-date', 'status', 'refid', 'create-start-date', 'create-end-date', 'keyword');
+      var usefulData = _.pick(this.model.toJSON(),
+        'userid',
+        'applicant-employee-id',
+        'applicant',
+        'approval-start-date',
+        'approval-end-date',
+        'status',
+        'refid',
+        'create-start-date',
+        'create-end-date',
+        'keyword'
+      );
       var statusApiURL = Hktdc.Config.apiURL + '/applications/computer-app/approval-history' + utils.getQueryString(usefulData);
       return statusApiURL;
     },
