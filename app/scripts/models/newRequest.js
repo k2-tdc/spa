@@ -111,8 +111,8 @@ Hktdc.Models = Hktdc.Models || {};
       var EDDateIsValid = function() {
         // console.log(attrs.EDeliveryDate);
         var today = moment().minute(0).hour(0).second(0);
-        var eDate = (moment(attrs.EDeliveryDate, 'YYYYMMDD', true).isValid())
-          ? moment(attrs.EDeliveryDate, 'YYYYMMDD')
+        var eDate = (moment(attrs.EDeliveryDate, 'YYYY-MM-DD', true).isValid())
+          ? moment(attrs.EDeliveryDate, 'YYYY-MM-DD')
           : moment(attrs.EDeliveryDate, 'DD MMM YYYY');
         var createDate = moment(attrs.CreatedOn, 'DD MMM YYYY');
         // console.group(new Date());

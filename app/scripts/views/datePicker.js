@@ -36,13 +36,13 @@ Hktdc.Views = Hktdc.Views || {};
             return moment(date).format('DD MMM YYYY');
           },
           toValue: function(date, format, language) {
-            return moment(date).format('YYYYMMDD');
+            return moment(date).format('YYYY-MM-DD');
           }
         }
       })
         .on('changeDate', function(ev) {
           // var $input = ($(ev.target).is('input')) ? $(ev.target) : $(ev.target).find('input');
-          var val = moment($(this).datepicker('getDate')).format('YYYYMMDD');
+          var val = moment($(this).datepicker('getDate')).format('YYYY-MM-DD');
           // console.log(val);
           if (self.onSelect) {
             self.onSelect(val);
@@ -69,8 +69,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     updateDateModelByEvent: function(ev) {
       var datePickerValue = $('.date', this.el).datepicker('getDate');
-      console.log(datePickerValue);
-      var parseVal = (moment(datePickerValue).isValid()) ? moment(datePickerValue).format('MM/DD/YYYY') : '';
+      var parseVal = (moment(datePickerValue).isValid())
+        ? moment(datePickerValue).format('YYYY-MM-DD')
+        : '';
       if (this.onSelect) {
         this.onSelect(parseVal);
       }

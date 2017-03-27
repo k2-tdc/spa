@@ -66,7 +66,7 @@ Hktdc.Views = Hktdc.Views || {};
       var field = $(ev.target).attr('name');
       var value = '';
       if ($(ev.target).val()) {
-        value = moment($(ev.target).val(), 'DD MMM YYYY').format('YYYYMMDD');
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('YYYY-MM-DD');
       }
 
       this.updateModel(field, value);
@@ -316,12 +316,14 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({
           placeholder: 'From Date',
           value: (self.model.toJSON()['create-start-date'])
-            ? moment(self.model.toJSON()['create-start-date'], 'YYYYMMDD').format('DD MMM YYYY')
+            ? moment(self.model.toJSON()['create-start-date'], 'YYYY-MM-DD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
           self.model.set({
-            'start-date': val
+            'start-date': (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });
@@ -329,12 +331,14 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({
           placeholder: 'To Date',
           value: (self.model.toJSON()['create-end-date'])
-            ? moment(self.model.toJSON()['create-end-date'], 'YYYYMMDD').format('DD MMM YYYY')
+            ? moment(self.model.toJSON()['create-end-date'], 'YYYY-MM-DD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
           self.model.set({
-            'end-date': val
+            'end-date': (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });

@@ -28,11 +28,11 @@ Hktdc.Views = Hktdc.Views || {};
       //   return moment(date).format('DD MMM YYYY');
       // },
       // toValue: function(date, format, language) {
-      //   return moment(date).format('YYYYMMDD');
+      //   return moment(date).format('YYYY-MM-DD');
 
       self.model.set({
         EDeliveryDate: (self.model.toJSON().EDeliveryDate)
-          ? moment(self.model.toJSON().EDeliveryDate, 'YYYYMMDD').format('DD MMM YYYY')
+          ? moment(self.model.toJSON().EDeliveryDate, 'YYYY-MM-DD').format('DD MMM YYYY')
           : null
       });
       self.setCommentBlock();
@@ -244,7 +244,7 @@ Hktdc.Views = Hktdc.Views || {};
       var value = '';
       var obj = {};
       if ($(ev.target).val()) {
-        value = moment($(ev.target).val(), 'DD MMM YYYY').format('YYYYMMDD');
+        value = moment($(ev.target).val(), 'DD MMM YYYY').format('YYYY-MM-DD');
       }
       obj[field] = value;
 
@@ -405,16 +405,10 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         startDate: startDate,
         onSelect: function(val) {
-          self.model.set({
-            EDeliveryDate: val
-          }, {
-            validate: true,
-            field: 'EDeliveryDate'
-          });
-        },
-        onBlur: function(val) {
           this.model.set({
-            EDeliveryDate: val
+            EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           }, {
             validate: true,
             field: 'EDeliveryDate'

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, utils, _, NProgress, Q, Blob, BlobBuilder, XMLHttpRequest */
+/* global Hktdc, Backbone, JST, $, utils, _, NProgress, Q, Blob, BlobBuilder, XMLHttpRequest, moment */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -108,9 +108,10 @@ Hktdc.Views = Hktdc.Views || {};
       var createDateFromView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({ placeholder: 'From Date' }),
         onSelect: function(val) {
-          console.log(val);
           self.model.set({
-            'create-date-start': val
+            'create-date-start': (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });
@@ -118,7 +119,9 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({ placeholder: 'To Date' }),
         onSelect: function(val) {
           self.model.set({
-            'create-date-end': val
+            'create-date-end': (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });
@@ -126,7 +129,9 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({ placeholder: 'From Date' }),
         onSelect: function(val) {
           self.model.set({
-            'completion-date-start': val
+            'completion-date-start': (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });
@@ -134,7 +139,9 @@ Hktdc.Views = Hktdc.Views || {};
         model: new Hktdc.Models.DatePicker({ placeholder: 'To Date' }),
         onSelect: function(val) {
           self.model.set({
-            'completion-date-end': val
+            'completion-date-end': (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });

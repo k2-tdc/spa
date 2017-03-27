@@ -483,7 +483,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         Justification_Importand_Notes: requestFormData.Justification,
         Expected_Dalivery_Date: (moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid())
-          ? moment(requestFormData.EDeliveryDate, 'DD MMM YYYY').format('YYYYMMDD')
+          ? moment(requestFormData.EDeliveryDate, 'DD MMM YYYY').format('YYYY-MM-DD')
           : requestFormData.EDeliveryDate,
         Frequency_Duration_of_Use: requestFormData.DurationOfUse,
         Estimated_Cost: requestFormData.EstimatedCost,
