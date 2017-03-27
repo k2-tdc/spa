@@ -79,7 +79,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (self.allowEmpty) {
         this.collection.unshift({
           UserFullName: '-- Select --',
-          UserId: ''
+          UserId: '0'
         });
       }
       this.collection.each(this.renderApplicantItem);
