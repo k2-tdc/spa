@@ -28,616 +28,11 @@ Hktdc.Views = Hktdc.Views || {};
       // this.render();
     },
 
-    clickWorkflowBtnHandler: function(ev) {
-      var self = this;
-      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
-      var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
-      Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
-        message: 'Are you sure to ' + actionName + '?',
-        onConfirm: function() {
-          Hktdc.Dispatcher.trigger('toggleLockButton', true);
-          if (self.model.toJSON().showSave && (status === 'Review' || status === 'Return' || status === 'Rework')) {
-            self.saveAndApprover(status, 'approver', function() {
-              self.workflowHandler(ev, function() {
-                // console.log('workflow handler success');
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              }, function() {
-                // console.log('workflow handler error');
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              });
-            });
-          } else {
-            self.workflowHandler(ev, function() {
-              // console.log('2 workflow handler success');
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-            }, function() {
-              // console.log('2 workflow handler error');
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-            });
-          }
-        }
-      });
-    },
+    render: function(showButtonOptions) {
+      /* load available buttons */
 
-    workflowHandler: function(ev, successCallback, errorCallback) {
-      // console.log(Backbone.history.getFragment());
-      var self = this;
-      var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
-      var sn = hashWithoutQS.split('/')[3];
-      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
-      if (!actionName || !sn) {
-        Hktdc.Dispatcher.trigger('openAlert', {
-          message: 'Error on prepare data',
-          type: 'error',
-          title: 'Error'
-        });
-      }
-      var body = {
-        UserId: Hktdc.Config.userID,
-        SN: sn,
-        ActionName: actionName,
-        Remark: this.requestFormModel.toJSON().Remark
-      };
-      if ($(ev.target).attr('workflowAction') === 'Forward') {
-        body.Forward_To_ID = this.requestFormModel.toJSON().Forward_To_ID;
-      }
-
-      Backbone.emulateHTTP = true;
-      Backbone.emulateJSON = true;
-      var worklistModel = new Hktdc.Models.WorklistAction();
-      worklistModel.set(body);
-      worklistModel.url = worklistModel.url($(ev.target).attr('uri'));
-      worklistModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        success: function(action, response) {
-          self.successRedirect();
-          Hktdc.Dispatcher.trigger('reloadMenu');
-          // window.location.href = "alltask.html";
-          if (successCallback) {
-            successCallback();
-          }
-        },
-        error: function(action, response) {
-          // console.log('error on worklist action');
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Error on workflow action',
-            type: 'error',
-            title: 'Error'
-          });
-
-          if (errorCallback) {
-            errorCallback();
-          }
-        }
-      });
-    },
-
-    getWorklistURI: function(actionId) {
-      var mapping = [
-        { ActionID: '3', URI: 'approve'},
-        { ActionID: '4', URI: 'reject'},
-        { ActionID: '5', URI: 'return-to-applicant'},
-        // { ActionID: '26', URI: 'recall'},
-        { ActionID: '1', URI: 'send-to-approver'},
-        { ActionID: '2', URI: 'return-to-preparer'},
-        { ActionID: '28', URI: 'delete'},
-        { ActionID: '7', URI: 'reject'},
-        { ActionID: '8', URI: 'complete'},
-        { ActionID: '9', URI: 'forward'},
-        { ActionID: '10', URI: 'cancel'},
-        { ActionID: '11', URI: 'send-to-its'},
-        { ActionID: '22', URI: 'send-to-applicant'},
-        { ActionID: '23', URI: 'delete'},
-        { ActionID: '12', URI: 'recommend'},
-        { ActionID: '13', URI: 'reject'},
-        { ActionID: '14', URI: 'reject'},
-        { ActionID: '15', URI: 'complete'},
-        { ActionID: '16', URI: 'forward'},
-        { ActionID: '17', URI: 'cancel'},
-        { ActionID: '18', URI: 'reject'},
-        { ActionID: '19', URI: 'complete'},
-        { ActionID: '20', URI: 'forward'},
-        { ActionID: '21', URI: 'cancel'},
-        { ActionID: '24', URI: 'send-to-approver'},
-        { ActionID: '25', URI: 'return-to-preparer'}
-        // { ActionID: '6', Action: 'Recall', ButtonName: 'Recall', URI: 'recall'},
-        // { ActionID: '29', Action: 'Submit', ButtonName: 'Submitted', URI: 'submitted'},
-      ];
-
-      return _.find(mapping, function(obj) {
-        return String(obj.ActionID) === String(actionId);
-      }).URI;
-    },
-
-    clickSaveHandler: function() {
-      var self = this;
-      this.model.trigger('checkIsValid', function() {
-        var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
-        Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'Confirmation',
-          message: 'Confirm save the ' + status + ' form?',
-          onConfirm: function() {
-            Hktdc.Dispatcher.trigger('toggleLockButton', true);
-            self.saveAndApprover(status, '', function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              if (status === 'Draft') {
-                self.successRedirect('draft');
-              } else {
-                self.successRedirect();
-              }
-            }, function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-            });
-          }
-        });
-      });
-    },
-
-    clickApplicantHandler: function() {
-      var self = this;
-      this.model.trigger('checkIsValid', function() {
-        Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'Comfirmation',
-          message: 'Are you sure  to send to applicant?',
-          onConfirm: function() {
-            Hktdc.Dispatcher.trigger('toggleLockButton', true);
-            self.saveAndApprover('Review', 'applicant', function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect('');
-            }, function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-            });
-          }
-        });
-      });
-    },
-
-    clickApproverHandler: function() {
-      var self = this;
-      this.model.trigger('checkIsValid', function() {
-        Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'Confirmation',
-          message: 'Are you sure to send to approver?',
-          onConfirm: function() {
-            Hktdc.Dispatcher.trigger('toggleLockButton', true);
-            self.saveAndApprover('Approval', 'approver', function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect('');
-            }, function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-            });
-          }
-        });
-      });
-    },
-
-    clickDeleteBtnHandler: function() {
-      var self = this;
-      Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
-        message: 'Are you sure to delete the request?',
-        onConfirm: function() {
-          Hktdc.Dispatcher.trigger('toggleLockButton', true);
-
-          Backbone.emulateHTTP = true;
-          Backbone.emulateJSON = true;
-          var refId = self.requestFormModel.toJSON().ReferenceID;
-          var DeleteRequestModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app'
-            // url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
-          });
-          var DeleteRequestModelInstance = new DeleteRequestModel({data: [{ReferenceID: refId}]});
-
-          DeleteRequestModelInstance.save(null, {
-            beforeSend: utils.setAuthHeader,
-            type: 'POST',
-            success: function(model, response) {
-              // console.log('success: ', a);
-              // console.log(b);
-              Hktdc.Dispatcher.trigger('reloadMenu');
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-
-              self.successRedirect();
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'server error on delete: ' + err,
-                type: 'error',
-                title: 'Error'
-              });
-              console.log(err);
-              // console.log(b);
-            }
-          });
-        }
-      });
-    },
-
-    clickRecallBtnHandler: function() {
-      var self = this;
-      Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
-        message: 'Are you sure to Recall the Form: ' + self.requestFormModel.toJSON().ReferenceID + ' ?',
-        onConfirm: function() {
-          Hktdc.Dispatcher.trigger('toggleLockButton', true);
-
-          Backbone.emulateHTTP = true;
-          Backbone.emulateJSON = true;
-          var ActionModel = Backbone.Model.extend({
-            urlRoot: Hktdc.Config.apiURL + '/applications/computer-app/' + self.requestFormModel.toJSON().ReferenceID + '/recall'
-          });
-          var action = new ActionModel();
-          action.set({
-            UserId: Hktdc.Config.userID,
-            ProcInstID: self.requestFormModel.toJSON().ProcInstID,
-            ActionName: 'Recall',
-            Remark: self.requestFormModel.toJSON().Remark
-          });
-          action.save({}, {
-            beforeSend: utils.setAuthHeader,
-            success: function(action, response) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Successfully Recall request',
-                type: 'notice',
-                title: 'Confirmation'
-              });
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect();
-            },
-            error: function(action, response) {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on Recall request' + JSON.stringify(response.responseText.Message, null, 2),
-                type: 'error',
-                title: 'Error'
-              });
-            }
-          });
-        }
-      });
-    },
-
-    clickResendBtnHandler: function() {
-      var self = this;
-      Hktdc.Dispatcher.trigger('openConfirm', {
-        title: 'Confirmation',
-        message: 'Are you sure to resend email notification?',
-        onConfirm: function() {
-          Hktdc.Dispatcher.trigger('toggleLockButton', true);
-
-          Backbone.emulateHTTP = true;
-          Backbone.emulateJSON = true;
-          var formId = self.requestFormModel.toJSON().FormID;
-          var ResendEmailModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/resend-email'
-          });
-          var ResendEmailModelInstance = new ResendEmailModel();
-          ResendEmailModelInstance.save({ FormID: formId }, {
-            beforeSend: utils.setAuthHeader,
-            success: function(model, response) {
-              // console.log('success: ', a);
-              // console.log(b);
-              Hktdc.Dispatcher.trigger('reloadMenu');
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-
-              self.successRedirect();
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'server error on delete: ' + err,
-                type: 'error',
-                title: 'Error'
-              });
-              console.log(err);
-              // console.log(b);
-            }
-          });
-        }
-      });
-    },
-
-    saveAndApprover: function(status, submitTo, redirectCallback, failCallback) {
-      /* set the request object */
-      var realSubmitTo = this.requestFormModel.toJSON().applicantSubmittedTo;
-      var submitToString = '';
-      // var self = this;
-      if (submitTo) {
-        realSubmitTo = this.requestFormModel.toJSON()[submitTo + 'SubmittedTo'];
-      }
-
-      if (submitTo === 'approver' && this.requestFormModel.toJSON().ApproverFNAME) {
-        submitToString += ' to ' + this.requestFormModel.toJSON().ApproverFNAME;
-      } else if (submitTo === 'applicant' && this.requestFormModel.toJSON().ApplicantFNAME) {
-        submitToString += ' to ' + this.requestFormModel.toJSON().ApplicantFNAME;
-      } else {
-        submitToString += ' to ' + submitTo;
-      }
-
-      // console.log(realSubmitTo);
-      var insertServiceResponse;
-      Q.fcall(this.setRequestObject.bind(this, status, realSubmitTo))
-        .then(function(sendRequestModel) {
-          console.debug('ended set data', sendRequestModel.toJSON());
-          /* send the request object */
-          return this.sendXhrRequest(sendRequestModel);
-        }.bind(this))
-
-        .then(function(data) {
-          insertServiceResponse = data;
-          console.log('ended save request');
-          /* send file */
-          return this.sendAttachment(
-            insertServiceResponse.FormID,
-            this.requestFormModel.toJSON().selectedAttachmentCollection
-          );
-        }.bind(this))
-
-        .then(function(data) {
-          /* delete file */
-          console.log('end send attachment');
-          var self = this;
-          return Q.all(_.map(this.requestFormModel.toJSON().deleteAttachmentIdArray, function(guid) {
-            return self.deleteAttachment(guid);
-          }));
-          // return this.deleteAttachment();
-        }.bind(this))
-
-        .then(function() {
-          console.log('end delete attachment');
-          // FormID = ReferenceID and FormID
-          // if (true) {
-          if (insertServiceResponse.FormID) {
-            // window.location.href = Hktdc.Config.projectPath + '#draft';
-            if (!submitTo) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Your ' + status + ' form has been saved. <br /> The request ID is ' + insertServiceResponse.FormID,
-                title: 'Confirmation',
-                type: 'success'
-              });
-            } else {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Your request is confirmed and sent' + submitToString + '.<br /> The ref. code is ' + insertServiceResponse.FormID,
-                title: 'Confirmation',
-                type: 'success'
-              });
-            }
-
-            // if (!redirectCallback) {
-            //   self.successRedirect();
-            // } else {
-            redirectCallback();
-            // }
-            /* reload the menu for new counts */
-            Hktdc.Dispatcher.trigger('reloadMenu');
-          } else {
-            if (failCallback) {
-              failCallback();
-            }
-
-            Hktdc.Dispatcher.trigger('openAlert', {
-              message: 'error on saving the record',
-              title: 'Error',
-              type: 'error'
-            });
-          }
-        })
-
-        .fail(function(err) {
-          // console.log(err);
-          if (failCallback) {
-            failCallback();
-          }
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'caught error on saving the record: <br /><code>' + err + '</code>',
-            title: 'Error',
-            type: 'error'
-          });
-        });
-    },
-
-    setRequestObject: function(status, realSubmitTo) {
-      var requestFormData = this.requestFormModel.toJSON();
-      var serviceGroup = _.groupBy(requestFormData.selectedServiceCollection.toJSON(), 'GUID');
-      var serviceList = _.flatten(_.map(serviceGroup, function(group, key) {
-        group = _.sortBy(group, 'index');
-        var finalService = group[0];
-        var finalNameArr = [];
-        var finalNoteArr = [];
-        if (group.length > 0 && String(finalService.ControlFlag) === '2') {
-          _.each(group, function(service) {
-            finalNameArr.push(service.Name);
-            finalNoteArr.push(service.Notes || '');
-          });
-          finalService.Name = finalNameArr.join('#*#');
-          finalService.Notes = finalNoteArr.join('#*#');
-          return finalService;
-        }
-        return group;
-      }));
-      console.log('raw date: ', requestFormData.EDeliveryDate);
-      console.log('date is valid: ', moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid());
-
-      var sendRequestModel = new Hktdc.Models.SendRequest({
-        Req_Status: status,
-        Prepared_By: requestFormData.PreparerFNAME,
-        Preparer_ID: requestFormData.PreparerUserID,
-        Ref_Id: requestFormData.ReferenceID,
-        Created_Date: requestFormData.CreatedOn,
-        Applicant: requestFormData.selectedApplicantModel.toJSON().UserFullName,
-        Applicant_ID: requestFormData.selectedApplicantModel.toJSON().UserId,
-        Title: requestFormData.Title,
-        Office: requestFormData.Location,
-        Department: requestFormData.DEPT,
-        Forward_To_ID: requestFormData.Forward_To_ID,
-
-        Justification_Importand_Notes: requestFormData.Justification,
-        Expected_Dalivery_Date: (moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid())
-          ? moment(requestFormData.EDeliveryDate, 'DD MMM YYYY').format('YYYY-MM-DD')
-          : requestFormData.EDeliveryDate,
-        Frequency_Duration_of_Use: requestFormData.DurationOfUse,
-        Estimated_Cost: requestFormData.EstimatedCost,
-        Budget_Provided: requestFormData.BudgetProvided,
-        // Budgeted_Sum: requestFormData.BudgetSum,
-        Recommend_By: (requestFormData.selectedRecommentModel)
-          ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
-          : null,
-        Recommend_By_ID: (requestFormData.selectedRecommentModel)
-          ? requestFormData.selectedRecommentModel.toJSON().WorkerId
-          : null,
-        cc: _.map(this.requestFormModel.toJSON().selectedCCCollection.toJSON(), function(ccData) {
-          return {
-            Name: ccData.FullName || ccData.FULLNAME,
-            UserID: ccData.UserID || ccData.USERID
-          };
-        }),
-        Remark: requestFormData.Remark,
-        // TODO: use applicant or approver submittedTo
-        SubmittedTo: realSubmitTo,
-        ActionTakerRuleCode: this.getActionTaker(this.requestFormModel.toJSON().selectedServiceCollection.toJSON()),
-
-        Service_AcquireFor: serviceList
-        // Service_AcquireFor: this.requestFormModel.toJSON().selectedServiceCollection.toJSON()
-      });
-      console.log('final return:', sendRequestModel.toJSON());
-      return sendRequestModel;
-    },
-
-    getActionTaker: function(selectedServiceCollectionArray) {
-      var actionTakerArray = _.map(selectedServiceCollectionArray, function(serviceData) {
-        // console.log(serviceData);
-        return serviceData.ActionTaker;
-      });
-      return _.uniq(actionTakerArray).join(';');
-    },
-
-    sendXhrRequest: function(sendRequestModel) {
-      var deferred = Q.defer();
-      Backbone.emulateHTTP = true;
-      Backbone.emulateJSON = true;
-
-      sendRequestModel.url = sendRequestModel.url(this.requestFormModel.toJSON().ReferenceID);
-      sendRequestModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        success: function(mymodel, response) {
-          deferred.resolve(response);
-        },
-        error: function(e) {
-          deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
-        }
-      });
-      return deferred.promise;
-    },
-
-    sendAttachment: function(refId, attachmentCollection) {
-      // console.group('files');
-      // var attachmentCollection = attachmentCollection.toJSON();
-      // var attachmentCollection = $('#Fileattach').get(0).files;
-      // console.log('attchCollection', attachmentCollection);
-      var deferred = Q.defer();
-      var files = _.reject(attachmentCollection.toJSON(), function(attachment) {
-        return attachment.AttachmentGUID;
-      });
-      if (files.length <= 0) {
-        deferred.resolve();
-        return;
-      }
-      var ajaxOptions = {
-        type: 'POST',
-        processData: false,
-        cache: false,
-        contentType: false
-      };
-      // var files = $('#Fileattach').get(0).files;
-      var data = new FormData();
-      var sendAttachmentModel = new Hktdc.Models.SendAttachment();
-      var filename = _.map(files, function(file) {
-        // return file.toJSON().file.name;
-        return (file.file) && file.file.name;
-      });
-
-      sendAttachmentModel.url = sendAttachmentModel.url(refId);
-
-      _.each(files, function(file, i) {
-        data.append('file' + i, file.file);
-        // data.append('refid', refId);
-        // data.append('process', 'CHSW');
-      });
-
-      // console.log('final data: ', data);
-      // console.groupEnd();
-      ajaxOptions.data = data;
-
-      // mymodel = sendRequest model
-      // mymodel.set(filename);
-      sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          deferred.resolve();
-        },
-        error: function(e) {
-          deferred.reject('Submit File Error' + JSON.stringify(e, null, 2));
-        }
-      }));
-      return deferred.promise;
-    },
-
-    deleteAttachment: function(AttachmentGUID) {
-      var deferred = Q.defer();
-      // if (!deleteAttachmentIdArray || (deleteAttachmentIdArray && deleteAttachmentIdArray.length <= 0)) {
-      //   deferred.resolve();
-      //   return;
-      // }
-      Backbone.emulateHTTP = true;
-      Backbone.emulateJSON = true;
-      var delFileModel = new Hktdc.Models.DeleteFile();
-      // delFileModel.set({
-      //   files: _.map(deleteAttachmentIdArray, function(AttachmentGUID) {
-      //     return {GUID: AttachmentGUID};
-      //   })
-      // });
-      delFileModel.url = delFileModel.url(AttachmentGUID);
-      delFileModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        type: 'DELETE',
-        success: function() {
-          deferred.resolve(AttachmentGUID);
-        },
-        error: function(e) {
-          deferred.reject('Delete File Error' + JSON.stringify(e, null, 2));
-        }
-      });
-      return deferred.promise;
-    },
-
-    successRedirect: function(forceRedirect) {
-      var baseURL = Backbone.history.getHash().split('?')[0];
-
-      if (forceRedirect || forceRedirect === '') {
-        Backbone.history.navigate(forceRedirect, {trigger: true});
-      } else if (/\/check\//.test(baseURL)) {
-        Backbone.history.navigate('', {trigger: true});
-      } else if (/\/draft\//.test(baseURL)) {
-        Backbone.history.navigate('draft', {trigger: true});
-      } else if (/\/all\//.test(baseURL)) {
-        Backbone.history.navigate('alltask', {trigger: true});
-      } else if (/\/approval\//.test(baseURL)) {
-        Backbone.history.navigate('approvaltask', {trigger: true});
-      // } else if (/\/request\//.test(baseURL)) {
-      //   Backbone.history.navigate('draft', {trigger: true});
-      } else {
-        Backbone.history.navigate('', {trigger: true});
-      }
+      this.model.set(_.extend({}, this.model.defaults, showButtonOptions));
+      this.$el.html(this.template(this.model.toJSON()));
     },
 
     renderButtonHandler: function() {
@@ -862,11 +257,650 @@ Hktdc.Views = Hktdc.Views || {};
       this.render(options);
     },
 
-    render: function(showButtonOptions) {
-      /* load available buttons */
+    clickWorkflowBtnHandler: function(ev) {
+      var self = this;
+      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
+      var actionDisplay = $(ev.target).text();
+      var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to ' + actionDisplay + '?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+          var saveData;
+          if (
+            // means = the form is editable
+            self.requestFormModel.toJSON().mode === 'edit' &&
 
-      this.model.set(_.extend({}, this.model.defaults, showButtonOptions));
-      this.$el.html(this.template(this.model.toJSON()));
+            // seems useless
+            (status === 'Review' || status === 'Return' || status === 'Rework')
+          ) {
+            self.saveRequestAndSendAttachment(status, 'approver')
+              .then(function(_saveData) {
+                saveData = _saveData;
+                return self.workflowHandler(ev);
+              })
+              .then(function() {
+                  // console.log('workflow handler success');
+                  self.openAlertDialog('send', { submitTo: saveData.submitTo, refId: saveData.refId });
+                  Hktdc.Dispatcher.trigger('closeConfirm');
+              })
+              .fail(function(err) {
+                  console.error(err);
+                  // console.log('workflow handler error');
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              });
+          } else {
+            self.workflowHandler(ev)
+              .then(function() {
+                // because the Delete button may generated by server 'actions'
+                if (actionName === 'Delete') {
+                  self.openAlertDialog('delete', { refId: self.requestFormModel.toJSON().ReferenceID });
+                } else {
+                  self.openAlertDialog('send', { submitTo: self.requestFormModel.toJSON().applicantSubmittedTo, refId: self.requestFormModel.toJSON().ReferenceID });
+                }
+                Hktdc.Dispatcher.trigger('closeConfirm');
+              })
+              .fail(function(err) {
+                console.error(err);
+              })
+              .fin(function(){
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              });
+          }
+        }
+      });
+    },
+
+    clickSaveHandler: function() {
+      var self = this;
+      this.model.trigger('checkIsValid', function() {
+        var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
+        var formType = (self.requestFormModel.toJSON().FormStatus) ? 'request' : 'draft';
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'Confirmation',
+          message: 'Confirm save the ' + formType + ' form?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+            self.saveRequestAndSendAttachment(status, '')
+              .then(function(saveData) {
+                self.openAlertDialog('save', { formType: formType, refId: saveData.refId });
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                if (status === 'Draft') {
+                  self.successRedirect('draft');
+                } else {
+                  self.successRedirect();
+                }
+              })
+              .fail(function(err) {
+                console.error(err);
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              });
+          }
+        });
+      });
+    },
+
+    clickApplicantHandler: function() {
+      var self = this;
+      this.model.trigger('checkIsValid', function() {
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'Comfirmation',
+          message: 'Are you sure  to send to applicant?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+            self.saveRequestAndSendAttachment('Review', 'applicant')
+            .then(function(saveData) {
+              self.openAlertDialog('send', { submitTo: 'applicant', refId: saveData.refId });
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              self.successRedirect('');
+            })
+            .fail(function(err) {
+              console.error(err);
+            })
+            .fin(function() {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+            });
+          }
+        });
+      });
+    },
+
+    clickApproverHandler: function() {
+      var self = this;
+      this.model.trigger('checkIsValid', function() {
+        Hktdc.Dispatcher.trigger('openConfirm', {
+          title: 'Confirmation',
+          message: 'Are you sure to send to approver?',
+          onConfirm: function() {
+            Hktdc.Dispatcher.trigger('toggleLockButton', true);
+            self.saveRequestAndSendAttachment('Approval', 'approver')
+              .then(function(saveData) {
+                self.openAlertDialog('send', { submitTo: 'approver', refId: saveData.refId });
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                self.successRedirect('');
+              })
+              .fail(function(err) {
+                console.log(err);
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              });
+          }
+        });
+      });
+    },
+
+    clickDeleteBtnHandler: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to delete the request?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+
+          Backbone.emulateHTTP = true;
+          Backbone.emulateJSON = true;
+          var refId = self.requestFormModel.toJSON().ReferenceID;
+          var DeleteRequestModel = Backbone.Model.extend({
+            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app'
+            // url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
+          });
+          var DeleteRequestModelInstance = new DeleteRequestModel({data: [{ReferenceID: refId}]});
+
+          DeleteRequestModelInstance.save(null, {
+            beforeSend: utils.setAuthHeader,
+            type: 'POST',
+            success: function(model, response) {
+              // console.log('success: ', a);
+              // console.log(b);
+              Hktdc.Dispatcher.trigger('reloadMenu');
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+
+              self.successRedirect();
+            },
+            error: function(err) {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'server error on delete: ' + err,
+                type: 'error',
+                title: 'Error'
+              });
+              console.log(err);
+              // console.log(b);
+            }
+          });
+        }
+      });
+    },
+
+    clickRecallBtnHandler: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to Recall the Form: ' + self.requestFormModel.toJSON().ReferenceID + ' ?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+
+          Backbone.emulateHTTP = true;
+          Backbone.emulateJSON = true;
+          var ActionModel = Backbone.Model.extend({
+            urlRoot: Hktdc.Config.apiURL + '/applications/computer-app/' + self.requestFormModel.toJSON().ReferenceID + '/recall'
+          });
+          var action = new ActionModel();
+          action.set({
+            UserId: Hktdc.Config.userID,
+            ProcInstID: self.requestFormModel.toJSON().ProcInstID,
+            ActionName: 'Recall',
+            Remark: self.requestFormModel.toJSON().Remark
+          });
+          action.save({}, {
+            beforeSend: utils.setAuthHeader,
+            success: function(action, response) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Successfully Recall request',
+                type: 'notice',
+                title: 'Confirmation'
+              });
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+              self.successRedirect();
+            },
+            error: function(action, response) {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Error on Recall request' + JSON.stringify(response.responseText.Message, null, 2),
+                type: 'error',
+                title: 'Error'
+              });
+            }
+          });
+        }
+      });
+    },
+
+    clickResendBtnHandler: function() {
+      var self = this;
+      Hktdc.Dispatcher.trigger('openConfirm', {
+        title: 'Confirmation',
+        message: 'Are you sure to resend email notification?',
+        onConfirm: function() {
+          Hktdc.Dispatcher.trigger('toggleLockButton', true);
+
+          Backbone.emulateHTTP = true;
+          Backbone.emulateJSON = true;
+          var formId = self.requestFormModel.toJSON().FormID;
+          var ResendEmailModel = Backbone.Model.extend({
+            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/resend-email'
+          });
+          var ResendEmailModelInstance = new ResendEmailModel();
+          ResendEmailModelInstance.save({ FormID: formId }, {
+            beforeSend: utils.setAuthHeader,
+            success: function(model, response) {
+              // console.log('success: ', a);
+              // console.log(b);
+              Hktdc.Dispatcher.trigger('reloadMenu');
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('closeConfirm');
+
+              self.successRedirect();
+            },
+            error: function(err) {
+              Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'server error on delete: ' + err,
+                type: 'error',
+                title: 'Error'
+              });
+              console.log(err);
+              // console.log(b);
+            }
+          });
+        }
+      });
+    },
+
+    workflowHandler: function(ev) {
+      // console.log(Backbone.history.getFragment());
+      var self = this;
+      var deferred = Q.defer();
+      var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
+      var sn = hashWithoutQS.split('/')[3];
+      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
+      if (!actionName || !sn) {
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: 'Error on prepare data',
+          type: 'error',
+          title: 'Error'
+        });
+      }
+      var body = {
+        UserId: Hktdc.Config.userID,
+        SN: sn,
+        ActionName: actionName,
+        Remark: this.requestFormModel.toJSON().Remark
+      };
+      if ($(ev.target).attr('workflowAction') === 'Forward') {
+        body.Forward_To_ID = this.requestFormModel.toJSON().Forward_To_ID;
+      }
+
+      Backbone.emulateHTTP = true;
+      Backbone.emulateJSON = true;
+      var worklistModel = new Hktdc.Models.WorklistAction();
+      worklistModel.set(body);
+      worklistModel.url = worklistModel.url($(ev.target).attr('uri'));
+      worklistModel.save({}, {
+        beforeSend: utils.setAuthHeader,
+        success: function(action, response) {
+          self.successRedirect();
+          Hktdc.Dispatcher.trigger('reloadMenu');
+          // window.location.href = "alltask.html";
+          deferred.resolve(response);
+        },
+        error: function(model, response) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Error on workflow action',
+            type: 'error',
+            title: 'Error'
+          });
+          deferred.reject(response.responseText);
+        }
+      });
+      return deferred.promise;
+    },
+
+    saveRequestAndSendAttachment: function(status, submitTo) {
+      /* set the request object */
+      var submitToString = '';
+      var realSubmitTo = (submitTo)
+        ? this.requestFormModel.toJSON()[submitTo + 'SubmittedTo']
+        : this.requestFormModel.toJSON().applicantSubmittedTo;
+
+      if (submitTo === 'approver' && this.requestFormModel.toJSON().ApproverFNAME) {
+        submitToString += ' to ' + this.requestFormModel.toJSON().ApproverFNAME;
+      } else if (submitTo === 'applicant' && this.requestFormModel.toJSON().ApplicantFNAME) {
+        submitToString += ' to ' + this.requestFormModel.toJSON().ApplicantFNAME;
+      } else {
+        submitToString += ' to ' + submitTo;
+      }
+
+      // console.log(realSubmitTo);
+      var insertServiceResponse;
+      return Q.fcall(this.setRequestObject.bind(this, status, realSubmitTo))
+        .then(function(sendRequestModel) {
+          console.debug('ended set data', sendRequestModel.toJSON());
+          /* send the request object */
+          return this.sendXhrRequest(sendRequestModel);
+        }.bind(this))
+
+        .then(function(data) {
+          insertServiceResponse = data;
+          console.log('ended save request');
+          /* send file */
+          return this.sendAttachment(
+            insertServiceResponse.FormID,
+            this.requestFormModel.toJSON().selectedAttachmentCollection
+          );
+        }.bind(this))
+
+        .then(function(data) {
+          /* delete file */
+          console.log('end send attachment');
+          var self = this;
+          return Q.all(_.map(this.requestFormModel.toJSON().deleteAttachmentIdArray, function(guid) {
+            return self.deleteAttachment(guid);
+          }));
+          // return this.deleteAttachment();
+        }.bind(this))
+
+        .then(function() {
+          // console.log('end delete attachment');
+          // FormID = ReferenceID and FormID
+          // if (true) {
+          if (insertServiceResponse.FormID) {
+            return {
+              refId: insertServiceResponse.FormID,
+              submitTo: submitToString
+            };
+            /* reload the menu for new counts */
+            Hktdc.Dispatcher.trigger('reloadMenu');
+          } else {
+            throw new Error('server not return FormID');
+          }
+        })
+
+        .fail(function(err) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Error on saving the record:',
+            title: 'Error',
+            type: 'error'
+          });
+          throw err;
+        });
+    },
+
+    setRequestObject: function(status, realSubmitTo) {
+      var requestFormData = this.requestFormModel.toJSON();
+      var serviceGroup = _.groupBy(requestFormData.selectedServiceCollection.toJSON(), 'GUID');
+      var serviceList = _.flatten(_.map(serviceGroup, function(group, key) {
+        group = _.sortBy(group, 'index');
+        var finalService = group[0];
+        var finalNameArr = [];
+        var finalNoteArr = [];
+        if (group.length > 0 && String(finalService.ControlFlag) === '2') {
+          _.each(group, function(service) {
+            finalNameArr.push(service.Name);
+            finalNoteArr.push(service.Notes || '');
+          });
+          finalService.Name = finalNameArr.join('#*#');
+          finalService.Notes = finalNoteArr.join('#*#');
+          return finalService;
+        }
+        return group;
+      }));
+      console.log('raw date: ', requestFormData.EDeliveryDate);
+      console.log('date is valid: ', moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid());
+
+      var sendRequestModel = new Hktdc.Models.SendRequest({
+        Req_Status: status,
+        Prepared_By: requestFormData.PreparerFNAME,
+        Preparer_ID: requestFormData.PreparerUserID,
+        Ref_Id: requestFormData.ReferenceID,
+        Created_Date: requestFormData.CreatedOn,
+        Applicant: requestFormData.selectedApplicantModel.toJSON().UserFullName,
+        Applicant_ID: requestFormData.selectedApplicantModel.toJSON().UserId,
+        Title: requestFormData.Title,
+        Office: requestFormData.Location,
+        Department: requestFormData.DEPT,
+        Forward_To_ID: requestFormData.Forward_To_ID,
+
+        Justification_Importand_Notes: requestFormData.Justification,
+        Expected_Dalivery_Date: (moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid())
+          ? moment(requestFormData.EDeliveryDate, 'DD MMM YYYY').format('YYYY-MM-DD')
+          : requestFormData.EDeliveryDate,
+        Frequency_Duration_of_Use: requestFormData.DurationOfUse,
+        Estimated_Cost: requestFormData.EstimatedCost,
+        Budget_Provided: requestFormData.BudgetProvided,
+        // Budgeted_Sum: requestFormData.BudgetSum,
+        Recommend_By: (requestFormData.selectedRecommentModel)
+          ? requestFormData.selectedRecommentModel.toJSON().WorkerFullName
+          : null,
+        Recommend_By_ID: (requestFormData.selectedRecommentModel)
+          ? requestFormData.selectedRecommentModel.toJSON().WorkerId
+          : null,
+        cc: _.map(this.requestFormModel.toJSON().selectedCCCollection.toJSON(), function(ccData) {
+          return {
+            Name: ccData.FullName || ccData.FULLNAME,
+            UserID: ccData.UserID || ccData.USERID
+          };
+        }),
+        Remark: requestFormData.Remark,
+        // TODO: use applicant or approver submittedTo
+        SubmittedTo: realSubmitTo,
+        ActionTakerRuleCode: this.getActionTaker(this.requestFormModel.toJSON().selectedServiceCollection.toJSON()),
+
+        Service_AcquireFor: serviceList
+        // Service_AcquireFor: this.requestFormModel.toJSON().selectedServiceCollection.toJSON()
+      });
+      console.log('final return:', sendRequestModel.toJSON());
+      return sendRequestModel;
+    },
+
+    getWorklistURI: function(actionId) {
+      var mapping = [
+        { ActionID: '3', URI: 'approve'},
+        { ActionID: '4', URI: 'reject'},
+        { ActionID: '5', URI: 'return-to-applicant'},
+        // { ActionID: '26', URI: 'recall'},
+        { ActionID: '1', URI: 'send-to-approver'},
+        { ActionID: '2', URI: 'return-to-preparer'},
+        { ActionID: '28', URI: 'delete'},
+        { ActionID: '7', URI: 'reject'},
+        { ActionID: '8', URI: 'complete'},
+        { ActionID: '9', URI: 'forward'},
+        { ActionID: '10', URI: 'cancel'},
+        { ActionID: '11', URI: 'send-to-its'},
+        { ActionID: '22', URI: 'send-to-applicant'},
+        { ActionID: '23', URI: 'delete'},
+        { ActionID: '12', URI: 'recommend'},
+        { ActionID: '13', URI: 'reject'},
+        { ActionID: '14', URI: 'reject'},
+        { ActionID: '15', URI: 'complete'},
+        { ActionID: '16', URI: 'forward'},
+        { ActionID: '17', URI: 'cancel'},
+        { ActionID: '18', URI: 'reject'},
+        { ActionID: '19', URI: 'complete'},
+        { ActionID: '20', URI: 'forward'},
+        { ActionID: '21', URI: 'cancel'},
+        { ActionID: '24', URI: 'send-to-approver'},
+        { ActionID: '25', URI: 'return-to-preparer'}
+        // { ActionID: '6', Action: 'Recall', ButtonName: 'Recall', URI: 'recall'},
+        // { ActionID: '29', Action: 'Submit', ButtonName: 'Submitted', URI: 'submitted'},
+      ];
+
+      return _.find(mapping, function(obj) {
+        return String(obj.ActionID) === String(actionId);
+      }).URI;
+    },
+
+    getActionTaker: function(selectedServiceCollectionArray) {
+      var actionTakerArray = _.map(selectedServiceCollectionArray, function(serviceData) {
+        // console.log(serviceData);
+        return serviceData.ActionTaker;
+      });
+      return _.uniq(actionTakerArray).join(';');
+    },
+
+    sendXhrRequest: function(sendRequestModel) {
+      var deferred = Q.defer();
+      Backbone.emulateHTTP = true;
+      Backbone.emulateJSON = true;
+
+      sendRequestModel.url = sendRequestModel.url(this.requestFormModel.toJSON().ReferenceID);
+      sendRequestModel.save({}, {
+        beforeSend: utils.setAuthHeader,
+        success: function(mymodel, response) {
+          deferred.resolve(response);
+        },
+        error: function(e) {
+          deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
+        }
+      });
+      return deferred.promise;
+    },
+
+    sendAttachment: function(refId, attachmentCollection) {
+      // console.group('files');
+      // var attachmentCollection = attachmentCollection.toJSON();
+      // var attachmentCollection = $('#Fileattach').get(0).files;
+      // console.log('attchCollection', attachmentCollection);
+      var deferred = Q.defer();
+      var files = _.reject(attachmentCollection.toJSON(), function(attachment) {
+        return attachment.AttachmentGUID;
+      });
+      if (files.length <= 0) {
+        deferred.resolve();
+        return;
+      }
+      var ajaxOptions = {
+        type: 'POST',
+        processData: false,
+        cache: false,
+        contentType: false
+      };
+      // var files = $('#Fileattach').get(0).files;
+      var data = new FormData();
+      var sendAttachmentModel = new Hktdc.Models.SendAttachment();
+      var filename = _.map(files, function(file) {
+        // return file.toJSON().file.name;
+        return (file.file) && file.file.name;
+      });
+
+      sendAttachmentModel.url = sendAttachmentModel.url(refId);
+
+      _.each(files, function(file, i) {
+        data.append('file' + i, file.file);
+        // data.append('refid', refId);
+        // data.append('process', 'CHSW');
+      });
+
+      // console.log('final data: ', data);
+      // console.groupEnd();
+      ajaxOptions.data = data;
+
+      // mymodel = sendRequest model
+      // mymodel.set(filename);
+      sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
+        beforeSend: utils.setAuthHeader,
+        success: function(model, response) {
+          deferred.resolve();
+        },
+        error: function(e) {
+          deferred.reject('Submit File Error' + JSON.stringify(e, null, 2));
+        }
+      }));
+      return deferred.promise;
+    },
+
+    deleteAttachment: function(AttachmentGUID) {
+      var deferred = Q.defer();
+      // if (!deleteAttachmentIdArray || (deleteAttachmentIdArray && deleteAttachmentIdArray.length <= 0)) {
+      //   deferred.resolve();
+      //   return;
+      // }
+      Backbone.emulateHTTP = true;
+      Backbone.emulateJSON = true;
+      var delFileModel = new Hktdc.Models.DeleteFile();
+      // delFileModel.set({
+      //   files: _.map(deleteAttachmentIdArray, function(AttachmentGUID) {
+      //     return {GUID: AttachmentGUID};
+      //   })
+      // });
+      delFileModel.url = delFileModel.url(AttachmentGUID);
+      delFileModel.save({}, {
+        beforeSend: utils.setAuthHeader,
+        type: 'DELETE',
+        success: function() {
+          deferred.resolve(AttachmentGUID);
+        },
+        error: function(e) {
+          deferred.reject('Delete File Error' + JSON.stringify(e, null, 2));
+        }
+      });
+      return deferred.promise;
+    },
+
+    successRedirect: function(forceRedirect) {
+      var baseURL = Backbone.history.getHash().split('?')[0];
+
+      if (forceRedirect || forceRedirect === '') {
+        Backbone.history.navigate(forceRedirect, {trigger: true});
+      } else if (/\/check\//.test(baseURL)) {
+        Backbone.history.navigate('', {trigger: true});
+      } else if (/\/draft\//.test(baseURL)) {
+        Backbone.history.navigate('draft', {trigger: true});
+      } else if (/\/all\//.test(baseURL)) {
+        Backbone.history.navigate('alltask', {trigger: true});
+      } else if (/\/approval\//.test(baseURL)) {
+        Backbone.history.navigate('approvaltask', {trigger: true});
+      // } else if (/\/request\//.test(baseURL)) {
+      //   Backbone.history.navigate('draft', {trigger: true});
+      } else {
+        Backbone.history.navigate('', {trigger: true});
+      }
+    },
+
+    openAlertDialog: function(type, data) {
+      switch (type) {
+        case 'save':
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Your ' + data.formType + ' form has been saved. <br /> The request ID is ' + data.refId,
+            title: 'Confirmation',
+            type: 'success'
+          });
+          break;
+        case 'send':
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'Your request is confirmed and sent to ' + data.submitTo + '.<br /> The ref. code is ' + data.refId,
+            title: 'Confirmation',
+            type: 'success'
+          });
+          break;
+        case 'delete':
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: 'The record : ' + data.refId + ' is deleted.',
+            title: 'Confirmation',
+            type: 'success'
+          });
+          break;
+        default:
+
+      }
     }
 
   });
