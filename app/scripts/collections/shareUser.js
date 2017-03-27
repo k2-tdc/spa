@@ -2,7 +2,7 @@
 
 Hktdc.Collections = Hktdc.Collections || {};
 
-(function () {
+(function() {
   'use strict';
 
   Hktdc.Collections.ShareUser = Backbone.Collection.extend({
@@ -10,7 +10,7 @@ Hktdc.Collections = Hktdc.Collections || {};
       return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/share-user?process=CHSW';
     },
 
-    model: Hktdc.Models.User
+    model: Hktdc.Models.Employee
 
   });
 
