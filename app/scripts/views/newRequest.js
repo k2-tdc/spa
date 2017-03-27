@@ -405,7 +405,7 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         startDate: startDate,
         onSelect: function(val) {
-          this.model.set({
+          self.model.set({
             EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())
               ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
               : ''
@@ -414,7 +414,7 @@ Hktdc.Views = Hktdc.Views || {};
             field: 'EDeliveryDate'
           });
 
-          this.model.set({
+          self.model.set({
             EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())
               ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
               : ''
