@@ -35,8 +35,18 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       // this.$el.html(this.template(this.model.toJSON()));
+      var self = this;
       this.$el.html(this.template({ filter: this.model.toJSON() }));
       this.renderDataTable();
+      if (this.model.toJSON().showShareUser) {
+        this.loadShareUser()
+          .then(function(shareUsers) {
+            return self.renderShareUser(shareUsers);
+          })
+          .catch(function(e) {
+            console.error(e);
+          });
+      }
     },
 
     updateModel: function(field, value) {
@@ -86,8 +96,17 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     doSearch: function() {
-      var queryParams = _.omit(this.model.toJSON(), 'UserId', 'canChooseStatus', 'mode', 'searchUserType');
-      // console.log(Backbone.history.getHash().split('?')[0]);
+      var queryParams = _.pick(this.model.toJSON(),
+        'offset',
+        'limit',
+        'sort',
+        'status',
+        'start-date',
+        'end-date',
+        'refid',
+        'applicant',
+        'applicant-employee-id'
+      );
       var currentBase = Backbone.history.getHash().split('?')[0];
       Backbone.history.navigate(currentBase + utils.getQueryString(queryParams));
       this.statusDataTable.ajax.url(this.getAjaxURL()).load();
@@ -103,9 +122,7 @@ Hktdc.Views = Hktdc.Views || {};
         'end-date',
         'refid',
         'applicant',
-
-        // 'UserId',
-        'EmployeeId'
+        'applicant-employee-id'
       );
       var filterArr = _.map(usefulData, function(val, filter) {
         var value = (_.isNull(val)) ? '' : val;
@@ -133,6 +150,22 @@ Hktdc.Views = Hktdc.Views || {};
           // statusApiURL = Hktdc.Config.apiURL + '/GetRequestDetails?' + filterArr.join('&');
       }
       return statusApiURL;
+    },
+
+    loadShareUser: function() {
+      var deferred = Q.defer();
+      var shareUserCollection = new Hktdc.Collections.ShareUser();
+      shareUserCollection.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function() {
+          deferred.resolve(shareUserCollection);
+        },
+        error: function(err) {
+          deferred.reject(err);
+        }
+      });
+
+      return deferred.promise;
     },
 
     renderDataTable: function() {
@@ -192,7 +225,7 @@ Hktdc.Views = Hktdc.Views || {};
           data: 'status'
         }],
         initComplete: function(settings, records) {
-          self.renderUserFilter(records);
+          self.renderApplicantFilter(records);
           self.renderStatusFilter(records);
         }
 
@@ -224,7 +257,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 
-    renderUserFilter: function(records) {
+    renderApplicantFilter: function(records) {
       var self = this;
       var userListView;
       var applicants = _.map(records, function(record) {
@@ -237,28 +270,21 @@ Hktdc.Views = Hktdc.Views || {};
       var distinctApplicants = _.uniq(applicants, function(applicant) {
         return applicant.UserId;
       });
+
       var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
-      if (self.model.toJSON().mode === 'APPROVAL TASKS' || self.model.toJSON().mode === 'ALL TASKS') {
-        userListView = new Hktdc.Views.DelegationList({
-          tagName: 'select',
-          className: 'form-control user-select',
-          attributes: {
-            name: 'SUser'
-          },
-          collection: applicantCollection,
-          selectedDelegation: self.model.toJSON().SUser
-        });
-      } else {
-        userListView = new Hktdc.Views.ApplicantSelect({
-          collection: applicantCollection,
-          selectedApplicant: self.model.toJSON().applicant,
-          onSelect: function(model) {
-            var val = (model) ? model.toJSON().EmployeeID : '';
-            self.model.set({ applicant: val });
-          }
-        });
-        userListView.render();
-      }
+
+      userListView = new Hktdc.Views.ApplicantSelect({
+        collection: applicantCollection,
+        selectedApplicant: self.model.toJSON().applicant,
+        onSelect: function(model) {
+          var val = (model) ? model.toJSON().EmployeeID : '';
+          self.model.set({
+            applicant: val,
+            'applicant-employee-id': val.EmployeeID
+          });
+        }
+      });
+      userListView.render();
 
       $('.user-container', self.el).html(userListView.el);
     },
@@ -315,6 +341,20 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('.create-from-datepicker-container', self.el).html(createDateFromView.el);
       $('.create-to-datepicker-container', self.el).html(createDateToView.el);
+    },
+
+    renderShareUser: function(shareUsersCollection) {
+      var self = this;
+      var shareUserListView = new Hktdc.Views.DelegationSelect({
+        attributes: {
+          name: 'SUser'
+        },
+        collection: shareUsersCollection,
+        selectedDelegation: self.model.toJSON().SUser
+      });
+
+      // shareUserListView
+      $('.share-user-container', self.el).html(shareUserListView.el);
     },
 
     getSummaryFromRow: function(formID, requestList) {

@@ -7,18 +7,16 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.User = Backbone.Model.extend({
 
-    initialize: function() {
-    },
+    initialize: function() {},
 
     defaults: {
       UserName: 'Guest',
       UserId: 'guest'
     },
 
-    validate: function(attrs, options) {
-    },
+    validate: function(attrs, options) {},
 
-    parse: function(response, options)  {
+    parse: function(response, options) {
       return response;
     }
   });

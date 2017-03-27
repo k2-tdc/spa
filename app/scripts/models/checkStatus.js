@@ -19,7 +19,8 @@ Hktdc.Models = Hktdc.Models || {};
       limit: 999999,
       sort: '+lastactiontime',
       status: '',
-      applicant: '',
+      applicant: '', // userID
+      'applicant-employee-id': '', // BSxxx
 
       UserId: '',
       SUser: '',

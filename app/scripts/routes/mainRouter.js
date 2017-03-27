@@ -38,9 +38,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       Hktdc.Dispatcher.trigger('checkPagePermission', function() {
         var checkStatusModel = new Hktdc.Models.CheckStatus({
           canChooseStatus: true,
-          searchUserType: 'Applicant',
+          showShareUser: false,
           UserId: Hktdc.Config.userID,
-          EmployeeId: Hktdc.Config.employeeID,
+          'applicant-employee-id': utils.getParameterByName('applicant-employee-id'),
           status: utils.getParameterByName('status'),
           refid: utils.getParameterByName('refid'),
           'start-date': utils.getParameterByName('start-date'),
@@ -72,9 +72,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       Hktdc.Dispatcher.trigger('checkPagePermission', function() {
         var checkStatusModel = new Hktdc.Models.CheckStatus({
           canChooseStatus: false,
-          searchUserType: 'Applicant',
+          showShareUser: false,
           UserId: Hktdc.Config.userID,
-          EmployeeId: Hktdc.Config.employeeID,
+          'applicant-employee-id': utils.getParameterByName('applicant-employee-id'),
           status: utils.getParameterByName('status'),
           refid: utils.getParameterByName('refid'),
           'start-date': utils.getParameterByName('start-date'),
@@ -105,10 +105,10 @@ Hktdc.Routers = Hktdc.Routers || {};
       console.debug('[ routes/mainRouter.js ] - all task route handler');
       Hktdc.Dispatcher.trigger('checkPagePermission', function() {
         var checkStatusModel = new Hktdc.Models.CheckStatus({
-          searchUserType: 'Sharing User',
+          showShareUser: true,
           canChooseStatus: true,
           UserId: Hktdc.Config.userID,
-          EmployeeId: Hktdc.Config.employeeID,
+          'applicant-employee-id': utils.getParameterByName('applicant-employee-id'),
           status: utils.getParameterByName('status'),
           refid: utils.getParameterByName('refid'),
           'start-date': utils.getParameterByName('start-date'),
@@ -140,9 +140,9 @@ Hktdc.Routers = Hktdc.Routers || {};
       Hktdc.Dispatcher.trigger('checkPagePermission', function() {
         var checkStatusModel = new Hktdc.Models.CheckStatus({
           canChooseStatus: true,
-          searchUserType: 'Sharing User',
+          showShareUser: true,
           UserId: Hktdc.Config.userID,
-          EmployeeId: Hktdc.Config.employeeID,
+          'applicant-employee-id': utils.getParameterByName('applicant-employee-id'),
           status: utils.getParameterByName('status'),
           refid: utils.getParameterByName('refid'),
           'start-date': utils.getParameterByName('start-date'),
@@ -176,7 +176,7 @@ Hktdc.Routers = Hktdc.Routers || {};
           var approvalHistoryModel = new Hktdc.Models.ApprovalHistory({
             canChooseStatus: true,
             userid: Hktdc.Config.userID,
-            employeeid: Hktdc.Config.employeeID,
+            employeeid: '',
             applicant: utils.getParameterByName('applicant') || '',
             'approval-start-date': utils.getParameterByName('approval-start-date'),
             'approval-end-date': utils.getParameterByName('approval-end-date'),
