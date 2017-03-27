@@ -415,7 +415,9 @@ Hktdc.Views = Hktdc.Views || {};
           });
 
           this.model.set({
-            EDeliveryDate: val
+            EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())
+              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+              : ''
           });
         }
       });
