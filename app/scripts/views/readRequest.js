@@ -63,11 +63,13 @@ Hktdc.Views = Hktdc.Views || {};
             console.error(e);
           });
       } else {
-        self.renderButtons();
-        self.renderAttachment(self.model.toJSON().Attachments);
-        self.renderSelectedCCView(self.model.toJSON().RequestCC);
-        self.renderWorkflowLog(self.model.toJSON().ProcessLog);
-        self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
+        setTimeout(function() {
+          self.renderButtons();
+          self.renderAttachment(self.model.toJSON().Attachments);
+          self.renderSelectedCCView(self.model.toJSON().RequestCC);
+          self.renderWorkflowLog(self.model.toJSON().ProcessLog);
+          self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
+        });
       }
     },
 
