@@ -11,10 +11,6 @@ Hktdc.Views = Hktdc.Views || {};
 
     tagName: 'div',
 
-    id: '',
-
-    className: '',
-
     events: {
       'blur #txtRemark': 'updateNewRequestModel'
     },
@@ -159,7 +155,7 @@ Hktdc.Views = Hktdc.Views || {};
           requestFormModel: this.model
         });
         attachmentListView.render();
-        $('#attachment-container').html(attachmentListView.el);
+        $('#attachment-container', this.el).html(attachmentListView.el);
       }
     },
 
