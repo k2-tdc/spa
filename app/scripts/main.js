@@ -132,6 +132,7 @@ window.Hktdc = {
               }, function(error) {
                 /* else */
                 console.error('OAuth Error', error);
+                alert('Error on refreshing the access token. Redirect to login page.');
                 window.location.href = window.Hktdc.Config.OAuthLoginUrl;
               });
             }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
@@ -141,6 +142,7 @@ window.Hktdc = {
         }, function(error) {
           /* else */
           console.error('OAuth Error', error);
+          alert('Error on getting the access token on init. Redirect to login page.');
           window.location.href = window.Hktdc.Config.OAuthLoginUrl;
         });
       } else {
@@ -244,6 +246,9 @@ window.Hktdc = {
           processList: menuModel.toJSON().PList
         });
         onSuccess(menuModel);
+      })
+      .catch(function(error) {
+        console.error(error);
       });
   },
 
@@ -257,7 +262,7 @@ window.Hktdc = {
         // onSuccess(menuModel);
         deferred.resolve(menuModel);
       },
-      error: function(error) {
+      error: function(model, error) {
         console.log('error on rendering menu');
         deferred.reject(error);
       }
@@ -311,6 +316,8 @@ window.Hktdc = {
 
   globalConfig: function(env) {
     utils.setURL(env);
+    Backbone.emulateHTTP = true;
+    Backbone.emulateJSON = true;
     NProgress.configure({
       parent: '#page',
       showSpinner: false
@@ -325,6 +332,10 @@ window.Hktdc = {
     });
     $(document).ajaxError(function(xhr, status, err) {
       if (/4\d{2}$/.test(status.status)) {
+        console.log('xhr: ', xhr);
+        console.log('status: ', status);
+        console.log('err: ', err);
+        alert('server return 4xx error, redirect to login page.');
         window.location.href = window.Hktdc.Config.OAuthLoginUrl;
       }
     });
