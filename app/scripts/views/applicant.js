@@ -85,9 +85,7 @@ Hktdc.Views = Hktdc.Views || {};
       this.collection.each(this.renderApplicantItem);
       setTimeout(function() {
         self.$el.find('option[value="' + self.selectedApplicant + '"]').prop('selected', true);
-        if (self.disabled) {
-          self.$el.prop('disabled', true);
-        }
+        self.$el.prop('disabled', self.disabled);
       });
     },
 
