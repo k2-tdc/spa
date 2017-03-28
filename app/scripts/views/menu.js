@@ -173,8 +173,14 @@ Hktdc.Views = Hktdc.Views || {};
 
       var pagePath = $target.attr('routename').toLowerCase().split('?')[0];
       var currentRoute = Backbone.history.getHash();
-      if (currentRoute.indexOf(pagePath) >= 0 && currentRoute.split('/').length === 1) {
-        Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
+      var isParentPath = (currentRoute.indexOf('/') === -1);
+      var containQueryString = currentRoute.indexOf('?') >= 0;
+      if (currentRoute.indexOf(pagePath) >= 0 && isParentPath) {
+        if (containQueryString) {
+          Backbone.history.navigate(pagePath, true);
+        } else {
+          Backbone.history.loadUrl(pagePath, { trigger: true });
+        }
       } else {
         Backbone.history.navigate(pagePath, true);
       }

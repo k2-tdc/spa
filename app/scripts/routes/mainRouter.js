@@ -22,16 +22,7 @@ Hktdc.Routers = Hktdc.Routers || {};
       'logout': 'logout'
     },
 
-    initialize: function() {
-      var self = this;
-      var footerView = new Hktdc.Views.Footer();
-      self.listenTo(Hktdc.Dispatcher, 'reloadRoute', function(route) {
-        // Backbone.history.navigate(route, true);
-        Backbone.history.loadUrl(route, {
-          trigger: true
-        });
-      });
-    },
+    initialize: function() {},
 
     checkStatus: function() {
       console.debug('[ routes/mainRouter.js ] - checkStatus route handler');
