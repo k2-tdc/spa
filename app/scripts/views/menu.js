@@ -171,7 +171,7 @@ Hktdc.Views = Hktdc.Views || {};
         $target = $(ev.target).parent('li');
       }
 
-      var pagePath = $target.attr('routename').toLowerCase();
+      var pagePath = $target.attr('routename').toLowerCase().split('?')[0];
       var currentRoute = Backbone.history.getHash();
       if (currentRoute.indexOf(pagePath) >= 0 && currentRoute.split('/').length === 1) {
         Hktdc.Dispatcher.trigger('reloadRoute', pagePath);
