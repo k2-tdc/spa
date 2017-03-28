@@ -543,6 +543,9 @@ Hktdc.Views = Hktdc.Views || {};
         collection: new Hktdc.Collections.Applicant(employeeArray),
         selectedApplicant: self.model.toJSON().ApplicantUserID || Hktdc.Config.userID,
         allowEmpty: false,
+        disabled: function() {
+          return self.model.toJSON().actions && self.model.toJSON().actions.length > 0;
+        },
         onSelect: function(model) {
           // console.log(model.toJSON());
           var val = (model) ? model.toJSON().UserId : null;

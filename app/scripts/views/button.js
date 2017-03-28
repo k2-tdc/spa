@@ -92,8 +92,9 @@ Hktdc.Views = Hktdc.Views || {};
         }
 
         if (this.requestFormModel.toJSON().FormStatus === 'Rework' && me === Preparer && this.requestFormModel.toJSON().mode !== 'read') {
+          options.showSave = true;
           self.renderDraftModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
-          // options.showSave = true;
+          // _.extend(options, self.renderDraftModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode));
           // options.showDelete = true;
         }
 
@@ -214,35 +215,9 @@ Hktdc.Views = Hktdc.Views || {};
 
       console.log('before role check: ', showButtonOptions);
 
-      /* Check Login user against role, ANSURE THE ABOVE SET BUT UNWANTED BUTTON NOT SHOW */
-      // formstatus is 'Draft'
-      // if (FormStatus === 'Draft') {
-      //   if (me === Applicant) {
-      //     showButtonOptions.showSendToApplicant = false;
-      //   }
-      // // formstatus is 'Review'
-      // } else if (FormStatus === 'Review') {
-      //   /* NO role case to handle, must be applicant */
-      //   showButtonOptions.showReturn = true;
-      //   showButtonOptions.returnTo = 'Preparer';
-      // // formstatus is Return
-      // } else if (FormStatus === 'Return') {
-      //   if (me === Applicant) {
-      //     showButtonOptions.showDelete = false;
-      //     showButtonOptions.showSendToApplicant = false;
-      //     showButtonOptions.showReturn = true;
-      //   } else if (me === Preparer) {
-      //     showButtonOptions.showSendToApprover = false;
-      //     showButtonOptions.showReturn = false;
-      //   }
-      // } else {
-      //   /* no Case to handle, must be applicant */
-      // }
-
-      // console.log('after role check: ', showButtonOptions);
-      // console.groupEnd();
-
       self.render(showButtonOptions);
+      // return for next button options if any
+      return showButtonOptions;
     },
 
     renderRequestFormButtonByActions: function(actions, defaultOptions) {
