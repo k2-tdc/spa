@@ -322,7 +322,7 @@ window.Hktdc = {
       parent: '#page',
       showSpinner: false
     });
-    $.fn.dataTable.moment('DD MMM YYYY');
+    // $.fn.dataTable.moment('DD MMM YYYY');
     $(document).ajaxStart(function(event) {
       NProgress.start();
     });
