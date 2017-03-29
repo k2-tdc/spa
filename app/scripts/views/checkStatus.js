@@ -105,7 +105,8 @@ Hktdc.Views = Hktdc.Views || {};
         'end-date',
         'refid',
         'applicant',
-        'applicant-employee-id'
+        'applicant-employee-id',
+        'SUser'
       );
       var currentBase = Backbone.history.getHash().split('?')[0];
       Backbone.history.navigate(currentBase + utils.getQueryString(queryParams));
@@ -122,7 +123,8 @@ Hktdc.Views = Hktdc.Views || {};
         'end-date',
         'refid',
         'applicant',
-        'applicant-employee-id'
+        'applicant-employee-id',
+        'SUser'
       );
       var filterArr = _.map(usefulData, function(val, filter) {
         var value = (_.isNull(val)) ? '' : val;
@@ -354,7 +356,12 @@ Hktdc.Views = Hktdc.Views || {};
           name: 'SUser'
         },
         collection: shareUsersCollection,
-        selectedDelegation: self.model.toJSON().SUser
+        selectedDelegation: self.model.toJSON().SUser,
+        onSelect: function(selectedUser) {
+          self.model.set({
+            SUser: selectedUser.UserID
+          });
+        }
       });
 
       // shareUserListView

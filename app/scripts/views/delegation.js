@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, _ */
+/* global Hktdc, Backbone, JST, _, $ */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -45,15 +45,16 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     events: {
-      'select': 'selectApplcantHandler'
+      'change': 'selectDelegationHandler'
     },
 
-    selectApplcantHandler: function() {
-      /* The new request model will handle the change */
-
-      this.requestFormModel.set({
-        selectedDelegationModel: this.model
-      });
+    selectDelegationHandler: function(ev) {
+      if (this.onSelect) {
+        var userId = $(ev.target).find('option:selected').val();
+        this.onSelect(_.find(this.collection.toJSON(), function(user) {
+          return String(user.UserID) === String(userId);
+        }));
+      }
     },
 
     renderDelegationOption: function(model) {
@@ -87,8 +88,8 @@ Hktdc.Views = Hktdc.Views || {};
       this.$el.html(this.template({
         user: this.model.toJSON()
       }));
-      this.$el.attr('value', this.model.toJSON().FromUser_USER_ID);
-      if (this.selectedDelegation === this.model.toJSON().FromUser_USER_ID) {
+      this.$el.attr('value', this.model.toJSON().UserID);
+      if (this.selectedDelegation === this.model.toJSON().UserID) {
         this.$el.prop('selected', true);
       }
     }

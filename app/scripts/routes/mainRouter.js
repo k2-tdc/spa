@@ -104,7 +104,8 @@ Hktdc.Routers = Hktdc.Routers || {};
           refid: utils.getParameterByName('refid'),
           'start-date': utils.getParameterByName('start-date'),
           'end-date': utils.getParameterByName('end-date'),
-          applicant: utils.getParameterByName('applicant') || ''
+          applicant: utils.getParameterByName('applicant') || '',
+          SUser: utils.getParameterByName('SUser')
         });
         checkStatusModel.set({
           mode: 'ALL TASKS'
@@ -138,7 +139,8 @@ Hktdc.Routers = Hktdc.Routers || {};
           refid: utils.getParameterByName('refid'),
           'start-date': utils.getParameterByName('start-date'),
           'end-date': utils.getParameterByName('end-date'),
-          applicant: utils.getParameterByName('applicant') || ''
+          applicant: utils.getParameterByName('applicant') || '',
+          SUser: utils.getParameterByName('SUser')
         });
         checkStatusModel.set({
           mode: 'APPROVAL TASKS'
