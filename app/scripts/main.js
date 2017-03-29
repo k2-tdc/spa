@@ -133,7 +133,7 @@ window.Hktdc = {
                 /* else */
                 console.error('OAuth Error', error);
                 alert('Error on refreshing the access token. Redirect to login page.');
-                window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+                window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
               });
             }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
@@ -143,7 +143,7 @@ window.Hktdc = {
           /* else */
           console.error('OAuth Error', error);
           alert('Error on getting the access token on init. Redirect to login page.');
-          window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+          window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
         });
       } else {
         Hktdc.Config.userID = 'dewang';
@@ -322,7 +322,10 @@ window.Hktdc = {
       parent: '#page',
       showSpinner: false
     });
-    // $.fn.dataTable.moment('DD MMM YYYY');
+    
+    // below is for sorting date
+    $.fn.dataTable.moment('DD MMM YYYY');
+
     $(document).ajaxStart(function(event) {
       NProgress.start();
     });
@@ -336,7 +339,7 @@ window.Hktdc = {
         console.log('status: ', status);
         console.log('err: ', err);
         alert('server return 4xx error, redirect to login page.');
-        window.location.href = window.Hktdc.Config.OAuthLoginUrl;
+        window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
       }
     });
   }
