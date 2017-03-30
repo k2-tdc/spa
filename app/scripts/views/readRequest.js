@@ -144,13 +144,19 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderWorkflowLog: function(workflowLogList) {
+      var self = this;
       var workflowLogCollections = new Hktdc.Collections.WorkflowLog(workflowLogList);
       var workflowLogListView = new Hktdc.Views.WorkflowLogList({
         collection: workflowLogCollections,
-        requestFormModel: this.model
+        requestFormModel: self.model
       });
       workflowLogListView.render();
       $('#workflowlog-container', this.el).html(workflowLogListView.el);
+      if (String(self.model.toJSON().Permission) === '2') {
+        self.model.set({
+          showLog: true
+        });
+      }
     },
 
     renderAttachment: function(attachmentList) {

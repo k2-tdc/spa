@@ -57,14 +57,17 @@
     </div>
     <div class="sep-space-sm"></div>
 
-
     <div class="request-application">
+      <% if (request.Permission != 2) { %>
       <div class="sep-space-sm"></div>
       <div class="block-padding">
         <div class="newrequest-title text-left">Service Acquired for</div>
       </div>
+      <% } // endif %>
+
       <div class="select-service-header" style="border: none;">
         <div class="">
+          <% if (request.Permission != 2) { %>
           <div id="service-container">
             <!-- ========================= -->
             <!-- service type content here -->
@@ -193,54 +196,52 @@
           </div>
           <div class="sep-space"></div>
 
+          <% } // endif %>
+
           <div class="rowrow field" id="workflowlog-container">
             <!-- workflow log here -->
           </div>
           <div class="sep-space"></div>
 
-          <% if (request.showRemark) { %>
+          <% if (request.Permission != 2) { %>
 
-            <div class="sep-space-db-border"></div>
-            <div class="sep-space"></div>
-            <div class="row field">
-              <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Remark</div>
-              <div class="col-xs-12 col-sm-10 col-md-8 form_data">
-                <textarea class="form-control keepEdit" rows="3" id="txtRemark" field="Remark"></textarea>
-              </div>
-            </div>
+            <% if (request.showRemark) { %>
 
-            <div class="sep-space"></div>
-
-            <% if (request.showForwardTo) { %>
+              <div class="sep-space-db-border"></div>
+              <div class="sep-space"></div>
               <div class="row field">
-                <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right" style='line-height:34px'>Forward To</div>
-                <div class="col-xs-12 col-sm-10 col-md-8 form_data forwardToUser">
+                <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right">Remark</div>
+                <div class="col-xs-12 col-sm-10 col-md-8 form_data">
+                  <textarea class="form-control keepEdit" rows="3" id="txtRemark" field="Remark"></textarea>
                 </div>
               </div>
+
+              <div class="sep-space"></div>
+
+              <% if (request.showForwardTo) { %>
+                <div class="row field">
+                  <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right" style='line-height:34px'>Forward To</div>
+                  <div class="col-xs-12 col-sm-10 col-md-8 form_data forwardToUser">
+                  </div>
+                </div>
+              <% } %>
+
+              <div class="sep-space"></div>
+              <div class="sep-space-db-border"></div>
+
             <% } %>
 
-
+            <div class="row field">
+              <div class="col-xs-10 col-sm-2 newrequest-title"></div>
+              <div class="col-xs-12 col-md-3 btn-group" style="text-align: left;"></div>
+            </div>
 
             <div class="sep-space"></div>
-            <div class="sep-space-db-border"></div>
-
-          <% } %>
-
-          <div class="row field">
-            <div class="col-xs-10 col-sm-2 newrequest-title"></div>
-            <div class="col-xs-12 col-md-3 btn-group" style="text-align: left;"></div>
-
-          </div>
-          <div class="sep-space"></div>
-          <div class="row field">
-            <div class="col-xs-12 col-md-12 buttons-container">
-              <!--
-                <button class="btn btn-primary" id="btnBack" style="display:none" type="button">Back</button>
-                <button class="btn btn-primary" id="btnsave" type="button">Save</button>
-                <button class="btn btn-primary" id="btnapprover" type="button">Send to Approver</button>
-              -->
+            <div class="row field">
+              <div class="col-xs-12 col-md-12 buttons-container"></div>
             </div>
-          </div>
+
+          <% } // endif %>
 
         </div>
       </div>
