@@ -143,6 +143,10 @@ window.utils = {
   },
 
   getAccessToken: function(onSuccess, onError) {
+    if (!(Hktdc.Config.environment === 'uat' || Hktdc.Config.environment === 'chsw')) {
+      onError('in local env');
+      return;
+    }
     var self = this;
     var accessToken = '';
     var refreshToken = Cookies.get('REFRESH-TOKEN');
@@ -152,7 +156,6 @@ window.utils = {
 
     /* if no refresh token */
     if (!refreshToken) {
-
       /* Initiate OAuth login flow */
       window.location.href = oauthUrl;
 

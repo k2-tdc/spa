@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $, Q, NProgress */
+/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert */
 
 window.Hktdc = {
   Models: {},
@@ -121,21 +121,6 @@ window.Hktdc = {
               });
               Backbone.history.start();
             });
-
-            /* to prevent token expiry when using the SPA */
-            setInterval(function() {
-              Hktdc.Config.gettingToken = true;
-              utils.getAccessToken(function(accessToken) {
-                Hktdc.Config.gettingToken = false;
-                Hktdc.Config.accessToken = accessToken;
-                console.log('refreshed the access token: ', accessToken);
-              }, function(error) {
-                /* else */
-                console.error('OAuth Error', error);
-                alert('Error on refreshing the access token. Redirect to login page.');
-                window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
-              });
-            }, 1000 * 60 * Hktdc.Config.refreshTokenInterval);
           }, function(error) {
             console.error('Error on getting user info by access token', error);
           });
@@ -255,18 +240,27 @@ window.Hktdc = {
   loadMenu: function() {
     var deferred = Q.defer();
     var menuModel = new Hktdc.Models.Menu();
-    menuModel.fetch({
-      beforeSend: utils.setAuthHeader,
-      success: function(menuModel) {
-        // menuModel.set('activeTab', Backbone.history.getHash());
-        // onSuccess(menuModel);
-        deferred.resolve(menuModel);
-      },
-      error: function(model, error) {
-        console.log('error on rendering menu');
-        deferred.reject(error);
-      }
-    });
+    var doFetch = function() {
+      menuModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function(menuModel) {
+          deferred.resolve(menuModel);
+        },
+        error: function(model, response) {
+          if (response.status === 401) {
+            utils.getAccessToken(function() {
+              doFetch();
+            }, function(err) {
+              deferred.reject(err);
+            });
+          } else {
+            deferred.reject('error on rendering menu');
+            console.error(response.responseText);
+          }
+        }
+      });
+    };
+    doFetch();
     return deferred.promise;
   },
 
@@ -322,7 +316,7 @@ window.Hktdc = {
       parent: '#page',
       showSpinner: false
     });
-    
+
     // below is for sorting date
     $.fn.dataTable.moment('DD MMM YYYY');
 
@@ -332,15 +326,6 @@ window.Hktdc = {
     $(document).ajaxComplete(function() {
       NProgress.done();
       // NProgress.remove();
-    });
-    $(document).ajaxError(function(xhr, status, err) {
-      if (/4\d{2}$/.test(status.status)) {
-        console.log('xhr: ', xhr);
-        console.log('status: ', status);
-        console.log('err: ', err);
-        alert('server return 4xx error, redirect to login page.');
-        window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
-      }
     });
   }
 };
