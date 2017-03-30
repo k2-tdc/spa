@@ -15,37 +15,28 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtRemark': 'updateNewRequestModel'
     },
 
-    updateNewRequestModel: function(ev) {
-      var targetField = $(ev.target).attr('field');
-      var updateObject = {};
-      updateObject[targetField] = $(ev.target).val();
-      this.model.set(updateObject, {validate: true, field: targetField});
-      // double set is to prevent invalid value bypass the set model process
-      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
-      this.model.set(updateObject);
-    },
-
     initialize: function() {
       /* mode === read */
       console.debug('This is << READ >> mode');
       var self = this;
-
-      this.model.set({
-        EDeliveryDate: moment(this.model.toJSON().EDeliveryDate, 'YYYY-MM-DD').format('DD MMM YYYY')
-      });
+      if (self.model.toJSON().EDeliveryDate && moment(self.model.toJSON().EDeliveryDate, 'YYYYMMDD').isValid()) {
+        self.model.set({
+          EDeliveryDate: moment(self.model.toJSON().EDeliveryDate, 'YYYYMMDD').format('DD MMM YYYY')
+        });
+      }
 
       self.setCommentBlock();
 
-      if (_.find(this.model.toJSON().actions, function(action) {
+      if (_.find(self.model.toJSON().actions, function(action) {
         return action.Action === 'Forward';
       })) {
-        this.model.set({
+        self.model.set({
           showForwardTo: true
         });
       }
       self.render();
 
-      if (this.model.toJSON().showForwardTo) {
+      if (self.model.toJSON().showForwardTo) {
         self.loadForwardUser()
           .then(function(forwardUserCollection) {
             self.forwardUserCollection = forwardUserCollection;
@@ -71,6 +62,22 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderServiceCatagory(new Hktdc.Collections.ServiceCatagory(self.model.toJSON().RequestList));
         });
       }
+    },
+
+    render: function() {
+      this.$el.html(this.template({
+        request: this.model.toJSON()
+      }));
+    },
+
+    updateNewRequestModel: function(ev) {
+      var targetField = $(ev.target).attr('field');
+      var updateObject = {};
+      updateObject[targetField] = $(ev.target).val();
+      this.model.set(updateObject, {validate: true, field: targetField});
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      this.model.set(updateObject);
     },
 
     loadForwardUser: function() {
@@ -168,12 +175,6 @@ Hktdc.Views = Hktdc.Views || {};
       });
       serviceCatagoryListView.render();
       $('#service-container').html(serviceCatagoryListView.el);
-    },
-
-    render: function() {
-      this.$el.html(this.template({
-        request: this.model.toJSON()
-      }));
     }
 
   });

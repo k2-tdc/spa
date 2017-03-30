@@ -30,11 +30,11 @@ Hktdc.Views = Hktdc.Views || {};
       // toValue: function(date, format, language) {
       //   return moment(date).format('YYYY-MM-DD');
 
-      self.model.set({
-        EDeliveryDate: (self.model.toJSON().EDeliveryDate)
-          ? moment(self.model.toJSON().EDeliveryDate, 'YYYY-MM-DD').format('DD MMM YYYY')
-          : null
-      });
+      if (self.model.toJSON().EDeliveryDate && moment(self.model.toJSON().EDeliveryDate, 'YYYYMMDD').isValid()) {
+        self.model.set({
+          EDeliveryDate: moment(self.model.toJSON().EDeliveryDate, 'YYYYMMDD').format('DD MMM YYYY')
+        });
+      }
       self.setCommentBlock();
       self.render();
 
