@@ -98,7 +98,11 @@ Hktdc.Views = Hktdc.Views || {};
           // options.showDelete = true;
         }
 
-        if (this.requestFormModel.toJSON().FormStatus === 'Approval' && me === Applicant) {
+        if (
+          this.requestFormModel.toJSON().FormStatus === 'Approval' &&
+          me === Applicant &&
+          /\/check\//.test(Backbone.history.getHash())
+        ) {
           options.showRecall = true;
           options.showResend = true;
         }
