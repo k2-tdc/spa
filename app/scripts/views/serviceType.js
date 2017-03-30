@@ -22,8 +22,6 @@ Hktdc.Views = Hktdc.Views || {};
       'click .btn-add': 'addServiceRequest'
     },
 
-    defaultServiceRequestObject: {},
-
     initialize: function(props) {
       _.extend(this, props);
       this.renderServiceObject();
@@ -44,10 +42,6 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var selectedServiceRequestList = null;
         var availableServiceObjectArray = this.model.toJSON().Level3;
-        this.defaultServiceRequestObject = {
-          ControlFlag: availableServiceObjectArray[0].ControlFlag,
-          ServiceGUID: utils.makeId(10)
-        };
 
         switch (this.requestFormModel.toJSON().mode) {
           case 'new':
@@ -116,9 +110,17 @@ Hktdc.Views = Hktdc.Views || {};
       // console.groupEnd();
     },
 
+    getServiceRequestObject: function() {
+      var availableServiceObjectArray = this.model.toJSON().Level3;
+      return {
+        ControlFlag: availableServiceObjectArray[0].ControlFlag,
+        ServiceGUID: utils.makeId(10)
+      };
+    },
+
     addServiceRequest: function() {
       console.log('addServiceRequest in serviceType.js');
-      this.childServiceRequestCollection.add(this.defaultServiceRequestObject);
+      this.childServiceRequestCollection.add(this.getServiceRequestObject());
     },
 
     render: function() {
