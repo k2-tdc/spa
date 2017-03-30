@@ -207,51 +207,57 @@ Hktdc.Routers = Hktdc.Routers || {};
       console.debug('[ routes/mainRouter.js ] - newRequest route handler');
       Hktdc.Dispatcher.trigger('checkPagePermission', function() {
         var referenceIdModel = new Hktdc.Models.ReferenceId();
-        referenceIdModel.fetch({
-          beforeSend: utils.setAuthHeader,
-          type: 'POST',
-          success: function() {
-            $('#mainContent').addClass('compress');
-            var newRequestModel = new Hktdc.Models.NewRequest({
-              ReferenceID: referenceIdModel.toJSON().ReferenceID,
-              PreparerFNAME: Hktdc.Config.userName,
-              PreparerUserID: Hktdc.Config.userID,
-              CreatedOn: window.moment().format('DD MMM YYYY'),
-              mode: 'new',
+        var doFetch = function() {
+          referenceIdModel.fetch({
+            beforeSend: utils.setAuthHeader,
+            type: 'POST',
+            success: function() {
+              $('#mainContent').addClass('compress');
+              var newRequestModel = new Hktdc.Models.NewRequest({
+                ReferenceID: referenceIdModel.toJSON().ReferenceID,
+                PreparerFNAME: Hktdc.Config.userName,
+                PreparerUserID: Hktdc.Config.userID,
+                CreatedOn: window.moment().format('DD MMM YYYY'),
+                mode: 'new',
 
-              /* set the default selected applicant is self */
-              selectedApplicantModel: new Hktdc.Models.Applicant({
-                UserId: Hktdc.Config.userID,
-                UserFullName: Hktdc.Config.userName
-              })
-            });
-            var nrView = new Hktdc.Views.NewRequest({
-              model: newRequestModel
-            });
+                /* set the default selected applicant is self */
+                selectedApplicantModel: new Hktdc.Models.Applicant({
+                  UserId: Hktdc.Config.userID,
+                  UserFullName: Hktdc.Config.userName
+                })
+              });
+              var nrView = new Hktdc.Views.NewRequest({
+                model: newRequestModel
+              });
 
-            $('#mainContent').empty().html(nrView.el);
+              $('#mainContent').empty().html(nrView.el);
 
-            var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
-            var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
-              collection: subheaderMenuListCollection,
-              currentPageName: 'New Request'
-            });
-            subheaderMenuListView.render();
+              var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+              var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+                collection: subheaderMenuListCollection,
+                currentPageName: 'New Request'
+              });
+              subheaderMenuListView.render();
 
-            $('.subheader-menu-container').html(subheaderMenuListView.el);
-          },
-          error: function(err) {}
-        });
-
-        /* var referenceIdModel = new Hktdc.Models.ReferenceId();
-              referenceIdModel.fetch({
-              beforeSend: utils.setAuthHeader,
-              success: function() {
+              $('.subheader-menu-container').html(subheaderMenuListView.el);
             },
-            error: function(e) {
-            console.log('error on getting reference id');
-          }
-        }); */
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                });
+              } else {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'Error on getting new request form ID',
+                  type: 'error',
+                  title: 'Error'
+                });
+                console.error('Error on getting new request form ID', response.responseText);
+              }
+            }
+          });
+        };
+        doFetch();
       });
     },
 
@@ -276,113 +282,109 @@ Hktdc.Routers = Hktdc.Routers || {};
           type = 'Draft';
         }
         requestCollection.url = requestCollection.url(requestId, type, procId, snOrProcId);
-        requestCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function(result, response) {
-            if (result.length === 0) {
-              var noPermissionView = new Hktdc.Views.NoPermission();
-              noPermissionView.render();
-              $('#mainContent').empty().html(noPermissionView.el);
-              // Hktdc.Dispatcher.trigger('openAlert', {
-              //   message: 'Record not found or no permission to access the record',
-              //   title: 'error',
-              //   type: 'error'
-              // });
-              NProgress.done();
-              return;
-            }
-            $('#mainContent').addClass('compress');
-            var rawData = response[0];
-            var requestModel = new Hktdc.Models.NewRequest(rawData);
-            var FormStatus = requestModel.toJSON().FormStatus;
-            var me = Hktdc.Config.userID;
-            /* ----------- IMPORTANT: pre-set the request mode  ----------- */
-            var editModeStatus = ['Draft', 'Review', 'Return', 'Rework'];
-            var subheaderMapping = {
-              draft: 'Draft',
-              check: 'Check Status',
-              all: 'All Tasks',
-              approval: 'Approval Tasks',
-              history: 'Approval History'
-            };
-            // var mode = (modeObj) ? modeObj.name : 'read';
-            var getMode = function() {
-              // 'Draft'
-              if (FormStatus === 'Draft') {
-                return 'edit';
-
-                // other status
-              } else if ((!(_.contains(editModeStatus, FormStatus)) || !rawData.actions)) {
-                return 'read';
-
-                // ['Review', 'Return', 'Rework']
-              } else {
-                if (FormStatus === 'Review' && requestModel.toJSON().ApplicantUserID === me) {
-                  return 'edit';
-                } else if (FormStatus === 'Return' && requestModel.toJSON().ApplicantUserID === me) {
-                  return 'edit';
-                } else if (FormStatus === 'Rework' && requestModel.toJSON().PreparerUserID === me) {
-                  return 'edit';
-                }
+        var doFetch = function() {
+          requestCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function(result, response) {
+              if (result.length === 0) {
+                var noPermissionView = new Hktdc.Views.NoPermission();
+                noPermissionView.render();
+                $('#mainContent').empty().html(noPermissionView.el);
+                // Hktdc.Dispatcher.trigger('openAlert', {
+                //   message: 'Record not found or no permission to access the record',
+                //   title: 'error',
+                //   type: 'error'
+                // });
+                NProgress.done();
+                return;
               }
-              return 'read';
-            };
-            /* special case for preparer enter the review form */
-            // if (
-            //   rawData.ApplicantUserID !== Hktdc.Config.userID &&
-            //   rawData.PreparerUserID === Hktdc.Config.userID &&
-            //   requestModel.toJSON().FormStatus === 'Review'
-            // ) {
-            //   mode = 'read';
-            // }
-            // console.log(mode);
+              $('#mainContent').addClass('compress');
+              var rawData = response[0];
+              var requestModel = new Hktdc.Models.NewRequest(rawData);
+              var FormStatus = requestModel.toJSON().FormStatus;
+              var me = Hktdc.Config.userID;
+              /* ----------- IMPORTANT: pre-set the request mode  ----------- */
+              var editModeStatus = ['Draft', 'Review', 'Return', 'Rework'];
+              var subheaderMapping = {
+                draft: 'Draft',
+                check: 'Check Status',
+                all: 'All Tasks',
+                approval: 'Approval Tasks',
+                history: 'Approval History'
+              };
+              // var mode = (modeObj) ? modeObj.name : 'read';
+              var getMode = function() {
+                // 'Draft'
+                if (FormStatus === 'Draft') {
+                  return 'edit';
 
-            requestModel.set({
-              mode: getMode(),
-              selectedApplicantModel: new Hktdc.Models.Applicant({
-                UserId: rawData.ApplicantUserID,
-                UserFullName: rawData.ApplicantFNAME
-              })
-            });
+                  // other status
+                } else if ((!(_.contains(editModeStatus, FormStatus)) || !rawData.actions)) {
+                  return 'read';
 
-            if (getMode() === 'edit') {
-              // console.log(requestModel.toJSON());
-              var requestView = new Hktdc.Views.NewRequest({
-                model: requestModel
+                  // ['Review', 'Return', 'Rework']
+                } else {
+                  if (FormStatus === 'Review' && requestModel.toJSON().ApplicantUserID === me) {
+                    return 'edit';
+                  } else if (FormStatus === 'Return' && requestModel.toJSON().ApplicantUserID === me) {
+                    return 'edit';
+                  } else if (FormStatus === 'Rework' && requestModel.toJSON().PreparerUserID === me) {
+                    return 'edit';
+                  }
+                }
+                return 'read';
+              };
+
+              requestModel.set({
+                mode: getMode(),
+                selectedApplicantModel: new Hktdc.Models.Applicant({
+                  UserId: rawData.ApplicantUserID,
+                  UserFullName: rawData.ApplicantFNAME
+                })
               });
-            } else {
-              var requestView = new Hktdc.Views.ReadRequest({
-                model: requestModel
+
+              var requestView;
+              if (getMode() === 'edit') {
+                requestView = new Hktdc.Views.NewRequest({
+                  model: requestModel
+                });
+              } else {
+                requestView = new Hktdc.Views.ReadRequest({
+                  model: requestModel
+                });
+              }
+
+              $('#mainContent').empty().html(requestView.el);
+
+              var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
+              var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
+                collection: subheaderMenuListCollection,
+                currentPageName: subheaderMapping[from]
               });
+              subheaderMenuListView.render();
+              // console.log($('.subheader-menu-container'));
+
+              $('.subheader-menu-container').html(subheaderMenuListView.el);
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                });
+              } else {
+                var noPermissionView = new Hktdc.Views.NoPermission();
+                noPermissionView.render();
+                $('#mainContent').empty().html(noPermissionView.el);
+
+                NProgress.done();
+
+                console.error('Error on getting the request data: ', response.responseText);
+              }
             }
+          });
+        };
 
-            $('#mainContent').empty().html(requestView.el);
-
-            var subheaderMenuListCollection = new Hktdc.Collections.SubheaderMenu();
-            var subheaderMenuListView = new Hktdc.Views.SubheaderMenuList({
-              collection: subheaderMenuListCollection,
-              currentPageName: subheaderMapping[from]
-            });
-            subheaderMenuListView.render();
-            // console.log($('.subheader-menu-container'));
-
-            $('.subheader-menu-container').html(subheaderMenuListView.el);
-          },
-
-          error: function(err) {
-            var noPermissionView = new Hktdc.Views.NoPermission();
-            noPermissionView.render();
-            $('#mainContent').empty().html(noPermissionView.el);
-            // Hktdc.Dispatcher.trigger('openAlert', {
-            //   message: 'Error on getting the record.',
-            //   title: 'error',
-            //   type: 'error'
-            // });
-            NProgress.done();
-
-            console.error('error on getting the request: ', err);
-          }
-        });
+        doFetch();
       });
     },
 
@@ -401,15 +403,6 @@ Hktdc.Routers = Hktdc.Routers || {};
         dialogModel: new Hktdc.Models.DelegationDialog()
       });
       $('#mainContent').html(delegationPageView.el);
-      // delegationPageModel.fetch({
-      //   beforeSend: utils.setAuthHeader,
-      //   success: function() {
-      //   },
-      //   error: function() {
-      //   }
-      // });
-
-      // console.log(delegationPageView.el);
     },
 
     report: function() {

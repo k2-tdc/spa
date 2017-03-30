@@ -216,6 +216,13 @@ window.Hktdc = {
               });
               newMenuModel.set('activeTab', Backbone.history.getHash());
               $('#menu').html(newMenuView.el);
+            })
+            .catch(function(error) {
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: error,
+                type: 'error',
+                title: 'Error'
+              });
             });
         });
         // console.log(Hktdc.Config.environments[Hktdc.Config.environment].SPAHomePath);
@@ -233,7 +240,11 @@ window.Hktdc = {
         onSuccess(menuModel);
       })
       .catch(function(error) {
-        console.error(error);
+        Hktdc.Dispatcher.trigger('openAlert', {
+          message: error,
+          type: 'error',
+          title: 'Error'
+        });
       });
   },
 
@@ -254,8 +265,8 @@ window.Hktdc = {
               deferred.reject(err);
             });
           } else {
-            deferred.reject('error on rendering menu');
             console.error(response.responseText);
+            deferred.reject('Error on loading menu');
           }
         }
       });

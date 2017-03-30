@@ -143,8 +143,20 @@ window.utils = {
   },
 
   getAccessToken: function(onSuccess, onError) {
+    var defaultError = function() {
+      Hktdc.Dispatcher.trigger('openAlert', {
+        message: 'Error on getting access token',
+        type: 'error',
+        title: 'Error'
+      });
+    }
     if (!(Hktdc.Config.environment === 'uat' || Hktdc.Config.environment === 'chsw')) {
-      onError('in local env');
+      var msg = 'in local env';
+      if (onError && typeof onError === 'function') {
+        onError(msg);
+      } else {
+        defaultError(msg);
+      }
       return;
     }
     var self = this;
@@ -184,13 +196,21 @@ window.utils = {
           if (accessToken) {
             onSuccess(accessToken);
           } else {
-            onError('Access token empty after refresh.');
+            var msg = 'Access token empty after refresh.';
+            if (onError && typeof onError === 'function') {
+              onError(msg);
+            } else {
+              defaultError(msg);
+            }
           }
         };
 
         xhr.onerror = function() {
           if (onError && typeof onError === 'function') {
-            onError('Can\'t get new access token by refresh token.');
+            var msg = 'Can\'t get new access token by refresh token.';
+            onError(msg);
+          } else {
+            defaultError(msg);
           }
         };
 
