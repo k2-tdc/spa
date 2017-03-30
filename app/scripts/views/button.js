@@ -237,8 +237,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     clickWorkflowBtnHandler: function(ev) {
       var self = this;
-      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
-      var actionDisplay = $(ev.target).text();
+      var actionName = $(ev.target).attr('workflowaction').replace(/(\r\n|\n|\r)/gm, '');
+      var actionDisplay = $(ev.target).text().replace(/(\r\n|\n|\r)/gm, '');
       var status = self.requestFormModel.toJSON().FormStatus || 'Draft';
       Hktdc.Dispatcher.trigger('openConfirm', {
         title: 'Confirmation',
@@ -263,6 +263,7 @@ Hktdc.Views = Hktdc.Views || {};
               .then(function() {
                 // console.log('workflow handler success');
                 self.openAlertDialog('send', { submitTo: saveData.submitTo, refId: saveData.refId });
+
                 Hktdc.Dispatcher.trigger('closeConfirm');
               })
               .fail(function(err) {
@@ -279,7 +280,10 @@ Hktdc.Views = Hktdc.Views || {};
                 if (actionName === 'Delete') {
                   self.openAlertDialog('delete', { refId: self.requestFormModel.toJSON().ReferenceID });
                 } else {
-                  self.openAlertDialog('send', { submitTo: self.requestFormModel.toJSON().applicantSubmittedTo, refId: self.requestFormModel.toJSON().ReferenceID });
+                  self.openAlertDialog('send', {
+                    submitTo: self.getSubmitTo(actionDisplay),
+                    refId: self.requestFormModel.toJSON().ReferenceID
+                  });
                 }
                 Hktdc.Dispatcher.trigger('closeConfirm');
               })
@@ -334,17 +338,17 @@ Hktdc.Views = Hktdc.Views || {};
           onConfirm: function() {
             Hktdc.Dispatcher.trigger('toggleLockButton', true);
             self.saveRequestAndSendAttachment('Review', 'applicant')
-            .then(function(saveData) {
-              self.openAlertDialog('send', { submitTo: 'applicant', refId: saveData.refId });
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect('');
-            })
-            .fail(function(err) {
-              console.error(err);
-            })
-            .fin(function() {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-            });
+              .then(function(saveData) {
+                self.openAlertDialog('send', { submitTo: 'applicant', refId: saveData.refId });
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                self.successRedirect('');
+              })
+              .fail(function(err) {
+                console.error(err);
+              })
+              .fin(function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+              });
           }
         });
       });
@@ -511,7 +515,7 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var hashWithoutQS = Backbone.history.getFragment().split('?')[0];
       var sn = hashWithoutQS.split('/')[3];
-      var actionName = $(ev.target).attr('workflowaction').replace('\n', '');
+      var actionName = $(ev.target).attr('workflowaction').replace(/(\r\n|\n|\r)/gm, '');
       if (!actionName || !sn) {
         Hktdc.Dispatcher.trigger('openAlert', {
           message: 'Error on prepare data',
@@ -869,11 +873,15 @@ Hktdc.Views = Hktdc.Views || {};
           });
           break;
         case 'send':
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Your request is confirmed and sent to ' +
+          var message = (data.submitTo)
+            ? 'Your request is confirmed and sent to ' +
               data.submitTo +
               '.<br /> The ref. code is ' +
-              data.refId,
+              data.refId
+            : 'Your request is confirmed and sent.<br />The ref. code is ' +
+              data.refId;
+          Hktdc.Dispatcher.trigger('openAlert', {
+            message: message,
             title: 'Confirmation',
             type: 'success'
           });
@@ -889,6 +897,32 @@ Hktdc.Views = Hktdc.Views || {};
           break;
         default:
 
+      }
+    },
+
+    getSubmitTo: function(buttonName) {
+      switch (buttonName.trim().replace(/\s/gm, '').toLowerCase()) {
+        case 'returntopreparer':
+          return 'Preparer';
+
+        case 'returntoapplicant':
+        case 'sendtoapplicant':
+          return 'Applicant';
+
+        case 'sendtoapprover':
+          return 'Approver';
+
+        case 'approve':
+        case 'forward':
+        case 'recommend':
+        case 'reject':
+          return 'Action Taker';
+
+        case 'sendtoitsapproval':
+          return 'ITS Approver';
+
+        default:
+          return false;
       }
     }
 
