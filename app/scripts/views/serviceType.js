@@ -44,7 +44,10 @@ Hktdc.Views = Hktdc.Views || {};
       try {
         var selectedServiceRequestList = null;
         var availableServiceObjectArray = this.model.toJSON().Level3;
-        this.defaultServiceRequestObject = { ControlFlag: availableServiceObjectArray[0].ControlFlag };
+        this.defaultServiceRequestObject = {
+          ControlFlag: availableServiceObjectArray[0].ControlFlag,
+          ServiceGUID: utils.makeId(10)
+        };
 
         switch (this.requestFormModel.toJSON().mode) {
           case 'new':
