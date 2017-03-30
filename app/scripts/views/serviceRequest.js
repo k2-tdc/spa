@@ -167,7 +167,7 @@ Hktdc.Views = Hktdc.Views || {};
         serviceObjectListView.render();
 
         setTimeout(function() {
-          console.log(serviceObjectListView.el);
+          // console.log(serviceObjectListView.el);
           $('.service-object-container', this.el).append(serviceObjectListView.el);
         }.bind(this));
       } catch (e) {

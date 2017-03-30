@@ -68,7 +68,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       /* the collection share with new request selectedCCCollection */
-      console.log(this.requestFormModel.toJSON());
+      // console.log(this.requestFormModel.toJSON());
       if (this.collection.length || this.requestFormModel.toJSON().mode !== 'read') {
         this.collection.each(this.renderSelectedCCItem);
       } else {
