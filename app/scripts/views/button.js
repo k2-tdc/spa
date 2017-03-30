@@ -262,7 +262,10 @@ Hktdc.Views = Hktdc.Views || {};
               })
               .then(function() {
                 // console.log('workflow handler success');
-                self.openAlertDialog('send', { submitTo: saveData.submitTo, refId: saveData.refId });
+                self.openAlertDialog('send', {
+                  submitTo: self.getSubmitTo(actionDisplay, self.requestFormModel.toJSON()),
+                  refId: saveData.refId
+                });
 
                 Hktdc.Dispatcher.trigger('closeConfirm');
               })
@@ -281,7 +284,7 @@ Hktdc.Views = Hktdc.Views || {};
                   self.openAlertDialog('delete', { refId: self.requestFormModel.toJSON().ReferenceID });
                 } else {
                   self.openAlertDialog('send', {
-                    submitTo: self.getSubmitTo(actionDisplay),
+                    submitTo: self.getSubmitTo(actionDisplay, self.requestFormModel.toJSON()),
                     refId: self.requestFormModel.toJSON().ReferenceID
                   });
                 }
@@ -560,18 +563,9 @@ Hktdc.Views = Hktdc.Views || {};
 
     saveRequestAndSendAttachment: function(status, submitTo) {
       /* set the request object */
-      var submitToString = '';
       var realSubmitTo = (submitTo)
         ? this.requestFormModel.toJSON()[submitTo + 'SubmittedTo']
         : this.requestFormModel.toJSON().applicantSubmittedTo;
-
-      if (submitTo === 'approver' && this.requestFormModel.toJSON().ApproverFNAME) {
-        submitToString += ' to ' + this.requestFormModel.toJSON().ApproverFNAME;
-      } else if (submitTo === 'applicant' && this.requestFormModel.toJSON().ApplicantFNAME) {
-        submitToString += ' to ' + this.requestFormModel.toJSON().ApplicantFNAME;
-      } else {
-        submitToString += ' to ' + submitTo;
-      }
 
       // console.log(realSubmitTo);
       var insertServiceResponse;
@@ -611,8 +605,7 @@ Hktdc.Views = Hktdc.Views || {};
             Hktdc.Dispatcher.trigger('reloadMenu');
 
             return {
-              refId: insertServiceResponse.FormID,
-              submitTo: submitToString
+              refId: insertServiceResponse.FormID
             };
           } else {
             throw new Error('server not return FormID');
@@ -900,26 +893,31 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    getSubmitTo: function(buttonName) {
+    getSubmitTo: function(buttonName, formData) {
       switch (buttonName.trim().replace(/\s/gm, '').toLowerCase()) {
         case 'returntopreparer':
-          return 'Preparer';
+          return 'Preparer ' + formData.PreparerFNAME;
 
         case 'returntoapplicant':
         case 'sendtoapplicant':
-          return 'Applicant';
+          return 'Applicant ' + formData.ApplicantFNAME;
 
         case 'sendtoapprover':
-          return 'Approver';
+          return 'Approver ' + formData.ApproverFNAME;
 
         case 'approve':
         case 'forward':
         case 'recommend':
+          return 'Action Taker ' + formData.ActionTakerFullName;
+
         case 'reject':
-          return 'Action Taker';
+          if (formData.FormStatus === 'ITSApproval') {
+            return 'Action Taker ' + formData.ActionTakerFullName;
+          }
+          return false;
 
         case 'sendtoitsapproval':
-          return 'ITS Approver';
+          return 'ITS Approver ' + formData.ITSApproverFullName;
 
         default:
           return false;
