@@ -59,7 +59,8 @@ Hktdc.Views = Hktdc.Views || {};
         selectedServiceObject: true
       });
       this.model.set({
-        Notes: ''
+        Notes: '',
+        ServiceGUID: utils.makeId(10)
       });
       // console.log(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.remove(this.serviceRequestModel.toJSON().ServiceGUID);

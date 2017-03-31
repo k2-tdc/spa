@@ -50,17 +50,28 @@ Hktdc.Views = Hktdc.Views || {};
       var collection = this.model.toJSON().parentCollection;
       var self = this;
       // console.log('model', this.model.toJSON());
-      console.log('serviceRequestList Collection: ', collection.toJSON());
+      // console.group('remove');
+      // console.log('serviceRequestList Collection: ', collection.toJSON());
       // console.log('selectedServiceCollection collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
       // old: if (this.model.toJSON().ServiceGUID || String(this.model.toJSON().ControlFlag) === '1') {
       if (String(this.model.toJSON().ControlFlag) === '1') {
+        // console.log(collection.toJSON());
+        // console.log(this.model.toJSON());
         collection.remove(this.model);
         /* insert mode use selectedRequestModel */
         /* edit mode use this.model */
         var targetModel = this.model.toJSON().selectedRequestModel ||
                           this.model;
+        // console.log('targetModel: ', targetModel.toJSON());
+        var removeTarget;
+        this.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedModel) {
+          if (selectedModel.toJSON().ServiceGUID === targetModel.toJSON().ServiceGUID) {
+            removeTarget = selectedModel;
+          }
+        });
+        // console.log('removeTarget: ', removeTarget);
         /* console.group('group');
         console.log('collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
         console.log('selectedRequestModel: ', this.model.toJSON().selectedRequestModel.toJSON());
@@ -68,7 +79,7 @@ Hktdc.Views = Hktdc.Views || {};
         console.log('targetModel: ', targetModel.toJSON());
         console.groupEnd(); */
         /* also delete the collection */
-        this.requestFormModel.toJSON().selectedServiceCollection.remove(targetModel);
+        this.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
 
       /* not have ServiceGUID = (ControlFlag = 2) */
       } else {
@@ -106,6 +117,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         // console.log(collection.toJSON());
       }
+      // console.groupEnd();
       console.log('removed, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
 
