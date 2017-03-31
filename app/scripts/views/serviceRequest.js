@@ -50,11 +50,12 @@ Hktdc.Views = Hktdc.Views || {};
       var collection = this.model.toJSON().parentCollection;
       var self = this;
       // console.log('model', this.model.toJSON());
-      console.log('serviceRequestList Collection: ', collection.toJSON());
-      console.log('selectedServiceCollection collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      // console.log('serviceRequestList Collection: ', collection.toJSON());
+      // console.log('selectedServiceCollection collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
-      if (this.model.toJSON().ServiceGUID || String(this.model.toJSON().ControlFlag) === '1') {
+      // old: if (this.model.toJSON().ServiceGUID || String(this.model.toJSON().ControlFlag) === '1') {
+      if (String(this.model.toJSON().ControlFlag) === '1') {
         collection.remove(this.model);
         /* insert mode use selectedRequestModel */
         /* edit mode use this.model */
@@ -72,17 +73,17 @@ Hktdc.Views = Hktdc.Views || {};
       /* not have ServiceGUID = (ControlFlag = 2) */
       } else {
         // console.log('condition b');
-        console.log('this.model', this.model.toJSON());
+        // console.log('this.model', this.model.toJSON());
         collection.each(function(model) {
-          console.log('models in serviceRequestList collection', model.toJSON());
+          // console.log('models in serviceRequestList collection', model.toJSON());
           // when 'new' mode
           if (model.toJSON().availableServiceObjectArray) {
             _.each(model.toJSON().availableServiceObjectArray, function(service) {
-              console.log('service ID: ', service.ServiceGUID);
+              // console.log('service ID: ', service.ServiceGUID);
               self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedServiceModel) {
                 // console.log('current: ', selectedServiceModel.toJSON().ServiceGUID);
                 if (selectedServiceModel && selectedServiceModel.toJSON().ServiceGUID === service.ServiceGUID) {
-                  console.log('found: ', selectedServiceModel.toJSON().ServiceGUID);
+                  // console.log('found: ', selectedServiceModel.toJSON().ServiceGUID);
                   self.requestFormModel.toJSON().selectedServiceCollection.remove(selectedServiceModel);
                 }
               });
