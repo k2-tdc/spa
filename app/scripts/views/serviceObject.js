@@ -58,13 +58,14 @@ Hktdc.Views = Hktdc.Views || {};
         selectedRequestModel: this.model,
         selectedServiceObject: true
       });
+      this.model.set({
+        Notes: ''
+      });
       // console.log(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.remove(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
       // console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
-      this.serviceRequestModel.trigger('changePlaceholder', this.model);
-
-      // console.log(this.model.toJSON());
+      this.serviceRequestModel.trigger('changeServiceSelect', this.model);
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
 

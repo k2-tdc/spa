@@ -122,11 +122,12 @@ Hktdc.Views = Hktdc.Views || {};
       });
       this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));
 
-      this.listenTo(self.model, 'changePlaceholder', function(selectServiceModel) {
+      this.listenTo(self.model, 'changeServiceSelect', function(selectServiceModel) {
         // console.log(selectServiceModel.toJSON());
         // console.log(selectServiceModel.toJSON().Placeholder);
         // console.log($('.service-notes', self.el).find('textarea'));
         $('.service-notes', self.el).attr('placeholder', selectServiceModel.toJSON().Placeholder);
+        $('.service-notes', self.el).val('');
       });
     },
 
