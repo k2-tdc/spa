@@ -231,15 +231,28 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var applicantCollection = new Hktdc.Collections.Applicant();
       applicantCollection.url = applicantCollection.url(this.model.toJSON().mode);
-      applicantCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(applicantCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        applicantCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(applicantCollection);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on getting user');
+            }
+          }
+        });
+      };
+
+      doFetch();
 
       return deferred.promise;
     },
@@ -249,15 +262,28 @@ Hktdc.Views = Hktdc.Views || {};
       var statusCollection = new Hktdc.Collections.Status();
       var task = this.model.toJSON().mode;
       statusCollection.url = statusCollection.url(task);
-      statusCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(statusCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        statusCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(statusCollection);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              deferred.reject('error on getting status list');
+              console.error(response.responseText);
+            }
+          }
+        });
+      };
+
+      doFetch();
       return deferred.promise;
     },
 

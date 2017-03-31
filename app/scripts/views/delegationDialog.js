@@ -206,16 +206,28 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.model.toJSON().ProId) {
         var stepCollection = new Hktdc.Collections.Step();
         stepCollection.url = stepCollection.url(procId);
-        stepCollection.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function() {
-            deferred.resolve(stepCollection);
-          },
-          error: function(err) {
-            deferred.reject(err);
-          }
-        });
-      }else {
+        var doFetch = function() {
+          stepCollection.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function() {
+              deferred.resolve(stepCollection);
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  deferred.reject(err);
+                });
+              } else {
+                console.error(response.responseText);
+              }
+            }
+          });
+        };
+        
+        doFetch();
+      } else {
         deferred.resolve(new Hktdc.Collections.Step([]));
       }
       return deferred.promise;

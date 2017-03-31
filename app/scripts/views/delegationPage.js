@@ -182,25 +182,36 @@ Hktdc.Views = Hktdc.Views || {};
               url: Hktdc.Config.apiURL + '/DeleteDelegation?DeleID=' + DelegationID
             });
             var DeleteRequestModelInstance = new DeleteRequestModel();
-            DeleteRequestModelInstance.save(null, {
-              beforeSend: utils.setAuthHeader,
-              success: function(model, response) {
-                // console.log('success: ', a);
-                // console.log(b);
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
-                Hktdc.Dispatcher.trigger('closeConfirm');
-                self.delegationDataTable.ajax.reload();
-                // Hktdc.Dispatcher.trigger('reloadMenu');
-              },
-              error: function(err) {
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'error on delete delegation' + JSON.stringify(err, null, 2),
-                  type: 'error',
-                  title: 'Error'
-                });
-              }
-            });
+            var doSave = function() {
+              DeleteRequestModelInstance.save(null, {
+                beforeSend: utils.setAuthHeader,
+                success: function(model, response) {
+                  // console.log('success: ', a);
+                  // console.log(b);
+                  Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                  Hktdc.Dispatcher.trigger('closeConfirm');
+                  self.delegationDataTable.ajax.reload();
+                  // Hktdc.Dispatcher.trigger('reloadMenu');
+                },
+                error: function(model, response) {
+                  if (response.status === 401) {
+                    utils.getAccessToken(function() {
+                      doSave();
+                    });
+                  } else {
+                    console.error(response.responseText);
+                    Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                      message: 'error on delete delegation',
+                      type: 'error',
+                      title: 'Error'
+                    });
+                  }
+                }
+              });
+            };
+
+            doSave();
           }
         });
       });
