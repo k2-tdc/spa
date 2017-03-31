@@ -394,7 +394,7 @@ Hktdc.Views = Hktdc.Views || {};
           Backbone.emulateJSON = true;
           var refId = self.requestFormModel.toJSON().ReferenceID;
           var DeleteRequestModel = Backbone.Model.extend({
-            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app'
+            url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app/delete'
             // url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
           });
           var DeleteRequestModelInstance = new DeleteRequestModel({data: [{ReferenceID: refId}]});
