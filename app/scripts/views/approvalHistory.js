@@ -386,6 +386,9 @@ Hktdc.Views = Hktdc.Views || {};
         case 'RejectedbyITS':
           return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
 
+        case 'Rework':
+          return formStatusDisplay + '<br /> by: ' + row.PreparerFNAME;
+
         case 'Review':
         case 'Return':
           return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
