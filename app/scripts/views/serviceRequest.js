@@ -50,7 +50,7 @@ Hktdc.Views = Hktdc.Views || {};
       var collection = this.model.toJSON().parentCollection;
       var self = this;
       // console.log('model', this.model.toJSON());
-      // console.log('serviceRequestList Collection: ', collection.toJSON());
+      console.log('serviceRequestList Collection: ', collection.toJSON());
       // console.log('selectedServiceCollection collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
@@ -74,19 +74,26 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         // console.log('condition b');
         // console.log('this.model', this.model.toJSON());
+        // console.group('remove flag 2');
         collection.each(function(model) {
           // console.log('models in serviceRequestList collection', model.toJSON());
           // when 'new' mode
           if (model.toJSON().availableServiceObjectArray) {
+            var removeTargets = [];
             _.each(model.toJSON().availableServiceObjectArray, function(service) {
-              // console.log('service ID: ', service.ServiceGUID);
+              // console.log('service ID: ', service.GUID);
               self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedServiceModel) {
-                // console.log('current: ', selectedServiceModel.toJSON().ServiceGUID);
-                if (selectedServiceModel && selectedServiceModel.toJSON().ServiceGUID === service.ServiceGUID) {
-                  // console.log('found: ', selectedServiceModel.toJSON().ServiceGUID);
-                  self.requestFormModel.toJSON().selectedServiceCollection.remove(selectedServiceModel);
+                // use GUID here because items in ControlFlag 2 are delete at the same time
+                if (selectedServiceModel && selectedServiceModel.toJSON().GUID === service.GUID) {
+                  // console.log('found: ', selectedServiceModel.toJSON().Name);
+                  // self.requestFormModel.toJSON().selectedServiceCollection.remove(selectedServiceModel);
+                  removeTargets.push(selectedServiceModel);
+                  // console.log(self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
                 }
               });
+            });
+            _.each(removeTargets, function(removeTarget) {
+              self.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
             });
           // when edit mode
           } else {
@@ -95,6 +102,8 @@ Hktdc.Views = Hktdc.Views || {};
         });
 
         collection.reset();
+        // console.groupEnd();
+
         // console.log(collection.toJSON());
       }
       console.log('removed, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
@@ -207,6 +216,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     addServiceRequest: function(model) {
+      console.log('add request');
       if (model.toJSON().ControlFlag === 2) {
         // hide add button
         this.serviceTypeModel.set({ needAddBtn: false });
@@ -250,7 +260,8 @@ Hktdc.Views = Hktdc.Views || {};
         parentCollection: this.collection,
         serviceCatagoryModel: this.serviceCatagoryModel,
         serviceTypeName: this.serviceTypeName,
-        readonly: (this.requestFormModel.toJSON().mode === 'read')
+        readonly: (this.requestFormModel.toJSON().mode === 'read'),
+        ServiceGUID: utils.makeId(10)
       });
 
       if (this.requestFormModel.toJSON().mode === 'read') {
