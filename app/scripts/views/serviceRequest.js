@@ -266,15 +266,18 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderServiceRequest: function(model, index) {
-      model.set({
+      var data = {
         index: index + 1,
         availableServiceObjectArray: this.availableServiceObjectArray,
         parentCollection: this.collection,
         serviceCatagoryModel: this.serviceCatagoryModel,
         serviceTypeName: this.serviceTypeName,
-        readonly: (this.requestFormModel.toJSON().mode === 'read'),
-        ServiceGUID: utils.makeId(10)
-      });
+        readonly: (this.requestFormModel.toJSON().mode === 'read')
+      };
+      if (!model.toJSON().ServiceGUID) {
+        data.ServiceGUID = utils.makeId(10);
+      }
+      model.set(data);
 
       if (this.requestFormModel.toJSON().mode === 'read') {
         var serviceRequestItemView = new Hktdc.Views.ServiceRequestReadOnly({

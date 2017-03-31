@@ -58,10 +58,13 @@ Hktdc.Views = Hktdc.Views || {};
         selectedRequestModel: this.model,
         selectedServiceObject: true
       });
-      this.model.set({
-        Notes: '',
-        ServiceGUID: utils.makeId(10)
-      });
+      var data = {
+        Notes: ''
+      };
+      if (!this.model.toJSON().ServiceGUID) {
+        data.ServiceGUID = utils.makeId(10);
+      }
+      this.model.set(data);
       // console.log(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.remove(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
