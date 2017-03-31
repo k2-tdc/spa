@@ -716,7 +716,8 @@ Hktdc.Views = Hktdc.Views || {};
         { ActionID: '20', URI: 'forward'},
         { ActionID: '21', URI: 'cancel'},
         { ActionID: '24', URI: 'send-to-approver'},
-        { ActionID: '25', URI: 'return-to-preparer'}
+        { ActionID: '25', URI: 'return-to-preparer'},
+        { ActionID: '30', URI: 'delete'}
         // { ActionID: '6', Action: 'Recall', ButtonName: 'Recall', URI: 'recall'},
         // { ActionID: '29', Action: 'Submit', ButtonName: 'Submitted', URI: 'submitted'},
       ];
