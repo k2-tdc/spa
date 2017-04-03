@@ -462,7 +462,7 @@ Hktdc.Views = Hktdc.Views || {};
               deferred.reject(e);
             }
           },
-          error: function(model, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -491,7 +491,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(employeeCollection.toJSON());
           },
-          error: function(model, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -574,7 +574,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(colleagueCollection);
           },
-          error: function(model, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -837,7 +837,7 @@ Hktdc.Views = Hktdc.Views || {};
               });
             }
           },
-          error: function(model, response) {
+          error: function(collection, response) {
             // console.log('error');
             if (response.status === 401) {
               utils.getAccessToken(function() {

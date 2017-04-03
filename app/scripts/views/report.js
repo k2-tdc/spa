@@ -59,7 +59,7 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log('selectedCCCollection: ', self.model);
             deferred.resolve(departmentCollection);
           },
-          error: function(model, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
@@ -87,7 +87,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(applicantCollection);
           },
-          error: function(model, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();

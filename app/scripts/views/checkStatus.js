@@ -163,7 +163,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function() {
             deferred.resolve(shareUserCollection);
           },
-          error: function(model, response) {
+          error: function(collection, response) {
             if (response.status === 401) {
               utils.getAccessToken(function() {
                 doFetch();
