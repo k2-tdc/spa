@@ -270,8 +270,11 @@ Hktdc.Views = Hktdc.Views || {};
                 Hktdc.Dispatcher.trigger('closeConfirm');
               })
               .fail(function(err) {
-                console.error(err);
-                // console.log('workflow handler error');
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: err,
+                  type: 'error',
+                  title: 'Error'
+                });
               })
               .fin(function() {
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
@@ -291,7 +294,11 @@ Hktdc.Views = Hktdc.Views || {};
                 Hktdc.Dispatcher.trigger('closeConfirm');
               })
               .fail(function(err) {
-                console.error(err);
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: err,
+                  type: 'error',
+                  title: 'Error'
+                });
               })
               .fin(function() {
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
@@ -398,30 +405,35 @@ Hktdc.Views = Hktdc.Views || {};
             // url: Hktdc.Config.apiURL + '/DeleteDraft?ReferID=' + refId
           });
           var DeleteRequestModelInstance = new DeleteRequestModel({data: [{ReferenceID: refId}]});
+          var doSave = function() {
+            DeleteRequestModelInstance.save(null, {
+              beforeSend: utils.setAuthHeader,
+              type: 'POST',
+              success: function(model, response) {
+                Hktdc.Dispatcher.trigger('reloadMenu');
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                Hktdc.Dispatcher.trigger('closeConfirm');
 
-          DeleteRequestModelInstance.save(null, {
-            beforeSend: utils.setAuthHeader,
-            type: 'POST',
-            success: function(model, response) {
-              // console.log('success: ', a);
-              // console.log(b);
-              Hktdc.Dispatcher.trigger('reloadMenu');
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-
-              self.successRedirect();
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'server error on delete: ' + err,
-                type: 'error',
-                title: 'Error'
-              });
-              console.log(err);
-              // console.log(b);
-            }
-          });
+                self.successRedirect();
+              },
+              error: function(model, response) {
+                if (response.status === 401) {
+                  utils.getAccessToken(function() {
+                    doSave();
+                  });
+                } else {
+                  console.error(response.responseText);
+                  Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'server error on delete',
+                    type: 'error',
+                    title: 'Error'
+                  });
+                }
+              }
+            });
+          };
+          doSave();
         }
       });
     },
@@ -446,27 +458,37 @@ Hktdc.Views = Hktdc.Views || {};
             ActionName: 'Recall',
             Remark: self.requestFormModel.toJSON().Remark
           });
-          action.save({}, {
-            beforeSend: utils.setAuthHeader,
-            success: function(action, response) {
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Successfully Recall request',
-                type: 'notice',
-                title: 'Confirmation'
-              });
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
-              self.successRedirect();
-            },
-            error: function(action, response) {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on Recall request' + JSON.stringify(response.responseText.Message, null, 2),
-                type: 'error',
-                title: 'Error'
-              });
-            }
-          });
+          var doSave = function() {
+            action.save({}, {
+              beforeSend: utils.setAuthHeader,
+              success: function(model, response) {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: 'Successfully Recall request',
+                  type: 'notice',
+                  title: 'Confirmation'
+                });
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                Hktdc.Dispatcher.trigger('closeConfirm');
+                self.successRedirect();
+              },
+              error: function(model, response) {
+                if (response.status === 401) {
+                  utils.getAccessToken(function() {
+                    doSave();
+                  });
+                } else {
+                  console.error(response.responseText);
+                  Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'Error on Recall request',
+                    type: 'error',
+                    title: 'Error'
+                  });
+                }
+              }
+            });
+          };
+          doSave();
         }
       });
     },
@@ -486,28 +508,37 @@ Hktdc.Views = Hktdc.Views || {};
             url: Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/resend-email'
           });
           var ResendEmailModelInstance = new ResendEmailModel();
-          ResendEmailModelInstance.save({ FormID: formId }, {
-            beforeSend: utils.setAuthHeader,
-            success: function(model, response) {
-              // console.log('success: ', a);
-              // console.log(b);
-              Hktdc.Dispatcher.trigger('reloadMenu');
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('closeConfirm');
+          var doSave = function() {
+            ResendEmailModelInstance.save({ FormID: formId }, {
+              beforeSend: utils.setAuthHeader,
+              success: function(model, response) {
+                // console.log('success: ', a);
+                // console.log(b);
+                Hktdc.Dispatcher.trigger('reloadMenu');
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                Hktdc.Dispatcher.trigger('closeConfirm');
 
-              self.successRedirect();
-            },
-            error: function(err) {
-              Hktdc.Dispatcher.trigger('toggleLockButton', false);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'server error on delete: ' + err,
-                type: 'error',
-                title: 'Error'
-              });
-              console.log(err);
-              // console.log(b);
-            }
-          });
+                self.successRedirect();
+              },
+              error: function(model, response) {
+                if (response.status === 401) {
+                  utils.getAccessToken(function() {
+                    doSave();
+                  });
+                } else {
+                  console.error(response.responseText);
+                  Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                    message: 'server error on delete',
+                    type: 'error',
+                    title: 'Error'
+                  });
+                }
+                // console.log(b);
+              }
+            });
+          };
+          doSave();
         }
       });
     },
@@ -541,23 +572,30 @@ Hktdc.Views = Hktdc.Views || {};
       var worklistModel = new Hktdc.Models.WorklistAction();
       worklistModel.set(body);
       worklistModel.url = worklistModel.url($(ev.target).attr('uri'));
-      worklistModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        success: function(action, response) {
-          self.successRedirect();
-          Hktdc.Dispatcher.trigger('reloadMenu');
-          // window.location.href = "alltask.html";
-          deferred.resolve(response);
-        },
-        error: function(model, response) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Error on workflow action',
-            type: 'error',
-            title: 'Error'
-          });
-          deferred.reject(response.responseText);
-        }
-      });
+      var doSave = function() {
+        worklistModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          success: function(action, response) {
+            self.successRedirect();
+            Hktdc.Dispatcher.trigger('reloadMenu');
+            // window.location.href = "alltask.html";
+            deferred.resolve(response);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on workflow action');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 
@@ -741,23 +779,31 @@ Hktdc.Views = Hktdc.Views || {};
       Backbone.emulateJSON = true;
 
       sendRequestModel.url = sendRequestModel.url(this.requestFormModel.toJSON().ReferenceID);
-      sendRequestModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        success: function(mymodel, response) {
-          deferred.resolve(response);
-        },
-        error: function(e) {
-          deferred.reject('Submit Request Error' + JSON.stringify(e, null, 2));
-        }
-      });
+      var doSave = function() {
+        sendRequestModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          success: function(mymodel, response) {
+            deferred.resolve(response);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Submit Request Error');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 
     sendAttachment: function(refId, attachmentCollection) {
-      // console.group('files');
-      // var attachmentCollection = attachmentCollection.toJSON();
-      // var attachmentCollection = $('#Fileattach').get(0).files;
-      // console.log('attchCollection', attachmentCollection);
       var deferred = Q.defer();
       var files = _.reject(attachmentCollection.toJSON(), function(attachment) {
         return attachment.AttachmentGUID;
@@ -772,37 +818,38 @@ Hktdc.Views = Hktdc.Views || {};
         cache: false,
         contentType: false
       };
-      // var files = $('#Fileattach').get(0).files;
       var data = new FormData();
       var sendAttachmentModel = new Hktdc.Models.SendAttachment();
-      // var filename = _.map(files, function(file) {
-      //   // return file.toJSON().file.name;
-      //   return (file.file) && file.file.name;
-      // });
 
       sendAttachmentModel.url = sendAttachmentModel.url(refId);
 
       _.each(files, function(file, i) {
         data.append('file' + i, file.file);
-        // data.append('refid', refId);
-        // data.append('process', 'CHSW');
       });
 
-      // console.log('final data: ', data);
-      // console.groupEnd();
       ajaxOptions.data = data;
 
-      // mymodel = sendRequest model
-      // mymodel.set(filename);
-      sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
-        beforeSend: utils.setAuthHeader,
-        success: function(model, response) {
-          deferred.resolve();
-        },
-        error: function(e) {
-          deferred.reject('Submit File Error' + JSON.stringify(e, null, 2));
-        }
-      }));
+      var doSave = function() {
+        sendAttachmentModel.save(null, $.extend({}, ajaxOptions, {
+          beforeSend: utils.setAuthHeader,
+          success: function(model, response) {
+            deferred.resolve();
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Submit File Error');
+            }
+          }
+        }));
+      };
+      doSave();
       return deferred.promise;
     },
 
@@ -821,16 +868,28 @@ Hktdc.Views = Hktdc.Views || {};
       //   })
       // });
       delFileModel.url = delFileModel.url(AttachmentGUID);
-      delFileModel.save({}, {
-        beforeSend: utils.setAuthHeader,
-        type: 'DELETE',
-        success: function() {
-          deferred.resolve(AttachmentGUID);
-        },
-        error: function(e) {
-          deferred.reject('Delete File Error' + JSON.stringify(e, null, 2));
-        }
-      });
+      var doSave = function() {
+        delFileModel.save({}, {
+          beforeSend: utils.setAuthHeader,
+          type: 'DELETE',
+          success: function() {
+            deferred.resolve(AttachmentGUID);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doSave();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Delete File Error');
+            }
+          }
+        });
+      };
+      doSave();
       return deferred.promise;
     },
 

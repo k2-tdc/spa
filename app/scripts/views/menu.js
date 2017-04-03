@@ -149,19 +149,32 @@ Hktdc.Views = Hktdc.Views || {};
         var pageGUID = menuObj && menuObj.MenuId;
         var checkPagePermissionModel = new Hktdc.Models.Menu();
         checkPagePermissionModel.url = checkPagePermissionModel.url(pageGUID);
-        checkPagePermissionModel.fetch({
-          beforeSend: utils.setAuthHeader,
-          success: function(model, data) {
-            if (data.EmployeeNo) {
-              onSuccess();
-            } else {
-              onError();
+        var doFetch = function() {
+          checkPagePermissionModel.fetch({
+            beforeSend: utils.setAuthHeader,
+            success: function(model, data) {
+              if (data.EmployeeNo) {
+                onSuccess();
+              } else {
+                onError();
+              }
+            },
+            error: function(model, response) {
+              if (response.status === 401) {
+                utils.getAccessToken(function() {
+                  doFetch();
+                }, function(err) {
+                  onError();
+                  console.error(err);
+                });
+              } else {
+                console.error(response.responseText);
+                onError();
+              }
             }
-          },
-          error: function() {
-            onError();
-          }
-        });
+          });
+        };
+        doFetch();
       }
     },
 
