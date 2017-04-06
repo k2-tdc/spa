@@ -157,15 +157,26 @@ Hktdc.Views = Hktdc.Views || {};
     loadShareUser: function() {
       var deferred = Q.defer();
       var shareUserCollection = new Hktdc.Collections.ShareUser();
-      shareUserCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(shareUserCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        shareUserCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(shareUserCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+            }
+          }
+        });
+      };
+      doFetch();
 
       return deferred.promise;
     },

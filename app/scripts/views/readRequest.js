@@ -84,15 +84,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var forwardUserCollection = new Hktdc.Collections.ForwardUser();
       forwardUserCollection.url = forwardUserCollection.url(this.model.toJSON().ApplicantUserID);
-      forwardUserCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(forwardUserCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        forwardUserCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(forwardUserCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting forward users');
+            }
+          }
+        });
+      };
+      doFetch();
 
       return deferred.promise;
     },

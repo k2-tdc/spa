@@ -450,40 +450,62 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       // var self = this;
       var serviceCatagoryCollections = new Hktdc.Collections.ServiceCatagory();
-      serviceCatagoryCollections.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          try {
-            console.debug('[views/newRequest.js] - onLoadData');
-            deferred.resolve(serviceCatagoryCollections);
-          } catch (e) {
-            console.error('error on rendering service level1::', e);
-            deferred.reject(e);
+      var doFetch = function() {
+        serviceCatagoryCollections.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            try {
+              console.debug('[views/newRequest.js] - onLoadData');
+              deferred.resolve(serviceCatagoryCollections);
+            } catch (e) {
+              console.error('error on rendering service level1::', e);
+              deferred.reject(e);
+            }
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting service catagory list');
+            }
           }
-        },
-        error: function(model, response) {
-          deferred.reject(response);
-          console.error(JSON.stringify(response, null, 2));
-        }
-      });
+        });
+      };
+      doFetch();
+
       return deferred.promise;
     },
 
     loadEmployee: function() {
       /* employee component */
       var deferred = Q.defer();
-      // var self = this;
-
       var employeeCollection = new Hktdc.Collections.Employee();
-      employeeCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(employeeCollection.toJSON());
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        employeeCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(employeeCollection.toJSON());
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting employee.');
+            }
+          }
+        });
+      };
+      doFetch();
 
       return deferred.promise;
     },
@@ -491,48 +513,82 @@ Hktdc.Views = Hktdc.Views || {};
     loadApplicantDetail: function() {
       // var self = this;
       var deferred = Q.defer();
-      this.model.toJSON().selectedApplicantModel.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function(res) {
-          var selectedApplicantModel = res;
-          deferred.resolve(selectedApplicantModel);
-        },
-        error: function(e) {
-          deferred.reject(e);
-        }
-      });
+      var doFetch = function() {
+        this.model.toJSON().selectedApplicantModel.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function(res) {
+            var selectedApplicantModel = res;
+            deferred.resolve(selectedApplicantModel);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting applicant detail');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
     loadFileTypeRules: function() {
       var deferred = Q.defer();
       var fileRuleModel = new Hktdc.Models.FileRule();
-      fileRuleModel.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(fileRuleModel);
-          // console.log(fileRuleModel.toJSON());
-        },
-        error: function(err) {
-          deferred.reject(err);
-          // console.log(err);
-        }
-      });
+      var doFetch = function() {
+        fileRuleModel.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(fileRuleModel);
+          },
+          error: function(model, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('Error on getting file type rule.');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
     loadColleague: function() {
       var deferred = Q.defer();
       var colleagueCollection = new Hktdc.Collections.Colleague();
-      colleagueCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(colleagueCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        colleagueCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(colleagueCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting user list.');
+            }
+          }
+        });
+      };
+      doFetch();
 
       return deferred.promise;
     },
@@ -750,49 +806,55 @@ Hktdc.Views = Hktdc.Views || {};
       var cost = this.model.toJSON().EstimatedCost;
       // console.log('selectedRecommend:', self.model.toJSON().ApproverUserID);
       recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
-      recommendCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          var recommendListView = new Hktdc.Views.RecommendList({
-            collection: recommendCollection,
-            requestFormModel: self.model,
-            tagName: 'select',
-            className: 'form-control recommend-select',
-            selectedRecommend: self.model.toJSON().ApproverUserID
-          });
-          $('.recommend-select', self.el).remove();
-          // console.log(recommendListView.el);
-          $('.recommend-container', self.el).html(recommendListView.el);
-          var selected = null;
-          recommendCollection.each(function(approverModel) {
-            if (
-              self.model.toJSON().selectedRecommentModel &&
-              (self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId)
-            ) {
-              selected = approverModel.toJSON();
-            }
-          });
-          if (selected) {
-            // console.log($('.recommend-select option[value="' + selected.WorkerId + '"]', self.el));
-            // console.log('a');
-            $('.recommend-select option[value="' + selected.WorkerId + '"]', self.el).prop('selected', true);
-          } else {
-            //   console.log('b');
-            $('.recommend-select option:eq(0)', self.el).prop('selected', true);
-            self.model.set({
-              selectedRecommentModel: null
+      var doFetch = function() {
+        recommendCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            var recommendListView = new Hktdc.Views.RecommendList({
+              collection: recommendCollection,
+              requestFormModel: self.model,
+              tagName: 'select',
+              className: 'form-control recommend-select',
+              selectedRecommend: self.model.toJSON().ApproverUserID
             });
+            $('.recommend-select', self.el).remove();
+            $('.recommend-container', self.el).html(recommendListView.el);
+            var selected = null;
+            recommendCollection.each(function(approverModel) {
+              if (
+                self.model.toJSON().selectedRecommentModel &&
+                (self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId)
+              ) {
+                selected = approverModel.toJSON();
+              }
+            });
+            if (selected) {
+              $('.recommend-select option[value="' + selected.WorkerId + '"]', self.el).prop('selected', true);
+            } else {
+              $('.recommend-select option:eq(0)', self.el).prop('selected', true);
+              self.model.set({
+                selectedRecommentModel: null
+              });
+            }
+          },
+          error: function(collection, response) {
+            // console.log('error');
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              });
+            } else {
+              console.error(response.responseText);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Can\'t get the recommend user list.',
+                type: 'error',
+                title: 'Error'
+              });
+            }
           }
-        },
-        error: function() {
-          // console.log('error');
-          Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Can\'t get the recommend user list.',
-            type: 'error',
-            title: 'Error'
-          });
-        }
-      });
+        });
+      };
+      doFetch();
     }
   });
 })();

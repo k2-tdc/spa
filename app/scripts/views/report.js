@@ -51,17 +51,29 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var departmentCollection = new Hktdc.Collections.Department();
       departmentCollection.url = departmentCollection.url();
-      departmentCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
-          // console.log('selectedCCCollection: ', self.model);
-          deferred.resolve(departmentCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        departmentCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            // console.log('selectedCCCollection: ', self.model.toJSON().selectedCCCollection);
+            // console.log('selectedCCCollection: ', self.model);
+            deferred.resolve(departmentCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting department list');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 
@@ -69,15 +81,27 @@ Hktdc.Views = Hktdc.Views || {};
       var deferred = Q.defer();
       var applicantCollection = new Hktdc.Collections.ReportApplicant();
       applicantCollection.url = applicantCollection.url();
-      applicantCollection.fetch({
-        beforeSend: utils.setAuthHeader,
-        success: function() {
-          deferred.resolve(applicantCollection);
-        },
-        error: function(err) {
-          deferred.reject(err);
-        }
-      });
+      var doFetch = function() {
+        applicantCollection.fetch({
+          beforeSend: utils.setAuthHeader,
+          success: function() {
+            deferred.resolve(applicantCollection);
+          },
+          error: function(collection, response) {
+            if (response.status === 401) {
+              utils.getAccessToken(function() {
+                doFetch();
+              }, function(err) {
+                deferred.reject(err);
+              });
+            } else {
+              console.error(response.responseText);
+              deferred.reject('error on getting appliant');
+            }
+          }
+        });
+      };
+      doFetch();
       return deferred.promise;
     },
 

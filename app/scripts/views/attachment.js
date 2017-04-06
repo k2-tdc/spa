@@ -40,7 +40,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     downloadFile: function(url, filename) {
       var xhr = new XMLHttpRequest();
-
+      var self = this;
       xhr.open('GET', url, true);
       xhr.setRequestHeader('Authorization', 'Bearer ' + Hktdc.Config.accessToken);
       xhr.responseType = 'blob';
@@ -82,6 +82,12 @@ Hktdc.Views = Hktdc.Views || {};
             document.body.appendChild(anchorLink);
             anchorLink.click();
           }
+        } else if (xhr.status === 401) {
+          utils.getAccessToken(function() {
+            self.downloadFile();
+          });
+        } else {
+          console.error(xhr.responseText);
         }
       };
       xhr.send(null);
