@@ -511,10 +511,10 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     loadApplicantDetail: function() {
-      // var self = this;
+      var self = this;
       var deferred = Q.defer();
       var doFetch = function() {
-        this.model.toJSON().selectedApplicantModel.fetch({
+        self.model.toJSON().selectedApplicantModel.fetch({
           beforeSend: utils.setAuthHeader,
           success: function(res) {
             var selectedApplicantModel = res;
