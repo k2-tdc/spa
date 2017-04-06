@@ -138,14 +138,20 @@ textarea {
     margin: 30px auto;
   }
 }
+
+.modal-dialog .modal-title {
+  text-align: center;
+  font-size: 15pt;
+}
+
 .modal{
   top: calc(50% - 120px);
   .model-title{
     text-transform: none;
   }
 }
-.modal-content{
 
+.modal-content{
   padding: 3px;
   border-radius: 2px;
   .modal-header{
