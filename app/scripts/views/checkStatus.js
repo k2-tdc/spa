@@ -211,6 +211,21 @@ Hktdc.Views = Hktdc.Views || {};
             });
             return modData;
             // return { data: modData, recordsTotal: modData.length };
+          },
+          error: function(xhr, status, err) {
+            console.log(xhr);
+            if (xhr.status === 401) {
+              utils.getAccessToken(function() {
+                self.statusDataTable.ajax.url(self.getAjaxURL()).load();
+              });
+            } else {
+              console.error(xhr.responseText);
+              Hktdc.Dispatcher.trigger('openAlert', {
+                message: 'Error on getting data from server.',
+                type: 'error',
+                title: 'Error'
+              });
+            }
           }
         },
         createdRow: function(row, data, index) {
@@ -416,19 +431,19 @@ Hktdc.Views = Hktdc.Views || {};
           return 'Submitted<br /> by: ' + Hktdc.Config.userName;
 
         case 'Approval':
-          return formStatusDisplay + '<br /> by: ' + row.ApproverFNAME;
+          return formStatusDisplay + '<br /> by: ' + (row.CurrentActor || row.ApproverFNAME);
 
         case 'ProcessTasks':
         case 'ApprovedbyITS':
         case 'RejectedbyITS':
-          return formStatusDisplay + '<br /> by: ' + row.ActionTakerFullName;
+          return formStatusDisplay + '<br /> by: ' + (row.CurrentActor || row.ActionTakerFullName);
 
         case 'Rework':
-          return formStatusDisplay + '<br /> by: ' + row.PreparerFNAME;
+          return formStatusDisplay + '<br /> by: ' + (row.CurrentActor || row.PreparerFNAME);
 
         case 'Review':
         case 'Return':
-          return formStatusDisplay + '<br /> by: ' + row.ApplicantFNAME;
+          return formStatusDisplay + '<br /> by: ' + (row.CurrentActor || row.ApplicantFNAME);
 
         case 'Reject':
         case 'Completed':
@@ -438,10 +453,10 @@ Hktdc.Views = Hktdc.Views || {};
           return formStatusDisplay;
 
         case 'ITSApproval':
-          return formStatusDisplay + '<br /> by: ' + row.ITSApproverFullName;
+          return formStatusDisplay + '<br /> by: ' + (row.CurrentActor || row.ITSApproverFullName);
 
         default:
-          return formStatusDisplay + '<br /> by: ' + row.LastUser;
+          return formStatusDisplay + '<br /> by: ' + (row.CurrentActor || row.LastUser);
 
       }
     }
