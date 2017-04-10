@@ -33,9 +33,6 @@ window.Hktdc = {
         },
         needAuthHeader: false,
         SPADomain: 'https://workflowuat.tdc.org.hk',
-        OAuthLoginPath: '/workflow/oauth2/login',
-        OAuthGetTokenPath: '/workflow/oauth2/token',
-        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo',
         projectPath: '/',
         SPAHomePath: '/vicosysspa/'
       },
@@ -67,9 +64,9 @@ window.Hktdc = {
         SPAHomePath: '/vicosysspa/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
-        OAuthLoginPath: '/oauth/oauth2/login',
-        OAuthGetTokenPath: '/oauth/oauth2/token',
-        OAuthGetUserIDPath: '/oauth/oauth2/tokeninfo'
+        OAuthLoginPath: '/auth/oauth2/login',
+        OAuthGetTokenPath: '/auth/oauth2/token',
+        OAuthGetUserIDPath: '/auth/oauth2/tokeninfo'
       },
 
       // REAL UAT VM - uat test
@@ -84,9 +81,9 @@ window.Hktdc = {
         SPAHomePath: '/chsw/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
-        OAuthLoginPath: '/workflow/oauth2/login',
-        OAuthGetTokenPath: '/workflow/oauth2/token',
-        OAuthGetUserIDPath: '/workflow/oauth2/tokeninfo'
+        OAuthLoginPath: '/auth/oauth2/login',
+        OAuthGetTokenPath: '/auth/oauth2/token',
+        OAuthGetUserIDPath: '/auth/oauth2/tokeninfo'
       }
     }
 
