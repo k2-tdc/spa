@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _ */
+/* global Hktdc, Backbone, JST, $, _, utils */
 /**
  * This file contains:
  * ServiceObjectList
@@ -53,7 +53,6 @@ Hktdc.Views = Hktdc.Views || {};
     selectServiceHandler: function() {
       /* save the selected request to the upper level so that can delete request form collection by selected model */
       // this.serviceRequestModel.set();
-      // console.log(this.serviceRequestModel.toJSON());
       this.serviceRequestModel.set({
         selectedRequestModel: this.model,
         selectedServiceObject: true

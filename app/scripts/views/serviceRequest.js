@@ -139,7 +139,6 @@ Hktdc.Views = Hktdc.Views || {};
         $('.selectleve2sub', self.el).text(newModel.toJSON().Name);
       });
       this.model.on('change:selectedServiceObject', function(selectedReq, isSelected) {
-        // console.log('selectedServiceObject: ', isSelected);
         $('.service-notes', self.el).prop('disabled', !isSelected);
       });
       this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));

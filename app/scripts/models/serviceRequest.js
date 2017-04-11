@@ -8,7 +8,7 @@ Hktdc.Models = Hktdc.Models || {};
   Hktdc.Models.ServiceRequest = Backbone.Model.extend({
     idAttribute: 'ServiceGUID',
     defaults: {
-      selectedServiceObject: true
+      selectedServiceObject: false
     }
   });
 })();
