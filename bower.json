@@ -14,7 +14,8 @@
     "bootstrap-datepicker": "^1.6.4",
     "q": "1.0.1",
     "nprogress": "^0.2.0",
-    "blueimp-file-upload": "^9.17.0"
+    "blueimp-file-upload": "^9.17.0",
+    "sprintf": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",

@@ -219,12 +219,20 @@ Hktdc.Views = Hktdc.Views || {};
                 self.statusDataTable.ajax.url(self.getAjaxURL()).load();
               });
             } else {
-              console.error(xhr.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Error on getting data from server.',
-                type: 'error',
-                title: 'Error'
-              });
+              try {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: sprintf(dialogMessage.common.servererror.fail, JSON.parse(xhr.responseText).request_id),
+                  type: 'error',
+                  title: 'Error'
+                });
+              } catch (e) {
+                console.error(xhr.responseText);
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: sprintf(dialogMessage.common.servererror.fail, 'Unknown error code.'),
+                  type: 'error',
+                  title: 'Error'
+                });
+              }
             }
           }
         },
