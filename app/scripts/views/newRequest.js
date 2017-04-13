@@ -68,7 +68,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderCCList(results[4]);
           self.renderSelectedCCView();
           self.initDatePicker();
-          self.checkAndLoadRecommend(true);
+          self.checkAndLoadRecommend();
           /* default render the save button only,
            after change the approver(recommend by), render other button */
           self.renderButtons();
@@ -129,7 +129,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderAttachment(results[3], self.model.toJSON().Attachments);
           self.renderCCList(results[4]);
           self.renderSelectedCCView(self.model.toJSON().RequestCC);
-          self.checkAndLoadRecommend(true);
+          self.checkAndLoadRecommend();
           self.initDatePicker();
 
           self.renderButtons();
@@ -165,9 +165,9 @@ Hktdc.Views = Hktdc.Views || {};
       return this.haveBudgetAndService(false, ev);
     },
 
-    checkAndLoadRecommend: function(allowEmptyNotes) {
+    checkAndLoadRecommend: function() {
       var self = this;
-      if (self.haveBudgetAndService(allowEmptyNotes)) {
+      if (self.haveBudgetAndService(true)) {
         self.renderRecommendList();
       } else {
         self.model.set({
@@ -186,9 +186,11 @@ Hktdc.Views = Hktdc.Views || {};
         if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0) {
           valid = false;
         }
-        if (!allowEmptyNotes) {
+        if (true) {
+        // if (!allowEmptyNotes) {
           self.model.toJSON().selectedServiceCollection.each(function(service) {
-            // console.log(service.toJSON());
+            // console.log('invalid service: ', service.toJSON());
+            Hktdc.Dispatcher.trigger('serviceInvalid', service.toJSON());
             if (!service.toJSON().Notes) {
               valid = false;
             }
@@ -303,7 +305,7 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
 
         /* get new approver list */
-        self.checkAndLoadRecommend(true);
+        self.checkAndLoadRecommend();
 
         /* clear the button set to prevent lag button render */
         // self.doRenderButtons({showSave: true});
@@ -322,7 +324,7 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
 
         /* get new approver list */
-        self.checkAndLoadRecommend(true);
+        self.checkAndLoadRecommend();
         self.renderButtons();
       });
 
@@ -362,7 +364,7 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
         // console.log('add<><><>');
         /* get new approver list */
-        self.checkAndLoadRecommend(true);
+        self.checkAndLoadRecommend();
 
         self.renderButtons();
       });
@@ -372,7 +374,7 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
         // console.log('change{}{}{}{}');
         /* get new approver list */
-        self.checkAndLoadRecommend(true);
+        self.checkAndLoadRecommend();
 
         self.renderButtons();
       });
@@ -381,7 +383,7 @@ Hktdc.Views = Hktdc.Views || {};
         /* clear the selectedRecommentModel */
         /* get new approver list */
         // console.log('remove selected service');
-        self.checkAndLoadRecommend(true);
+        self.checkAndLoadRecommend();
         self.renderButtons();
       });
     },

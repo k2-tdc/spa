@@ -37,6 +37,20 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }.bind(this));
 
+        this.listenTo(window.Hktdc.Dispatcher, 'serviceInvalid', function(service) {
+          var $parent = self.$el.parents('.select-service');
+          // console.log(this.model.toJSON());
+          // console.log(service.ServiceGUID);
+          if (!this.model.toJSON().Notes) {
+          // if (service.ServiceGUID === this.model.toJSON().ServiceGUID) {
+            $parent.find('.error-message').removeClass('hidden');
+            $parent.addClass('error-input');
+          } else {
+            $parent.find('.error-message').addClass('hidden');
+            $parent.removeClass('error-input');
+          }
+        });
+
         // this.listenTo('clearServiceRequest', this.deleteRequestObject.bind(this));
       } catch (e) {
         console.error('service request render error');
