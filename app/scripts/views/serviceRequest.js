@@ -16,8 +16,8 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
     className: 'Headleve2sub',
     initialize: function(props) {
-      var self = this;
       try {
+        var self = this;
         _.extend(this, props);
         var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
         var serviceObjectListView = new Hktdc.Views.ServiceObjectList({
@@ -32,6 +32,9 @@ Hktdc.Views = Hktdc.Views || {};
           // console.log(serviceObjectListView.el);
           $('.service-object-container', this.el).append(serviceObjectListView.el);
           this.initModelChangeHandler();
+          self.model.set({
+            selectedServiceObject: !!self.model.toJSON().Notes
+          });
         }.bind(this));
 
         // this.listenTo('clearServiceRequest', this.deleteRequestObject.bind(this));
@@ -176,7 +179,6 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
     className: 'Headleve2sub',
     initialize: function(props) {
-      var self = this;
       _.extend(this, props);
       try {
         var serviceObjectCollection = new Hktdc.Collections.ServiceObject(this.model.toJSON().availableServiceObjectArray);
