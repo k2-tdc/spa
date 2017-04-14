@@ -37,11 +37,9 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }.bind(this));
 
-        this.listenTo(window.Hktdc.Dispatcher, 'serviceInvalid', function(service) {
+        this.listenTo(window.Hktdc.Dispatcher, 'serviceInvalid', function() {
           var $parent = self.$el.parents('.select-service');
-          // console.log(this.model.toJSON());
-          // console.log(service.ServiceGUID);
-          if (!this.model.toJSON().Notes) {
+          if (!this.model.toJSON().Notes && String(this.model.toJSON().ControlFlag) !== '2') {
           // if (service.ServiceGUID === this.model.toJSON().ServiceGUID) {
             $parent.find('.error-message').removeClass('hidden');
             $parent.addClass('error-input');
@@ -64,44 +62,45 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     deleteRequestObject: function(ev) {
-      var collection = this.model.toJSON().parentCollection;
+      // wait the jquery execute
       var self = this;
-      // console.log('model', this.model.toJSON());
+      var collection = self.model.toJSON().parentCollection;
+      // console.log('model', self.model.toJSON());
       // console.group('remove');
       // console.log('serviceRequestList Collection: ', collection.toJSON());
-      // console.log('selectedServiceCollection collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      // console.log('selectedServiceCollection collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
-      // old: if (this.model.toJSON().ServiceGUID || String(this.model.toJSON().ControlFlag) === '1') {
-      if (String(this.model.toJSON().ControlFlag) === '1') {
+      // old: if (self.model.toJSON().ServiceGUID || String(self.model.toJSON().ControlFlag) === '1') {
+      if (String(self.model.toJSON().ControlFlag) === '1') {
         // console.log(collection.toJSON());
-        // console.log(this.model.toJSON());
-        collection.remove(this.model);
+        // console.log(self.model.toJSON());
+        collection.remove(self.model);
         /* insert mode use selectedRequestModel */
-        /* edit mode use this.model */
-        var targetModel = this.model.toJSON().selectedRequestModel ||
-                          this.model;
+        /* edit mode use self.model */
+        var targetModel = self.model.toJSON().selectedRequestModel ||
+        self.model;
         // console.log('targetModel: ', targetModel.toJSON());
         var removeTarget;
-        this.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedModel) {
+        self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedModel) {
           if (selectedModel.toJSON().ServiceGUID === targetModel.toJSON().ServiceGUID) {
             removeTarget = selectedModel;
           }
         });
         // console.log('removeTarget: ', removeTarget);
         /* console.group('group');
-        console.log('collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
-        console.log('selectedRequestModel: ', this.model.toJSON().selectedRequestModel.toJSON());
-        console.log('this model: ', this.model.toJSON());
+        console.log('collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+        console.log('selectedRequestModel: ', self.model.toJSON().selectedRequestModel.toJSON());
+        console.log('self model: ', self.model.toJSON());
         console.log('targetModel: ', targetModel.toJSON());
         console.groupEnd(); */
         /* also delete the collection */
-        this.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
+        self.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
 
-      /* not have ServiceGUID = (ControlFlag = 2) */
+        /* not have ServiceGUID = (ControlFlag = 2) */
       } else {
         // console.log('condition b');
-        // console.log('this.model', this.model.toJSON());
+        // console.log('self.model', self.model.toJSON());
         // console.group('remove flag 2');
         collection.each(function(model) {
           // console.log('models in serviceRequestList collection', model.toJSON());
@@ -123,7 +122,7 @@ Hktdc.Views = Hktdc.Views || {};
             _.each(removeTargets, function(removeTarget) {
               self.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
             });
-          // when edit mode
+            // when edit mode
           } else {
             self.requestFormModel.toJSON().selectedServiceCollection.remove(model);
           }
@@ -135,7 +134,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(collection.toJSON());
       }
       // console.groupEnd();
-      console.log('removed, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      console.log('removed, new collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
 
     addNotesToServiceObject: function(ev) {
@@ -156,7 +155,8 @@ Hktdc.Views = Hktdc.Views || {};
         $('.selectleve2sub', self.el).text(newModel.toJSON().Name);
       });
       this.model.on('change:selectedServiceObject', function(selectedReq, isSelected) {
-        $('.service-notes', self.el).prop('disabled', !isSelected);
+        $('.service-notes', self.el).prop('disabled', false);
+        // $('.service-notes', self.el).prop('disabled', !isSelected);
       });
       this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));
 

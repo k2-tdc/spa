@@ -176,27 +176,27 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    haveBudgetAndService: function(allowEmptyNotes, ev) {
+    haveBudgetAndService: function(allowEmptyService, ev) {
       // if (this.model.toJSON().mode === 'read') {
       //   return false;
       // }
       var self = this;
       var haveSelectService = function() {
         var valid = true;
-        if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0) {
+        if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
           valid = false;
         }
-        if (true) {
-        // if (!allowEmptyNotes) {
-          self.model.toJSON().selectedServiceCollection.each(function(service) {
-            // console.log('invalid service: ', service.toJSON());
-            Hktdc.Dispatcher.trigger('serviceInvalid', service.toJSON());
-            if (!service.toJSON().Notes) {
-              valid = false;
-            }
-          });
+        self.model.toJSON().selectedServiceCollection.each(function(service) {
+          if (!service.toJSON().Notes) {
+            valid = false;
+            Hktdc.Dispatcher.trigger('serviceInvalid');
+          }
+        });
+        // console.log('it is ', valid, '!!!!!!');
+        if (valid) {
+          // console.log('con 2');
+          Hktdc.Dispatcher.trigger('serviceInvalid', true);
         }
-        // console.log('haveSelectService = ', valid);
         return valid;
       };
 
@@ -686,7 +686,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         if (!self.haveBudgetAndService(false)) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Request service notes must be filled',
+            message: 'All \'Service Acquired for\' must be filled',
             title: 'Input invalid',
             type: 'error'
           });

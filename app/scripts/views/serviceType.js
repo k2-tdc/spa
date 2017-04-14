@@ -33,6 +33,15 @@ Hktdc.Views = Hktdc.Views || {};
           $('.btn-add', this.el).hide();
         }
       }.bind(this));
+
+      this.listenTo(window.Hktdc.Dispatcher, 'serviceInvalid', function(isClear) {
+        if (isClear) {
+          console.log('serviceInvalid', isClear);
+          console.log(this.$el);
+          this.$el.find('.error-message').addClass('hidden');
+          this.$el.find('.select-service').removeClass('error-input');
+        }
+      });
     },
 
     renderServiceObject: function() {

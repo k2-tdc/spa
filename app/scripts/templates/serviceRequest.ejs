@@ -37,7 +37,7 @@
         <div class="sep-space"></div>
 
         <div>
-          <textarea class="level3 form-control service-notes" disabled placeholder="<% if (request.selectedRequestModel) { %><%= request.selectedRequestModel.toJSON().Placeholder %><% } %>" rows="3" ><% if (request.selectedRequestModel) { %><%= request.selectedRequestModel.toJSON().Notes %><% } else if (request.SValue) { %><%= request.SValue %><% } %></textarea>
+          <textarea class="level3 form-control service-notes" placeholder="<% if (request.selectedRequestModel) { %><%= request.selectedRequestModel.toJSON().Placeholder %><% } %>" rows="3" ><% if (request.selectedRequestModel) { %><%= request.selectedRequestModel.toJSON().Notes %><% } else if (request.SValue) { %><%= request.SValue %><% } %></textarea>
         </div>
       </div>
 
