@@ -270,6 +270,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         ? snOrProcId.split('_')[0]
         : snOrProcId; // SN = '123_456'
         var type;
+        var SUser = utils.getParameterByName('SUser');
         if (/\/approval\//.test(Backbone.history.getHash())) {
           type = 'Approval';
         } else if (/\/all\//.test(Backbone.history.getHash())) {
@@ -281,7 +282,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         } else {
           type = 'Draft';
         }
-        requestCollection.url = requestCollection.url(requestId, type, procId, snOrProcId);
+        requestCollection.url = requestCollection.url(requestId, type, procId, snOrProcId, SUser);
         var doFetch = function() {
           requestCollection.fetch({
             beforeSend: utils.setAuthHeader,

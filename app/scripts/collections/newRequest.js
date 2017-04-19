@@ -7,9 +7,9 @@ Hktdc.Collections = Hktdc.Collections || {};
 
   Hktdc.Collections.NewRequest = Backbone.Collection.extend({
 
-    url: function(refId, type, procId, sn) {
+    url: function(refId, type, procId, sn, SUser) {
       if (type === 'Approval' || type === 'Worklist') {
-        return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/' + sn;
+        return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/work-list/computer-app/' + sn + ((typeof(SUser)!=="undefined"&&SUser!==null)?"?SUser="+SUser:"");
       } else if (type === 'Draft') {
         return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/draft-list/computer-app/' + refId;
       } else if (type === 'History') {

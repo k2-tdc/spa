@@ -206,7 +206,8 @@ Hktdc.Views = Hktdc.Views || {};
                 status: self.getStatusFrowRow(row),
                 refId: row.ReferenceID,
                 ProcInstID: row.ProcInstID,
-                SN: row.SN
+                SN: row.SN,
+                SUser: row.SUser
               };
             });
             return modData;
@@ -269,6 +270,7 @@ Hktdc.Views = Hktdc.Views || {};
             SNOrProcIdPath = '/' + rowData.ProcInstID;
           }
         }
+        var SUser = rowData.SUser;
         var typePath;
         if (self.model.toJSON().mode === 'APPROVAL TASKS') {
           typePath = '/approval/';
@@ -279,7 +281,7 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           typePath = '/check/';
         }
-        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath, {
+        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath+((typeof(SUser)!=="undefined" && SUser !==null)?"?SUser="+SUser:""), {
           trigger: true
         });
       });
