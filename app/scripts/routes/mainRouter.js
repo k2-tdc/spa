@@ -270,7 +270,7 @@ Hktdc.Routers = Hktdc.Routers || {};
         ? snOrProcId.split('_')[0]
         : snOrProcId; // SN = '123_456'
         var type;
-        var SUser = utils.getParameterByName('SUser');
+        var SUser = Hktdc.Config.sharingUser;
         if (/\/approval\//.test(Backbone.history.getHash())) {
           type = 'Approval';
         } else if (/\/all\//.test(Backbone.history.getHash())) {

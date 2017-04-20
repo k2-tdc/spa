@@ -270,7 +270,7 @@ Hktdc.Views = Hktdc.Views || {};
             SNOrProcIdPath = '/' + rowData.ProcInstID;
           }
         }
-        var SUser = rowData.SUser;
+        Hktdc.Config.sharingUser = rowData.SUser;
         var typePath;
         if (self.model.toJSON().mode === 'APPROVAL TASKS') {
           typePath = '/approval/';
@@ -281,7 +281,7 @@ Hktdc.Views = Hktdc.Views || {};
         } else {
           typePath = '/check/';
         }
-        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath+((typeof(SUser)!=="undefined" && SUser !==null)?"?SUser="+SUser:""), {
+        Backbone.history.navigate('request' + typePath + rowData.refId + SNOrProcIdPath, {
           trigger: true
         });
       });

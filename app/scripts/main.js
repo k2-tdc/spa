@@ -85,8 +85,8 @@ window.Hktdc = {
         OAuthGetTokenPath: '/auth/oauth2/token',
         OAuthGetUserIDPath: '/auth/oauth2/tokeninfo'
       }
-    }
-
+    },
+    sharingUser: ''
   },
 
   init: function(env) {
