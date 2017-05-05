@@ -413,7 +413,7 @@ Hktdc.Views = Hktdc.Views || {};
               success: function(model, response) {
                 setTimeout(function() {
                   Hktdc.Dispatcher.trigger('reloadMenu');
-                }, this.delayReloadMenuTime);
+                }, self.delayReloadMenuTime);
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 Hktdc.Dispatcher.trigger('closeConfirm');
 
@@ -519,7 +519,7 @@ Hktdc.Views = Hktdc.Views || {};
                 // console.log(b);
                 setTimeout(function() {
                   Hktdc.Dispatcher.trigger('reloadMenu');
-                }, this.delayReloadMenuTime);
+                }, self.delayReloadMenuTime);
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 Hktdc.Dispatcher.trigger('closeConfirm');
 
@@ -584,7 +584,7 @@ Hktdc.Views = Hktdc.Views || {};
             self.successRedirect();
             setTimeout(function() {
               Hktdc.Dispatcher.trigger('reloadMenu');
-            }, this.delayReloadMenuTime);
+            }, self.delayReloadMenuTime);
             // window.location.href = "alltask.html";
             deferred.resolve(response);
           },
@@ -608,6 +608,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     saveRequestAndSendAttachment: function(status, submitTo) {
       /* set the request object */
+      var self = this;
       var realSubmitTo = (submitTo)
         ? this.requestFormModel.toJSON()[submitTo + 'SubmittedTo']
         : this.requestFormModel.toJSON().applicantSubmittedTo;
@@ -649,7 +650,7 @@ Hktdc.Views = Hktdc.Views || {};
             /* reload the menu for new counts */
             setTimeout(function() {
               Hktdc.Dispatcher.trigger('reloadMenu');
-            }, this.delayReloadMenuTime);
+            }, self.delayReloadMenuTime);
             return {
               refId: insertServiceResponse.FormID
             };
