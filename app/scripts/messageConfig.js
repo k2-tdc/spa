@@ -102,9 +102,9 @@ var dialogMessage = {
       fail3: 'unacceptable rule code: !== (IT0008 || IT0009)'
     },
     validation: {
-      costandservice: 'Please select service and filled the cost field',
-      service: 'Request service notes must be filled',
-      general: 'Input is not valid'
+      // costandservice: 'Please select service and filled the cost field',
+      // service: 'Request service notes must be filled',
+      general: 'At least one mandatory field is missing.'
     }
   },
 
@@ -116,4 +116,8 @@ var dialogMessage = {
       fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
     }
   }
+};
+
+var validateMessage = {
+  required: 'Please fill up this field.'
 };

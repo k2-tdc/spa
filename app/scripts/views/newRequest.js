@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, _, moment */
+/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, dialogMessage, validateMessage */
 Hktdc.Views = Hktdc.Views || {};
 
 (function() {
@@ -184,7 +184,10 @@ Hktdc.Views = Hktdc.Views || {};
       var haveSelectService = function() {
         var valid = true;
         if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
+          self.highlightServiceCatagory(true);
           valid = false;
+        } else {
+          self.highlightServiceCatagory(false);
         }
         self.model.toJSON().selectedServiceCollection.each(function(service) {
           if (!service.toJSON().Notes) {
@@ -214,9 +217,8 @@ Hktdc.Views = Hktdc.Views || {};
           }
 
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: dialogMessage.requestForm.validation.costandservice,
-            type: 'error',
-            title: 'Error'
+            message: dialogMessage.requestForm.validation.general,
+            title: 'Input Error'
           });
         }
         return false;
@@ -686,9 +688,8 @@ Hktdc.Views = Hktdc.Views || {};
 
         if (!self.haveBudgetAndService(false)) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: dialogMessage.requestForm.validation.service,
-            title: 'Input invalid',
-            type: 'error'
+            title: 'Input Error',
+            message: dialogMessage.requestForm.validation.general
           });
           return false;
         }
@@ -699,9 +700,8 @@ Hktdc.Views = Hktdc.Views || {};
           }
         } else {
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: dialogMessage.requestForm.validation.general,
-            title: 'Input invalid',
-            type: 'error'
+            title: 'Input Error',
+            message: dialogMessage.requestForm.validation.general
           });
 
           self.model.set({
@@ -865,6 +865,22 @@ Hktdc.Views = Hktdc.Views || {};
         });
       };
       doFetch();
+    },
+
+    highlightServiceCatagory: function(isHighlight) {
+      if (isHighlight) {
+        $('#service-container', this.el)
+          .addClass('error-input')
+          .siblings('.error-message')
+          .html(validateMessage.required)
+          .removeClass('hidden');
+      } else {
+        $('#service-container', this.el)
+          .removeClass('error-input')
+          .siblings('.error-message')
+          .html('')
+          .addClass('hidden');
+      }
     }
   });
 })();
