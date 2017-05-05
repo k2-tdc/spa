@@ -24,6 +24,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
       _.extend(this, props);
+      this.delayReloadMenuTime = 10000;
       // this.model.on('change')
       // this.render();
     },
@@ -410,7 +411,9 @@ Hktdc.Views = Hktdc.Views || {};
               beforeSend: utils.setAuthHeader,
               type: 'POST',
               success: function(model, response) {
-                Hktdc.Dispatcher.trigger('reloadMenu');
+                setTimeout(function() {
+                  Hktdc.Dispatcher.trigger('reloadMenu');
+                }, this.delayReloadMenuTime);
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 Hktdc.Dispatcher.trigger('closeConfirm');
 
@@ -514,7 +517,9 @@ Hktdc.Views = Hktdc.Views || {};
               success: function(model, response) {
                 // console.log('success: ', a);
                 // console.log(b);
-                Hktdc.Dispatcher.trigger('reloadMenu');
+                setTimeout(function() {
+                  Hktdc.Dispatcher.trigger('reloadMenu');
+                }, this.delayReloadMenuTime);
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 Hktdc.Dispatcher.trigger('closeConfirm');
 
@@ -577,7 +582,9 @@ Hktdc.Views = Hktdc.Views || {};
           beforeSend: utils.setAuthHeader,
           success: function(action, response) {
             self.successRedirect();
-            Hktdc.Dispatcher.trigger('reloadMenu');
+            setTimeout(function() {
+              Hktdc.Dispatcher.trigger('reloadMenu');
+            }, this.delayReloadMenuTime);
             // window.location.href = "alltask.html";
             deferred.resolve(response);
           },
@@ -640,8 +647,9 @@ Hktdc.Views = Hktdc.Views || {};
           // if (true) {
           if (insertServiceResponse.FormID) {
             /* reload the menu for new counts */
-            Hktdc.Dispatcher.trigger('reloadMenu');
-
+            setTimeout(function() {
+              Hktdc.Dispatcher.trigger('reloadMenu');
+            }, this.delayReloadMenuTime);
             return {
               refId: insertServiceResponse.FormID
             };
