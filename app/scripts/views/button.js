@@ -956,28 +956,28 @@ Hktdc.Views = Hktdc.Views || {};
     getSubmitTo: function(buttonName, formData) {
       switch (buttonName.trim().replace(/\s/gm, '').toLowerCase()) {
         case 'returntopreparer':
-          return 'Preparer ' + formData.PreparerFNAME;
+          return 'Preparer ' + (formData.PreparerFNAME || '');
 
         case 'returntoapplicant':
         case 'sendtoapplicant':
-          return 'Applicant ' + formData.ApplicantFNAME;
+          return 'Applicant ' + (formData.ApplicantFNAME || '');
 
         case 'sendtoapprover':
-          return 'Approver ' + formData.ApproverFNAME;
+          return 'Approver ' + (formData.ApproverFNAME || '');
 
         case 'approve':
         case 'forward':
         case 'recommend':
-          return 'Action Taker ' + formData.ActionTakerFullName;
+          return 'Action Taker ' + (formData.ActionTakerFullName || '');
 
         case 'reject':
           if (formData.FormStatus === 'ITSApproval') {
-            return 'Action Taker ' + formData.ActionTakerFullName;
+            return 'Action Taker ' + (formData.ActionTakerFullName || '');
           }
           return false;
 
         case 'sendtoitsapproval':
-          return 'ITS Approver ' + formData.ITSApproverFullName;
+          return 'ITS Approver ' + (formData.ITSApproverFullName || '');
 
         default:
           return false;
