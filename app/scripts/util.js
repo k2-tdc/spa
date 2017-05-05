@@ -79,25 +79,20 @@ window.utils = {
   },
   // Asynchronously load templates located in separate .html files
 
-  displayValidationErrors: function(messages) {
-    for (var key in messages) {
-      if (messages.hasOwnProperty(key)) {
-        this.addValidationError(key, messages[key]);
-      }
+  toggleInvalidMessage: function(viewElement, field, message, isShow) {
+    var $target = $('[field=' + field + ']', viewElement);
+    var $errorContainer = ($target.parents('.container').find('.error-message').length)
+    ? $target.parents('.container').find('.error-message')
+    : $target.parents().siblings('.error-message');
+    if (isShow) {
+      $errorContainer.removeClass('hidden');
+      $errorContainer.html(message);
+      $target.addClass('error-input');
+    } else {
+      $errorContainer.addClass('hidden');
+      $errorContainer.empty();
+      $target.removeClass('error-input');
     }
-    this.showAlert('Warning!', 'Fix validation errors and try again', 'alert-warning');
-  },
-
-  addValidationError: function(field, message) {
-    var controlGroup = $('#' + field).parent().parent();
-    controlGroup.addClass('error');
-    $('.help-inline', controlGroup).html(message);
-  },
-
-  removeValidationError: function(field) {
-    var controlGroup = $('#' + field).parent().parent();
-    controlGroup.removeClass('error');
-    $('.help-inline', controlGroup).html('');
   },
 
   makeId: function(length) {

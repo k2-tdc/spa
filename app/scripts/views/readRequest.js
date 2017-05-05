@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, utils, Q, moment, _ */
+/* global Hktdc, Backbone, JST, $, utils, Q, moment, _, dialogMessage, validateMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -74,10 +74,12 @@ Hktdc.Views = Hktdc.Views || {};
       var targetField = $(ev.target).attr('field');
       var updateObject = {};
       updateObject[targetField] = $(ev.target).val();
-      this.model.set(updateObject, {validate: true, field: targetField});
+      this.model.set(updateObject);
+
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
-      this.model.set(updateObject);
+      // this.model.set(updateObject, {validate: true, field: targetField});
+      this.checkRemark(false);
     },
 
     loadForwardUser: function() {
@@ -136,9 +138,14 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderButtons: function() {
+      var self = this;
+      var buttonModel = new Hktdc.Models.Button();
       var buttonView = new Hktdc.Views.Button({
-        model: new Hktdc.Models.Button(),
-        requestFormModel: this.model
+        model: buttonModel,
+        requestFormModel: self.model
+      });
+      self.listenTo(buttonModel, 'checkRemark', function(successCallback) {
+        self.checkRemark(true, successCallback);
       });
       buttonView.renderButtonHandler();
       // console.log(buttonView.el);
@@ -193,6 +200,25 @@ Hktdc.Views = Hktdc.Views || {};
       });
       serviceCatagoryListView.render();
       $('#service-container').html(serviceCatagoryListView.el);
+    },
+
+    checkRemark: function(openAlert, successCallback) {
+      var self = this;
+      if (!self.model.toJSON().Remark) {
+        if (openAlert) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            title: 'Input Error',
+            message: dialogMessage.requestForm.validation.general
+          });
+        }
+
+        utils.toggleInvalidMessage(self.el, 'Remark', validateMessage.required, true);
+      } else {
+        utils.toggleInvalidMessage(self.el, 'Remark', validateMessage.required, false);
+        if (successCallback) {
+          successCallback();
+        }
+      }
     }
 
   });
