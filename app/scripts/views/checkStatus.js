@@ -30,7 +30,6 @@ Hktdc.Views = Hktdc.Views || {};
       self.model.on('change:showAdvanced', function(model, isShow) {
         self.doToggleAdvanceMode(isShow);
       });
-
     },
 
     render: function() {
@@ -305,7 +304,8 @@ Hktdc.Views = Hktdc.Views || {};
 
       userListView = new Hktdc.Views.ApplicantSelect({
         collection: applicantCollection,
-        selectedApplicant: self.model.toJSON().applicant || Hktdc.Config.userID || '0',
+        selectedApplicant: self.model.toJSON().applicant || '0',
+        // selectedApplicant: self.model.toJSON().applicant || Hktdc.Config.userID || '0',
         onSelect: function(model) {
           // var val = (model) ? model.toJSON().EmployeeID : '';
           var data = (model.toJSON().UserId === '0')

@@ -209,7 +209,7 @@ Hktdc.Views = Hktdc.Views || {};
       var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
       var userListView = new Hktdc.Views.ApplicantSelect({
         collection: applicantCollection,
-        selectedApplicant: self.model.toJSON().applicant,
+        selectedApplicant: self.model.toJSON().applicant || '0',
         onSelect: function(model) {
           var data = (model.toJSON().UserId === '0')
             ? { applicant: '', 'applicant-employee-id': '' }
