@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $, NProgress */
+/* global Hktdc, Backbone, utils, _, $, NProgress, dialogMessage */
 
 Hktdc.Routers = Hktdc.Routers || {};
 
@@ -248,7 +248,7 @@ Hktdc.Routers = Hktdc.Routers || {};
                 });
               } else {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: 'Error on getting new request form ID',
+                  message: dialogMessage.requestForm.getformid.fail,
                   type: 'error',
                   title: 'Error'
                 });

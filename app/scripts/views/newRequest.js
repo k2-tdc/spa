@@ -214,7 +214,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
 
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Please select service and filled the cost field',
+            message: dialogMessage.requestForm.validation.costandservice,
             type: 'error',
             title: 'Error'
           });
@@ -686,7 +686,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         if (!self.haveBudgetAndService(false)) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'All \'Service Acquired for\' must be filled',
+            message: dialogMessage.requestForm.validation.service,
             title: 'Input invalid',
             type: 'error'
           });
@@ -699,7 +699,7 @@ Hktdc.Views = Hktdc.Views || {};
           }
         } else {
           Hktdc.Dispatcher.trigger('openAlert', {
-            message: 'Input is not valid',
+            message: dialogMessage.requestForm.validation.general,
             title: 'Input invalid',
             type: 'error'
           });
@@ -846,12 +846,20 @@ Hktdc.Views = Hktdc.Views || {};
                 doFetch();
               });
             } else {
-              console.error(response.responseText);
-              Hktdc.Dispatcher.trigger('openAlert', {
-                message: 'Can\'t get the recommend user list.',
-                type: 'error',
-                title: 'Error'
-              });
+              try {
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: sprintf(dialogMessage.common.servererror.fail, JSON.parse(response.responseText).request_id),
+                  type: 'error',
+                  title: 'Error'
+                });
+              } catch (e) {
+                console.error(response.responseText);
+                Hktdc.Dispatcher.trigger('openAlert', {
+                  message: sprintf(dialogMessage.common.servererror.fail, 'Unknown error code.'),
+                  type: 'error',
+                  title: 'Error'
+                });
+              }
             }
           }
         });

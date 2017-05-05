@@ -238,8 +238,7 @@ window.Hktdc = {
       })
       .catch(function(error) {
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: error,
-          type: 'error',
+          message: sprintf(dialogMessage.common.servererror.fail, error.request_id || error),
           title: 'Error'
         });
       });
@@ -259,11 +258,21 @@ window.Hktdc = {
             utils.getAccessToken(function() {
               doFetch();
             }, function(err) {
-              deferred.reject(err);
+              deferred.reject({
+                error: err,
+                request_id: 'unknown error code'
+              });
             });
           } else {
-            console.error(response.responseText);
-            deferred.reject('Error on loading menu');
+            try {
+              deferred.reject(JSON.parse(response.responseText));
+            } catch (e) {
+              console.error(response.responseText);
+              deferred.reject({
+                request_id: 'unknown error code',
+                error: 'Error on loading menu'
+              });
+            }
           }
         }
       });

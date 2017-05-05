@@ -145,11 +145,11 @@ window.utils = {
   getAccessToken: function(onSuccess, onError) {
     var defaultError = function() {
       Hktdc.Dispatcher.trigger('openAlert', {
-        message: 'Error on getting access token',
+        message: dialogMessage.common.getaccesstoken.fail,
         type: 'error',
         title: 'Error'
       });
-    }
+    };
     if (!(Hktdc.Config.environment === 'uat' || Hktdc.Config.environment === 'chsw')) {
       var msg = 'in local env';
       if (onError && typeof onError === 'function') {

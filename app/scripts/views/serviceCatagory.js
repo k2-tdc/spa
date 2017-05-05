@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _ */
+/* global Hktdc, Backbone, JST, $, _, sprintf, dialogMessage */
 
 /**
  * This file contains:
@@ -52,8 +52,6 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     onCheckboxMouseDown: function(ev) {
-      console.log('onCheckbox Mousedown');
-
       var self = this;
       // console.log($(ev.currentTarget).prop('checked'));
       // current is checked = will be uncheck and vice versa
@@ -61,7 +59,7 @@ Hktdc.Views = Hktdc.Views || {};
         ev.preventDefault();
         Hktdc.Dispatcher.trigger('openConfirm', {
           title: 'Confirmation',
-          message: 'Are you sure to clear all of the ' + self.model.toJSON().Name + ' item(s)?',
+          message: sprintf(dialogMessage.requestForm.clearitem.confirm, self.model.toJSON().Name),
           onConfirm: function() {
             $(ev.target).prop('checked', false);
             self.model.trigger('clearServiceRequest', self.model.toJSON());
@@ -76,7 +74,6 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     onCheckboxClick: function(ev) {
-      console.log('onCheckbox click');
       this.model.set({
         checked: $(ev.currentTarget).is(':checked'),
         open: $(ev.currentTarget).is(':checked')
