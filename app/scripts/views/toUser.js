@@ -50,7 +50,6 @@ Hktdc.Views = Hktdc.Views || {};
     selectToUserHandler: function(ev) {
       /* The new request model will handle the change */
       // var self = this;
-      console.log(this.selectFieldName);
       if (this.parentModel) {
         var setObj = {};
         if (this.selectFieldName) {
@@ -59,6 +58,9 @@ Hktdc.Views = Hktdc.Views || {};
           setObj.ToUserId = $(ev.target).val();
         }
         this.parentModel.set(setObj);
+      }
+      if (this.onSelected) {
+        this.onSelected();
       }
       // this.parentModel.on('change:ToUserId', function() {
       //   self.$el.find('option').eq(0).prop('selected', true);
@@ -81,7 +83,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (this.tagName === 'ul') {
         this.collection.each(this.renderToUserItem);
       } else {
-        $(this.el).append('<option value="">-- Select --</option>');
+        $(this.el).append('<option value="asdfasdf">-- Select --</option>');
         this.collection.each(this.renderToUserOption);
       }
     }

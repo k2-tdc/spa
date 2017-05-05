@@ -76,10 +76,11 @@ Hktdc.Views = Hktdc.Views || {};
       updateObject[targetField] = $(ev.target).val();
       this.model.set(updateObject);
 
+      utils.toggleInvalidMessage(this.el, 'Remark', validateMessage.required, false);
       // double set is to prevent invalid value bypass the set model process
       // because if saved the valid model, then set the invalid model will not success and the model still in valid state
       // this.model.set(updateObject, {validate: true, field: targetField});
-      this.checkRemark(false);
+      // this.checkRemark(false);
     },
 
     loadForwardUser: function() {
@@ -128,10 +129,15 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     renderForwardUserList: function() {
+      var self = this;
       var toUserView = new Hktdc.Views.ToUserList({
         collection: this.forwardUserCollection,
+        attributes: { field: 'Forward_To_ID', name: 'Forward_To_ID' },
         parentModel: this.model,
-        selectFieldName: 'Forward_To_ID'
+        selectFieldName: 'Forward_To_ID',
+        onSelected: function() {
+          utils.toggleInvalidMessage(self.el, 'Forward_To_ID', validateMessage.required, false);
+        }
       });
       // $('.forwardToUser', buttonView.el).html(toUserView.el);
       $('.forwardToUser', this.el).html(toUserView.el);
@@ -145,7 +151,16 @@ Hktdc.Views = Hktdc.Views || {};
         requestFormModel: self.model
       });
       self.listenTo(buttonModel, 'checkRemark', function(successCallback) {
+        utils.toggleInvalidMessage(self.el, 'Remark', validateMessage.required, false);
+        utils.toggleInvalidMessage(self.el, 'Forward_To_ID', validateMessage.required, false);
+
         self.checkRemark(true, successCallback);
+      });
+      self.listenTo(buttonModel, 'checkForward', function(successCallback) {
+        utils.toggleInvalidMessage(self.el, 'Remark', validateMessage.required, false);
+        utils.toggleInvalidMessage(self.el, 'Forward_To_ID', validateMessage.required, false);
+
+        self.checkForward(true, successCallback);
       });
       buttonView.renderButtonHandler();
       // console.log(buttonView.el);
@@ -215,6 +230,25 @@ Hktdc.Views = Hktdc.Views || {};
         utils.toggleInvalidMessage(self.el, 'Remark', validateMessage.required, true);
       } else {
         utils.toggleInvalidMessage(self.el, 'Remark', validateMessage.required, false);
+        if (successCallback) {
+          successCallback();
+        }
+      }
+    },
+
+    checkForward: function(openAlert, successCallback) {
+      var self = this;
+      if (!self.model.toJSON().Forward_To_ID) {
+        if (openAlert) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            title: 'Input Error',
+            message: dialogMessage.requestForm.validation.general
+          });
+        }
+
+        utils.toggleInvalidMessage(self.el, 'Forward_To_ID', validateMessage.required, true);
+      } else {
+        utils.toggleInvalidMessage(self.el, 'Forward_To_ID', validateMessage.required, false);
         if (successCallback) {
           successCallback();
         }

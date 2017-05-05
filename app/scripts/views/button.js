@@ -304,6 +304,8 @@ Hktdc.Views = Hktdc.Views || {};
       };
       if (actionKey === 'reject' || actionKey === 'returntopreparer' || actionKey === 'returntoapplicant') {
         this.model.trigger('checkRemark', onFormValid);
+      } else if (actionKey === 'forward') {
+        this.model.trigger('checkForward', onFormValid);
       } else {
         onFormValid();
       }

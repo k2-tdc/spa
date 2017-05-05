@@ -224,7 +224,9 @@
               <% if (request.showForwardTo) { %>
                 <div class="row field">
                   <div class="col-xs-10 col-sm-2 newrequest-title text-right mobile-text-align-left text-lg-right" style='line-height:34px'>Forward To</div>
-                  <div class="col-xs-12 col-sm-10 col-md-8 form_data forwardToUser">
+                  <div class="col-xs-12 col-sm-10 col-md-8 form_data container">
+                    <div class="forwardToUser"></div>
+                    <div class="error-message hidden"></div>
                   </div>
                 </div>
               <% } %>
