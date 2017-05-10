@@ -60,16 +60,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(departmentCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting department list');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.departmentList.error
+            });
           }
         });
       };
@@ -88,16 +82,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(applicantCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting appliant');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.reportApplicantList.error
+            });
           }
         });
       };

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert */
+/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert, sprintf, dialogMessage */
 
 window.Hktdc = {
   Models: {},
@@ -216,9 +216,8 @@ window.Hktdc = {
             })
             .catch(function(error) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: error,
-                type: 'error',
-                title: 'Error'
+                title: 'Error',
+                message: sprintf(dialogMessage.commom.servererror.fail, error.request_id || error.error || error)
               });
             });
         });
@@ -254,26 +253,10 @@ window.Hktdc = {
           deferred.resolve(menuModel);
         },
         error: function(model, response) {
-          if (response.status === 401) {
-            utils.getAccessToken(function() {
-              doFetch();
-            }, function(err) {
-              deferred.reject({
-                error: err,
-                request_id: 'unknown error code'
-              });
-            });
-          } else {
-            try {
-              deferred.reject(JSON.parse(response.responseText));
-            } catch (e) {
-              console.error(response.responseText);
-              deferred.reject({
-                request_id: 'unknown error code',
-                error: 'Error on loading menu'
-              });
-            }
-          }
+          utils.apiErrorHandling(response, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.menu.load.error
+          });
         }
       });
     };

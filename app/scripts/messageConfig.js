@@ -1,7 +1,19 @@
 // use sprintf syntax to replace data with %s, %d, etc. see https://github.com/alexei/sprintf.js
+var dialogTitle = {
+  error: 'Error',
+  confirmation: 'Confirmation',
+  information: 'Information'
+};
 
 var dialogMessage = {
-
+  menu: {
+    load: {
+      error: 'Error on rendering menu'
+    },
+    permission: {
+      error: 'Permission denied for accessing this page'
+    }
+  },
   requestFormButton: {
     // this key should be in lower case and without spaces
     save: {
@@ -85,8 +97,13 @@ var dialogMessage = {
       confirm: 'Do you want to submit?'
     }
   },
-
   requestForm: {
+    getRefId: {
+      error: 'Error on getting new request form ID'
+    },
+    getDetail: {
+      error: 'Error on getting the request data'
+    },
     clearitem: {
       confirm: 'Are you sure to clear all of the %s item(s)?'
     },
@@ -101,13 +118,33 @@ var dialogMessage = {
       fail2: 'Exception case: RuleCode IT0008, unknown situation',
       fail3: 'unacceptable rule code: !== (IT0008 || IT0009)'
     },
+    delete: {
+      error: 'error on deleting record'
+    },
+    recall: {
+      error: 'error on recall record'
+    },
+    workflowAction: {
+      error: 'error on perform workflow action'
+    },
+    resend: {
+      error: 'error on resend email'
+    },
+    save: {
+      error: 'error on saving request form'
+    },
+    saveAttachment: {
+      error: 'error on saving attachment'
+    },
+    deleteAttachment: {
+      error: 'error on deleting attachment'
+    },
     validation: {
       // costandservice: 'Please select service and filled the cost field',
       // service: 'Request service notes must be filled',
       general: 'At least one mandatory field is missing.'
     }
   },
-
   common: {
     getaccesstoken: {
       fail: 'Error on getting access token'
@@ -115,9 +152,47 @@ var dialogMessage = {
     servererror: {
       fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %s'
     }
+  },
+  component: {
+    applicantList: {
+      error: 'Error on getting user list'
+    },
+    statusList: {
+      error: 'Error on getting status list'
+    },
+    serviceCatagoryList: {
+      error: 'Error on getting service list'
+    },
+    employeeList: {
+      error: 'Error on getting employee list'
+    },
+    recommendList: {
+      error: 'Error on getting approver user list'
+    },
+    userList: {
+      error: 'Error on getting user list'
+    },
+    applicantDetail: {
+      error: 'Error on getting applicant detail'
+    },
+    fileRule: {
+      error: 'Error on getting upload file rules'
+    },
+    forwardUserList: {
+      error: 'error on getting forward users'
+    },
+    departmentList: {
+      error: 'error on getting department list'
+    },
+    reportApplicantList: {
+      error: 'error on getting department list'
+    },
   }
 };
 
 var validateMessage = {
-  required: 'Please fill up this field.'
+  required: 'Please fill up this field',
+  gt: 'Should be greater than %s',
+  eitherRequired: 'Either %s is required.',
+  conditionalRequired: '%s is required if %s'
 };

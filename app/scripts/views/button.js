@@ -437,32 +437,17 @@ Hktdc.Views = Hktdc.Views || {};
                 setTimeout(function() {
                   Hktdc.Dispatcher.trigger('reloadMenu');
                 }, self.delayReloadMenuTime);
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
 
                 self.successRedirect();
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
-                  });
-                } else {
-                  console.error(response.responseText);
-                  Hktdc.Dispatcher.trigger('toggleLockButton', false);
-                  try {
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: sprintf(dialogMessage.requestFormButton.delete.fail, JSON.parse(response.responseText).request_id),
-                      title: 'Error'
-                    });
-                  } catch (e) {
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: sprintf(dialogMessage.requestFormButton.delete.fail, 'Unknown error code.'),
-                      title: 'Error'
-                    });
-                  }
-                }
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.requestForm.delete.error
+                });
               },
               complete: function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 Hktdc.Dispatcher.trigger('closeConfirm');
               }
             });
@@ -500,32 +485,17 @@ Hktdc.Views = Hktdc.Views || {};
                   message: dialogMessage.requestFormButton.recall.success,
                   title: 'Information'
                 });
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                // Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 self.successRedirect();
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
-                  });
-                } else {
-                  Hktdc.Dispatcher.trigger('toggleLockButton', false);
-                  try {
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: sprintf(dialogMessage.requestFormButton.recall.fail, JSON.parse(response.responseText).request_id),
-                      title: 'Error'
-                    });
-                  } catch (e) {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('toggleLockButton', false);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: sprintf(dialogMessage.requestFormButton.recall.fail, 'Unknown error code.'),
-                      title: 'Error'
-                    });
-                  }
-                }
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.requestForm.recall.error
+                });
               },
               complete: function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 Hktdc.Dispatcher.trigger('closeConfirm');
               }
             });
@@ -559,33 +529,18 @@ Hktdc.Views = Hktdc.Views || {};
                 setTimeout(function() {
                   Hktdc.Dispatcher.trigger('reloadMenu');
                 }, self.delayReloadMenuTime);
-                Hktdc.Dispatcher.trigger('toggleLockButton', false);
+                // Hktdc.Dispatcher.trigger('toggleLockButton', false);
 
                 self.successRedirect();
               },
               error: function(model, response) {
-                if (response.status === 401) {
-                  utils.getAccessToken(function() {
-                    doSave();
-                  });
-                } else {
-                  Hktdc.Dispatcher.trigger('toggleLockButton', false);
-                  try {
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: sprintf(dialogMessage.requestFormButton.resendemailnotificaiton.fail, JSON.parse(response.responseText).request_id),
-                      title: 'Error'
-                    });
-                  } catch (e) {
-                    console.error(response.responseText);
-                    Hktdc.Dispatcher.trigger('openAlert', {
-                      message: sprintf(dialogMessage.requestFormButton.resendemailnotificaiton.fail, 'Unknown error code.'),
-                      title: 'Error'
-                    });
-                  }
-                }
-                // console.log(b);
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.requestForm.resend.error
+                });
               },
               complete: function() {
+                Hktdc.Dispatcher.trigger('toggleLockButton', false);
                 Hktdc.Dispatcher.trigger('closeConfirm');
               }
             });
@@ -636,20 +591,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error(response.responseText);
-                deferred.reject('Unknown error code.');
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.requestForm.workflowAction.error
+            });
           }
         });
       };
@@ -837,21 +782,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(response);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error('Error on saving request.');
-                console.error(response.responseText);
-                deferred.reject('Unknown error code.');
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.requestForm.save.error
+            });
           }
         });
       };
@@ -892,21 +826,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve();
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              try {
-                deferred.reject(JSON.parse(response.responseText));
-              } catch (e) {
-                console.error('Submit File Error');
-                console.error(response.responseText);
-                deferred.reject('Unknown error code.');
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.requestForm.saveAttachment.error
+            });
           }
         }));
       };
@@ -937,16 +860,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(AttachmentGUID);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doSave();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('Delete File Error');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.requestForm.deleteAttachment.error
+            });
           }
         });
       };

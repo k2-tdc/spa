@@ -94,16 +94,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(forwardUserCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting forward users');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.forwardUserList.error
+            });
           }
         });
       };
