@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert */
+/* global Hktdc, Backbone, utils, _, $, Q, NProgress, alert, sprintf, dialogMessage */
 
 window.Hktdc = {
   Models: {},
@@ -197,32 +197,55 @@ window.Hktdc = {
         });
 
         $('#menu').html(menuView.el);
-        menuView.listenTo(window.Hktdc.Dispatcher, 'reloadMenu', function() {
-          self.loadMenu()
-            .then(function(newMenuModel) {
+        menuView.listenTo(window.Hktdc.Dispatcher, 'reloadBadge', function() {
+          self.loadBadgeNumber()
+            .then(function(badgeNumberModel) {
               /* remove the old menu view to prevent duplicated event listener */
-              menuView.remove();
-              var newMenu = newMenuModel.toJSON();
-              newMenuModel.set({
-                Menu: newMenu.Menu,
-                PList: newMenu.PList,
-                User: { UserName: newMenu.UserName, UserID: newMenu.UserID }
+              // menuView.remove();
+              var newBadgeItems = badgeNumberModel.toJSON().number;
+              var getMenu = function(menuItems) {
+                // console.log(menuItems);
+                return _.map(menuItems, function(menu) {
+                  // console.log(menu);
+                  if (menu.sumenu && menu.sumenu.length) {
+                    menu.sumenu = getMenu(menu.sumenu);
+                    return menu;
+                  } else {
+                    // console.log(newBadgeItems);
+                    var target = _.find(newBadgeItems, function(newBadge) {
+                      // console.log(newBadge);
+                      return newBadge.MenuId === menu.MenuId;
+                    });
+                    // console.log('target: ', target);
+                    menu.Scount = (target && target.Scount)
+                      ? target.Scount
+                      : null;
+                    return menu;
+                  }
+                });
+              };
+              var menuWithNewBadge = getMenu(menuModel.toJSON().Menu);
+              // console.log('menuWithNewBadge: ', menuWithNewBadge);
+              menuModel.set({
+                Menu: menuWithNewBadge
               });
-              var newMenuView = new Hktdc.Views.Menu({
-                model: newMenuModel
-              });
-              newMenuModel.set('activeTab', Backbone.history.getHash());
-              $('#menu').html(newMenuView.el);
+              // var newMenuView = new Hktdc.Views.Menu({
+              //   model: menuModel
+              // });
+              menuModel.set('activeTab', '');
+              menuView.render();
+              menuModel.set('activeTab', Backbone.history.getHash());
+              $('#menu').html(menuView.el);
             })
             .catch(function(error) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                message: error,
-                type: 'error',
-                title: 'Error'
+                title: 'Error',
+                message: sprintf(dialogMessage.commom.servererror.fail, error.request_id || error.error || error)
               });
             });
         });
-        // console.log(Hktdc.Config.environments[Hktdc.Config.environment].SPAHomePath);
+
+        Hktdc.Dispatcher.trigger('reloadBadge');
         var userView = new Hktdc.Views.User({
           model: new Hktdc.Models.User({
             UserName: menu.UserName,
@@ -254,26 +277,31 @@ window.Hktdc = {
           deferred.resolve(menuModel);
         },
         error: function(model, response) {
-          if (response.status === 401) {
-            utils.getAccessToken(function() {
-              doFetch();
-            }, function(err) {
-              deferred.reject({
-                error: err,
-                request_id: 'unknown error code'
-              });
-            });
-          } else {
-            try {
-              deferred.reject(JSON.parse(response.responseText));
-            } catch (e) {
-              console.error(response.responseText);
-              deferred.reject({
-                request_id: 'unknown error code',
-                error: 'Error on loading menu'
-              });
-            }
-          }
+          utils.apiErrorHandling(response, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.menu.load.error
+          });
+        }
+      });
+    };
+    doFetch();
+    return deferred.promise;
+  },
+
+  loadBadgeNumber: function() {
+    var deferred = Q.defer();
+    var badgeModel = new Hktdc.Models.BadgeNumber();
+    var doFetch = function() {
+      badgeModel.fetch({
+        beforeSend: utils.setAuthHeader,
+        success: function(badgeModel) {
+          deferred.resolve(badgeModel);
+        },
+        error: function(model, response) {
+          utils.apiErrorHandling(response, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.menu.load.error
+          });
         }
       });
     };

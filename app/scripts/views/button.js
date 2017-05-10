@@ -435,7 +435,7 @@ Hktdc.Views = Hktdc.Views || {};
               type: 'POST',
               success: function(model, response) {
                 setTimeout(function() {
-                  Hktdc.Dispatcher.trigger('reloadMenu');
+                  Hktdc.Dispatcher.trigger('reloadBadge');
                 }, self.delayReloadMenuTime);
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
 
@@ -557,7 +557,7 @@ Hktdc.Views = Hktdc.Views || {};
                 // console.log('success: ', a);
                 // console.log(b);
                 setTimeout(function() {
-                  Hktdc.Dispatcher.trigger('reloadMenu');
+                  Hktdc.Dispatcher.trigger('reloadBadge');
                 }, self.delayReloadMenuTime);
                 Hktdc.Dispatcher.trigger('toggleLockButton', false);
 
@@ -630,7 +630,7 @@ Hktdc.Views = Hktdc.Views || {};
           success: function(action, response) {
             self.successRedirect();
             setTimeout(function() {
-              Hktdc.Dispatcher.trigger('reloadMenu');
+              Hktdc.Dispatcher.trigger('reloadBadge');
             }, self.delayReloadMenuTime);
             // window.location.href = "alltask.html";
             deferred.resolve(response);
@@ -700,7 +700,7 @@ Hktdc.Views = Hktdc.Views || {};
           if (insertServiceResponse.FormID) {
             /* reload the menu for new counts */
             setTimeout(function() {
-              Hktdc.Dispatcher.trigger('reloadMenu');
+              Hktdc.Dispatcher.trigger('reloadBadge');
             }, self.delayReloadMenuTime);
             return {
               refId: insertServiceResponse.FormID

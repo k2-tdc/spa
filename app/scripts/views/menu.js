@@ -33,7 +33,9 @@ Hktdc.Views = Hktdc.Views || {};
           $('#mainContent').empty().html(noPermissionView.el);
         });
       });
-      self.model.on('change:activeTab', self.setActiveMenu.bind(self));
+      self.model.on('change:activeTab', function(a, b) {
+        self.setActiveMenu(a, b);
+      });
     },
 
     render: function() {
@@ -200,8 +202,9 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     setActiveMenu: function(currentRoute, route) {
+      var self = this;
       // console.log(currentRoute.toJSON().activeTab);
-      // console.log(this.model.toJSON().activeTab);
+      console.log(self.model.toJSON().activeTab);
       var routeMap = {
         ALL: 'ALLTASK',
         APPROVAL: 'APPROVALTASK',
