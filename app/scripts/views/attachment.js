@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, Blob, XMLHttpRequest, BlobBuilder */
+/* global Hktdc, Backbone, JST, $, _, Blob, XMLHttpRequest, BlobBuilder, dialogMessage, utils */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -82,12 +82,11 @@ Hktdc.Views = Hktdc.Views || {};
             document.body.appendChild(anchorLink);
             anchorLink.click();
           }
-        } else if (xhr.status === 401) {
-          utils.getAccessToken(function() {
-            self.downloadFile();
-          });
         } else {
-          console.error(xhr.responseText);
+          utils.apiErrorHandling(xhr, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.download.attachment.error
+          });
         }
       };
       xhr.send(null);

@@ -77,7 +77,6 @@ window.utils = {
       }
     }
   },
-  // Asynchronously load templates located in separate .html files
 
   toggleInvalidMessage: function(viewElement, field, message, isShow) {
     var $target = $('[field=' + field + ']', viewElement);
@@ -106,16 +105,58 @@ window.utils = {
     return text;
   },
 
-  // showAlert: function(title, text, klass) {
-  //   $('.alert').removeClass('alert-error alert-warning alert-success alert-info');
-  //   $('.alert').addClass(klass);
-  //   $('.alert').html('<strong>' + title + '</strong> ' + text);
-  //   $('.alert').show();
-  // },
-  //
-  // hideAlert: function() {
-  //   $('.alert').hide();
-  // },
+  apiErrorHandling: function(response, handler) {
+    // return format: { request_id: xxx, error: xxxxxxx }
+    var errorObject;
+    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+
+    try {
+      var responseObj = JSON.parse(response.responseText);
+      errorObject = (responseObj.request_id)
+      ? responseObj
+      : {
+        request_id: 'N/A',
+        error: sprintf(dialogMessage.common.error.unknown, handler.unknownMessage)
+      };
+    } catch (e) {
+      errorObject = {
+        request_id: 'N/A',
+        error: sprintf(dialogMessage.common.error.unknown, handler.unknownMessage)
+      };
+    }
+    if (response.status === 401) {
+      // this.getAccessToken(function() {
+      //   handler[401]();
+      // }, function(err) {
+      //   errorObject.error = err;
+      //   handler.error(errorObject);
+      // });
+      window.location.href = oauthUrl;
+    } else if (response.status === 403) {
+      console.error('403 error.');
+      // handler.error(errorObject);
+    } else if (response.status === 500) {
+      // handler['500error'](errorObject);
+      console.error(response.responseText);
+      Hktdc.Dispatcher.trigger('openAlert', {
+        title: dialogTitle.error,
+        message: sprintf(dialogMessage.common.error.system, {
+          code: errorObject.request_id,
+          msg: errorObject.error
+        })
+      });
+    } else {
+      console.error('Unknown status code');
+      Hktdc.Dispatcher.trigger('openAlert', {
+        title: dialogTitle.error,
+        message: sprintf(dialogMessage.common.error.system, {
+          code: errorObject.request_id || 'Unknown',
+          msg: errorObject.error || 'Unknown system error'
+        })
+      });
+    }
+  },
+
 
   /* =============================================>>>>>
   = OAuth Login =

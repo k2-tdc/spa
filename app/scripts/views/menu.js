@@ -169,17 +169,10 @@ Hktdc.Views = Hktdc.Views || {};
               }
             },
             error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                }, function(err) {
-                  onError();
-                  console.error(err);
-                });
-              } else {
-                console.error(response.responseText);
-                onError();
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.menu.permission.error
+              });
             }
           });
         };

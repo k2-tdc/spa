@@ -242,18 +242,10 @@ Hktdc.Routers = Hktdc.Routers || {};
               $('.subheader-menu-container').html(subheaderMenuListView.el);
             },
             error: function(model, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                });
-              } else {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: dialogMessage.requestForm.getformid.fail,
-                  type: 'error',
-                  title: 'Error'
-                });
-                console.error('Error on getting new request form ID', response.responseText);
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.requestForm.getRefId.error
+              });
             }
           });
         };
@@ -368,19 +360,10 @@ Hktdc.Routers = Hktdc.Routers || {};
               $('.subheader-menu-container').html(subheaderMenuListView.el);
             },
             error: function(collection, response) {
-              if (response.status === 401) {
-                utils.getAccessToken(function() {
-                  doFetch();
-                });
-              } else {
-                var noPermissionView = new Hktdc.Views.NoPermission();
-                noPermissionView.render();
-                $('#mainContent').empty().html(noPermissionView.el);
-
-                NProgress.done();
-
-                console.error('Error on getting the request data: ', response.responseText);
-              }
+              utils.apiErrorHandling(response, {
+                // 401: doFetch,
+                unknownMessage: dialogMessage.requestForm.getDetail.error
+              });
             }
           });
         };

@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, utils, _,  $, Q, moment */
+/* global Hktdc, Backbone, JST, utils, _,  $, Q, moment, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -137,27 +137,11 @@ Hktdc.Views = Hktdc.Views || {};
             return modData;
             // return { data: modData, recordsTotal: modData.length };
           },
-          error: function(xhr, status, err) {
-            console.log(xhr);
-            if (xhr.status === 401) {
-              utils.getAccessToken(function() {
-                self.approvalHistoryDataTable.ajax.url(self.getAjaxURL()).load();
-              });
-            } else {
-              try {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.common.servererror.fail, JSON.parse(xhr.responseText).request_id),
-                  type: 'error',
-                  title: 'Error'
-                });
-              } catch (e) {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.common.servererror.fail, 'Unknown error code'),
-                  type: 'error',
-                  title: 'Error'
-                });
-              }
-            }
+          error: function(response, status, err) {
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.approvalHistory.getList.error
+            });
           }
         },
         initComplete: function(settings, records) {
@@ -260,16 +244,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(applicantCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('Error on getting user');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.applicantList.error
+            });
           }
         });
       };
@@ -291,16 +269,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(statusCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              deferred.reject('error on getting status list');
-              console.error(response.responseText);
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.statusList.error
+            });
           }
         });
       };

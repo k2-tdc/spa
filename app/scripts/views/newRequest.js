@@ -475,16 +475,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting service catagory list');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.serviceCatagoryList.error
+            });
           }
         });
       };
@@ -504,16 +498,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(employeeCollection.toJSON());
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting employee.');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.employeeList.error
+            });
           }
         });
       };
@@ -533,16 +521,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(selectedApplicantModel);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting applicant detail');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.applicantDetail.error
+            });
           }
         });
       };
@@ -560,16 +542,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(fileRuleModel);
           },
           error: function(model, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('Error on getting file type rule.');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.fileRule.error
+            });
           }
         });
       };
@@ -587,16 +563,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(colleagueCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting user list.');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.userList.error
+            });
           }
         });
       };
@@ -831,27 +801,10 @@ Hktdc.Views = Hktdc.Views || {};
             }
           },
           error: function(collection, response) {
-            // console.log('error');
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              });
-            } else {
-              try {
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.common.servererror.fail, JSON.parse(response.responseText).request_id),
-                  type: 'error',
-                  title: 'Error'
-                });
-              } catch (e) {
-                console.error(response.responseText);
-                Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.common.servererror.fail, 'Unknown error code.'),
-                  type: 'error',
-                  title: 'Error'
-                });
-              }
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.recommendList.error
+            });
           }
         });
       };

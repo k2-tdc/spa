@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, utils, _, NProgress, Q, Blob, BlobBuilder, XMLHttpRequest, moment */
+/* global Hktdc, Backbone, JST, $, utils, _, NProgress, Q, Blob, BlobBuilder, XMLHttpRequest, moment, dialogMessage */
 
 Hktdc.Views = Hktdc.Views || {};
 
@@ -60,16 +60,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(departmentCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting department list');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.departmentList.error
+            });
           }
         });
       };
@@ -88,16 +82,10 @@ Hktdc.Views = Hktdc.Views || {};
             deferred.resolve(applicantCollection);
           },
           error: function(collection, response) {
-            if (response.status === 401) {
-              utils.getAccessToken(function() {
-                doFetch();
-              }, function(err) {
-                deferred.reject(err);
-              });
-            } else {
-              console.error(response.responseText);
-              deferred.reject('error on getting appliant');
-            }
+            utils.apiErrorHandling(response, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.component.reportApplicantList.error
+            });
           }
         });
       };
@@ -248,6 +236,11 @@ Hktdc.Views = Hktdc.Views || {};
             document.body.appendChild(anchorLink);
             anchorLink.click();
           }
+        } else {
+          utils.apiErrorHandling(xhr, {
+            // 401: doFetch,
+            unknownMessage: dialogMessage.download.report.error
+          });
         }
       };
       xhr.send(null);
