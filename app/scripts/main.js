@@ -229,13 +229,13 @@ window.Hktdc = {
               menuModel.set({
                 Menu: menuWithNewBadge
               });
-              // var newMenuView = new Hktdc.Views.Menu({
-              //   model: menuModel
-              // });
+              var newMenuView = new Hktdc.Views.Menu({
+                model: menuModel
+              });
               menuModel.set('activeTab', '');
-              menuView.render();
+              // menuView.render();
               menuModel.set('activeTab', Backbone.history.getHash());
-              $('#menu').html(menuView.el);
+              $('#menu').html(newMenuView.el);
             })
             .catch(function(error) {
               Hktdc.Dispatcher.trigger('openAlert', {

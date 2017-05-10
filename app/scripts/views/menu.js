@@ -181,6 +181,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     onClickMenu: function(ev) {
+      console.log('crash');
       var $target = $(ev.target);
       if ($(ev.target).is('a')) {
         $target = $(ev.target).parent('li');
