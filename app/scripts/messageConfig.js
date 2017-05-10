@@ -145,6 +145,14 @@ var dialogMessage = {
       general: 'At least one mandatory field is missing.'
     }
   },
+  download: {
+    attachment: {
+      error: 'error on download the attachment'
+    },
+    report: {
+      error: 'error on download the report'
+    }
+  },
   common: {
     getaccesstoken: {
       fail: 'Error on getting access token'
