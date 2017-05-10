@@ -234,13 +234,14 @@ Hktdc.Views = Hktdc.Views || {};
       }
       var updateObject = {};
       updateObject[targetField] = $(ev.target).val();
+      // double set is to prevent invalid value bypass the set model process
+      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
+      this.model.set(updateObject);
+
       this.model.set(updateObject, {
         validate: true,
         field: targetField
       });
-      // double set is to prevent invalid value bypass the set model process
-      // because if saved the valid model, then set the invalid model will not success and the model still in valid state
-      this.model.set(updateObject);
     },
 
     updateDateModelByEvent: function(ev) {
@@ -342,11 +343,17 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(selectedUserName);
         $('.recommend-select option[value="' + selectedUserName + '"]', self.el).prop('selected', true);
 
+        self.model.set({
+          selectedRecommentModel: self.model.toJSON().selectedRecommentModel
+        }, {
+          validate: true,
+          field: 'selectedRecommentModel'
+        });
+
         self.renderButtons();
       });
 
       this.model.on('invalid', function(model, validObj) {
-        // console.log('is invalid', validObj);
         self.toggleInvalidMessage(validObj.field, true);
       });
 
@@ -682,19 +689,13 @@ Hktdc.Views = Hktdc.Views || {};
       buttonView.renderButtonHandler();
 
       this.listenTo(buttonModel, 'checkIsValid', function(successCallback) {
-        // self.model.validate(self.model, {field: 'Justification'});
-        // console.log(self.model.toJSON().EstimatedCost);
-        // console.error(self.model.isValid());
-
+        var serviceValid = true;
         if (!self.haveBudgetAndService(false)) {
-          Hktdc.Dispatcher.trigger('openAlert', {
-            title: 'Input Error',
-            message: dialogMessage.requestForm.validation.general
-          });
-          return false;
+          serviceValid = false;
         }
+        self.validateField();
 
-        if (self.model.isValid()) {
+        if (self.model.isValid() && serviceValid) {
           if (successCallback) {
             successCallback();
           }
@@ -702,31 +703,6 @@ Hktdc.Views = Hktdc.Views || {};
           Hktdc.Dispatcher.trigger('openAlert', {
             title: 'Input Error',
             message: dialogMessage.requestForm.validation.general
-          });
-
-          self.model.set({
-            Justification: self.model.toJSON().Justification
-          }, {
-            validate: true,
-            field: 'Justification'
-          });
-          self.model.set({
-            selectedRecommentModel: self.model.toJSON().selectedRecommentModel
-          }, {
-            validate: true,
-            field: 'selectedRecommentModel'
-          });
-          self.model.set({
-            EstimatedCost: self.model.toJSON().EstimatedCost
-          }, {
-            validate: true,
-            field: 'EstimatedCost'
-          });
-          self.model.set({
-            EDeliveryDate: self.model.toJSON().EDeliveryDate
-          }, {
-            validate: true,
-            field: 'EDeliveryDate'
           });
         }
       });
@@ -817,6 +793,7 @@ Hktdc.Views = Hktdc.Views || {};
               requestFormModel: self.model,
               tagName: 'select',
               className: 'form-control recommend-select',
+              attributes: { field: 'selectedRecommentModel', name: 'selectedRecommentModel' },
               selectedRecommend: self.model.toJSON().ApproverUserID
             });
             $('.recommend-select', self.el).remove();
@@ -865,6 +842,38 @@ Hktdc.Views = Hktdc.Views || {};
         });
       };
       doFetch();
+    },
+
+    validateField: function() {
+      var self = this;
+
+      self.model.set({
+        Justification: self.model.toJSON().Justification
+      }, {
+        validate: true,
+        field: 'Justification'
+      });
+
+      self.model.set({
+        selectedRecommentModel: self.model.toJSON().selectedRecommentModel
+      }, {
+        validate: true,
+        field: 'selectedRecommentModel'
+      });
+
+      self.model.set({
+        EstimatedCost: self.model.toJSON().EstimatedCost
+      }, {
+        validate: true,
+        field: 'EstimatedCost'
+      });
+
+      self.model.set({
+        EDeliveryDate: self.model.toJSON().EDeliveryDate
+      }, {
+        validate: true,
+        field: 'EDeliveryDate'
+      });
     },
 
     highlightServiceCatagory: function(isHighlight) {

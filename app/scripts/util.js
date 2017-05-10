@@ -1,4 +1,4 @@
-/* global Hktdc, _, Cookies */
+/* global Hktdc, _, Cookies, $ */
 /* all application level methods should be placed here */
 
 window.utils = {
