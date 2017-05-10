@@ -33,8 +33,15 @@ Hktdc.Views = Hktdc.Views || {};
           $('#mainContent').empty().html(noPermissionView.el);
         });
       });
-      self.model.on('change:activeTab', function(a, b) {
-        self.setActiveMenu(a, b);
+      self.model.on('change:activeTab', function(model, isActive) {
+        self.setActiveMenu(model, isActive);
+      });
+      self.model.on('change:gettingBadge', function(model, isGetting) {
+        if (isGetting) {
+          $('.data-table-loader', self.el).removeClass('hidden');
+        } else {
+          $('.data-table-loader', self.el).addClass('hidden');
+        }
       });
     },
 

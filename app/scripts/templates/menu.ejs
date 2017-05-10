@@ -12,7 +12,9 @@
           <li routename='<%= items.RouteName %>'>
             <a>
               <%= items.Name %>
+              <div class="data-table-loader hidden"></div>
               <% if (items.Scount && String(items.Scount) !== '0') { %>
+
               <span class='menu-index-value outline'><%=items.Scount%></span>
               <% } %>
               <span class='glyphicon glyphicon-menu-right'></span>
@@ -36,7 +38,9 @@
           <li routename='<%= submenu.RouteName %>' <% if (items.onlyMobileAndTablet) { %>class='visible-xs-block visible-sm-block'<% } %>>
             <a>
               <%= submenu.Name %>
+              <div class="data-table-loader hidden"></div>
               <% if(submenu.Scount && String(submenu.Scount) !== '0') { %>
+
               <span class='menu-index-value outline'><%=submenu.Scount%></span>
               <% }
               %>

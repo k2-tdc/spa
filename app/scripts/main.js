@@ -198,6 +198,9 @@ window.Hktdc = {
 
         $('#menu').html(menuView.el);
         menuView.listenTo(window.Hktdc.Dispatcher, 'reloadBadge', function() {
+          menuModel.set({
+            gettingBadge: true
+          });
           self.loadBadgeNumber()
             .then(function(badgeNumberModel) {
               /* remove the old menu view to prevent duplicated event listener */
@@ -241,6 +244,11 @@ window.Hktdc = {
               Hktdc.Dispatcher.trigger('openAlert', {
                 title: 'Error',
                 message: sprintf(dialogMessage.commom.servererror.fail, error.request_id || error.error || error)
+              });
+            })
+            .fin(function() {
+              menuModel.set({
+                gettingBadge: false
               });
             });
         });
