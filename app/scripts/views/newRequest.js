@@ -167,6 +167,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     checkAndLoadRecommend: function() {
       var self = this;
+      self.toggleInvalidMessage('selectedRecommentModel', false);
       if (self.haveBudgetAndService(true)) {
         self.renderRecommendList();
       } else {
@@ -688,6 +689,19 @@ Hktdc.Views = Hktdc.Views || {};
       });
       buttonView.renderButtonHandler();
 
+      self.listenTo(buttonModel, 'checkRemark', function(successCallback) {
+        self.toggleInvalidMessage('Remark', false);
+        self.toggleInvalidMessage('Forward_To_ID', false);
+
+        self.checkRemark(true, successCallback);
+      });
+      self.listenTo(buttonModel, 'checkForward', function(successCallback) {
+        self.toggleInvalidMessage('Remark', false);
+        self.toggleInvalidMessage('Forward_To_ID', false);
+
+        self.checkForward(true, successCallback);
+      });
+
       this.listenTo(buttonModel, 'checkIsValid', function(successCallback) {
         var serviceValid = true;
         if (!self.haveBudgetAndService(false)) {
@@ -890,6 +904,45 @@ Hktdc.Views = Hktdc.Views || {};
           .html('')
           .addClass('hidden');
       }
+    },
+
+    checkRemark: function(openAlert, successCallback) {
+      var self = this;
+      if (!self.model.toJSON().Remark) {
+        if (openAlert) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            title: 'Input Error',
+            message: dialogMessage.requestForm.validation.general
+          });
+        }
+
+        self.toggleInvalidMessage('Remark', true);
+      } else {
+        self.toggleInvalidMessage('Remark', false);
+        if (successCallback) {
+          successCallback();
+        }
+      }
+    },
+
+    checkForward: function(openAlert, successCallback) {
+      var self = this;
+      if (!self.model.toJSON().Forward_To_ID) {
+        if (openAlert) {
+          Hktdc.Dispatcher.trigger('openAlert', {
+            title: 'Input Error',
+            message: dialogMessage.requestForm.validation.general
+          });
+        }
+
+        self.toggleInvalidMessage('Forward_To_ID', true);
+      } else {
+        self.toggleInvalidMessage('Forward_To_ID', false);
+        if (successCallback) {
+          successCallback();
+        }
+      }
     }
+
   });
 })();
