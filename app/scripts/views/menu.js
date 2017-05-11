@@ -16,42 +16,8 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function() {
       console.debug('[ views/menu.js ] - initialize');
       var self = this;
-      self.render();
-      // self.listenTo(self.model, 'change', self.render);
-      self.listenTo(Hktdc.Dispatcher, 'checkPagePermission', function(onSuccess) {
-        var path = Backbone.history.getHash().split('?')[0].split('/')[0];
-        self.checkPagePermission(path, function() {
-          onSuccess();
-        }, function() {
-          // Hktdc.Dispatcher.trigger('openAlert', {
-          //   message: 'Permission denied for accessing this page',
-          //   title: 'error',
-          //   type: 'error'
-          // });
-          var noPermissionView = new Hktdc.Views.NoPermission();
-          noPermissionView.render();
-          $('#mainContent').empty().html(noPermissionView.el);
-        });
-      });
-      self.model.on('change:activeTab', function(model, isActive) {
-        self.setActiveMenu(model, isActive);
-      });
-      self.model.on('change:gettingBadge', function(model, isGetting) {
-        if (isGetting) {
-          $('.data-table-loader', self.el).removeClass('hidden');
-          $('.menu-index-value', self.el).addClass('hidden');
-        } else {
-          $('.data-table-loader', self.el).addClass('hidden');
-          $('.menu-index-value', self.el).removeClass('hidden');
-        }
-      });
-    },
-
-    render: function() {
-      // console.log(this.model.toJSON());
       var rawMenu = this.model.toJSON();
       var menu = rawMenu.Menu || [];
-      // var self = this;
       /* add PList and User into menu for mobile version */
       var PListMenu = {
         Mlink: '#',
@@ -96,9 +62,50 @@ Hktdc.Views = Hktdc.Views || {};
           RouteName: 'logout'
         }]
       };
-      menu.push(UserMenu);
+      if (!_.find(menu, function(m) {
+        return m.Name === rawMenu.User.UserName;
+      })) {
+        menu.push(UserMenu);
+      }
       // menu.push(PListMenu, UserMenu);
       // console.log(menu);
+
+      self.render();
+      // self.listenTo(self.model, 'change', self.render);
+      self.listenTo(Hktdc.Dispatcher, 'checkPagePermission', function(onSuccess) {
+        var path = Backbone.history.getHash().split('?')[0].split('/')[0];
+        self.checkPagePermission(path, function() {
+          onSuccess();
+        }, function() {
+          // Hktdc.Dispatcher.trigger('openAlert', {
+          //   message: 'Permission denied for accessing this page',
+          //   title: 'error',
+          //   type: 'error'
+          // });
+          var noPermissionView = new Hktdc.Views.NoPermission();
+          noPermissionView.render();
+          $('#mainContent').empty().html(noPermissionView.el);
+        });
+      });
+      self.model.on('change:activeTab', function(model, isActive) {
+        self.setActiveMenu(model, isActive);
+      });
+      self.model.on('change:gettingBadge', function(model, isGetting) {
+        if (isGetting) {
+          $('.data-table-loader', self.el).removeClass('hidden');
+          $('.menu-index-value', self.el).addClass('hidden');
+        } else {
+          $('.data-table-loader', self.el).addClass('hidden');
+          $('.menu-index-value', self.el).removeClass('hidden');
+        }
+      });
+    },
+
+    render: function() {
+      // console.log(this.model.toJSON());
+      var rawMenu = this.model.toJSON();
+      var menu = rawMenu.Menu || [];
+      // var self = this;
       /* map the name, the server should return the route later */
       _.each(menu, function(raw) {
         if (raw.sumenu) {
