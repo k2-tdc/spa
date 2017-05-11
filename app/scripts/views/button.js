@@ -270,7 +270,10 @@ Hktdc.Views = Hktdc.Views || {};
               })
               .fail(function(err) {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.requestFormButton[actionKey].fail, (err.request_id || err)),
+                  message: sprintf(dialogMessage.requestFormButton[actionKey].fail, {
+                    code: err.request_id || 'unknown',
+                    msg: err.error || 'unknown'
+                  }),
                   type: 'error',
                   title: 'Error'
                 });
@@ -291,7 +294,10 @@ Hktdc.Views = Hktdc.Views || {};
               .fail(function(err) {
                 Hktdc.Dispatcher.trigger('openAlert', {
                   title: 'Error',
-                  message: sprintf(dialogMessage.requestFormButton[actionKey].fail, (err.request_id || err))
+                  message: sprintf(dialogMessage.requestFormButton[actionKey].fail, {
+                    code: err.request_id || 'unknown',
+                    msg: err.error || 'unknown'
+                  })
                 });
               })
               .fin(function() {
@@ -335,7 +341,10 @@ Hktdc.Views = Hktdc.Views || {};
               })
               .fail(function(err) {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.requestFormButton.save.fail, err.request_id || err),
+                  message: sprintf(dialogMessage.requestFormButton.save.fail, {
+                    code: err.request_id || 'unknown',
+                    msg: err.error || 'unknown'
+                  }),
                   type: 'error',
                   title: 'Error'
                 });
@@ -367,7 +376,10 @@ Hktdc.Views = Hktdc.Views || {};
               })
               .fail(function(err) {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.requestFormButton.sendtoapplicant.fail, err.request_id || err),
+                  message: sprintf(dialogMessage.requestFormButton.sendtoapplicant.fail, {
+                    code: err.request_id || 'unknown',
+                    msg: err.error || 'unknown'
+                  }),
                   type: 'error',
                   title: 'Error'
                 });
@@ -399,7 +411,10 @@ Hktdc.Views = Hktdc.Views || {};
               })
               .fail(function(err) {
                 Hktdc.Dispatcher.trigger('openAlert', {
-                  message: sprintf(dialogMessage.requestFormButton.sendtoapprover.fail, err.request_id || err),
+                  message: sprintf(dialogMessage.requestFormButton.sendtoapprover.fail, {
+                    code: err.request_id || 'unknown',
+                    msg: err.error || 'unknown'
+                  }),
                   type: 'error',
                   title: 'Error'
                 });

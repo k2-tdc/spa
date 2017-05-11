@@ -1,4 +1,4 @@
-/* global Hktdc, _, Cookies, $ */
+/* global Hktdc, _, Cookies, $, dialogTitle, sprintf, dialogMessage */
 /* all application level methods should be placed here */
 
 window.utils = {
@@ -113,11 +113,11 @@ window.utils = {
     try {
       var responseObj = JSON.parse(response.responseText);
       errorObject = (responseObj.request_id)
-      ? responseObj
-      : {
-        request_id: 'N/A',
-        error: sprintf(dialogMessage.common.error.unknown, handler.unknownMessage)
-      };
+        ? responseObj
+        : {
+          request_id: 'N/A',
+          error: sprintf(dialogMessage.common.error.unknown, handler.unknownMessage)
+        };
     } catch (e) {
       errorObject = {
         request_id: 'N/A',
@@ -142,7 +142,7 @@ window.utils = {
         title: dialogTitle.error,
         message: sprintf(dialogMessage.common.error.system, {
           code: errorObject.request_id,
-          msg: errorObject.error
+          msg: errorObject.error + ' ' + (errorObject.error_description || '')
         })
       });
     } else {
@@ -156,7 +156,6 @@ window.utils = {
       });
     }
   },
-
 
   /* =============================================>>>>>
   = OAuth Login =
