@@ -154,11 +154,14 @@ var dialogMessage = {
     }
   },
   common: {
-    getaccesstoken: {
-      fail: 'Error on getting access token'
+    invalid: {
+      form: 'Input is missing/incorrect.'
     },
-    servererror: {
-      fail: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s'
+    error: {
+      accessToken: 'Error on getting access token',
+      system: 'System error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
+      script: 'Script error. You are welcomed to contact the Helpdesk 24-hours hotline 852-2892-4848 for questions or further assistance. <br />Error code: %(code)s <br />Error message: %(msg)s',
+      unknown: 'Unknown error. <br />%s'
     }
   },
   component: {

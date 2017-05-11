@@ -180,7 +180,7 @@ window.utils = {
   getAccessToken: function(onSuccess, onError) {
     var defaultError = function() {
       Hktdc.Dispatcher.trigger('openAlert', {
-        message: dialogMessage.common.getaccesstoken.fail,
+        message: dialogMessage.common.error.accessToken,
         type: 'error',
         title: 'Error'
       });

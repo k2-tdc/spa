@@ -272,7 +272,7 @@ window.Hktdc = {
       })
       .catch(function(error) {
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: sprintf(dialogMessage.common.servererror.fail, {
+          message: sprintf(dialogMessage.common.error.system, {
             code: error.request_id || 'unknown',
             msg: error.error || 'unknown'
           }),
