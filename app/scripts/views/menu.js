@@ -39,8 +39,10 @@ Hktdc.Views = Hktdc.Views || {};
       self.model.on('change:gettingBadge', function(model, isGetting) {
         if (isGetting) {
           $('.data-table-loader', self.el).removeClass('hidden');
+          $('.menu-index-value', self.el).addClass('hidden');
         } else {
           $('.data-table-loader', self.el).addClass('hidden');
+          $('.menu-index-value', self.el).removeClass('hidden');
         }
       });
     },

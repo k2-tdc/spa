@@ -24,7 +24,7 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       // this.listenTo(this.model, 'change', this.render);
       _.extend(this, props);
-      this.delayReloadMenuTime = 10000;
+      this.delayReloadMenuTime = 5000;
       // this.model.on('change')
       // this.render();
     },
@@ -541,9 +541,9 @@ Hktdc.Views = Hktdc.Views || {};
               success: function(model, response) {
                 // console.log('success: ', a);
                 // console.log(b);
-                setTimeout(function() {
-                  Hktdc.Dispatcher.trigger('reloadBadge');
-                }, self.delayReloadMenuTime);
+                // setTimeout(function() {
+                //   Hktdc.Dispatcher.trigger('reloadBadge');
+                // }, self.delayReloadMenuTime);
                 // Hktdc.Dispatcher.trigger('toggleLockButton', false);
 
                 self.successRedirect();
