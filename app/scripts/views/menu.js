@@ -46,14 +46,6 @@ Hktdc.Views = Hktdc.Views || {};
         Scount: null,
         onlyMobileAndTablet: true,
         sumenu: [{
-          Mlink: '#delegation',
-          Name: 'Delegation (under construct)',
-          onlyMobileAndTablet: true,
-          Route: '/#delegation',
-          // Route: '/#',
-          Scount: null,
-          RouteName: 'delegation'
-        }, {
           Mlink: '#logout',
           onlyMobileAndTablet: true,
           Name: 'Logout',
