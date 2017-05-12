@@ -204,43 +204,45 @@ Hktdc.Views = Hktdc.Views || {};
       xhr.responseType = 'blob';
       xhr.onreadystatechange = function() {
         var anchorLink;
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          if (typeof window.navigator.msSaveBlob !== 'undefined') {
-            var blob;
-            try {
-              blob = new Blob([xhr.response], {
-                type: 'application/octet-stream'
-              });
-            } catch (e) {
-              // Old browser, need to use blob builder
-              window.BlobBuilder = window.BlobBuilder ||
-                                   window.WebKitBlobBuilder ||
-                                   window.MozBlobBuilder ||
-                                   window.MSBlobBuilder;
-              if (window.BlobBuilder) {
-                var bb = new BlobBuilder();
-                bb.append(xhr.response);
-                blob = bb.getBlob('application/octet-stream');
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+              var blob;
+              try {
+                blob = new Blob([xhr.response], {
+                  type: 'application/octet-stream'
+                });
+              } catch (e) {
+                // Old browser, need to use blob builder
+                window.BlobBuilder = window.BlobBuilder ||
+                                     window.WebKitBlobBuilder ||
+                                     window.MozBlobBuilder ||
+                                     window.MSBlobBuilder;
+                if (window.BlobBuilder) {
+                  var bb = new BlobBuilder();
+                  bb.append(xhr.response);
+                  blob = bb.getBlob('application/octet-stream');
+                }
               }
-            }
-            if (blob) {
-              window.navigator.msSaveBlob(blob, 'report.xls');
+              if (blob) {
+                window.navigator.msSaveBlob(blob, 'report.xls');
+              }
+            } else {
+              // Trick for making downloadable link
+              anchorLink = document.createElement('a');
+              anchorLink.href = window.URL.createObjectURL(xhr.response);
+              // Give filename you wish to download
+              anchorLink.download = 'report.xls';
+              anchorLink.style.display = 'none';
+              document.body.appendChild(anchorLink);
+              anchorLink.click();
             }
           } else {
-            // Trick for making downloadable link
-            anchorLink = document.createElement('a');
-            anchorLink.href = window.URL.createObjectURL(xhr.response);
-            // Give filename you wish to download
-            anchorLink.download = 'report.xls';
-            anchorLink.style.display = 'none';
-            document.body.appendChild(anchorLink);
-            anchorLink.click();
+            utils.apiErrorHandling(xhr, {
+              // 401: doFetch,
+              unknownMessage: dialogMessage.download.report.error
+            });
           }
-        } else {
-          utils.apiErrorHandling(xhr, {
-            // 401: doFetch,
-            unknownMessage: dialogMessage.download.report.error
-          });
         }
       };
       xhr.send(null);
