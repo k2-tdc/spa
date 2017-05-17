@@ -1,4 +1,4 @@
-/*global Hktdc, Backbone*/
+/* global Hktdc, Backbone */
 
 Hktdc.Collections = Hktdc.Collections || {};
 
@@ -6,12 +6,12 @@ Hktdc.Collections = Hktdc.Collections || {};
   'use strict';
 
   Hktdc.Collections.ShareUser = Backbone.Collection.extend({
-    url: function() {
-      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/share-user?process=CHSW';
+    url: function(type) {
+      var typePath = type ? '&type=' + type : '';
+      return Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/share-user?process=CHSW' + typePath;
     },
 
     model: Hktdc.Models.Employee
 
   });
-
 })();

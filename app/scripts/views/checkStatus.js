@@ -156,6 +156,8 @@ Hktdc.Views = Hktdc.Views || {};
     loadShareUser: function() {
       var deferred = Q.defer();
       var shareUserCollection = new Hktdc.Collections.ShareUser();
+      var type = (this.model.toJSON().mode === 'APPROVAL TASKS') ? 'Approval' : false;
+      shareUserCollection.url = shareUserCollection.url(type);
       var doFetch = function() {
         shareUserCollection.fetch({
           beforeSend: utils.setAuthHeader,
