@@ -331,8 +331,8 @@ Hktdc.Views = Hktdc.Views || {};
       var createDateFromView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
           placeholder: 'From Date',
-          value: (self.model.toJSON()['create-start-date'])
-            ? moment(self.model.toJSON()['create-start-date'], 'YYYY-MM-DD').format('DD MMM YYYY')
+          value: (self.model.toJSON()['start-date'])
+            ? moment(self.model.toJSON()['start-date'], 'YYYY-MM-DD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
@@ -346,8 +346,8 @@ Hktdc.Views = Hktdc.Views || {};
       var createDateToView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
           placeholder: 'To Date',
-          value: (self.model.toJSON()['create-end-date'])
-            ? moment(self.model.toJSON()['create-end-date'], 'YYYY-MM-DD').format('DD MMM YYYY')
+          value: (self.model.toJSON()['end-date'])
+            ? moment(self.model.toJSON()['end-date'], 'YYYY-MM-DD').format('DD MMM YYYY')
             : null
         }),
         onSelect: function(val) {
