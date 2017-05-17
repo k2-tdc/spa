@@ -203,8 +203,6 @@ window.Hktdc = {
           });
           self.loadBadgeNumber()
             .then(function(badgeNumberModel) {
-              /* remove the old menu view to prevent duplicated event listener */
-              // menuView.remove();
               var newBadgeItems = badgeNumberModel.toJSON().number;
               var getMenu = function(menuItems) {
                 // console.log(menuItems);
@@ -230,15 +228,13 @@ window.Hktdc = {
               var menuWithNewBadge = getMenu(menuModel.toJSON().Menu);
               // console.log('menuWithNewBadge: ', menuWithNewBadge);
               menuModel.set({
-                Menu: menuWithNewBadge
+                Menu: menuWithNewBadge,
+                activeTab: ''
               });
-              var newMenuView = new Hktdc.Views.Menu({
-                model: menuModel
-              });
-              menuModel.set('activeTab', '');
-              // menuView.render();
+
+              menuView.render();
+
               menuModel.set('activeTab', Backbone.history.getHash());
-              $('#menu').html(newMenuView.el);
             })
             .catch(function(error) {
               Hktdc.Dispatcher.trigger('openAlert', {
@@ -250,6 +246,10 @@ window.Hktdc = {
               });
             })
             .fin(function() {
+              /* remove the old menu view to prevent duplicated event listener */
+              // menuView.stopListening(Hktdc.Dispatcher);
+              // menuView.remove();
+
               menuModel.set({
                 gettingBadge: false
               });
