@@ -216,7 +216,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (!self.model.toJSON().Remark) {
         if (openAlert) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            title: 'Input Error',
+            title: dialogTitle.warning,
             message: dialogMessage.requestForm.validation.general
           });
         }
@@ -235,7 +235,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (!self.model.toJSON().Forward_To_ID) {
         if (openAlert) {
           Hktdc.Dispatcher.trigger('openAlert', {
-            title: 'Input Error',
+            title: dialogTitle.warning,
             message: dialogMessage.requestForm.validation.general
           });
         }

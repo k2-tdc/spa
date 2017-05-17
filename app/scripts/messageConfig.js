@@ -2,7 +2,8 @@
 var dialogTitle = {
   error: 'Error',
   confirmation: 'Confirmation',
-  information: 'Information'
+  information: 'Information',
+  warning: 'Warning'
 };
 
 var dialogMessage = {
@@ -142,7 +143,7 @@ var dialogMessage = {
     validation: {
       // costandservice: 'Please select service and filled the cost field',
       // service: 'Request service notes must be filled',
-      general: 'At least one mandatory field is missing.'
+      general: 'Input is missing/incorrect'
     }
   },
   download: {

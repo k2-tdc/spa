@@ -182,7 +182,7 @@ window.utils = {
       Hktdc.Dispatcher.trigger('openAlert', {
         message: dialogMessage.common.error.accessToken,
         type: 'error',
-        title: 'Error'
+        title: dialogTitle.error
       });
     };
     if (!(Hktdc.Config.environment === 'uat' || Hktdc.Config.environment === 'chsw')) {

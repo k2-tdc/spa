@@ -192,9 +192,8 @@ Hktdc.Views = Hktdc.Views || {};
         // console.groupEnd();
       } else {
         Hktdc.Dispatcher.trigger('openAlert', {
-          message: validateFilesObj.errorMessages.join(',<br />'),
-          type: 'error',
-          title: 'Error'
+          title: dialogTitle.error,
+          message: validateFilesObj.errorMessages.join(',<br />')
         });
       }
     },

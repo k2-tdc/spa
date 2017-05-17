@@ -58,7 +58,7 @@ Hktdc.Views = Hktdc.Views || {};
       if ($(ev.target).prop('checked') && self.model.toJSON().selectedServiceCount > 0) {
         ev.preventDefault();
         Hktdc.Dispatcher.trigger('openConfirm', {
-          title: 'Confirmation',
+          title: dialogTitle.confirmation,
           message: sprintf(dialogMessage.requestForm.clearitem.confirm, self.model.toJSON().Name),
           onConfirm: function() {
             $(ev.target).prop('checked', false);

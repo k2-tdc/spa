@@ -242,7 +242,7 @@ window.Hktdc = {
             })
             .catch(function(error) {
               Hktdc.Dispatcher.trigger('openAlert', {
-                title: 'Error',
+                title: dialogTitle.error,
                 message: sprintf(dialogMessage.commom.servererror.fail, {
                   code: error.request_id || 'unknown',
                   msg: error.error || 'unknown'
@@ -276,7 +276,7 @@ window.Hktdc = {
             code: error.request_id || 'unknown',
             msg: error.error || 'unknown'
           }),
-          title: 'Error'
+          title: dialogTitle.error
         });
       });
   },
