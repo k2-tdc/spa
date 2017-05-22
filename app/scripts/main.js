@@ -386,6 +386,39 @@ window.Hktdc = {
       NProgress.done();
       // NProgress.remove();
     });
+
+    var originalFetch = Backbone.Model.prototype.fetch;
+    Backbone.Model.prototype.fetch = function(options) {
+      var self = this;
+      if (env === 'uat' || env === 'chsw') {
+        return utils.getAccessToken2(function() {
+          originalFetch.call(self, options);
+        }, function() {
+          console.error('can\'t get access token fro API gateway, redirect to login page');
+          var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+          window.location.href = oauthUrl;
+        });
+      } else {
+        // Backbone.Model.prototype.fetch(options);
+        return originalFetch.call(this, options);
+      }
+    };
+
+    var originalSave = Backbone.Model.prototype.save;
+    Backbone.Model.prototype.save = function(options) {
+      var self = this;
+      if (env === 'uat' || env === 'chsw') {
+        return utils.getAccessToken2(function() {
+          originalSave.call(self, options);
+        }, function() {
+          console.error('can\'t get access token fro API gateway, redirect to login page');
+          var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+          window.location.href = oauthUrl;
+        });
+      } else {
+        return originalSave.call(this, options);
+      }
+    };
   }
 };
 
