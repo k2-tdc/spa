@@ -404,21 +404,45 @@ window.Hktdc = {
       }
     };
 
+    // function proxyAjaxEvent(event, options, dit) {
+    //   var eventCallback = options[event];
+    //   options[event] = function() {
+    //     // check if callback for event exists and if so pass on request
+    //     if (eventCallback) { eventCallback(arguments); }
+    //     dit.processQueue(); // move onto next save request in the queue
+    //   };
+    // }
     var originalSave = Backbone.Model.prototype.save;
-    Backbone.Model.prototype.save = function(options) {
+    Backbone.Model.prototype.save = function(attrs, options) {
       var self = this;
+      // if (true) {
       if (env === 'uat' || env === 'chsw') {
+        if (!options) { options = {}; }
         return utils.getAccessToken(function() {
-          originalSave.call(self, options);
+          originalSave.call(self, attrs, options);
         }, function() {
           console.error('can\'t get access token fro API gateway, redirect to login page');
           var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
           window.location.href = oauthUrl;
         });
       } else {
-        return originalSave.call(this, options);
+        return originalSave.call(this, attrs, options);
       }
     };
+
+    // Backbone.Model.prototype.processQueue = function() {
+    //   var self = this;
+    //
+    //   if (self.saveQueue && self.saveQueue.length) {
+    //     var saveArgs = self.saveQueue.shift();
+    //     proxyAjaxEvent('success', saveArgs.options, self);
+    //     proxyAjaxEvent('error', saveArgs.options, self);
+    //     originalSave.call(self, saveArgs.attrs, saveArgs.options);
+    //   } else {
+    //     self.saving = false;
+    //   }
+    // };
+
   }
 };
 
