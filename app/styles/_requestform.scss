@@ -1,7 +1,15 @@
 .form_input {
   max-width: 600px;
 }
+@media screen and (max-width: 767px) {
+  .no-right-padding {
+    padding-right: 0 !important;
+  }
 
+  .no-left-padding {
+    padding-left: 0 !important;
+  }
+}
 .form_data {
   // max-width: 600px;
   min-height: 1em;

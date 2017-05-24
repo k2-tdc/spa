@@ -20,13 +20,13 @@
 
 
         <div class="col-xs-5 col-sm-4 p0m0">
-          <div class="col-xs-6 col-sm-4 col-md-4 newrequest-title text-left refId">Ref ID</div>
-          <div class="col-xs-6 col-sm-8 col-md-8" id="divRefID"><%= request.ReferenceID %></div>
+          <div class="col-xs-6 col-sm-4 col-md-4 newrequest-title text-left refId no-right-padding">Ref ID</div>
+          <div class="col-xs-6 col-sm-8 col-md-8 no-left-padding no-right-padding" id="divRefID"><%= request.ReferenceID %></div>
         </div>
 
         <div class="col-xs-7 col-sm-7 p0m0">
-          <div class="col-xs-6 col-sm-4 col-md-4 newrequest-title text-left">Create Date</div>
-          <div class="col-xs-6 col-sm-8 col-md-8" id="divCreateddate"><%= request.CreatedOn %></div>
+          <div class="col-xs-6 col-sm-4 col-md-4 newrequest-title text-left no-left-padding no-right-padding">Create Date</div>
+          <div class="col-xs-6 col-sm-8 col-md-8 no-padding no-left-padding" id="divCreateddate"><%= request.CreatedOn %></div>
         </div>
 
       </div>
@@ -226,7 +226,7 @@
             <div class="col-xs-12 col-sm-9 col-md-9 form_input">
               <textarea class="form-control" rows="3" id="txtremark" field="Remark"><%= request.Remark %></textarea>
               <div class="error-message hidden">Please fill up this field</div>
-              
+
             </div>
           </div>
           <div class="sep-space"></div>
