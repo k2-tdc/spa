@@ -64,6 +64,7 @@ window.Hktdc = {
         SPAHomePath: '/vicosysspa/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
+        AdminSPAPath: '/adminspa',
         OAuthLoginPath: '/auth/oauth2/login',
         OAuthGetTokenPath: '/auth/oauth2/token',
         OAuthGetUserIDPath: '/auth/oauth2/tokeninfo'
@@ -81,6 +82,7 @@ window.Hktdc = {
         SPAHomePath: '/chsw/',
         SPADomain: 'https://workflowuat.tdc.org.hk',
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
+        AdminSPAPath: '/adminspa',
         OAuthLoginPath: '/auth/oauth2/login',
         OAuthGetTokenPath: '/auth/oauth2/token',
         OAuthGetUserIDPath: '/auth/oauth2/tokeninfo'

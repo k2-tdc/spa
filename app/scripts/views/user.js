@@ -25,7 +25,8 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       this.$el.html(this.template({
-        user: this.model.toJSON()
+        user: this.model.toJSON(),
+        adminSPAURL: Hktdc.Config.adminSPAURL
       }));
     }
 
