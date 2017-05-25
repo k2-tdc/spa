@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, dialogMessage, validateMessage */
+/* global Hktdc, Backbone, JST, $, Q, utils, _, moment, dialogMessage, validateMessage, dialogTitle */
 Hktdc.Views = Hktdc.Views || {};
 
 (function() {
@@ -175,6 +175,17 @@ Hktdc.Views = Hktdc.Views || {};
           selectedRecommentModel: null
         });
       }
+
+      if (self.model.toJSON().firstTimeValidate === false) {
+        setTimeout(function() {
+          self.model.set({
+            selectedRecommentModel: self.model.toJSON().selectedRecommentModel
+          }, {
+            validate: true,
+            field: 'selectedRecommentModel'
+          });
+        });
+      }
     },
 
     haveBudgetAndService: function(allowEmptyService, ev) {
@@ -323,7 +334,6 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.model.on('change:EstimatedCost', function(model, newCost, options) {
-        // console.log('change cost');
         /* clear the selectedRecommentModel */
         // self.model.set({ selectedRecommentModel: null });
 
@@ -335,13 +345,10 @@ Hktdc.Views = Hktdc.Views || {};
       /* click recommend will trigger change of the selectedRecommentModel */
       this.model.on('change:selectedRecommentModel', function(model, selectedRecommentModel, options) {
         if (!selectedRecommentModel) {
-          // console.log('nononono: ',$('.recommend-select option:eq(1)', self.el));
           $('.recommend-select option:eq(0)', self.el).prop('selected', true);
           return false;
         }
-        // console.log('selectedRecommentModel:', selectedRecommentModel.toJSON());
         var selectedUserName = selectedRecommentModel.toJSON().WorkerFullName;
-        // console.log(selectedUserName);
         $('.recommend-select option[value="' + selectedUserName + '"]', self.el).prop('selected', true);
 
         self.model.set({
@@ -673,6 +680,9 @@ Hktdc.Views = Hktdc.Views || {};
       });
 
       this.listenTo(buttonModel, 'checkIsValid', function(successCallback) {
+        self.model.set({
+          firstTimeValidate: false
+        });
         var serviceValid = true;
         if (!self.haveBudgetAndService(false)) {
           serviceValid = false;

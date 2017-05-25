@@ -54,9 +54,22 @@ Hktdc.Views = Hktdc.Views || {};
     className: 'dropdown-menu recommend-list',
 
     initialize: function(props) {
-      _.extend(this, props);
-      _.bindAll(this, 'renderRecommendItem', 'renderRecommendOption');
-      this.render();
+      var self = this;
+      _.extend(self, props);
+      _.bindAll(self, 'renderRecommendItem', 'renderRecommendOption');
+      self.render();
+
+      console.log('firstTimeValidate: ', self.requestFormModel.toJSON().firstTimeValidate);
+      if (self.requestFormModel.toJSON().firstTimeValidate === false) {
+        setTimeout(function() {
+          self.requestFormModel.set({
+            selectedRecommentModel: self.requestFormModel.toJSON().selectedRecommentModel
+          }, {
+            validate: true,
+            field: 'selectedRecommentModel'
+          });
+        });
+      }
     },
 
     attributes: {
@@ -102,8 +115,6 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(applicantOptionView.el);
       $(this.el).append(applicantOptionView.el);
     },
-
-
 
     render: function() {
       // this.$el.html(this.template(this.model.toJSON()));

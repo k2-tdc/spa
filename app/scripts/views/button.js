@@ -1,4 +1,4 @@
-/* global Hktdc, Backbone, JST, $, _, utils, Q, moment, FormData, dialogMessage, sprintf */
+/* global Hktdc, Backbone, JST, $, _, utils, Q, moment, FormData, dialogMessage, sprintf, dialogTitle */
 
 Hktdc.Views = Hktdc.Views || {};
 
