@@ -5,6 +5,10 @@
       <button class="btn btn-primary" id="btnsave" type="button">Save</button>
     <% } %>
 
+    <% if (showDelete) { %>
+      <button class="btn btn-primary" id="btndelete" type="button">Delete</button>
+    <% } %>
+
     <% if (showSendToApplicant) {%>
       <button class="btn btn-primary" id="btnapplicant" type="button">Send to <%= applicantSendTo %></button>
     <% } %>
@@ -19,10 +23,6 @@
 
     <% if (showResend) {%>
       <button class="btn btn-primary" id="btnresend" type="button">Resend Email Notification</button>
-    <% } %>
-
-    <% if (showDelete) { %>
-      <button class="btn btn-primary" id="btndelete" type="button">Delete</button>
     <% } %>
 
     <%

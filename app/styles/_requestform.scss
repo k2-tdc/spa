@@ -354,7 +354,6 @@ div.newrequest-title {
   padding: 4px;
   padding-top: 0px;
 }
-
 @media screen and (max-width: 480px) {
   .select-service-header{
     .checkbox-option {
@@ -432,5 +431,11 @@ div.newrequest-title {
 
   .service-catagory-item > .select-service-header.panel-active {
     box-shadow: none;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .service-category-name {
+    max-width: 180px;
   }
 }
