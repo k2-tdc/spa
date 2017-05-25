@@ -50,7 +50,7 @@ Hktdc.Views = Hktdc.Views || {};
           onlyMobileAndTablet: true,
           Name: 'Settings',
           Route: 'settings',
-          directLink: Hktdc.Config.adminSPAURL,
+          directLink: Hktdc.Config.adminSPAURL + '/#',
           Scount: null,
           RouteName: 'settings'
         }, {
