@@ -11,7 +11,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     events: {
       'click #btnSearchCheckStatus': 'doSearch',
-      'click .advanced-btn': 'toggleAdvanceMode',
+      'click .advanced-btn-wrapper': 'toggleAdvanceMode',
       'change .status-select': 'updateModelByEvent',
       'blur .search-field': 'updateModelByEvent'
     },
