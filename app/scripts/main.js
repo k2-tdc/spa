@@ -33,6 +33,7 @@ window.Hktdc = {
         },
         needAuthHeader: false,
         SPADomain: 'https://workflowuat.tdc.org.hk',
+        AdminSPAPath: '/adminspa',
         projectPath: '/',
         SPAHomePath: '/vicosysspa/'
       },
@@ -47,6 +48,7 @@ window.Hktdc = {
           base: '/api'
         },
         needAuthHeader: false,
+        AdminSPAPath: '/adminspa',
         logoutURL: 'https://corpsso.tdc.org.hk/adfs/ls/?wa=wsignout1.0',
         // needAuthHeader: true,
         projectPath: '/',

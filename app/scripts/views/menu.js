@@ -46,6 +46,14 @@ Hktdc.Views = Hktdc.Views || {};
         Scount: null,
         onlyMobileAndTablet: true,
         sumenu: [{
+          Mlink: 'settings',
+          onlyMobileAndTablet: true,
+          Name: 'Settings',
+          Route: 'settings',
+          directLink: Hktdc.Config.adminSPAURL,
+          Scount: null,
+          RouteName: 'settings'
+        }, {
           Mlink: '#logout',
           onlyMobileAndTablet: true,
           Name: 'Logout',

@@ -10,7 +10,7 @@
           %>
 
           <li routename='<%= items.RouteName %>'>
-            <a>
+            <a <% if (items.directLink){ %>href="<%= items.directLink %>"<% } %>>
               <%= items.Name %>
 
               <% if (items.WorkflowCount) { %>
@@ -39,7 +39,7 @@
           %>
 
           <li routename='<%= submenu.RouteName %>' <% if (items.onlyMobileAndTablet) { %>class='visible-xs-block visible-sm-block'<% } %>>
-            <a>
+            <a <% if (submenu.directLink){ %>href="<%= submenu.directLink %>"<% } %>>
               <%= submenu.Name %>
 
               <% if (submenu.WorkflowCount) { %>
