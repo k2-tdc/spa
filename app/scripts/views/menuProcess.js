@@ -38,7 +38,10 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click': 'clickProcessHandler'
     },
-    clickProcessHandler: function() {
+    clickProcessHandler: function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      return false;
     },
 
     initialize: function(props) {
