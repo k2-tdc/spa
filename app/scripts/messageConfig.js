@@ -166,6 +166,9 @@ var dialogMessage = {
     }
   },
   component: {
+    general: {
+      error: 'Error on getting component resources.'
+    },
     applicantList: {
       error: 'Error on getting user list'
     },
