@@ -128,6 +128,8 @@ Hktdc.Views = Hktdc.Views || {};
     renderDraftModeButton: function(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode) {
       var self = this;
       // var me = Hktdc.Config.userID;
+      var RuleCode1 = Hktdc.Config.RuleCode.split(',')[0];
+      var RuleCode2 = Hktdc.Config.RuleCode.split(',')[1];
       var showButtonOptions = { showSave: true };
       if (self.requestFormModel.toJSON().FormStatus) {
         showButtonOptions.showDelete = true;
@@ -135,10 +137,10 @@ Hktdc.Views = Hktdc.Views || {};
       // for submitted to
 
       // ApproverRuleCode !== 'IT0009'
-      if (ApplicantRuleCode === 'IT0009') {
+      if (ApplicantRuleCode === RuleCode2) {
         // 1) Preparer !== Applicant && Approver !== Applicant
         if (Preparer !== Applicant && Approver !== Applicant) {
-          console.log('condition 1 (IT0009): Preparer !== Applicant && Approver !== Applicant');
+          console.log('condition 1 (' + RuleCode2 + '): Preparer !== Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.applicantSendTo = 'Applicant';
           showButtonOptions.showSendToApprover = true;
@@ -150,7 +152,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         // 2) Preparer === Applicant && Approver !== Applicant
         } else if (Preparer === Applicant && Approver !== Applicant) {
-          console.log('condition 2 (IT0009): Preparer === Applicant && Approver !== Applicant');
+          console.log('condition 2 (' + RuleCode2 + '): Preparer === Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApprover = true;
           showButtonOptions.approverSendTo = 'Approver';
           self.requestFormModel.set({
@@ -166,10 +168,10 @@ Hktdc.Views = Hktdc.Views || {};
         }
 
       // ApproverRuleCode !== 'IT0008'
-      } else if (ApplicantRuleCode === 'IT0008') {
+      } else if (ApplicantRuleCode === RuleCode1) {
         // Preparer === Applicant && Approver !== Applicant
         if (Preparer === Applicant && Approver !== Applicant) {
-          console.log('condition 3 (IT0008): Preparer === Applicant && Approver !== Applicant');
+          console.log('condition 3 (' + RuleCode1 + '): Preparer === Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApplicant = false;
           showButtonOptions.showSendToApprover = true;
           showButtonOptions.approverSendTo = 'Approver';
@@ -178,20 +180,20 @@ Hktdc.Views = Hktdc.Views || {};
           });
         // Preparer === Applicant && Approver === Applicant
         } else if (Preparer === Applicant && Approver === Applicant) {
-          console.log('condition 4 (IT0008): Preparer === Applicant && Approver === Applicant');
+          console.log('condition 4 (' + RuleCode1 + '): Preparer === Applicant && Approver === Applicant');
           showButtonOptions.showSendToApprover = true;
           showButtonOptions.approverSendTo = 'Task Actioner';
           self.requestFormModel.set({ approverSubmittedTo: 'TaskActioner' });
         // Preparer !== Applicant && Approver === Applicant
         } else if (Preparer !== Applicant && Approver === Applicant) {
-          console.log('condition 5 (IT0008): Preparer !== Applicant && Approver === Applicant');
+          console.log('condition 5 (' + RuleCode1 + '): Preparer !== Applicant && Approver === Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.showSendToApprover = false;
           showButtonOptions.applicantSendTo = 'Applicant';
           self.requestFormModel.set({ applicantSubmittedTo: 'Applicant' });
         // Preparer !== Applicant && Approver !== Applicant
         } else if (Preparer !== Applicant && Approver !== Applicant) {
-          console.log('condition 6 (IT0008): Preparer !== Applicant && Applicant !== Applicant');
+          console.log('condition 6 (' + RuleCode1 + '): Preparer !== Applicant && Applicant !== Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.applicantSendTo = 'Applicant';
           self.requestFormModel.set({ applicantSubmittedTo: 'Applicant' });

@@ -269,9 +269,9 @@ window.Hktdc = {
           })
         });
 
-        headerModel.set({
-          processList: menuModel.toJSON().PList
-        });
+        // headerModel.set({
+        //   processList: menuModel.toJSON().PList
+        // });
         onSuccess(menuModel);
       })
       .catch(function(error) {

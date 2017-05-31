@@ -115,9 +115,9 @@ var dialogMessage = {
       fail: 'Error on getting new request form ID'
     },
     rulecode: {
-      fail1: 'Exception case: RuleCode IT0009, Approver === Applicant',
-      fail2: 'Exception case: RuleCode IT0008, unknown situation',
-      fail3: 'unacceptable rule code: !== (IT0008 || IT0009)'
+      fail1: 'Exception case: RuleCode 2, Approver === Applicant',
+      fail2: 'Exception case: RuleCode 1, unknown situation',
+      fail3: 'unacceptable rule code: !== (1 || 2)'
     },
     delete: {
       error: 'error on deleting record'
