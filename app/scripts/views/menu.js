@@ -53,14 +53,17 @@ Hktdc.Views = Hktdc.Views || {};
           directLink: Hktdc.Config.adminSPAURL + '/#',
           Scount: null,
           RouteName: 'settings'
-        }, {
-          Mlink: '#logout',
-          onlyMobileAndTablet: true,
-          Name: 'Logout',
-          Route: '/#logout',
-          Scount: null,
-          RouteName: 'logout'
-        }]
+        }
+		// no need to show logout in Mobile version
+		//, {
+        //  Mlink: '#logout',
+        //  onlyMobileAndTablet: true,
+        //  Name: 'Logout',
+        //  Route: '/#logout',
+        //  Scount: null,
+        //  RouteName: 'logout'
+        //}
+		]
       };
       if (!_.find(menu, function(m) {
         return m.Name === rawMenu.User.UserName;
