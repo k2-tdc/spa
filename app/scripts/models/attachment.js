@@ -7,7 +7,7 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.Attachment = Backbone.Model.extend({
 
-    idAttribute: 'FileName',
+    idAttribute: 'id',
 
     initialize: function() {},
 
@@ -23,7 +23,8 @@ Hktdc.Models = Hktdc.Models || {};
       UploadedByEmployeeID: '',
       UploadedByFullName: '',
       UploadedByUserID: '',
-      UploadedDate: ''
+      UploadedDate: '',
+	  id:''
     },
 
     validate: function(attrs, options) {},
