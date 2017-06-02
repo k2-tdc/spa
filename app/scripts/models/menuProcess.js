@@ -15,7 +15,8 @@ Hktdc.Models = Hktdc.Models || {};
       ProcessID: '',
       ProcessName: '',
       ProcessDisplayName: '',
-      IsDefault: ''
+      IsDefault: '',
+      SPANav:''
     },
 
     validate: function(attrs, options) {},
