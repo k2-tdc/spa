@@ -39,9 +39,26 @@ Hktdc.Views = Hktdc.Views || {};
       'click': 'clickProcessHandler'
     },
     clickProcessHandler: function(ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      return false;
+      //ev.preventDefault();
+      //ev.stopPropagation();
+      //return false;
+      var pagePath = '';
+      var $target = $(ev.target);
+      if ($(ev.target).is('a')) {
+        pagePath = $target.attr('href').toLowerCase();
+      }
+      var currentRoute = Backbone.history.getHash();
+      var isParentPath = (currentRoute.indexOf('/') === -1);
+      var containQueryString = currentRoute.indexOf('?') >= 0;
+      if (currentRoute.indexOf(pagePath) >= 0 && isParentPath) {
+        if (containQueryString) {
+          Backbone.history.navigate(pagePath, true);
+        } else {
+          Backbone.history.loadUrl(pagePath, { trigger: true });
+        }
+      } else {
+        Backbone.history.navigate(pagePath, true);
+      }
     },
 
     initialize: function(props) {
