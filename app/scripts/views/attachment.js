@@ -29,7 +29,7 @@ Hktdc.Views = Hktdc.Views || {};
       var filename = this.model.toJSON().FileName;
       var fGID = this.model.toJSON().AttachmentGUID;
       var fID = this.requestFormModel.toJSON().FormID;
-      var url = Hktdc.Config.apiURL + '/attachments?process=CHSW&guid=' + fGID;
+      var url = Hktdc.Config.apiURL + '/attachments?isattach&process=CHSW&guid=' + fGID;
       this.downloadFile(url, filename);
     },
 
