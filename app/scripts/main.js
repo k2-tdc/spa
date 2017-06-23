@@ -169,6 +169,8 @@ window.Hktdc = {
     });
 
     if (Hktdc.Config.isAppWebView) {
+      $('body').addClass('app-web-view');
+
       // process switch
       $('#header_main .nav-header-main').addClass('app-web-view');
 

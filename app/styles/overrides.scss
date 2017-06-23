@@ -344,6 +344,10 @@ div.dataTables_wrapper div.dataTables_processing{
 
 
 /* START -- app web view */
+body.app-web-view {
+  zoom: 90%;
+}
+
 #content{
   &.app-web-view{
 	font-size:12px;
