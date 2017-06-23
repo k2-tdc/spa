@@ -432,52 +432,8 @@ div.dataTables_wrapper div.dataTables_processing{
   #header_top .logo-hktdc {
     display: none;
   }
-  /* MMenu OVERRIDES */
-  html.mm-opened.mm-opening #mm-blocker.mm-slideout {
-    position: fixed;
-    top: 30px;
-    // left: -440px;
-    width: 60px;
-    height: 60px;
-  }
-
-  html.mm-opened.mm-opening .mm-menu.mm-offcanvas {
-    position: absolute;
-    left: -440px;
-    top: 90px;
-    z-index: 2;
-    max-width: 300px;
-  }
-
-  html.mm-opened .mm-menu.mm-offcanvas.mm-current {
-    left: 0;
-  }
-
-  html.mm-opening #page.mm-slideout {
-    transform: none;
-    background: initial;
-    height: 100%;
-  }
-
-  html.mm-opening #page.mm-slideout #content {
-    padding: 110px 20px 20px;
-    margin-left: 300px;
-    width: calc(100% - 300px);
-    height: calc(100%);
-    overflow-y: scroll;
-  }
-
   #header_main > span.sep-space {
     width: 0px;
-  }
-
-  html.mm-opening #header_main > span.sep-space {
-    // width: 90px;
-  }
-
-  html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
-    width: 100%;
-    //    letter-spacing: -0.5px;
   }
   @media screen and (max-width:959px) {
     span.nav-header-user-text {
