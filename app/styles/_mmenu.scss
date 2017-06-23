@@ -1,18 +1,18 @@
 /*=============================================>>>>>
 = fix mmenu css bg =
 ===============================================>>>>>*/
-
-.mm-slideout {
-  -webkit-transition: -webkit-transform .4s ease !important;
-  z-index: 1;
+@media screen and (max-width: 520px) {
+  .mm-slideout {
+    -webkit-transition: -webkit-transform .4s ease !important;
+    z-index: 1;
+  }
+  html.mm-opening .mm-menu~.mm-slideout {
+    transform: translate(80%, 0);
+    transform: translate3d(80%, 0, 0);
+    -webkit-transform: translate(80%, 0) !important;
+    -webkit-transform: translate3d(80%, 0, 0) !important;
+  }
 }
-html.mm-opening .mm-menu~.mm-slideout {
-  transform: translate(80%, 0);
-  transform: translate3d(80%, 0, 0);
-  -webkit-transform: translate(80%, 0) !important;
-  -webkit-transform: translate3d(80%, 0, 0) !important;
-}
-
 /*= End of fix mmenu css bg =*/
 /*=============================================<<<<<*/
 
