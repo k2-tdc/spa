@@ -7,7 +7,7 @@
     "jquery-ui": "^1.12.1",
     "moment": "^2.15.2",
     "bootstrap-sass-official": "~3.3.1",
-    "jQuery.mmenu": "^5.7.4",
+    "jQuery.mmenu": "^6.1.0",
     "datatables.net": "^1.10.12",
     "datatables.net-bs": "^1.10.12",
     "js-cookie": "^2.1.3",

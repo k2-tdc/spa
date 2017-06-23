@@ -1,4 +1,22 @@
-/* MMenu */
+/*=============================================>>>>>
+= fix mmenu css bg =
+===============================================>>>>>*/
+
+.mm-slideout {
+  -webkit-transition: -webkit-transform .4s ease !important;
+  z-index: 1;
+}
+html.mm-opening .mm-menu~.mm-slideout {
+  transform: translate(80%, 0);
+  transform: translate3d(80%, 0, 0);
+  -webkit-transform: translate(80%, 0) !important;
+  -webkit-transform: translate3d(80%, 0, 0) !important;
+}
+
+/*= End of fix mmenu css bg =*/
+/*=============================================<<<<<*/
+
+
 .mm-menu {
   background: none;
   border-right: 1px rgba(0,0,0,.1) solid;
@@ -120,4 +138,50 @@ li.menu-section > span:hover {
   font-weight: 600;
   right: 20px;
   top: 15px;
+}
+@media screen and (min-width: 768px) {
+
+  /* MMenu OVERRIDES */
+  html.mm-opened.mm-opening #mm-blocker.mm-slideout {
+    position: fixed;
+    top: 30px;
+    // left: -440px;
+    width: 60px;
+    height: 60px;
+  }
+
+  html.mm-opened.mm-opening .mm-menu.mm-offcanvas {
+    position: absolute;
+    // left: -440px;
+    top: 90px;
+    z-index: 2;
+    max-width: 300px;
+  }
+
+  html.mm-opened .mm-menu.mm-offcanvas.mm-current {
+    left: 0;
+  }
+
+  html.mm-opening #page.mm-slideout {
+    transform: none;
+    background: initial;
+    height: 100%;
+  }
+
+  html.mm-opening #page.mm-slideout #content {
+    padding: 110px 20px 20px;
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    height: calc(100%);
+    overflow-y: scroll;
+  }
+
+  html.mm-opening #header_main > span.sep-space {
+    // width: 90px;
+  }
+
+  html.mm-opening #header_main .btn-group.nav-header-main button.btn.btn-default.dropdown-toggle {
+    width: 100%;
+    //    letter-spacing: -0.5px;
+  }
 }
