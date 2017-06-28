@@ -37,13 +37,26 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }.bind(this));
 
-        this.listenTo(window.Hktdc.Dispatcher, 'serviceInvalid', function() {
+        this.listenTo(window.Hktdc.Dispatcher, 'serviceRequestInvalid', function(serviceValidationObject) {
+          var isValid = serviceValidationObject.valid;
           var $parent = self.$el.parents('.select-service');
-          if (!this.model.toJSON().Notes && String(this.model.toJSON().ControlFlag) !== '2') {
-          // if (service.ServiceGUID === this.model.toJSON().ServiceGUID) {
+          // console.log(self.model.toJSON().ServiceGUID);
+          // console.log(serviceValidationObject.ServiceGUID);
+          // if (self.model.toJSON().ServiceGUID !== serviceValidationObject.ServiceGUID) {
+          //   console.log('not this service');
+          //   return;
+          // }
+          // console.log(self.$el);
+          // console.log(self.model.toJSON());
+          // console.log('isValid: ', isValid);
+          // if (!this.model.toJSON().Notes && String(this.model.toJSON().ControlFlag) !== '2') {
+          if (!isValid) {
+            // console.log('show error------');
+            // console.log($parent);
             $parent.find('.error-message').removeClass('hidden');
             $parent.addClass('error-input');
           } else {
+            // console.log('hidden error------');
             $parent.find('.error-message').addClass('hidden');
             $parent.removeClass('error-input');
           }

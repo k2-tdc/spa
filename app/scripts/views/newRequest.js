@@ -196,22 +196,35 @@ Hktdc.Views = Hktdc.Views || {};
       var haveSelectService = function() {
         var valid = true;
         if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
+          // console.log('a-----');
           self.highlightServiceCatagory(true);
           valid = false;
         } else {
+          // console.log('b-----');
           self.highlightServiceCatagory(false);
         }
+
         self.model.toJSON().selectedServiceCollection.each(function(service) {
+          // console.group('c1-----, Notes: ', service.toJSON());
           if (!service.toJSON().Notes) {
+            // console.log('c2-----');
             valid = false;
-            Hktdc.Dispatcher.trigger('serviceInvalid');
+            // Hktdc.Dispatcher.trigger('serviceRequestInvalid', {
+            //   valid: false,
+            //   ServiceGUID: service.toJSON().ServiceGUID
+            // });
+            // Hktdc.Dispatcher.trigger('serviceInvalid');
+            // self.highlightServiceCatagory(true);
+          // } else {
+          //   console.log('c3-----');
           }
+          // console.groupEnd();
         });
-        // console.log('it is ', valid, '!!!!!!');
-        if (valid) {
-          // console.log('con 2');
-          Hktdc.Dispatcher.trigger('serviceInvalid', true);
-        }
+        Hktdc.Dispatcher.trigger('serviceRequestInvalid', {
+          valid: valid
+          // ServiceGUID: service.toJSON().ServiceGUID
+        });
+        // Hktdc.Dispatcher.trigger('serviceTypeInvalid', { valid: valid });
         return valid;
       };
 
@@ -224,7 +237,9 @@ Hktdc.Views = Hktdc.Views || {};
       if (!(haveSelectService() && haveFilledCost)) {
         // if it is fired by the click event
         if (ev) {
+          // console.log('1');
           if (ev && ev.preventDefault) {
+            // console.log('2');
             ev.preventDefault();
           }
 
