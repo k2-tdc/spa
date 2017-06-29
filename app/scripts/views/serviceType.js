@@ -34,8 +34,10 @@ Hktdc.Views = Hktdc.Views || {};
         }
       }.bind(this));
 
-      this.listenTo(window.Hktdc.Dispatcher, 'serviceInvalid', function(isClear) {
-        if (isClear) {
+      this.listenTo(window.Hktdc.Dispatcher, 'serviceTypeInvalid', function(validationObject) {
+        var valid = validationObject.valid;
+        // only valid action to clear the error
+        if (valid) {
           // console.log('serviceInvalid', isClear);
           // console.log(this.$el);
           this.$el.find('.error-message').addClass('hidden');
