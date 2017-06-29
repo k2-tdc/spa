@@ -1,4 +1,5 @@
 /* global Hktdc, _, Cookies, $, dialogTitle, sprintf, dialogMessage */
+/* global Hktdc, _, Cookies, $, dialogTitle, sprintf, dialogMessage */
 /* all application level methods should be placed here */
 
 window.utils = {
@@ -109,7 +110,7 @@ window.utils = {
   apiErrorHandling: function(response, handler) {
     // return format: { request_id: xxx, error: xxxxxxx }
     var errorObject;
-    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURIComponent(window.location.href);
 
     try {
       var responseObj = JSON.parse(response.responseText);
@@ -199,13 +200,14 @@ window.utils = {
     var accessToken = '';
     var refreshToken = Cookies.get('REFRESH-TOKEN');
 
-    var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
-    // var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.Hktdc.Config.SPAHomeUrl);
+	var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' +  encodeURIComponent(window.location.href);
 
     /* if no refresh token */
     if (!refreshToken) {
       /* Initiate OAuth login flow */
+	  
       window.location.href = oauthUrl;
+	  
 
     /* else have refresh token */
     } else {

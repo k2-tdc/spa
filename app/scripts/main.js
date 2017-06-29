@@ -129,7 +129,7 @@ window.Hktdc = {
           /* else */
           console.error('OAuth Error', error);
           alert('Error on getting the access token on init. Redirect to login page.');
-          window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+          window.location.href = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURIComponent(window.location.href);
         });
       } else {
         Hktdc.Config.userID = 'dewang';
@@ -401,7 +401,7 @@ window.Hktdc = {
           originalFetch.call(self, options);
         }, function() {
           console.error('can\'t get access token fro API gateway, redirect to login page');
-          var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+          var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURIComponent(window.location.href);
           window.location.href = oauthUrl;
         });
       } else {
@@ -428,7 +428,7 @@ window.Hktdc = {
           originalSave.call(self, attrs, options);
         }, function() {
           console.error('can\'t get access token fro API gateway, redirect to login page');
-          var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURI(window.location.href);
+          var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' + encodeURIComponent(window.location.href);
           window.location.href = oauthUrl;
         });
       } else {
