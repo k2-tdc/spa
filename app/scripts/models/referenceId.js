@@ -9,7 +9,7 @@ Hktdc.Models = Hktdc.Models || {};
 
     url: function() {
       // return Hktdc.Config.apiURL + '/GetReferenceID?UserId=' + Hktdc.Config.userID;
-      return Hktdc.Config.apiURL + '/applications';
+      return Hktdc.Config.apiURL + '/applications?process=CHSW';
     },
 
     defaults: {
