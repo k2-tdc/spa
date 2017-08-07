@@ -196,102 +196,12 @@ window.utils = {
       }
       return;
     }
-    var self = this;
-    var accessToken = '';
-    var refreshToken = Cookies.get('REFRESH-TOKEN');
-
-	var oauthUrl = window.Hktdc.Config.OAuthLoginUrl + '?redirect_uri=' +  encodeURIComponent(window.location.href);
-
-    /* if no refresh token */
-    if (!refreshToken) {
-      /* Initiate OAuth login flow */
-	  
-      window.location.href = oauthUrl;
-	  
-
-    /* else have refresh token */
-    } else {
-      accessToken = Cookies.get('ACCESS-TOKEN');
-      console.log('access token:' + accessToken);
-
-      /* if access token is invalid: no accessToken OR accessToken is expiried */
-      if (!accessToken) {
-        console.log('OAuth refresh token.');
-        /* Send GET request to token endpoint for getting access token through AJAX */
-
-        var xhr = self.createCORSRequest('GET', window.Hktdc.Config.OAuthGetTokenUrl);
-        if (!xhr) {
-          alert('Please use another browser that supports CORS.');
-          window.location.href = oauthUrl;
-          return false;
-        }
-        xhr.setRequestHeader('X-REFRESH-TOKEN', refreshToken);
-
-        // Response handlers.
-        xhr.onload = function() {
-          accessToken = Cookies.get('ACCESS-TOKEN');
-          console.log('Refreshed Token, new access token:' + accessToken);
-          if (accessToken) {
-            onSuccess(accessToken);
-          } else {
-            var msg = 'Access token empty after refresh.';
-            if (onError && typeof onError === 'function') {
-              onError(msg);
-            } else {
-              defaultError(msg);
-            }
-          }
-        };
-
-        xhr.onerror = function() {
-          if (onError && typeof onError === 'function') {
-            var msg = 'Can\'t get new access token by refresh token.';
-            onError(msg);
-          } else {
-            defaultError(msg);
-          }
-        };
-
-        xhr.send();
-
-      /* access token is valid */
-      } else {
-        console.debug('use existing token: ', accessToken);
-        onSuccess(accessToken);
-      }
-    }
+	getAuthAccessToken(window.Hktdc.Config.OAuthLoginUrl,window.Hktdc.Config.OAuthGetTokenUrl,onSuccess, onError);
+    
   },
 
   getLoginUserIdByToken: function(accessToken, onSuccess, onError) {
-    console.log('getLoginUserIdByToken: ', accessToken);
-    var Userid = '';
-    var self = this;
-    var url = window.Hktdc.Config.OAuthGetUserIDURL + '?access_token=' + accessToken;
-    var xhr = self.createCORSRequest('GET', url);
-    if (!xhr) {
-      onError('CORS not supported');
-      return;
-    }
-    // xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-
-    // Response handlers.
-    xhr.onload = function() {
-      var text = xhr.responseText;
-      var objLoginUser = JSON.parse(text);
-      // console.log(JSON.stringify(objLoginUsers, null, 2));
-      Userid = objLoginUser.user_id;
-
-      onSuccess(Userid);
-      // alert(Userid);
-      // return objLoginUser;
-    };
-
-    xhr.onerror = function() {
-      var text = xhr.responseText;
-      onError(text);
-    };
-    xhr.async = false;
-    xhr.send();
+    getAuthLoginUserIdByToken(window.Hktdc.Config.OAuthGetUserIDURL,accessToken, onSuccess, onError)
   }
 
   /* = End of OAuth Login = */

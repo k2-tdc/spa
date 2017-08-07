@@ -176,9 +176,14 @@ Hktdc.Views = Hktdc.Views || {};
     renderServiceObject: function() {
       /* initialize level 3 service */
       // console.group('group');
-      // console.log(this.model.toJSON());
+      //console.log(this.model.toJSON());
       var selectedServiceRequestList = null;
       var availableServiceObjectArray = this.model.toJSON().Level3;
+	  console.log(availableServiceObjectArray)
+	  _.each(availableServiceObjectArray,function(availableServiceObject){
+		  availableServiceObject.SValue=availableServiceObject.SValue.replace(/(?:\r\n|\r|\n)/g, '<br />');
+	  });
+	  //console.log(availableServiceObjectArray)
       this.defaultServiceRequestObject = { ControlFlag: availableServiceObjectArray[0].ControlFlag };
 
       /* service request list in 'read' request mode default is only from RequestDetail data */
