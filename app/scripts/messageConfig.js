@@ -143,7 +143,8 @@ var dialogMessage = {
     validation: {
       // costandservice: 'Please select service and filled the cost field',
       // service: 'Request service notes must be filled',
-      general: 'Input is missing/incorrect'
+      general: 'Input is missing/incorrect',
+	  ApproverChange:'Approver has Changed.Please double check.'
     }
   },
   download: {

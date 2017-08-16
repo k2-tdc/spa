@@ -181,32 +181,27 @@
           <div class="sep-space"></div> -->
           <div class="sep-space"></div>
 
+          <!-- Show RecommendBy-->
           <div class="row field">
-            <div class="col-xs-12 col-sm-3 newrequest-title text-right mobile-text-align-left text-lg-right"><span class='red'>* </span>Recommend By</div>
-            <div class="col-xs-12 col-sm-9 col-md-9 btn-group full-width form_input">
-              <div class="recommend-container">
-                <select class="form-control" field="selectedRecommentModel" name="selectedRecommentModel">
-                  <option>-- Select --</option>
-                </select>
+              <!-- Show RecommendBy Label -->
+              <div class="col-xs-12 col-sm-3 newrequest-title text-right mobile-text-align-left text-lg-right"><span class='red'>* </span>Recommend By</div>
+              <!-- Show RecommendBy Source -->
+              <div>
+			     <div class="col-xs-12 col-sm-9 col-md-9 btn-group full-width form_input" style="float:left" id="divRecommendBlock">
+                  <div id="divRecommendContainer" class="recommend-container" >
+                    <select class="form-control" field="selectedRecommentModel" name="selectedRecommentModel">
+                      <option>-- Select --</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="recommendDataLoader" class="data-table-loader hidden" style="float:left;padding: 0 0 0 0"></div>
               </div>
-              <!-- <button type="button" class="btn btn-default recommend" field="selectedRecommentModel" data-toggle="dropdown" id="recommend-btn">
-                <% if (request.ApproverFNAME) { %>
-                  <%= request.ApproverFNAME %>
-                <% } else { %>
-                  --Select--
-                <% } %>
-              </button>
-              <button type="button" class="btn btn-default dropdown-toggle recommend" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-              </button> -->
-              <div class="error-message hidden">Please choose one</div>
-
-              <!-- <ul id="ulrecommend" style="height:250px;overflow-y:scroll" class="dropdown-menu">
-              </ul> -->
-
-            </div>
-          </div>
+              <!-- Show RecommendBy Source Ends -->
+			  <div class="error-message hidden">Please choose one</div>
+          </div>  
+          <!-- Show RecommendBy Ends-->
+		  
+		  
           <div class="sep-space"></div>
 
           <div class="row field">

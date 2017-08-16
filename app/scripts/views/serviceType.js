@@ -241,6 +241,8 @@ Hktdc.Views = Hktdc.Views || {};
 
   Hktdc.Views.ServiceTypeList = Backbone.View.extend({
 
+	className: 'group-details-Panel',
+	
     initialize: function(props) {
       /* requestFormModel is new request model */
 

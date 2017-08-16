@@ -94,16 +94,19 @@ Hktdc.Views = Hktdc.Views || {};
         .then(function(results) {
           console.log('loaded resource');
           self.employeeArray = results[0];
-          self.colleagueCollection = results[4];
-
+		  self.colleagueCollection = results[4];
           var recommend = _.find(results[0], function(employee) {
-            return employee.UserId === self.model.toJSON().ApproverUserID;
+				return employee.UserId === self.model.toJSON().ApproverUserID;
           });
 
           /* need override the workerId and WorkerFullName */
-          recommend.WorkerId = recommend.UserId;
-          recommend.WorkerFullName = recommend.UserFullName;
-          var attachmentModelArray = _.map(self.model.toJSON().Attachments, function(attachment) {
+          //recommend.WorkerId = recommend.UserId;
+		  //recommend.WorkerFullName = recommend.UserFullName;
+          if(!(recommend)){ recommend = new Hktdc.Models.Employee();}
+		  recommend.WorkerId = self.model.toJSON().ApproverUserID;
+		  recommend.WorkerFullName = self.model.toJSON().ApproverFNAME;
+		  
+		  var attachmentModelArray = _.map(self.model.toJSON().Attachments, function(attachment) {
             return new Hktdc.Models.Attachment();
           });
           self.model.set({
@@ -165,16 +168,22 @@ Hktdc.Views = Hktdc.Views || {};
       return this.haveBudgetAndService(false, ev);
     },
 
+    
+
     checkAndLoadRecommend: function() {
       var self = this;
       self.toggleInvalidMessage('selectedRecommentModel', false);
-      if (self.haveBudgetAndService(true)) {
-        self.renderRecommendList();
-      } else {
-        self.model.set({
-          selectedRecommentModel: null
-        });
-      }
+      
+      // if (self.haveBudgetAndService(true)) {
+      //   self.renderRecommendList();
+      // } else {
+      //   self.model.set({
+      //     selectedRecommentModel: null
+      //   });
+      // }
+
+
+     self.renderRecommendList();
 
       if (self.model.toJSON().firstTimeValidate === false) {
         setTimeout(function() {
@@ -187,54 +196,26 @@ Hktdc.Views = Hktdc.Views || {};
         });
       }
     },
-
-    haveBudgetAndService: function(allowEmptyService, ev) {
-      // if (this.model.toJSON().mode === 'read') {
-      //   return false;
-      // }
+	
+	haveSelectService: function(allowEmptyService) {
       var self = this;
-      var haveSelectService = function() {
-        var valid = true;
-        if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
-          // console.log('a-----');
-          self.highlightServiceCatagory(true);
-          valid = false;
-        } else {
-          // console.log('b-----');
-          self.highlightServiceCatagory(false);
+      if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
+        return false;
+      }
+
+      self.model.toJSON().selectedServiceCollection.each(function(service) {
+        if (!service.toJSON().Notes) {
+          return false;
         }
+      });
 
-        self.model.toJSON().selectedServiceCollection.each(function(service) {
-          // console.group('c1-----, Notes: ', service.toJSON());
-          if (!service.toJSON().Notes) {
-            // console.log('c2-----');
-            valid = false;
-            // Hktdc.Dispatcher.trigger('serviceRequestInvalid', {
-            //   valid: false,
-            //   ServiceGUID: service.toJSON().ServiceGUID
-            // });
-            // Hktdc.Dispatcher.trigger('serviceInvalid');
-            // self.highlightServiceCatagory(true);
-          // } else {
-          //   console.log('c3-----');
-          }
-          // console.groupEnd();
-        });
-        Hktdc.Dispatcher.trigger('serviceRequestInvalid', {
-          valid: valid
-          // ServiceGUID: service.toJSON().ServiceGUID
-        });
-        // Hktdc.Dispatcher.trigger('serviceTypeInvalid', { valid: valid });
-        return valid;
-      };
+      return true;
+    },
 
+    haveBudgetAndService: function(allowEmptyService, ev) { 
+      var self = this;
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
-      // console.log(this.model.toJSON().selectedServiceCollection.toJSON());
-      // console.log(this.model.toJSON().EstimatedCost);
-      // console.log('haveSelectService(): ', haveSelectService());
-      // console.log('haveFilledCost: ', haveFilledCost);
-      // console.log('!(haveSelectService() && haveFilledCost) = ', !(haveSelectService() && haveFilledCost));
-      if (!(haveSelectService() && haveFilledCost)) {
+      if (!(self.haveSelectService(allowEmptyService) && haveFilledCost)) {
         // if it is fired by the click event
         if (ev) {
           // console.log('1');
@@ -242,7 +223,6 @@ Hktdc.Views = Hktdc.Views || {};
             // console.log('2');
             ev.preventDefault();
           }
-
           Hktdc.Dispatcher.trigger('openAlert', {
             title: dialogTitle.warning,
             message: dialogMessage.requestForm.validation.general
@@ -251,7 +231,6 @@ Hktdc.Views = Hktdc.Views || {};
         return false;
       }
       return true;
-      // return (this.model.toJSON().selectedServiceCollection.toJSON().length && this.model.toJSON().cost);
     },
 
     updateNewRequestModel: function(ev) {
@@ -672,7 +651,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 
-    renderButtons: function() {
+     renderButtons: function() {
       var self = this;
       var buttonModel = new Hktdc.Models.Button();
       var buttonView = new Hktdc.Views.Button({
@@ -681,13 +660,13 @@ Hktdc.Views = Hktdc.Views || {};
       });
       buttonView.renderButtonHandler();
 
-      self.listenTo(buttonModel, 'checkRemark', function(successCallback) {
+		self.listenTo(buttonModel, 'checkRemark', function(successCallback) {
         self.toggleInvalidMessage('Remark', false);
         self.toggleInvalidMessage('Forward_To_ID', false);
 
         self.checkRemark(true, successCallback);
       });
-      self.listenTo(buttonModel, 'checkForward', function(successCallback) {
+		  self.listenTo(buttonModel, 'checkForward', function(successCallback) {
         self.toggleInvalidMessage('Remark', false);
         self.toggleInvalidMessage('Forward_To_ID', false);
 
@@ -698,12 +677,11 @@ Hktdc.Views = Hktdc.Views || {};
         self.model.set({
           firstTimeValidate: false
         });
-        var serviceValid = true;
-        if (!self.haveBudgetAndService(false)) {
-          serviceValid = false;
-        }
-        self.validateField();
-
+        
+		var serviceValid = true;
+        if(!(self.validateServiceCatagory())){ serviceValid =false;}
+       
+		self.validateField();
         if (self.model.isValid() && serviceValid) {
           if (successCallback) {
             successCallback();
@@ -715,8 +693,6 @@ Hktdc.Views = Hktdc.Views || {};
           });
         }
       });
-
-      // console.log(buttonView.el);
       $('.buttons-container', this.el).html(buttonView.el);
     },
 
@@ -780,23 +756,36 @@ Hktdc.Views = Hktdc.Views || {};
       serviceCatagoryListView.render();
       $('#service-container').html(serviceCatagoryListView.el);
     },
-
+	
+	
+	//Function to get the Recommended By Start:-
     renderRecommendList: function() {
-      var self = this;
+	  var self = this;
+      //add a laoding image and disabled the dropdown
+      $('.recommend-select', self.el).prop('disabled',true);
+      $('.data-table-loader', self.el).removeClass('hidden');
+   
+      //get all the parameters and build the backend sever url
       var recommendCollection = new Hktdc.Collections.Recommend();
       var ruleCodeArr = _.map(this.model.toJSON().selectedServiceCollection.toJSON(), function(selectedService) {
         return selectedService.Approver;
       });
+	  
       var ruleCode = _.uniq(ruleCodeArr).join(',');
-      // console.log('ruleCode:::::::', this.model.toJSON().selectedApplicantModel.toJSON());
-      var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
-      var cost = this.model.toJSON().EstimatedCost;
-      // console.log('selectedRecommend:', self.model.toJSON().ApproverUserID);
-      recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
+      //alert('ruleCode' + + ruleCode);
+	  var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
+      //alert('applicantUserId' + + applicantUserId);
+	  var cost = this.model.toJSON().EstimatedCost;
+	  //alert('cost:-' + + cost);
+	  recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
+	  //alert('recommendCollection url' + + recommendCollection.url);
+	
+      //actual db call to the backend sever(GetAllEmployeeDetails)
       var doFetch = function() {
-        recommendCollection.fetch({
+		recommendCollection.fetch({
           beforeSend: utils.setAuthHeader,
           success: function() {
+            //Sucesss Starts
             var recommendListView = new Hktdc.Views.RecommendList({
               collection: recommendCollection,
               requestFormModel: self.model,
@@ -805,37 +794,81 @@ Hktdc.Views = Hktdc.Views || {};
               attributes: { field: 'selectedRecommentModel', name: 'selectedRecommentModel' },
               selectedRecommend: self.model.toJSON().ApproverUserID
             });
-            $('.recommend-select', self.el).remove();
+            
+            //assign all retrieved values..
+			$('.recommend-select', self.el).remove();
             $('.recommend-container', self.el).html(recommendListView.el);
-            var selected = null;
+			
+            //Select Logic Start
+			var selected = null;var defaultSelected=null;var defaultWorker=null;var showWarning=false;
+            
+            //Loop all retrived recommended List and Get the default selection logic
             recommendCollection.each(function(approverModel) {
-              if (
-                self.model.toJSON().selectedRecommentModel &&
-                (self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId)
-              ) {
-                selected = approverModel.toJSON();
+              if (self.model.toJSON().selectedRecommentModel)
+              { 
+                //Rule1 if selected worker id exist in the collection
+                if(self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId)
+                 {defaultSelected = approverModel.toJSON();} 
+               
+                //Rule2 get also the default record
+                if(approverModel.toJSON().IsDefault===1){defaultWorker= approverModel.toJSON();}
               }
             });
+            //Loop end for recommended List
+
+			
+            //Default selection logic
+			if(defaultSelected) {selected=defaultSelected;}
+            else if(defaultWorker) {selected=defaultWorker;showWarning=true}
+            else{selected=null;}
+            
             if (selected) {
               $('.recommend-select option[value="' + selected.WorkerId + '"]', self.el).prop('selected', true);
+               if(showWarning)
+                {
+                  Hktdc.Dispatcher.trigger('openAlert', {
+                  title: dialogTitle.information,
+                  message: dialogMessage.requestForm.validation.ApproverChange
+                  });
+                }
             } else {
               $('.recommend-select option:eq(0)', self.el).prop('selected', true);
               self.model.set({
                 selectedRecommentModel: null
               });
             }
-          },
-          error: function(collection, response) {
-            utils.apiErrorHandling(response, {
-              // 401: doFetch,
-              unknownMessage: dialogMessage.component.recommendList.error
-            });
-          }
-        });
-      };
-      doFetch();
-    },
+            //Default selection logic Ends
 
+            //remove a laoding image and enabled the dropdown
+            //To Do:-Take the function out of Timeout
+            setTimeout(function() {
+            $('.recommend-select', self.el).prop('disabled', false);
+            $('.data-table-loader', self.el).addClass('hidden');
+                },1000);
+            //Sucesss Ends
+          },
+          
+          //Error starts
+          error: function(collection, response) {
+                utils.apiErrorHandling(response, {
+                  // 401: doFetch,
+                  unknownMessage: dialogMessage.component.recommendList.error
+                });
+                //error case remove a laoding image and enabled the dropdown
+                $('.data-table-loader', self.el).addClass('hidden');
+                $('.recommend-select', self.el).prop('disabled', false);
+              }
+            //Error ends
+            });
+          };
+          //do fetch ends
+          
+          //call for the do fetch function
+          doFetch();  
+    },
+    //Function to get the Recommended By Source Ends:-
+	
+	
     validateField: function() {
       var self = this;
 
@@ -867,22 +900,197 @@ Hktdc.Views = Hktdc.Views || {};
         field: 'EDeliveryDate'
       });
     },
-
-    highlightServiceCatagory: function(isHighlight) {
-      if (isHighlight) {
-        $('#service-container', this.el)
-          .addClass('error-input')
-          .siblings('.error-message')
-          .html(validateMessage.required)
-          .removeClass('hidden');
-      } else {
-        $('#service-container', this.el)
-          .removeClass('error-input')
-          .siblings('.error-message')
-          .html('')
-          .addClass('hidden');
-      }
+  
+	//Function to Validate the Level 1 Inputs(Selection)  
+	validateServiceLevel1Inputs:function()
+	  {
+			var isValid = true;
+			var categorySelectedCount = $('.service-catagory-item input:checked').length; 
+			if(categorySelectedCount > 0)
+			{
+				$(".service-catagory-item").each(function() {
+                var isCategoryCheck = $(this).find('.toplevelCheckBox');
+                var isCategoryCheckValue = (isCategoryCheck.prop('checked')) ? 1 : 0;
+                var categoryPanel = $(this).find('.group-details-Panel');
+				
+                //get if service type is already not defined	
+                if(isCategoryCheckValue===1)
+                {
+                    //if level 2 is already defined no need to highlight
+                    var serviceLevel2=categoryPanel.find('.Headleve2sub').length;
+                    if(serviceLevel2<=0) {isValid=false; }
+                }
+				});
+			}
+			return isValid;
     },
+	
+    //Function to Validate the Level 2 Inputs(Service Notes[textArea])
+	validateServiceLevel2Inputs:function()
+	  {
+		  var isValid = true;
+		  //check UI inputs at level 2
+		  if($('textarea.lastnosub').length>0)
+		  {
+				$('textarea.lastnosub').each(function() {
+				  var serviceNotes=$(this).val();
+					if(!(serviceNotes)) { isValid=false; }
+				});
+		  }
+		  return isValid;
+		  
+    },
+	
+    //Function to Validate the Level 3 Inputs(Service Notes[textArea])
+	  validateServiceLevel3Inputs:function()
+	  {
+		   var isValid = true;
+			
+		  //check UI inputs at level 3
+		  if($('textarea.service-notes').length>0)
+		  {
+				$('textarea.service-notes').each(function() {
+				  var serviceNotes=$(this).val();
+				  if(!(serviceNotes)) { isValid = false;}
+				});
+		  }
+		  return isValid;
+	  },
+	  
+  //Function to validate the service Aquired For Section of UI
+	validateServiceCatagory: function() {  
+        
+		//Reset the service panel to original mode
+        this.ResetServicePanel();
+
+		//Check for Service validation(Model/UI)
+        var validService=false;
+        if(this.haveSelectService(false))
+        {
+            //Check for valid service at UI level
+             if(this.validateServiceLevel1Inputs() && this.validateServiceLevel2Inputs() && this.validateServiceLevel3Inputs()){
+              validService=true;
+            }
+        }
+		
+		//if all valid the proceed ahead no need to highlight
+		if(validService) { return true;}
+        else
+        {
+              //get if any of the category is selected or not
+              var categorySelectedCount = $('.service-catagory-item input:checked').length; 
+              if(categorySelectedCount > 0)
+              { 
+                  this.highlightServiceLevel1Inputs();
+                  this.highlightServiceLevel3Inputs();
+                  this.highlightServiceLevel2Inputs();
+              }
+              else{ 
+                  this.highlightAllServiceCategories();
+                }
+		    }
+    },
+
+    ResetServicePanel:function()
+    {
+        //Reset Header Panel
+        $('#service-container', this.el)
+              .removeClass('error-input')
+              .siblings('.error-message')
+              .html('')
+              .addClass('hidden');
+
+        //Reset Level 1
+         $(".service-catagory-item").each(function() {
+          var categoryPanel = $(this).find('.group-details-Panel');
+          categoryPanel.removeClass('error-input')
+                                  .parent().siblings('.error-message')
+                                  .html('')
+                                  .addClass('hidden');
+         });
+        
+         //Reset Level 2
+        $('textarea.lastnosub').each(function() {
+              var $parentL2 = $(this).parents('.select-service');      
+							$parentL2.find('.error-message').addClass('hidden');
+							$parentL2.removeClass('error-input');
+            });
+        
+        //Reset Level 3
+         $('textarea.service-notes').each(function() {
+		                 var $parent = $(this).parents('.select-service');
+                            $parent.find('.error-message').addClass('hidden');
+                            $parent.removeClass('error-input');
+              });
+
+    },
+
+    //Function to higlight Parent Service Category..
+    highlightAllServiceCategories:function() {  
+            $('#service-container', this.el)
+              .addClass('error-input')
+              .siblings('.error-message')
+              .html(validateMessage.required)
+              .removeClass('hidden');
+    },
+
+    //Function to higlight Parent Service Level  1 Inputs..
+	  highlightServiceLevel1Inputs: function() {  
+      $(".service-catagory-item").each(function() {
+                var isCategoryCheck = $(this).find('.toplevelCheckBox');
+                var isCategoryCheckValue = (isCategoryCheck.prop('checked')) ? 1 : 0;
+                var categoryPanel = $(this).find('.group-details-Panel');
+				
+                //get if service type is already not defined	
+                if(isCategoryCheckValue===1)
+                {
+                    //if level 2 is already defined no need to highlight
+                    var serviceLevel2=categoryPanel.find('.Headleve2sub').length;
+                    if(serviceLevel2<=0)
+                    {
+                      categoryPanel.addClass('error-input')
+                                    .parent().siblings('.error-message')
+                                    .html(validateMessage.required)
+                                    .removeClass('hidden');
+                    }
+                }
+          });
+    },
+
+    //Function to higlight Parent Service Level 2 Inputs..
+    highlightServiceLevel2Inputs: function(){  	    
+        var level2Exist=$('textarea.lastnosub');
+        if(level2Exist.length>0)
+        {
+            $('textarea.lastnosub').each(function() {
+                    var serviceNotesL2=$(this).val();
+                     var $parentL2 = $(this).parents('.select-service');
+                     if(!(serviceNotesL2))
+                      {
+							            $parentL2.find('.error-message').removeClass('hidden');
+							            $parentL2.addClass('error-input');
+                      }
+            });
+        }
+    },
+
+    //Function to higlight Parent Service Level 3 Inputs..
+    highlightServiceLevel3Inputs: function(){  	    
+		var level3Exist = $('textarea.service-notes');
+		    if(level3Exist.length>0)
+        {
+            $('textarea.service-notes').each(function() {
+		                 var $parent = $(this).parents('.select-service');
+						 var serviceNotes=$(this).val();
+		                 if(!(serviceNotes))
+                      {
+                          $parent.find('.error-message').removeClass('hidden');
+                          $parent.addClass('error-input');
+                      }
+              });
+        }
+    },
+
 
     checkRemark: function(openAlert, successCallback) {
       var self = this;

@@ -40,6 +40,8 @@ Hktdc.Views = Hktdc.Views || {};
         this.listenTo(window.Hktdc.Dispatcher, 'serviceRequestInvalid', function(serviceValidationObject) {
           var isValid = serviceValidationObject.valid;
           var $parent = self.$el.parents('.select-service');
+		  
+		  
           // console.log(self.model.toJSON().ServiceGUID);
           // console.log(serviceValidationObject.ServiceGUID);
           // if (self.model.toJSON().ServiceGUID !== serviceValidationObject.ServiceGUID) {
@@ -73,11 +75,18 @@ Hktdc.Views = Hktdc.Views || {};
       'click .btn-del': 'deleteRequestObject',
       'blur .service-notes': 'addNotesToServiceObject'
     },
+	
 
     deleteRequestObject: function(ev) {
       // wait the jquery execute
       var self = this;
       var collection = self.model.toJSON().parentCollection;
+	  
+		var $parentL2 = self.$el.parents('.select-service');
+		$parentL2.find('.error-message').addClass('hidden');
+		$parentL2.removeClass('error-input');
+	  
+	  
       // console.log('model', self.model.toJSON());
       // console.group('remove');
       // console.log('serviceRequestList Collection: ', collection.toJSON());
@@ -184,10 +193,21 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       var request = this.model.toJSON();
-      var isActive = (
-        this.requestFormModel.toJSON().ActionTakerServiceType &&
-        this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID
-      );
+      
+	  //get the Panel IsActive Value
+	  var isActive=false;
+      if(this.requestFormModel.toJSON().ActionTakerServiceTypeID)
+        {
+          isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                   this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
+		           this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.ServiceGUID);  
+        }
+      else
+        {
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                   this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
+        }
+	  
       var tmpl = this.template({
         request: request,
         isActive: isActive,
@@ -228,13 +248,28 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      var request = this.model.toJSON();
-      var isActive = (
-        this.requestFormModel.toJSON().ActionTakerServiceType &&
-        this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID
-      );
-      // console.log(request);
-      var tmpl = this.template({
+	  var request = this.model.toJSON();
+      
+	  console.log('requestModel');
+      console.log(request);
+      console.log('requestFormModel');
+      console.log(this.requestFormModel.toJSON());
+      
+	  //get the Panel IsActive Value
+	  var isActive=false;
+      if(this.requestFormModel.toJSON().ActionTakerServiceTypeID)
+        {
+          isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                   this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
+		           this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.ServiceGUID);  
+        }
+      else
+        {
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
+        }
+	  
+	  var tmpl = this.template({
         request: request,
         isActive: isActive
       });

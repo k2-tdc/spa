@@ -8,7 +8,7 @@ Hktdc.Collections = Hktdc.Collections || {};
   Hktdc.Collections.Recommend = Backbone.Collection.extend({
     model: Hktdc.Models.Recommend,
 
-    url: function(ApproverRuleCode, applicantUserId, cost) {
+    url: function(ApproverRuleCode, applicantUserId, cost) {		
       return Hktdc.Config.apiURL + '/users/' + applicantUserId + '/approvers/computer-app?' +
         'rule=' + ApproverRuleCode +
         '&cost=' + cost;

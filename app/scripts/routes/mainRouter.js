@@ -338,10 +338,12 @@ Hktdc.Routers = Hktdc.Routers || {};
 
               var requestView;
               if (getMode() === 'edit') {
+				
                 requestView = new Hktdc.Views.NewRequest({
                   model: requestModel
                 });
               } else {
+				  
                 requestView = new Hktdc.Views.ReadRequest({
                   model: requestModel
                 });
