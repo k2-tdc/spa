@@ -359,7 +359,8 @@ Hktdc.Views = Hktdc.Views || {};
         'create-end-date',
         'keyword'
       );
-      var statusApiURL = Hktdc.Config.apiURL + '/applications/computer-app/approval-history' + utils.getQueryString(usefulData);
+      //var statusApiURL = Hktdc.Config.apiURL + '/applications/computer-app/approval-history' + utils.getQueryString(usefulData);
+      var statusApiURL = Hktdc.Config.apiURL + '/users/' + Hktdc.Config.userID + '/approval-history/computer-app' + utils.getQueryString(usefulData);
       return statusApiURL;
     },
 
