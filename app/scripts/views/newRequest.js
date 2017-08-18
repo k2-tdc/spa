@@ -416,14 +416,14 @@ Hktdc.Views = Hktdc.Views || {};
           field: 'EDeliveryDate',
           value: self.model.toJSON().EDeliveryDate
         }),
-        startDate: startDate,
+        //startDate: startDate,
         onSelect: function(val) {
           self.model.set({
             EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())
               ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
               : ''
           }, {
-            validate: true,
+            validate: false,
             field: 'EDeliveryDate'
           });
 
