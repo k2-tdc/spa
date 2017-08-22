@@ -401,14 +401,14 @@ Hktdc.Views = Hktdc.Views || {};
 
     initDatePicker: function() {
       var self = this;
-      var createdOn = {
-        year: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').year(),
-        month: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').month(),
-        day: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').date()
-      };
-      var createdDate = new Date(createdOn.year, createdOn.month, createdOn.day);
-      var today = new Date();
-      var startDate = (today > createdDate) ? today : createdDate;
+      //var createdOn = {
+      //  year: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').year(),
+      //  month: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').month(),
+      //  day: moment(self.model.toJSON().CreatedOn, 'DD MMM YYYY').date()
+      //};
+      //var createdDate = new Date(createdOn.year, createdOn.month, createdOn.day);
+      //var today = new Date();
+      //var startDate = (today > createdDate) ? today : createdDate;
 
       var deliveryDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
@@ -418,14 +418,14 @@ Hktdc.Views = Hktdc.Views || {};
         }),
         //startDate: startDate,
         onSelect: function(val) {
-          self.model.set({
-            EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())
-              ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
-              : ''
-          }, {
-            validate: false,
-            field: 'EDeliveryDate'
-          });
+          //self.model.set({
+          //  EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())
+          //    ? moment(val, 'YYYY-MM-DD').format('YYYYMMDD')
+          //    : ''
+          //}, {
+          //  validate: false,
+          //  field: 'EDeliveryDate'
+          //});
 
           self.model.set({
             EDeliveryDate: (moment(val, 'YYYY-MM-DD').isValid())

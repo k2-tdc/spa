@@ -227,10 +227,22 @@ Hktdc.Views = Hktdc.Views || {};
           valid = false;
           errMsgArr.push('file size must <= ' + maxSizeRule.Value + maxSizeRule.Remark);
         }
-        if (!_.contains(fileTypeRules, file.type)) {
-          valid = false;
-          errMsgArr.push('file type not accepted');
-        }
+		console.log(fileTypeRules);
+        console.log(file.type);
+		if(file.type!=="")
+		{
+			if (!_.contains(fileTypeRules, file.type)) {
+			  valid = false;
+			  errMsgArr.push('file type not accepted');
+			}
+		}
+		else{
+			var fileExt=file.name.split('.')[1];
+			if (!_.contains(fileTypeRules, fileExt)) {
+			  valid = false;
+			  errMsgArr.push('file type not accepted');
+			}
+		}
       });
 
       return {valid: valid, errorMessages: errMsgArr};

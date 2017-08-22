@@ -35,11 +35,12 @@ Hktdc.Models = Hktdc.Models || {};
           : moment(self.attributes.EDeliveryDate, 'DD MMM YYYY');
           var createDate = moment(self.attributes.CreatedOn, 'DD MMM YYYY');
           return (
-            (
-              eDate.unix() >= createDate.unix() &&
-              eDate.unix() >= today.unix()
-            ) ||
-            !self.attributes.EDeliveryDate
+            //(
+            //  eDate.unix() >= createDate.unix() &&
+            //  eDate.unix() >= today.unix()
+            //) ||
+            //!self.attributes.EDeliveryDate
+			1==1
           );
         }
       };
@@ -137,12 +138,14 @@ Hktdc.Models = Hktdc.Models || {};
             field: 'selectedRecommentModel',
             message: 'Please select a Recommend By.'
           };
-        } else if (options.field === 'EDeliveryDate' && !this.isInvalid.EDDate()) {
-          return {
-            field: 'EDeliveryDate',
-            message: 'Estimated date must be after create date'
-          };
-        } else {
+        } 
+		//else if (options.field === 'EDeliveryDate' && !this.isInvalid.EDDate()) {
+        //  return {
+        //    field: 'EDeliveryDate',
+        //    message: 'Estimated date must be after create date'
+        //  };
+        //} 
+		else {
           this.trigger('valid', {field: options.field});
         }
       } else {
