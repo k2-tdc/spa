@@ -372,13 +372,13 @@ Hktdc.Views = Hktdc.Views || {};
           summary += ' <div><strong><span>' + Level2.Name + ' </span></strong></div>';
           _.each(Level2.Level3, function(Level3) {
             if (String(Level3.ControlFlag) === '2') {
-              var lv3Content = (Level3.SValue) ? '<span>&nbsp;' + Level3.SValue.split('#*#')[0] + '</span>' : '';
-              summary += '<div><span>-</span>' + lv3Content + '</div> ';
+              var lv3Content = (Level3.SValue) ? '<span>' + Level3.SValue.split('#*#')[0].replace(/(?:\r\n|\r|\n)/g, '<br />') + '</span>' : '';
+              summary += '<div>' + lv3Content + '</div> ';
             } else {
-              var lv3Title = '<span>&nbsp;' + Level3.Name + ' </span>';
-              var lv3Content = (Level3.SValue) ? '<span>: ' + Level3.SValue + '</span>' : '';
+              var lv3Title = '<span>' + Level3.Name + ':</span><br />';
+              var lv3Content = (Level3.SValue) ? '<span>' + Level3.SValue.replace(/(?:\r\n|\r|\n)/g, '<br />') + '</span>' : '';
               if (Level3.Name) {
-                summary += '<div><span>-</span>' + lv3Title + lv3Content + '</div> ';
+                summary += '<div>' + lv3Title + lv3Content + '</div> ';
               }
             }
           });

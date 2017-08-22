@@ -393,13 +393,13 @@ Hktdc.Views = Hktdc.Views || {};
           _.each(Level2.Level3, function(Level3) {
             var lv3Content;
             if (String(Level3.ControlFlag) === '2') {
-              lv3Content = (Level3.SValue) ? '<span>&nbsp;' + Level3.SValue.split('#*#')[0] + '</span>' : '';
-              summary += '<div><span>-</span>' + lv3Content + '</div> ';
+              lv3Content = (Level3.SValue) ? '<span>' + Level3.SValue.split('#*#')[0].replace(/(?:\r\n|\r|\n)/g, '<br />') + '</span>' : '';
+              summary += '<div>' + lv3Content + '</div> ';
             } else {
-              var lv3Title = '<span>&nbsp;' + Level3.Name + ' </span>';
-              lv3Content = (Level3.SValue) ? '<span>: ' + Level3.SValue + '</span>' : '';
+              var lv3Title = '<span>' + Level3.Name + ':</span><br />';
+              lv3Content = (Level3.SValue) ? '<span>' + Level3.SValue.replace(/(?:\r\n|\r|\n)/g, '<br />') + '</span>' : '';
               if (Level3.Name) {
-                summary += '<div><span>-</span>' + lv3Title + lv3Content + '</div> ';
+                summary += '<div>' + lv3Title + lv3Content + '</div> ';
               }
             }
           });

@@ -84,7 +84,7 @@
           <div class="row field">
             <div class="col-md-10 form_data">
               <% if (request.Justification) { %>
-                <%= request.Justification %>
+                <%= request.Justification.replace(/(?:\r\n|\r|\n)/g, '<br />') %>
               <% } else { %>
                 NIL
               <% } %>
@@ -110,7 +110,7 @@
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_data">
               <% if (request.DurationOfUse) { %>
-                <%= request.DurationOfUse %>
+                <%= request.DurationOfUse.replace(/(?:\r\n|\r|\n)/g, '<br />') %>
               <% } else { %>
                 NIL
               <% } %>
@@ -137,7 +137,7 @@
           <div class="row field">
             <div class="col-xs-12 col-sm-10 form_data">
               <% if (request.BudgetProvided) { %>
-                <%= request.BudgetProvided %>
+                <%= request.BudgetProvided.replace(/(?:\r\n|\r|\n)/g, '<br />') %>
               <% } else { %>
                 NIL
               <% } %>
