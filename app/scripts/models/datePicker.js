@@ -12,7 +12,8 @@ Hktdc.Models = Hktdc.Models || {};
     defaults: {
       placeholder: '',
       value: '',
-      field: ''
+      field: '',
+	  startdate : null
     },
 
     validate: function(attrs, options) {},

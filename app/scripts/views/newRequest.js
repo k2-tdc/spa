@@ -424,12 +424,15 @@ Hktdc.Views = Hktdc.Views || {};
       //var createdDate = new Date(createdOn.year, createdOn.month, createdOn.day);
       //var today = new Date();
       //var startDate = (today > createdDate) ? today : createdDate;
-
+	
+	  var nowDate = new Date();
+      var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
       var deliveryDateView = new Hktdc.Views.DatePicker({
         model: new Hktdc.Models.DatePicker({
           placeholder: '',
           field: 'EDeliveryDate',
-          value: self.model.toJSON().EDeliveryDate
+          value: self.model.toJSON().EDeliveryDate,
+		  startdate:today
         }),
         //startDate: startDate,
         onSelect: function(val) {

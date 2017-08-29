@@ -25,11 +25,16 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     render: function() {
-      var self = this;
+	  var self = this;
       self.$el.html(self.template(self.model.toJSON()));
+	  var _startDate=null;
+	  if(self.model.toJSON()){
+		  _startDate=self.model.toJSON().startdate
+	  }
       $('.date', self.el).datepicker({
         autoclose: true,
-        startDate: self.startDate,
+        startDate:_startDate,
+		//startDate: self.model.toJSON().startdate,
         forceParse: false,
         format: {
           toDisplay: function(date, format, language) {
