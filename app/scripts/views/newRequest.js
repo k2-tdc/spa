@@ -363,10 +363,12 @@ Hktdc.Views = Hktdc.Views || {};
         self.renderButtons();
       });
 
-      this.model.on('invalid', function(model, validObj) {
-        self.toggleInvalidMessage(validObj.field, true);
-      });
-	  
+      
+	    this.model.on('invalid', function(model, validObj) {
+        console.log(validObj.field);
+        //self.toggleInvalidMessage(validObj.field, true);
+		  });
+	
       this.listenTo(this.model, 'valid', function(validObj) {
         self.toggleInvalidMessage(validObj.field,false);
       });
@@ -673,13 +675,13 @@ Hktdc.Views = Hktdc.Views || {};
       });
       buttonView.renderButtonHandler();
 
-		self.listenTo(buttonModel, 'checkRemark', function(successCallback) {
+	  	self.listenTo(buttonModel, 'checkRemark', function(successCallback) {
         self.toggleInvalidMessage('Remark', false);
         self.toggleInvalidMessage('Forward_To_ID', false);
-
         self.checkRemark(true, successCallback);
       });
-		  self.listenTo(buttonModel, 'checkForward', function(successCallback) {
+	  
+	    self.listenTo(buttonModel, 'checkForward', function(successCallback) {
         self.toggleInvalidMessage('Remark', false);
         self.toggleInvalidMessage('Forward_To_ID', false);
 
@@ -691,17 +693,16 @@ Hktdc.Views = Hktdc.Views || {};
           firstTimeValidate: false
         });
         
-		var serviceValid = true;
-        if(!(self.validateServiceCatagory())){ serviceValid =false;}
-       
-	   
-		//console.log('Before validateField');
-		self.validateField();
-		//console.log('After validateField');
-		//console.log('IsValid or not ');
-		//console.log(self.model.isValid());
-	
-        if (self.model.isValid() && serviceValid) {
+		  var serviceValid = true;
+      if(!(self.validateServiceCatagory())){ serviceValid =false;}
+
+      //Call to higlight all the mandatory feilds..
+      var mandatoryExist=false;
+      mandatoryExist=this.highlightMandatoryFields();
+      
+      //Call for self Validate(Can be Removed)
+      self.validateField(); 
+      if (self.model.isValid() && serviceValid) {
           if (successCallback) {
             successCallback();
           }
@@ -924,21 +925,52 @@ Hktdc.Views = Hktdc.Views || {};
           doFetch();  
     },
     //Function to get the Recommended By Source Ends:-
-	
+  
+    //Function To Validate Mandatory feilds
+    highlightMandatoryFields: function() {
+      var self = this;
+      var inputModel=self.model.toJSON();
+      var isValidInput=true;
+      var invalidCount=0;
+      
+      //Justification
+      if (!(inputModel.Justification && self.attributes.Justification.trim()))  {
+        self.toggleInvalidMessage('Justification', true);
+        invalidCount=invalidCount+1;
+      }
+      else {
+        self.toggleInvalidMessage('Justification', false);
+      }
+      //selectedRecommentModel
+      if (!self.model.toJSON().selectedRecommentModel) {
+        self.toggleInvalidMessage('selectedRecommentModel', true);
+        invalidCount=invalidCount+1;
+      }
+      else {
+        self.toggleInvalidMessage('selectedRecommentModel', false);
+      }
+     
+      //Estimated Cost
+      if (!(self.model.toJSON().EstimatedCost && self.attributes.EstimatedCost.trim())) {
+        self.toggleInvalidMessage('EstimatedCost', true);
+        invalidCount=invalidCount+1;
+      }
+      else {
+        self.toggleInvalidMessage('EstimatedCost', false);
+      }
+      
+      if(invalidCount>0){isValidInput=false; }
+      return isValidInput;
+    },
+
     validateField: function() {
 	  var self = this;
-	
-	
-	  console.log('justification starts');
       self.model.set({
         Justification: self.model.toJSON().Justification
       }, {
         validate: true,
         field: 'Justification'
-      })
-	  console.log('justification ends');
-	  console.log(self.model);
-
+      });
       self.model.set({
         selectedRecommentModel: self.model.toJSON().selectedRecommentModel
       }, {

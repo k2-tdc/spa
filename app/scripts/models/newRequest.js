@@ -122,7 +122,7 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     validate: function(attrs, options) {
-	 if (options.field) {
+	    if (options.field) {
         if (options.field === 'Justification' && !this.isInvalid.justification()) {
           return {
             field: 'Justification',
@@ -161,6 +161,7 @@ Hktdc.Models = Hktdc.Models || {};
         }
       }
     },
+
 
     parse: function(response, options) {
       return response;
