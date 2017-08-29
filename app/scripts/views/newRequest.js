@@ -934,7 +934,7 @@ Hktdc.Views = Hktdc.Views || {};
       var invalidCount=0;
       
       //Justification
-      if (!(inputModel.Justification && self.attributes.Justification.trim()))  {
+      if (!(inputModel.Justification && inputModel.Justification.trim()))  {
         self.toggleInvalidMessage('Justification', true);
         invalidCount=invalidCount+1;
       }
@@ -951,7 +951,7 @@ Hktdc.Views = Hktdc.Views || {};
       }
      
       //Estimated Cost
-      if (!(self.model.toJSON().EstimatedCost && self.attributes.EstimatedCost.trim())) {
+      if (!(self.model.toJSON().EstimatedCost && inputModel.EstimatedCost.trim())) {
         self.toggleInvalidMessage('EstimatedCost', true);
         invalidCount=invalidCount+1;
       }
