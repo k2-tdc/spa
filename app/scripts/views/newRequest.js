@@ -68,7 +68,8 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderCCList(results[4]);
           self.renderSelectedCCView();
           self.initDatePicker();
-          self.checkAndLoadRecommend();
+          //console.log('initialize(New)-->checkAndLoadRecommend');
+          self.checkAndLoadRecommend(true,false,true);
           /* default render the save button only,
            after change the approver(recommend by), render other button */
           self.renderButtons();
@@ -94,7 +95,7 @@ Hktdc.Views = Hktdc.Views || {};
         .then(function(results) {
           console.log('loaded resource');
           self.employeeArray = results[0];
-		  self.colleagueCollection = results[4];
+		      self.colleagueCollection = results[4];
           var recommend = _.find(results[0], function(employee) {
 				return employee.UserId === self.model.toJSON().ApproverUserID;
           });
@@ -102,7 +103,7 @@ Hktdc.Views = Hktdc.Views || {};
           /* need override the workerId and WorkerFullName */
           //recommend.WorkerId = recommend.UserId;
 		  //recommend.WorkerFullName = recommend.UserFullName;
-          if(!(recommend)){ recommend = new Hktdc.Models.Employee();}
+      if(!(recommend)){ recommend = new Hktdc.Models.Employee();}
 		  recommend.WorkerId = self.model.toJSON().ApproverUserID;
 		  recommend.WorkerFullName = self.model.toJSON().ApproverFNAME;
 		  
@@ -132,7 +133,8 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderAttachment(results[3], self.model.toJSON().Attachments);
           self.renderCCList(results[4]);
           self.renderSelectedCCView(self.model.toJSON().RequestCC);
-          self.checkAndLoadRecommend();
+          //console.log('initialize(Edit)-->checkAndLoadRecommend');
+          self.checkAndLoadRecommend(false,true,true);
           self.initDatePicker();
 
           self.renderButtons();
@@ -165,26 +167,20 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     mousedownRecommendSelect: function(ev) {
-      return this.haveBudgetAndService(false, ev);
+      return this.haveBudgetAndService(false,true, ev);
     },
 
-    
-
-    checkAndLoadRecommend: function() {
+    checkAndLoadRecommend: function(isNewMode,isEditMode,isServiceAdd) {
       var self = this;
       self.toggleInvalidMessage('selectedRecommentModel', false);
-      
-      // if (self.haveBudgetAndService(true)) {
-      //   self.renderRecommendList();
-      // } else {
-      //   self.model.set({
-      //     selectedRecommentModel: null
-      //   });
-      // }
-
-
-     self.renderRecommendList();
-
+      if(isNewMode){
+          self.renderRecommendList(isNewMode,isEditMode);
+        }
+      else{
+          if (self.haveBudgetAndService(false,isServiceAdd)) {
+            self.renderRecommendList(isNewMode,isEditMode);
+          }
+        }
       if (self.model.toJSON().firstTimeValidate === false) {
         setTimeout(function() {
           self.model.set({
@@ -199,37 +195,47 @@ Hktdc.Views = Hktdc.Views || {};
 	
 	haveSelectService: function(allowEmptyService) {
       var self = this;
-      if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
-        return false;
+      var isValidService=true; 
+	    if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
+        isValidService= false;
+        return isValidService;
       }
-
+      //Notes Validation...
       self.model.toJSON().selectedServiceCollection.each(function(service) {
-        if (!service.toJSON().Notes) {
-          return false;
+        if(!(service.toJSON().Notes) ||
+           service.toJSON().Notes.length===0)
+        {
+          isValidService=false;
+          return isValidService;
         }
       });
-
-      return true;
+	    return isValidService;
     },
 
-    haveBudgetAndService: function(allowEmptyService, ev) { 
+    haveBudgetAndService: function(allowEmptyService,isServiceAdd,ev) { 
       var self = this;
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
-      if (!(self.haveSelectService(allowEmptyService) && haveFilledCost)) {
-        // if it is fired by the click event
-        if (ev) {
-          // console.log('1');
-          if (ev && ev.preventDefault) {
-            // console.log('2');
-            ev.preventDefault();
+      // if(isServiceAdd){
+        if (!(self.haveSelectService(allowEmptyService) && haveFilledCost)) {
+          // if it is fired by the click event
+          if (ev) {
+            // console.log('1');
+            if (ev && ev.preventDefault) {
+              // console.log('2');
+              ev.preventDefault();
+            }
+            Hktdc.Dispatcher.trigger('openAlert', {
+              title: dialogTitle.warning,
+              message: dialogMessage.requestForm.validation.general
+            });
           }
-          Hktdc.Dispatcher.trigger('openAlert', {
-            title: dialogTitle.warning,
-            message: dialogMessage.requestForm.validation.general
-          });
+          return false;
         }
-        return false;
-      }
+      //}
+      // else{
+      //     if(!haveFilledCost)
+      //       return false;
+      // }
       return true;
     },
 
@@ -287,7 +293,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     toggleInvalidMessage: function(field, isShow) {
-      // console.log('toggleInvalidMessage: ', field);
+      //console.log('toggleInvalidMessage: ', field);
       var self = this;
       var $target = $('[field=' + field + ']', self.el);
       // console.log($target);
@@ -314,7 +320,8 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
 
         /* get new approver list */
-        self.checkAndLoadRecommend();
+        //console.log('initModelChange-->change:selectedApplicantModel-->checkAndLoadRecommend');
+        self.checkAndLoadRecommend(false,false,true);
 
         /* clear the button set to prevent lag button render */
         // self.doRenderButtons({showSave: true});
@@ -332,7 +339,8 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
 
         /* get new approver list */
-        self.checkAndLoadRecommend();
+        //console.log('change:EstimatedCost-->checkAndLoadRecommend');        
+        self.checkAndLoadRecommend(false,false,true);
         self.renderButtons();
       });
 
@@ -358,10 +366,9 @@ Hktdc.Views = Hktdc.Views || {};
       this.model.on('invalid', function(model, validObj) {
         self.toggleInvalidMessage(validObj.field, true);
       });
-
+	  
       this.listenTo(this.model, 'valid', function(validObj) {
-        // console.log('is valid', validObj);
-        self.toggleInvalidMessage(validObj.field, false);
+        self.toggleInvalidMessage(validObj.field,false);
       });
 
       this.model.toJSON().selectedCCCollection.on('add', function(addedCC, newCollection) {
@@ -375,8 +382,13 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
         // console.log('add<><><>');
         /* get new approver list */
-        self.checkAndLoadRecommend();
-
+        //console.log('selectedServiceCollection-->add');
+        if(addedService)
+        {
+          if(addedService.toJSON().Notes && addedService.toJSON().Notes.length>0){
+              self.checkAndLoadRecommend(false,false,true);
+            }
+        }
         self.renderButtons();
       });
 
@@ -385,8 +397,8 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
         // console.log('change{}{}{}{}');
         /* get new approver list */
-        self.checkAndLoadRecommend();
-
+        //console.log('selectedServiceCollection-->change');
+        self.checkAndLoadRecommend(false,false,false);
         self.renderButtons();
       });
 
@@ -394,7 +406,8 @@ Hktdc.Views = Hktdc.Views || {};
         /* clear the selectedRecommentModel */
         /* get new approver list */
         // console.log('remove selected service');
-        self.checkAndLoadRecommend();
+        //console.log('selectedServiceCollection-->remove');
+        self.checkAndLoadRecommend(false,false,false);
         self.renderButtons();
       });
     },
@@ -681,7 +694,13 @@ Hktdc.Views = Hktdc.Views || {};
 		var serviceValid = true;
         if(!(self.validateServiceCatagory())){ serviceValid =false;}
        
+	   
+		//console.log('Before validateField');
 		self.validateField();
+		//console.log('After validateField');
+		//console.log('IsValid or not ');
+		//console.log(self.model.isValid());
+	
         if (self.model.isValid() && serviceValid) {
           if (successCallback) {
             successCallback();
@@ -758,13 +777,14 @@ Hktdc.Views = Hktdc.Views || {};
     },
 	
 	
+	
 	//Function to get the Recommended By Start:-
-    renderRecommendList: function() {
+	renderRecommendList: function(isNewMode,isEditMode) {
 	  var self = this;
       //add a laoding image and disabled the dropdown
-      $('.recommend-select', self.el).prop('disabled',true);
+      $('.recommend-select', self.el).attr('disabled','disabled');
       $('.data-table-loader', self.el).removeClass('hidden');
-   
+
       //get all the parameters and build the backend sever url
       var recommendCollection = new Hktdc.Collections.Recommend();
       var ruleCodeArr = _.map(this.model.toJSON().selectedServiceCollection.toJSON(), function(selectedService) {
@@ -772,80 +792,117 @@ Hktdc.Views = Hktdc.Views || {};
       });
 	  
       var ruleCode = _.uniq(ruleCodeArr).join(',');
-      //alert('ruleCode' + + ruleCode);
-	  var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
-      //alert('applicantUserId' + + applicantUserId);
-	  var cost = this.model.toJSON().EstimatedCost;
-	  //alert('cost:-' + + cost);
-	  recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
-	  //alert('recommendCollection url' + + recommendCollection.url);
-	
+	    var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
+	    var cost = this.model.toJSON().EstimatedCost;
+	    recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
+	    console.log('recommendCollection url');
+		  console.log(recommendCollection.url);
+		
       //actual db call to the backend sever(GetAllEmployeeDetails)
       var doFetch = function() {
-		recommendCollection.fetch({
+		  recommendCollection.fetch({
           beforeSend: utils.setAuthHeader,
           success: function() {
-            //Sucesss Starts
-            var recommendListView = new Hktdc.Views.RecommendList({
-              collection: recommendCollection,
-              requestFormModel: self.model,
-              tagName: 'select',
-              className: 'form-control recommend-select',
-              attributes: { field: 'selectedRecommentModel', name: 'selectedRecommentModel' },
-              selectedRecommend: self.model.toJSON().ApproverUserID
-            });
-            
-            //assign all retrieved values..
-			$('.recommend-select', self.el).remove();
-            $('.recommend-container', self.el).html(recommendListView.el);
-			
-            //Select Logic Start
-			var selected = null;var defaultSelected=null;var defaultWorker=null;var showWarning=false;
-            
-            //Loop all retrived recommended List and Get the default selection logic
-            recommendCollection.each(function(approverModel) {
-              if (self.model.toJSON().selectedRecommentModel)
-              { 
-                //Rule1 if selected worker id exist in the collection
-                if(self.model.toJSON().selectedRecommentModel.toJSON().WorkerId === approverModel.toJSON().WorkerId)
-                 {defaultSelected = approverModel.toJSON();} 
-               
-                //Rule2 get also the default record
-                if(approverModel.toJSON().IsDefault===1){defaultWorker= approverModel.toJSON();}
-              }
-            });
-            //Loop end for recommended List
-
-			
-            //Default selection logic
-			if(defaultSelected) {selected=defaultSelected;}
-            else if(defaultWorker) {selected=defaultWorker;showWarning=true}
-            else{selected=null;}
-            
-            if (selected) {
-              $('.recommend-select option[value="' + selected.WorkerId + '"]', self.el).prop('selected', true);
-               if(showWarning)
+              //Sucesss Starts
+              //generate the recommendListView
+              var recommendListView = new Hktdc.Views.RecommendList({
+                collection: recommendCollection,
+                requestFormModel: self.model,
+                tagName: 'select',
+                className: 'form-control recommend-select',
+                attributes: { field: 'selectedRecommentModel', name: 'selectedRecommentModel' },
+                selectedRecommend: self.model.toJSON().ApproverUserID
+              });
+              
+             //Assign all the retrived values..
+             setTimeout(function() {
+                //apply the select logic..(Select Logic Start)
+                var selected = null;var defaultSelected=null;var defaultWorker=null;var showWarning=true;
+                if(recommendCollection)
                 {
-                  Hktdc.Dispatcher.trigger('openAlert', {
-                  title: dialogTitle.information,
-                  message: dialogMessage.requestForm.validation.ApproverChange
+                  //Always get the defaultRecommendBy
+                  var defaultUserCollection= recommendCollection.filter(function (el) {
+                    return el.toJSON().IsDefault===1;
+                  });						
+                  if(defaultUserCollection && defaultUserCollection.length>0){
+                    defaultWorker=defaultUserCollection[0].toJSON();
+                  }
+
+                  //GET THE EXIST WORKER ID
+                  var existWorkerId=null;
+                  if(isEditMode && self.model.toJSON().selectedRecommentModel){
+                    existWorkerId=self.model.toJSON().selectedRecommentModel.toJSON().WorkerId;
+                  }
+                  else{ existWorkerId=$('select[name=selectedRecommentModel]').val();
+                  }
+                  console.log(existWorkerId);
+                  
+                  //get the previous selected value
+                  if(existWorkerId && existWorkerId!="-- Select --")
+                  {
+                    showWarning=true;
+                    recommendCollection.each(function(approverModel) {
+                      if(existWorkerId === approverModel.toJSON().WorkerId)
+                        {
+                          defaultSelected = approverModel.toJSON();
+                          showWarning=false;
+                        }
+                    });
+                  }
+                  else{ showWarning=false }
+                }
+                //apply the select logic ends..(Select Logic ends)
+          
+                //Default selection logic
+                if(defaultSelected) {
+                  selected=defaultSelected;               
+                  showWarning=false;
+                }
+                else if(defaultWorker) {
+                  selected=defaultWorker;
+                  showWarning=true;  
+                }
+                else{selected=null; 
+                }
+                
+                //Default selection logic ends
+                $('.recommend-select', self.el).remove();
+                $('.recommend-container', self.el).html(recommendListView.el);
+                if (selected) {
+                  $('.recommend-select option[value="' + selected.WorkerId + '"]', self.el).prop('selected', true);
+
+                  //assign the selected value to the model..
+				          self.model.attributes.selectedRecommentModel=selected;
+                  self.model.set({
+						                       selectedRecommentModel: new Hktdc.Models.Recommend(selected)
+                                 }, 
+                                 {
+                                  validate: true,
+                                  field: 'selectedRecommentModel'
+                                 });
+                } else {
+                  $('.recommend-select option:eq(0)', self.el).prop('selected', true);
+                  self.model.set({
+                    selectedRecommentModel: null
                   });
                 }
-            } else {
-              $('.recommend-select option:eq(0)', self.el).prop('selected', true);
-              self.model.set({
-                selectedRecommentModel: null
-              });
-            }
-            //Default selection logic Ends
+                if(showWarning && !(isNewMode))
+                  {
+                    Hktdc.Dispatcher.trigger('openAlert', {
+                    title: dialogTitle.information,
+                    message: dialogMessage.requestForm.validation.ApproverChange
+                    });
+                  }
+                //Default selection logic Ends
+              },1000);
 
-            //remove a laoding image and enabled the dropdown
-            //To Do:-Take the function out of Timeout
-            setTimeout(function() {
-            $('.recommend-select', self.el).prop('disabled', false);
-            $('.data-table-loader', self.el).addClass('hidden');
-                },1000);
-            //Sucesss Ends
+              //remove a laoding image and enabled the dropdown
+              //To Do:-Take the function out of Timeout
+              setTimeout(function() {
+              $('.recommend-select', self.el).removeAttr('disabled');
+              $('.data-table-loader', self.el).addClass('hidden');
+                  },1000);
+              //Sucesss Ends
           },
           
           //Error starts
@@ -856,7 +913,7 @@ Hktdc.Views = Hktdc.Views || {};
                 });
                 //error case remove a laoding image and enabled the dropdown
                 $('.data-table-loader', self.el).addClass('hidden');
-                $('.recommend-select', self.el).prop('disabled', false);
+                $('.recommend-select', self.el).removeAttr('disabled');
               }
             //Error ends
             });
@@ -868,16 +925,19 @@ Hktdc.Views = Hktdc.Views || {};
     },
     //Function to get the Recommended By Source Ends:-
 	
-	
     validateField: function() {
-      var self = this;
-
+	  var self = this;
+	
+	
+	  console.log('justification starts');
       self.model.set({
         Justification: self.model.toJSON().Justification
       }, {
         validate: true,
         field: 'Justification'
-      });
+      })
+	  console.log('justification ends');
+	  console.log(self.model);
 
       self.model.set({
         selectedRecommentModel: self.model.toJSON().selectedRecommentModel
@@ -963,7 +1023,7 @@ Hktdc.Views = Hktdc.Views || {};
 		//Reset the service panel to original mode
         this.ResetServicePanel();
 
-		//Check for Service validation(Model/UI)
+		    //Check for Service validation(Model/UI)
         var validService=false;
         if(this.haveSelectService(false))
         {
@@ -1067,7 +1127,7 @@ Hktdc.Views = Hktdc.Views || {};
                      var $parentL2 = $(this).parents('.select-service');
                      if(!(serviceNotesL2))
                       {
-							            $parentL2.find('.error-message').removeClass('hidden');
+							            $parentL2.find('.error-message').removeClass('hidden').html(validateMessage.requiredInside);
 							            $parentL2.addClass('error-input');
                       }
             });
@@ -1084,7 +1144,7 @@ Hktdc.Views = Hktdc.Views || {};
 						 var serviceNotes=$(this).val();
 		                 if(!(serviceNotes))
                       {
-                          $parent.find('.error-message').removeClass('hidden');
+                          $parent.find('.error-message').removeClass('hidden').html(validateMessage.requiredInside);
                           $parent.addClass('error-input');
                       }
               });
@@ -1110,7 +1170,7 @@ Hktdc.Views = Hktdc.Views || {};
         }
       }
     },
-
+    
     checkForward: function(openAlert, successCallback) {
       var self = this;
       if (!self.model.toJSON().Forward_To_ID) {

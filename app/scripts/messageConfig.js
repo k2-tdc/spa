@@ -144,7 +144,7 @@ var dialogMessage = {
       // costandservice: 'Please select service and filled the cost field',
       // service: 'Request service notes must be filled',
       general: 'Input is missing/incorrect',
-	  ApproverChange:'Approver has Changed.Please double check.'
+	  ApproverChange:'Approver has been Changed.Please double check.'
     }
   },
   download: {
@@ -208,6 +208,7 @@ var dialogMessage = {
 
 var validateMessage = {
   required: 'Please fill up this field',
+  requiredInside: 'Please fill up all fields inside',
   gt: 'Should be greater than %s',
   eitherRequired: 'Either %s is required.',
   conditionalRequired: '%s is required if %s'
