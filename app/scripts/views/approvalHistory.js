@@ -195,7 +195,7 @@ Hktdc.Views = Hktdc.Views || {};
         };
       });
       var distinctApplicants = _.uniq(applicants, function(applicant) {
-        return applicant.UserId;
+        return applicant.EmployeeID;
       });
       var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
       var userListView = new Hktdc.Views.ApplicantSelect({
@@ -313,16 +313,16 @@ Hktdc.Views = Hktdc.Views || {};
     doToggleAdvanceMode: function(isShow) {
       if (isShow) {
         $('.advanced-form', this.el).show();
-        $('.advanced-btn .isHide', this.el).show();
-        $('.advanced-btn .isShow', this.el).hide();
-        $('.advanced-btn-wrapper .closeBtn', this.el).css('display', 'inline-block');
-        $('.advanced-btn-wrapper .openBtn', this.el).hide();
+        //$('.advanced-btn .isHide', this.el).show();
+        //$('.advanced-btn .isShow', this.el).hide();
+        //$('.advanced-btn-wrapper .closeBtn', this.el).css('display', 'inline-block');
+        //$('.advanced-btn-wrapper .openBtn', this.el).hide();
       } else {
         $('.advanced-form', this.el).hide();
-        $('.advanced-btn .isHide', this.el).hide();
-        $('.advanced-btn .isShow', this.el).show();
-        $('.advanced-btn-wrapper .openBtn', this.el).css('display', 'inline-block');
-        $('.advanced-btn-wrapper .closeBtn', this.el).hide();
+        //$('.advanced-btn .isHide', this.el).hide();
+        //$('.advanced-btn .isShow', this.el).show();
+        //$('.advanced-btn-wrapper .openBtn', this.el).css('display', 'inline-block');
+        //$('.advanced-btn-wrapper .closeBtn', this.el).hide();
       }
     },
 
