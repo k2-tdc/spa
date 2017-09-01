@@ -6,15 +6,18 @@ Hktdc.Models = Hktdc.Models || {};
   'use strict';
 
   Hktdc.Models.Applicant = Backbone.Model.extend({
-    idAttribute: 'UserId',
+    idAttribute: 'UserFullName',
 
     defaults: {
       UserId: '',
       UserFullName: '',
-      Applicant: ''
+      Applicant: '',
+	  EmployeeID:''
     },
 
     url: function() {
+	  console.log('Inside the Applicatant model URL');
+	  console.log(Hktdc.Config.apiURL + '/users/' + this.attributes.UserId);
       return Hktdc.Config.apiURL + '/users/' + this.attributes.UserId;
     }
 

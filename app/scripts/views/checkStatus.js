@@ -277,14 +277,15 @@ Hktdc.Views = Hktdc.Views || {};
         };
       });
       var distinctApplicants = _.uniq(applicants, function(applicant) {
-        return applicant.UserId;
+        //return applicant.UserId;
+		return applicant.UserFullName;
       });
 
       var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
 
       userListView = new Hktdc.Views.ApplicantSelect({
         collection: applicantCollection,
-        selectedApplicant: self.model.toJSON().applicant || '0',
+        selectedApplicant: self.model.toJSON().applicant || '',
         // selectedApplicant: self.model.toJSON().applicant || Hktdc.Config.userID || '0',
         onSelect: function(model) {
           // var val = (model) ? model.toJSON().EmployeeID : '';

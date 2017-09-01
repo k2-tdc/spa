@@ -184,8 +184,8 @@ Hktdc.Views = Hktdc.Views || {};
         });
       });
     },
-
-    renderUserFilter: function(records) {
+	
+	 renderUserFilter: function(records) {
       var self = this;
       var applicants = _.map(records, function(record) {
         return {
@@ -194,20 +194,21 @@ Hktdc.Views = Hktdc.Views || {};
           EmployeeID: record.ApplicantEMP
         };
       });
-      var distinctApplicants = _.uniq(applicants, function(applicant) {
-        return applicant.EmployeeID;
+    var distinctApplicants = _.uniq(applicants, function(applicant) {
+        return applicant.UserFullName;
       });
-      var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
-      var userListView = new Hktdc.Views.ApplicantSelect({
+    var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
+	console.log(self.model.toJSON());
+	var userListView = new Hktdc.Views.ApplicantSelect({
         collection: applicantCollection,
-        selectedApplicant: self.model.toJSON().applicant || '0',
+        selectedApplicant: self.model.toJSON().applicant || '',
         onSelect: function(model) {
           var data = (model.toJSON().UserId === '0')
             ? { applicant: '', 'applicant-employee-id': '' }
             : { applicant: model.toJSON().UserId, 'applicant-employee-id': model.toJSON().EmployeeID }
           self.model.set(data);
         }
-      });
+      });  
       userListView.render();
       $('.user-container', self.el).html(userListView.el);
     },

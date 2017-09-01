@@ -221,9 +221,10 @@ Hktdc.Routers = Hktdc.Routers || {};
                 mode: 'new',
 
                 /* set the default selected applicant is self */
-                selectedApplicantModel: new Hktdc.Models.Applicant({
+				selectedApplicantModel: new Hktdc.Models.Applicant({
                   UserId: Hktdc.Config.userID,
-                  UserFullName: Hktdc.Config.userName
+                  UserFullName: Hktdc.Config.userName,
+				  EmployeeID: Hktdc.Config.employeeID
                 })
               });
               var nrView = new Hktdc.Views.NewRequest({
@@ -332,7 +333,8 @@ Hktdc.Routers = Hktdc.Routers || {};
                 mode: getMode(),
                 selectedApplicantModel: new Hktdc.Models.Applicant({
                   UserId: rawData.ApplicantUserID,
-                  UserFullName: rawData.ApplicantFNAME
+                  UserFullName: rawData.ApplicantFNAME,
+				  EmployeeID: rawData.ApplicantEMP
                 })
               });
 

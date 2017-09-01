@@ -598,7 +598,8 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var applicantSelectView = new Hktdc.Views.ApplicantSelect({
         collection: new Hktdc.Collections.Applicant(employeeArray),
-        selectedApplicant: self.model.toJSON().ApplicantUserID || Hktdc.Config.userID,
+        //selectedApplicant: self.model.toJSON().ApplicantUserID || Hktdc.Config.userID,
+		selectedApplicant: self.model.toJSON().ApplicantFNAME || Hktdc.Config.userName,
         allowEmpty: false,
         disabled: function() {
           return self.model.toJSON().actions && self.model.toJSON().actions.length > 0;

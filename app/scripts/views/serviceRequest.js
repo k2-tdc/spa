@@ -196,17 +196,27 @@ Hktdc.Views = Hktdc.Views || {};
       
 	  //get the Panel IsActive Value
 	  var isActive=false;
+	  
+	  console.log('request');
+	  console.log(request);
+	  console.log('requestFormModel');
+	  console.log(this.requestFormModel.toJSON());
+	  
       if(this.requestFormModel.toJSON().ActionTakerServiceTypeID)
         {
-          isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
                    this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
 		           this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.ServiceGUID);  
         }
       else
         {
-            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+		   isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
                    this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
         }
+		
+		console.log('isActive');
+		console.log(isActive);
+	
 	  
       var tmpl = this.template({
         request: request,
@@ -265,9 +275,13 @@ Hktdc.Views = Hktdc.Views || {};
         }
       else
         {
-            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+		   isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
                       this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
         }
+	  
+		
+		console.log('isActive');
+		console.log(isActive);
 	  
 	  var tmpl = this.template({
         request: request,
