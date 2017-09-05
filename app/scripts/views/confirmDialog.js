@@ -47,7 +47,7 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
       this.model.on('change:lockConfirmBtn', function(model, isLock) {
-        console.log('change lockConfirmBtn: ', isLock);
+        //console.log('change lockConfirmBtn: ', isLock);
         if (isLock) {
           $('.confirm-btn', self.el).prop('disabled', true);
         } else {

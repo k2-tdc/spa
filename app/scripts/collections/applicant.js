@@ -31,8 +31,8 @@ Hktdc.Collections = Hktdc.Collections || {};
         return key + '=' + val;
       });
 	
-	  console.log('Inside the Applicatant cllection URL');
-	  console.log(Hktdc.Config.apiURL + '/GetApplicantList?' + qsArr.join('&'));
+	  //console.log('Inside the Applicatant cllection URL');
+	  //console.log(Hktdc.Config.apiURL + '/GetApplicantList?' + qsArr.join('&'));
       return Hktdc.Config.apiURL + '/GetApplicantList?' + qsArr.join('&');
     }
   });

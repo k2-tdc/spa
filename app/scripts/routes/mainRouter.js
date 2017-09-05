@@ -377,7 +377,7 @@ Hktdc.Routers = Hktdc.Routers || {};
     },
 
     delegationList: function() {
-      console.log('mainRouter delegationlist');
+      //console.log('mainRouter delegationlist');
       // console.log(utils.getParameterByName('ProId'));
       var delegationPageModel = new Hktdc.Models.DelegationPage({
         UserId: Hktdc.Config.userID,

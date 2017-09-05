@@ -171,7 +171,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     onFileChange: function(ev) {
       var newFiles = ev.target.files;
-      console.log('file change: ', newFiles);
+      //console.log('file change: ', newFiles);
       var validateFilesObj = this.doValidateFiles(newFiles);
       var self = this;
       if (validateFilesObj.valid) {
@@ -185,7 +185,7 @@ Hktdc.Views = Hktdc.Views || {};
         });
         // console.debug('this collection before: ', this.collection.toJSON());
         $('#divfilename', self.el).empty();
-        console.log($('#divfilename', this.el));
+        //console.log($('#divfilename', this.el));
         this.collection.each(self.renderAttachmentItem);
         // console.debug('this collection after: ', this.collection.toJSON());
         // console.debug('requestFormModel collection before: ', this.requestFormModel.toJSON().selectedAttachmentCollection.toJSON());

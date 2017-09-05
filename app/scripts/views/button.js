@@ -60,10 +60,10 @@ Hktdc.Views = Hktdc.Views || {};
         console.debug('NEED Check APPLICANT_RULECODE');
         /* load related button set */
         // var ApproverRuleCode = self.requestFormModel.toJSON().selectedRecommentModel.toJSON().RuleCode;
-        console.log('Preparer: ', Preparer);
-        console.log('Applicant: ', Applicant);
-        console.log('ApplicantRuleCode: ', ApplicantRuleCode);
-        console.log('Approver: ', Approver);
+        //console.log('Preparer: ', Preparer);
+        //console.log('Applicant: ', Applicant);
+        //console.log('ApplicantRuleCode: ', ApplicantRuleCode);
+        //console.log('Approver: ', Approver);
         if (!Preparer || !Applicant || !Approver || !ApplicantRuleCode) {
           if (FormStatus) {
             self.render({
@@ -140,7 +140,7 @@ Hktdc.Views = Hktdc.Views || {};
       if (ApplicantRuleCode === RuleCode2) {
         // 1) Preparer !== Applicant && Approver !== Applicant
         if (Preparer !== Applicant && Approver !== Applicant) {
-          console.log('condition 1 (' + RuleCode2 + '): Preparer !== Applicant && Approver !== Applicant');
+          //console.log('condition 1 (' + RuleCode2 + '): Preparer !== Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.applicantSendTo = 'Applicant';
           showButtonOptions.showSendToApprover = true;
@@ -152,7 +152,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         // 2) Preparer === Applicant && Approver !== Applicant
         } else if (Preparer === Applicant && Approver !== Applicant) {
-          console.log('condition 2 (' + RuleCode2 + '): Preparer === Applicant && Approver !== Applicant');
+          //console.log('condition 2 (' + RuleCode2 + '): Preparer === Applicant && Approver !== Applicant');
           showButtonOptions.showSendToApprover = true;
           showButtonOptions.approverSendTo = 'Approver';
           self.requestFormModel.set({
@@ -180,20 +180,20 @@ Hktdc.Views = Hktdc.Views || {};
           });
         // Preparer === Applicant && Approver === Applicant
         } else if (Preparer === Applicant && Approver === Applicant) {
-          console.log('condition 4 (' + RuleCode1 + '): Preparer === Applicant && Approver === Applicant');
+          //console.log('condition 4 (' + RuleCode1 + '): Preparer === Applicant && Approver === Applicant');
           showButtonOptions.showSendToApprover = true;
           showButtonOptions.approverSendTo = 'Task Actioner';
           self.requestFormModel.set({ approverSubmittedTo: 'TaskActioner' });
         // Preparer !== Applicant && Approver === Applicant
         } else if (Preparer !== Applicant && Approver === Applicant) {
-          console.log('condition 5 (' + RuleCode1 + '): Preparer !== Applicant && Approver === Applicant');
+          //console.log('condition 5 (' + RuleCode1 + '): Preparer !== Applicant && Approver === Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.showSendToApprover = false;
           showButtonOptions.applicantSendTo = 'Applicant';
           self.requestFormModel.set({ applicantSubmittedTo: 'Applicant' });
         // Preparer !== Applicant && Approver !== Applicant
         } else if (Preparer !== Applicant && Approver !== Applicant) {
-          console.log('condition 6 (' + RuleCode1 + '): Preparer !== Applicant && Applicant !== Applicant');
+          //console.log('condition 6 (' + RuleCode1 + '): Preparer !== Applicant && Applicant !== Applicant');
           showButtonOptions.showSendToApplicant = true;
           showButtonOptions.applicantSendTo = 'Applicant';
           self.requestFormModel.set({ applicantSubmittedTo: 'Applicant' });
@@ -217,7 +217,7 @@ Hktdc.Views = Hktdc.Views || {};
         };
       }
 
-      console.log('before role check: ', showButtonOptions);
+      //console.log('before role check: ', showButtonOptions);
 
       self.render(showButtonOptions);
       // return for next button options if any
@@ -230,7 +230,7 @@ Hktdc.Views = Hktdc.Views || {};
         action.uri = self.getWorklistURI(action.ActionID);
         return action;
       });
-      console.log('actions', actions);
+      //console.log('actions', actions);
       var options = _.extend({workflowButtons: actions}, defaultOptions);
       this.render(options);
     },
@@ -629,7 +629,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         .then(function(data) {
           insertServiceResponse = data;
-          console.log('ended save request');
+          //console.log('ended save request');
           /* send file */
           return this.sendAttachment(
             insertServiceResponse.FormID,
@@ -639,7 +639,7 @@ Hktdc.Views = Hktdc.Views || {};
 
         .then(function(data) {
           /* delete file */
-          console.log('end send attachment');
+          //console.log('end send attachment');
           var self = this;
           return Q.all(_.map(this.requestFormModel.toJSON().deleteAttachmentIdArray, function(guid) {
             return self.deleteAttachment(guid);
@@ -684,8 +684,8 @@ Hktdc.Views = Hktdc.Views || {};
         }
         return group;
       }));
-      console.log('raw date: ', requestFormData.EDeliveryDate);
-      console.log('date is valid: ', moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid());
+      //console.log('raw date: ', requestFormData.EDeliveryDate);
+      //console.log('date is valid: ', moment(requestFormData.EDeliveryDate, 'DD MMM YYYY', true).isValid());
 
       var sendRequestModel = new Hktdc.Models.SendRequest({
         Req_Status: status,

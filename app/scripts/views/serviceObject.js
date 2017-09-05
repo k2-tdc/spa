@@ -16,14 +16,14 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #lastnosub': 'editServiceHandler'
     },
     editServiceHandler: function(ev) {
-      console.log('#lastnosub blur; ', $(ev.target).val().trim() );
+      //console.log('#lastnosub blur; ', $(ev.target).val().trim() );
       // console.log($(ev.target).val().trim());
       if ($(ev.target).val().trim().length > 0) {
         this.model.set({
           Notes: $('textarea', this.el).val().trim()
         });
         this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
-        console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+        //console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       }
 	  //done by gaurav
@@ -56,7 +56,7 @@ Hktdc.Views = Hktdc.Views || {};
     selectServiceHandler: function(ev) {		
       /* save the selected request to the upper level so that can delete request form collection by selected model */
       // this.serviceRequestModel.set();
-      console.log('selectServiceHandler');
+      //console.log('selectServiceHandler');
 
       this.serviceRequestModel.set({
         selectedRequestModel: this.model,
@@ -78,13 +78,17 @@ Hktdc.Views = Hktdc.Views || {};
         }
       if(_existSelServiceId && _existSelServiceId!=null && _existSelServiceId.length>0)
       {
-		    var removeTarget=null;
+	      	var removeTarget=null;
         this.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedModel) {
           if (selectedModel.toJSON().ServiceGUID === _existSelServiceId) {
-            removeTarget = selectedModel;
+			        removeTarget = selectedModel;
           }
         });
         if(removeTarget){
+          removeTarget.set({
+          IsServiceChanged:1
+          });
+		  //console.log('call to removeTarget after:-',removeTarget.toJSON());
           this.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
         }
       }
@@ -92,12 +96,12 @@ Hktdc.Views = Hktdc.Views || {};
 
       this.requestFormModel.toJSON().selectedServiceCollection.remove(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
-       this.serviceRequestModel.trigger('changeServiceSelect', this.model);
+      this.serviceRequestModel.trigger('changeServiceSelect', this.model);
       
       //set the previous selection..
 	    $(ev.target).closest( "ul" ).attr("prevSelectedGuid",this.model.toJSON().ServiceGUID);
 
-      console.log('selectServiceHandler ends');
+      //console.log('selectServiceHandler ends');
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
 

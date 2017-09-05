@@ -51,7 +51,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadColleague()
         ])
         .then(function(results) {
-          console.log('load ed resource');
+          //console.log('load ed resource');
           self.employeeArray = results[0];
           self.colleagueCollection = results[4];
           self.model.set({
@@ -68,7 +68,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderCCList(results[4]);
           self.renderSelectedCCView();
           self.initDatePicker();
-          console.log('initialize(New)-->checkAndLoadRecommend');
+          //console.log('initialize(New)-->checkAndLoadRecommend');
           self.checkAndLoadRecommend(true,false,true);
           /* default render the save button only,
            after change the approver(recommend by), render other button */
@@ -93,7 +93,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.loadColleague()
         ])
         .then(function(results) {
-          console.log('loaded resource');
+          //console.log('loaded resource');
           self.employeeArray = results[0];
 		      self.colleagueCollection = results[4];
           var recommend = _.find(results[0], function(employee) {
@@ -297,7 +297,7 @@ Hktdc.Views = Hktdc.Views || {};
       } else {
         selectedServiceCollection.each(function(selectedServiceModel) {
           var selectedService = selectedServiceModel.toJSON();
-          console.log(selectedService);
+          //console.log(selectedService);
           if (!selectedService.Notes) {
             isValid = false;
           }
@@ -381,7 +381,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       
 	    this.model.on('invalid', function(model, validObj) {
-        console.log(validObj.field);
+        //console.log(validObj.field);
         //self.toggleInvalidMessage(validObj.field, true);
 		  });
 	
@@ -403,6 +403,7 @@ Hktdc.Views = Hktdc.Views || {};
         //console.log('selectedServiceCollection-->add');
         if(addedService)
         {
+          //console.log(addedService.toJSON());
           if(addedService.toJSON().Notes && addedService.toJSON().Notes.length>0){
               self.checkAndLoadRecommend(false,false,true);
             }
@@ -416,10 +417,21 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log('change{}{}{}{}');
         /* get new approver list */
         //console.log('selectedServiceCollection-->change');
+        console.log(changedModel);
         if(changedModel)
         {
           if(changedModel.toJSON().Notes && changedModel.toJSON().Notes.length>0){
-              self.checkAndLoadRecommend(false,false,false);
+              //chk for ddl change
+              var loadRecommend=true;
+              if(changedModel.toJSON().IsServiceChanged && changedModel.toJSON().IsServiceChanged===1)
+              { 
+                loadRecommend =false;
+              }
+              //console.log('loadRecommend is :- ',loadRecommend)
+              if(loadRecommend){
+                //console.log('checkAndLoadRecommend');
+                self.checkAndLoadRecommend(false,false,false);
+              }
             }
         }
         self.renderButtons();
@@ -431,7 +443,18 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log('remove selected service');
 		
         //console.log('selectedServiceCollection-->remove');
-		    self.checkAndLoadRecommend(false,false,false);
+        //console.log('changedModel:-',changedModel.toJSON());
+        var loadRecommend=true;
+        if(changedModel && changedModel.toJSON().IsServiceChanged &&
+           changedModel.toJSON().IsServiceChanged===1)
+            {
+               loadRecommend =false;
+            }
+		//console.log('loadRecommend is :- ',loadRecommend)
+        if(loadRecommend){
+          //console.log('checkAndLoadRecommend');
+          self.checkAndLoadRecommend(false,false,false);
+        }
         self.renderButtons();
       });
     },
@@ -721,7 +744,7 @@ Hktdc.Views = Hktdc.Views || {};
         
 		  var serviceValid = true;
       if(!(self.validateServiceCatagory())){
-        console.log('service is invalid');
+        //console.log('service is invalid');
         serviceValid =false;
         }
 
@@ -759,7 +782,7 @@ Hktdc.Views = Hktdc.Views || {};
         Location: applicant.Office
           // RuleCode: target.RuleCode
       });
-      console.log(this.model.toJSON());
+      //console.log(this.model.toJSON());
       $('#divdepartment', this.el).text(applicant.Depart);
     },
 
@@ -825,8 +848,8 @@ Hktdc.Views = Hktdc.Views || {};
 	    var applicantUserId = this.model.toJSON().selectedApplicantModel.toJSON().UserId;
 	    var cost = this.model.toJSON().EstimatedCost;
 	    recommendCollection.url = recommendCollection.url(ruleCode, applicantUserId, cost);
-	    console.log('recommendCollection url');
-		  console.log(recommendCollection.url);
+	    //console.log('recommendCollection url');
+		//console.log(recommendCollection.url);
 		
       //actual db call to the backend sever(GetAllEmployeeDetails)
       var doFetch = function() {
@@ -865,7 +888,7 @@ Hktdc.Views = Hktdc.Views || {};
                   }
                   else{ existWorkerId=$('select[name=selectedRecommentModel]').val();
                   }
-                  console.log(existWorkerId);
+                  //console.log(existWorkerId);
                   
                   //get the previous selected value
                   if(existWorkerId && existWorkerId!="-- Select --")
@@ -1043,7 +1066,7 @@ Hktdc.Views = Hktdc.Views || {};
                 }
 				});
       }
-      console.log('validateServiceLevel1Inputs-->',isValid);
+      //console.log('validateServiceLevel1Inputs-->',isValid);
 			return isValid;
     },
 	
@@ -1059,7 +1082,7 @@ Hktdc.Views = Hktdc.Views || {};
 					if(!(serviceNotes)) { isValid=false; }
 				});
       }
-      console.log('validateServiceLevel2Inputs-->',isValid);
+      //console.log('validateServiceLevel2Inputs-->',isValid);
 		  return isValid;
 		  
     },
@@ -1078,7 +1101,7 @@ Hktdc.Views = Hktdc.Views || {};
 				});
       }
       
-      console.log('validateServiceLevel3Inputs-->',isValid);
+      //console.log('validateServiceLevel3Inputs-->',isValid);
 		  return isValid;
 	  },
 	  

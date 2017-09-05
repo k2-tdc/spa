@@ -198,7 +198,7 @@ Hktdc.Views = Hktdc.Views || {};
         return applicant.UserFullName;
       });
     var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
-	console.log(self.model.toJSON());
+	//console.log(self.model.toJSON());
 	var userListView = new Hktdc.Views.ApplicantSelect({
         collection: applicantCollection,
         selectedApplicant: self.model.toJSON().applicant || '',

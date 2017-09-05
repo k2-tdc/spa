@@ -59,7 +59,7 @@ Hktdc.Views = Hktdc.Views || {};
       _.bindAll(self, 'renderRecommendItem', 'renderRecommendOption');
       self.render();
 
-      console.log('firstTimeValidate: ', self.requestFormModel.toJSON().firstTimeValidate);
+      //console.log('firstTimeValidate: ', self.requestFormModel.toJSON().firstTimeValidate);
       if (self.requestFormModel.toJSON().firstTimeValidate === false) {
         setTimeout(function() {
           self.requestFormModel.set({

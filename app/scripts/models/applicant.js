@@ -16,8 +16,8 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     url: function() {
-	  console.log('Inside the Applicatant model URL');
-	  console.log(Hktdc.Config.apiURL + '/users/' + this.attributes.UserId);
+	 // console.log('Inside the Applicatant model URL');
+	  //console.log(Hktdc.Config.apiURL + '/users/' + this.attributes.UserId);
       return Hktdc.Config.apiURL + '/users/' + this.attributes.UserId;
     }
 

@@ -89,14 +89,14 @@ Hktdc.Views = Hktdc.Views || {};
 	  
       // console.log('model', self.model.toJSON());
       // console.group('remove');
-       console.log('serviceRequestList Collection: ', collection.toJSON());
-       console.log('deleteRequestObject');
-       console.log('selectedServiceCollection collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+       //console.log('serviceRequestList Collection: ', collection.toJSON());
+       //console.log('deleteRequestObject');
+       //console.log('selectedServiceCollection collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
       // old: if (self.model.toJSON().ServiceGUID || String(self.model.toJSON().ControlFlag) === '1') {
       if (String(self.model.toJSON().ControlFlag) === '1') {
-		  console.log('ControlFlag: ', 1);
+		  //console.log('ControlFlag: ', 1);
         // console.log(collection.toJSON());
         // console.log(self.model.toJSON());
         collection.remove(self.model);
@@ -104,14 +104,14 @@ Hktdc.Views = Hktdc.Views || {};
         /* edit mode use self.model */
         var targetModel = self.model.toJSON().selectedRequestModel ||
         self.model;
-        console.log('targetModel: ', targetModel.toJSON());
+        //console.log('targetModel: ', targetModel.toJSON());
         var removeTarget;
         self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedModel) {
           if (selectedModel.toJSON().ServiceGUID === targetModel.toJSON().ServiceGUID) {
             removeTarget = selectedModel;
           }
         });
-        console.log('removeTarget: ', removeTarget);
+        //console.log('removeTarget: ', removeTarget);
         /* console.group('group');
         console.log('collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
         console.log('selectedRequestModel: ', self.model.toJSON().selectedRequestModel.toJSON());
@@ -162,11 +162,11 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log(collection.toJSON());
       }
       // console.groupEnd();
-      console.log('removed, new collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+      //console.log('removed, new collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
     },
 
     addNotesToServiceObject: function(ev) {
-    console.log('addNotesToServiceObject');
+    //console.log('addNotesToServiceObject');
       var selectedServiceModel = this.requestFormModel.toJSON().selectedServiceCollection.get(this.model.toJSON().ServiceGUID);
       this.model.set({
         Notes: $(ev.target).val().trim()
@@ -179,7 +179,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initModelChangeHandler: function() {
-      console.log('initModelChangeHandler');
+      //console.log('initModelChangeHandler');
       var self = this;
       this.model.on('change:selectedRequestModel', function(selectedReq, newModel) {
         $('.selectleve2sub', self.el).text(newModel.toJSON().Name);
@@ -190,10 +190,10 @@ Hktdc.Views = Hktdc.Views || {};
         // $('.service-notes', self.el).prop('disabled', !isSelected);
       });
       
-      console.log('clearServiceRequest');
+      //console.log('clearServiceRequest');
       this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));
 
-      console.log('changeServiceSelect');
+      //console.log('changeServiceSelect');
       this.listenTo(self.model, 'changeServiceSelect', function(selectServiceModel) {
         // console.log($('.service-notes', self.el).find('textarea'));
         $('.service-notes', self.el).attr('placeholder', selectServiceModel.toJSON().Placeholder);
@@ -207,10 +207,10 @@ Hktdc.Views = Hktdc.Views || {};
 	  //get the Panel IsActive Value
 	  var isActive=false;
 	  
-	  console.log('request');
-	  console.log(request);
-	  console.log('requestFormModel');
-	  console.log(this.requestFormModel.toJSON());
+	  //console.log('request');
+	  //console.log(request);
+	  //console.log('requestFormModel');
+	  //console.log(this.requestFormModel.toJSON());
 	  
       if(this.requestFormModel.toJSON().ActionTakerServiceTypeID)
         {
@@ -239,8 +239,8 @@ Hktdc.Views = Hktdc.Views || {};
         }
 	  
 		
-		console.log('isActive');
-		console.log(isActive);
+		//console.log('isActive');
+		//console.log(isActive);
 	
 	  
       var tmpl = this.template({
@@ -285,10 +285,10 @@ Hktdc.Views = Hktdc.Views || {};
     render: function() {
 	  var request = this.model.toJSON();
       
-	  console.log('requestModel');
-      console.log(request);
-      console.log('requestFormModel');
-      console.log(this.requestFormModel.toJSON());
+	  //console.log('requestModel');
+      //console.log(request);
+      //console.log('requestFormModel');
+      //console.log(this.requestFormModel.toJSON());
       
 	  //get the Panel IsActive Value
 	  var isActive=false;
@@ -319,8 +319,8 @@ Hktdc.Views = Hktdc.Views || {};
         }
 	  
 		
-		console.log('isActive');
-		console.log(isActive);
+		//console.log('isActive');
+		//console.log(isActive);
 	  
 	  var tmpl = this.template({
         request: request,

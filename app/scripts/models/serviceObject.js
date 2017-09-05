@@ -13,6 +13,7 @@ Hktdc.Models = Hktdc.Models || {};
     },
 
     defaults: {
+		IsServiceChanged: '',
     },
 
     validate: function(attrs, options) {
