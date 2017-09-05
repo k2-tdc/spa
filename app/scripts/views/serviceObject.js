@@ -16,7 +16,7 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #lastnosub': 'editServiceHandler'
     },
     editServiceHandler: function(ev) {
-      // console.log('#lastnosub blur; ', );
+      console.log('#lastnosub blur; ', $(ev.target).val().trim() );
       // console.log($(ev.target).val().trim());
       if ($(ev.target).val().trim().length > 0) {
         this.model.set({
@@ -25,9 +25,11 @@ Hktdc.Views = Hktdc.Views || {};
         this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
         console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
-      } else {
-        this.requestFormModel.toJSON().selectedServiceCollection.remove(this.model);
       }
+	  //done by gaurav
+	  //else {
+        //this.requestFormModel.toJSON().selectedServiceCollection.remove(this.model);
+      //}
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
     initialize: function(props) {
@@ -50,9 +52,12 @@ Hktdc.Views = Hktdc.Views || {};
     events: {
       'click': 'selectServiceHandler'
     },
-    selectServiceHandler: function() {
+
+    selectServiceHandler: function(ev) {		
       /* save the selected request to the upper level so that can delete request form collection by selected model */
       // this.serviceRequestModel.set();
+      console.log('selectServiceHandler');
+
       this.serviceRequestModel.set({
         selectedRequestModel: this.model,
         selectedServiceObject: true
@@ -62,13 +67,37 @@ Hktdc.Views = Hktdc.Views || {};
       };
       if (!this.model.toJSON().ServiceGUID) {
         data.ServiceGUID = utils.makeId(10);
-      }
+		  }
       this.model.set(data);
-      // console.log(this.serviceRequestModel.toJSON().ServiceGUID);
+
+      //get and remove the previous selection logic Starts..
+	    var _existSelServiceId=null;
+      if($(ev.target))
+        {
+          _existSelServiceId=$(ev.target).closest( "ul" ).attr("prevSelectedGuid");
+        }
+      if(_existSelServiceId && _existSelServiceId!=null && _existSelServiceId.length>0)
+      {
+		    var removeTarget=null;
+        this.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedModel) {
+          if (selectedModel.toJSON().ServiceGUID === _existSelServiceId) {
+            removeTarget = selectedModel;
+          }
+        });
+        if(removeTarget){
+          this.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
+        }
+      }
+      //get and remove the previous selection logic ends...  
+
       this.requestFormModel.toJSON().selectedServiceCollection.remove(this.serviceRequestModel.toJSON().ServiceGUID);
       this.requestFormModel.toJSON().selectedServiceCollection.add(this.model);
-      // console.log('add service request, new collection: ', this.requestFormModel.toJSON().selectedServiceCollection.toJSON());
-      this.serviceRequestModel.trigger('changeServiceSelect', this.model);
+       this.serviceRequestModel.trigger('changeServiceSelect', this.model);
+      
+      //set the previous selection..
+	    $(ev.target).closest( "ul" ).attr("prevSelectedGuid",this.model.toJSON().ServiceGUID);
+
+      console.log('selectServiceHandler ends');
       // console.log(this.requestFormModel.selectedServiceCollection.toJSON());
     },
 

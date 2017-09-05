@@ -82,19 +82,21 @@ Hktdc.Views = Hktdc.Views || {};
       var self = this;
       var collection = self.model.toJSON().parentCollection;
 	  
-		var $parentL2 = self.$el.parents('.select-service');
-		$parentL2.find('.error-message').addClass('hidden');
-		$parentL2.removeClass('error-input');
+      var $parentL2 = self.$el.parents('.select-service');
+      $parentL2.find('.error-message').addClass('hidden');
+      $parentL2.removeClass('error-input');
 	  
 	  
       // console.log('model', self.model.toJSON());
       // console.group('remove');
-      // console.log('serviceRequestList Collection: ', collection.toJSON());
-      // console.log('selectedServiceCollection collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+       console.log('serviceRequestList Collection: ', collection.toJSON());
+       console.log('deleteRequestObject');
+       console.log('selectedServiceCollection collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
 
       // /* have GUID = (ControlFlag = 1) */
       // old: if (self.model.toJSON().ServiceGUID || String(self.model.toJSON().ControlFlag) === '1') {
       if (String(self.model.toJSON().ControlFlag) === '1') {
+		  console.log('ControlFlag: ', 1);
         // console.log(collection.toJSON());
         // console.log(self.model.toJSON());
         collection.remove(self.model);
@@ -102,14 +104,14 @@ Hktdc.Views = Hktdc.Views || {};
         /* edit mode use self.model */
         var targetModel = self.model.toJSON().selectedRequestModel ||
         self.model;
-        // console.log('targetModel: ', targetModel.toJSON());
+        console.log('targetModel: ', targetModel.toJSON());
         var removeTarget;
         self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedModel) {
           if (selectedModel.toJSON().ServiceGUID === targetModel.toJSON().ServiceGUID) {
             removeTarget = selectedModel;
           }
         });
-        // console.log('removeTarget: ', removeTarget);
+        console.log('removeTarget: ', removeTarget);
         /* console.group('group');
         console.log('collection: ', self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
         console.log('selectedRequestModel: ', self.model.toJSON().selectedRequestModel.toJSON());
@@ -117,27 +119,31 @@ Hktdc.Views = Hktdc.Views || {};
         console.log('targetModel: ', targetModel.toJSON());
         console.groupEnd(); */
         /* also delete the collection */
+        //console.log('deleteRequestObject-->cntrlFlag1');
         self.requestFormModel.toJSON().selectedServiceCollection.remove(removeTarget);
 
         /* not have ServiceGUID = (ControlFlag = 2) */
       } else {
-        // console.log('condition b');
+        //console.log('deleteRequestObject-->cntrlFlag2');
         // console.log('self.model', self.model.toJSON());
         // console.group('remove flag 2');
         collection.each(function(model) {
-          // console.log('models in serviceRequestList collection', model.toJSON());
+          //console.log('models in serviceRequestList collection', model.toJSON());
           // when 'new' mode
           if (model.toJSON().availableServiceObjectArray) {
+            //console.log('deleteRequestObject-->availableServiceObjectArray-->');
             var removeTargets = [];
             _.each(model.toJSON().availableServiceObjectArray, function(service) {
-              // console.log('service ID: ', service.GUID);
+              //console.log('availableServiceObjectArray service ID: ', service.GUID);
               self.requestFormModel.toJSON().selectedServiceCollection.each(function(selectedServiceModel) {
+                
+                //console.log('inside the loop');
                 // use GUID here because items in ControlFlag 2 are delete at the same time
                 if (selectedServiceModel && selectedServiceModel.toJSON().GUID === service.GUID) {
-                  // console.log('found: ', selectedServiceModel.toJSON().Name);
+                   //console.log('found: ', selectedServiceModel.toJSON().Name);
                   // self.requestFormModel.toJSON().selectedServiceCollection.remove(selectedServiceModel);
                   removeTargets.push(selectedServiceModel);
-                  // console.log(self.requestFormModel.toJSON().selectedServiceCollection.toJSON());
+                   
                 }
               });
             });
@@ -160,6 +166,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     addNotesToServiceObject: function(ev) {
+    console.log('addNotesToServiceObject');
       var selectedServiceModel = this.requestFormModel.toJSON().selectedServiceCollection.get(this.model.toJSON().ServiceGUID);
       this.model.set({
         Notes: $(ev.target).val().trim()
@@ -172,19 +179,22 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     initModelChangeHandler: function() {
+      console.log('initModelChangeHandler');
       var self = this;
       this.model.on('change:selectedRequestModel', function(selectedReq, newModel) {
         $('.selectleve2sub', self.el).text(newModel.toJSON().Name);
       });
+
       this.model.on('change:selectedServiceObject', function(selectedReq, isSelected) {
         $('.service-notes', self.el).prop('disabled', false);
         // $('.service-notes', self.el).prop('disabled', !isSelected);
       });
+      
+      console.log('clearServiceRequest');
       this.listenTo(self.model.toJSON().serviceCatagoryModel, 'clearServiceRequest', self.deleteRequestObject.bind(this));
 
+      console.log('changeServiceSelect');
       this.listenTo(self.model, 'changeServiceSelect', function(selectServiceModel) {
-        // console.log(selectServiceModel.toJSON());
-        // console.log(selectServiceModel.toJSON().Placeholder);
         // console.log($('.service-notes', self.el).find('textarea'));
         $('.service-notes', self.el).attr('placeholder', selectServiceModel.toJSON().Placeholder);
         $('.service-notes', self.el).val('');
@@ -204,15 +214,30 @@ Hktdc.Views = Hktdc.Views || {};
 	  
       if(this.requestFormModel.toJSON().ActionTakerServiceTypeID)
         {
+          if (String(request.ControlFlag) === '1') {
             isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
-                   this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
-		           this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.ServiceGUID);  
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
+                      this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.ServiceGUID);
+          }
+          else{
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.availableServiceObjectArray[0].GUID &&
+                      this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.availableServiceObjectArray[0].ServiceGUID);
+
+          }
         }
       else
         {
-		   isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
-                   this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
+          if (String(request.ControlFlag) === '1') {
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
+          }
+          else{
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.availableServiceObjectArray[0].GUID);
+          }
         }
+	  
 		
 		console.log('isActive');
 		console.log(isActive);
@@ -267,16 +292,30 @@ Hktdc.Views = Hktdc.Views || {};
       
 	  //get the Panel IsActive Value
 	  var isActive=false;
-      if(this.requestFormModel.toJSON().ActionTakerServiceTypeID)
+		if(this.requestFormModel.toJSON().ActionTakerServiceTypeID)
         {
-          isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
-                   this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
-		           this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.ServiceGUID);  
+          if (String(request.ControlFlag) === '1') {
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID &&
+                      this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.ServiceGUID);
+          }
+          else{
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.availableServiceObjectArray[0].GUID &&
+                      this.requestFormModel.toJSON().ActionTakerServiceTypeID === request.availableServiceObjectArray[0].ServiceGUID);
+
+          }
         }
       else
         {
-		   isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+          if (String(request.ControlFlag) === '1') {
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
                       this.requestFormModel.toJSON().ActionTakerServiceType === request.GUID);
+          }
+          else{
+            isActive=(this.requestFormModel.toJSON().ActionTakerServiceType &&
+                      this.requestFormModel.toJSON().ActionTakerServiceType === request.availableServiceObjectArray[0].GUID);
+          }
         }
 	  
 		
@@ -414,3 +453,4 @@ Hktdc.Views = Hktdc.Views || {};
 
   });
 })();
+

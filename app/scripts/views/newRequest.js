@@ -68,7 +68,7 @@ Hktdc.Views = Hktdc.Views || {};
           self.renderCCList(results[4]);
           self.renderSelectedCCView();
           self.initDatePicker();
-          //console.log('initialize(New)-->checkAndLoadRecommend');
+          console.log('initialize(New)-->checkAndLoadRecommend');
           self.checkAndLoadRecommend(true,false,true);
           /* default render the save button only,
            after change the approver(recommend by), render other button */
@@ -167,17 +167,17 @@ Hktdc.Views = Hktdc.Views || {};
     },
 
     mousedownRecommendSelect: function(ev) {
-      return this.haveBudgetAndService(false,true, ev);
+      return this.haveBudgetAndService(false,true,true,ev);
     },
 
     checkAndLoadRecommend: function(isNewMode,isEditMode,isServiceAdd) {
-      var self = this;
-      self.toggleInvalidMessage('selectedRecommentModel', false);
+	     var self = this;
+	    self.toggleInvalidMessage('selectedRecommentModel', false);
       if(isNewMode){
           self.renderRecommendList(isNewMode,isEditMode);
         }
       else{
-          if (self.haveBudgetAndService(false,isServiceAdd)) {
+          if (self.haveBudgetAndService(false,isServiceAdd,false)) {
             self.renderRecommendList(isNewMode,isEditMode);
           }
         }
@@ -193,30 +193,46 @@ Hktdc.Views = Hktdc.Views || {};
       }
     },
 	
-	haveSelectService: function(allowEmptyService) {
+	haveSelectService:function(allowEmptyService,validateNotes) {
       var self = this;
       var isValidService=true; 
 	    if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
         isValidService= false;
         return isValidService;
       }
-      //Notes Validation...
-      self.model.toJSON().selectedServiceCollection.each(function(service) {
-        if(!(service.toJSON().Notes) ||
-           service.toJSON().Notes.length===0)
+      if(validateNotes)
         {
-          isValidService=false;
-          return isValidService;
+            //Notes Validation...
+            self.model.toJSON().selectedServiceCollection.each(function(service) {
+              if(!(service.toJSON().Notes) ||
+                service.toJSON().Notes.length===0)
+              {
+                isValidService=false;
+                return isValidService;
+              }
+            });
         }
-      });
+		else
+          {
+            var noteExistCount=0;
+            self.model.toJSON().selectedServiceCollection.each(function(service) {
+              if(service.toJSON().Notes &&
+                 service.toJSON().Notes.length>0)
+              {
+                noteExistCount=noteExistCount+1;
+              }
+            });
+            if(noteExistCount===0)
+              isValidService=false;
+          }
 	    return isValidService;
     },
 
-    haveBudgetAndService: function(allowEmptyService,isServiceAdd,ev) { 
+    haveBudgetAndService: function(allowEmptyService,isServiceAdd,validateNotes,ev) { 
       var self = this;
       var haveFilledCost = !!this.model.toJSON().EstimatedCost;
       // if(isServiceAdd){
-        if (!(self.haveSelectService(allowEmptyService) && haveFilledCost)) {
+        if (!(self.haveSelectService(allowEmptyService,validateNotes) && haveFilledCost)) {
           // if it is fired by the click event
           if (ev) {
             // console.log('1');
@@ -378,7 +394,7 @@ Hktdc.Views = Hktdc.Views || {};
         // var selectedUserId = addedCC.toJSON().UserID;
         $('.selectedCC', this.el).text(selectedUserName);
       });
-
+	  
       this.model.toJSON().selectedServiceCollection.on('add', function(addedService, newCollection) {
         /* clear the selectedRecommentModel */
         // self.model.set({ selectedRecommentModel: null });
@@ -400,7 +416,12 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log('change{}{}{}{}');
         /* get new approver list */
         //console.log('selectedServiceCollection-->change');
-        self.checkAndLoadRecommend(false,false,false);
+        if(changedModel)
+        {
+          if(changedModel.toJSON().Notes && changedModel.toJSON().Notes.length>0){
+              self.checkAndLoadRecommend(false,false,false);
+            }
+        }
         self.renderButtons();
       });
 
@@ -408,8 +429,9 @@ Hktdc.Views = Hktdc.Views || {};
         /* clear the selectedRecommentModel */
         /* get new approver list */
         // console.log('remove selected service');
+		
         //console.log('selectedServiceCollection-->remove');
-        self.checkAndLoadRecommend(false,false,false);
+		    self.checkAndLoadRecommend(false,false,false);
         self.renderButtons();
       });
     },
@@ -698,7 +720,10 @@ Hktdc.Views = Hktdc.Views || {};
         });
         
 		  var serviceValid = true;
-      if(!(self.validateServiceCatagory())){ serviceValid =false;}
+      if(!(self.validateServiceCatagory())){
+        console.log('service is invalid');
+        serviceValid =false;
+        }
 
       //Call to higlight all the mandatory feilds..
       var mandatoryExist=false;
@@ -1017,7 +1042,8 @@ Hktdc.Views = Hktdc.Views || {};
                     if(serviceLevel2<=0) {isValid=false; }
                 }
 				});
-			}
+      }
+      console.log('validateServiceLevel1Inputs-->',isValid);
 			return isValid;
     },
 	
@@ -1032,7 +1058,8 @@ Hktdc.Views = Hktdc.Views || {};
 				  var serviceNotes=$(this).val();
 					if(!(serviceNotes)) { isValid=false; }
 				});
-		  }
+      }
+      console.log('validateServiceLevel2Inputs-->',isValid);
 		  return isValid;
 		  
     },
@@ -1049,19 +1076,21 @@ Hktdc.Views = Hktdc.Views || {};
 				  var serviceNotes=$(this).val();
 				  if(!(serviceNotes)) { isValid = false;}
 				});
-		  }
+      }
+      
+      console.log('validateServiceLevel3Inputs-->',isValid);
 		  return isValid;
 	  },
 	  
   //Function to validate the service Aquired For Section of UI
 	validateServiceCatagory: function() {  
         
-		//Reset the service panel to original mode
+		    //Reset the service panel to original mode
         this.ResetServicePanel();
 
 		    //Check for Service validation(Model/UI)
         var validService=false;
-        if(this.haveSelectService(false))
+        if(this.haveSelectService(false,true))
         {
             //Check for valid service at UI level
              if(this.validateServiceLevel1Inputs() && this.validateServiceLevel2Inputs() && this.validateServiceLevel3Inputs()){
@@ -1069,8 +1098,8 @@ Hktdc.Views = Hktdc.Views || {};
             }
         }
 		
-		//if all valid the proceed ahead no need to highlight
-		if(validService) { return true;}
+		   //if all valid the proceed ahead no need to highlight
+		   if(validService) { return true;}
         else
         {
               //get if any of the category is selected or not

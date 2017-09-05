@@ -41,7 +41,8 @@
 } else {
 %>
 
-<div class="row service-request-wrap block-padding <% if (isActive) { %>panel-highlight<% } %>">
+<div class="service-request-wrap block-padding <% if (isActive) { %>panel-highlight<% } %>">
+ <div class="row">
   <div class="service_num" style='padding-left: 20px;'>
     <span class="select-applicant-step">
       <%= request.index %>
@@ -55,7 +56,7 @@
     </div>
   </div>
   <div class="sep-space"></div>
-
+ </div>
 </div>
 
 <%

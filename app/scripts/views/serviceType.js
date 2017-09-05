@@ -67,6 +67,8 @@ Hktdc.Views = Hktdc.Views || {};
             if (!this.selectedServiceCatagoryTree) {
               selectedServiceRequestList = [];
             } else {
+				console.log("selectedServiceTypeTree");
+				console.log(selectedServiceTypeTree);
               var selectedServiceTypeTree = _.filter(this.selectedServiceCatagoryTree.Level2, function(selectedType) {
                 // TODO: change to GUID
                 return selectedType.Name === this.model.toJSON().Name;
@@ -74,6 +76,7 @@ Hktdc.Views = Hktdc.Views || {};
               // console.log('selectedServiceTypeTree: ', selectedServiceTypeTree);
 
               selectedServiceRequestList = _.flatten(_.pluck(selectedServiceTypeTree, 'Level3'));
+			  console.log(selectedServiceRequestList);
             }
 
             break;
