@@ -182,6 +182,7 @@ Hktdc.Views = Hktdc.Views || {};
       //console.log(this.model.toJSON());
       var selectedServiceRequestList = null;
       var availableServiceObjectArray = this.model.toJSON().Level3;
+	  console.log("this.model.toJSON().Level3");
 	  console.log(availableServiceObjectArray)
 	  _.each(availableServiceObjectArray,function(availableServiceObject){
 		  availableServiceObject.SValue=availableServiceObject.SValue.replace(/(?:\r\n|\r|\n)/g, '<br />');

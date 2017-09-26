@@ -7,6 +7,7 @@ Hktdc.Models = Hktdc.Models || {};
 
   Hktdc.Models.Button = Backbone.Model.extend({
     defaults: {
+	  showBack: true,		
       showSave: false,
       showSendToApplicant: false,
       showSendToApprover: false,

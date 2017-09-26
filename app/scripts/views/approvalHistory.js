@@ -22,19 +22,24 @@ Hktdc.Views = Hktdc.Views || {};
       $('#mainContent').removeClass('compress');
 
       var self = this;
+      var self = this;
+      var backHandler=utils.initializeBackHandler();
+      //console.log('initializeBackHandler call ends',backHandler);
+
       // _.extend(this, props);
-      self.render();
+      self.render(backHandler);
       self.model.on('change:showAdvanced', function(model, isShow) {
-        self.doToggleAdvanceMode(isShow);
+        self.doToggleAdvanceMode(isShow,false);
       });
+      backHandler=false;
     },
 
-    render: function() {
+    render: function(_isBackHandler) {
       var self = this;
       self.$el.html(self.template(self.model.toJSON()));
-      self.doToggleAdvanceMode(self.model.toJSON().showAdvanced);
+      self.doToggleAdvanceMode(self.model.toJSON().showAdvanced,_isBackHandler);
       self.renderDatePicker();
-      self.renderDataTable();
+      self.renderDataTable(_isBackHandler);
     },
 
     renderDatePicker: function() {
@@ -106,7 +111,7 @@ Hktdc.Views = Hktdc.Views || {};
       $('.approval-to-datepicker-container', self.el).html(approvalDateToView.el);
     },
 
-    renderDataTable: function() {
+    renderDataTable: function(_isBackHandler) {
       var self = this;
       /* Use DataTable's AJAX instead of backbone fetch and render */
       /* because to make use of DataTable funciton */
@@ -145,8 +150,9 @@ Hktdc.Views = Hktdc.Views || {};
           }
         },
         initComplete: function(settings, records) {
-          self.renderUserFilter(records);
-          self.renderStatusFilter(records);
+          self.renderUserFilter(records,_isBackHandler);
+          self.renderStatusFilter(records,_isBackHandler);
+          utils.updateDataTablePageInfo(_isBackHandler,self.approvalHistoryDataTable);
         },
         createdRow: function(row, data, index) {
           $(row).css({
@@ -176,6 +182,7 @@ Hktdc.Views = Hktdc.Views || {};
 
       $('#approvalHistoryTable tbody', self.el).on('click', 'tr', function(ev) {
         var rowData = self.approvalHistoryDataTable.row(this).data();
+        utils.getCurrentPageInfo(self.approvalHistoryDataTable);
         var ProcInstIDPath = '/' + rowData.ProcInstID;
         var typePath = '/history/';
 
@@ -185,7 +192,7 @@ Hktdc.Views = Hktdc.Views || {};
       });
     },
 	
-	 renderUserFilter: function(records) {
+	 renderUserFilter: function(records,_isBackHandler) {
       var self = this;
       var applicants = _.map(records, function(record) {
         return {
@@ -194,26 +201,32 @@ Hktdc.Views = Hktdc.Views || {};
           EmployeeID: record.ApplicantEMP
         };
       });
-    var distinctApplicants = _.uniq(applicants, function(applicant) {
+      var distinctApplicants = _.uniq(applicants, function(applicant) {
         return applicant.UserFullName;
       });
-    var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
-	//console.log(self.model.toJSON());
-	var userListView = new Hktdc.Views.ApplicantSelect({
-        collection: applicantCollection,
-        selectedApplicant: self.model.toJSON().applicant || '',
-        onSelect: function(model) {
-          var data = (model.toJSON().UserId === '0')
-            ? { applicant: '', 'applicant-employee-id': '' }
-            : { applicant: model.toJSON().UserId, 'applicant-employee-id': model.toJSON().EmployeeID }
-          self.model.set(data);
-        }
-      });  
+      
+      distinctApplicants=utils.refreshSourceFromStorage("Applicants",distinctApplicants,_isBackHandler);
+      var _selectedApplicantName=utils.getDefaultApplicant(distinctApplicants,self.model.toJSON().applicant);
+      var applicantCollection = new Hktdc.Collections.Applicant(distinctApplicants);
+      
+      
+      //console.log(self.model.toJSON());
+       var userListView = new Hktdc.Views.ApplicantSelect({
+          collection: applicantCollection,
+          //selectedApplicant: self.model.toJSON().applicant || '',
+          selectedApplicant: _selectedApplicantName || '',
+          onSelect: function(model) {
+            var data = (model.toJSON().UserId === '0')
+              ? { applicant: '', 'applicant-employee-id': '' }
+              : { applicant: model.toJSON().UserId, 'applicant-employee-id': model.toJSON().EmployeeID }
+            self.model.set(data);
+          }
+        });  
       userListView.render();
       $('.user-container', self.el).html(userListView.el);
     },
 
-    renderStatusFilter: function(records) {
+    renderStatusFilter: function(records,_isBackHandler) {
       var self = this;
       var allStatus = _.map(records, function(record) {
         return {
@@ -224,6 +237,9 @@ Hktdc.Views = Hktdc.Views || {};
       var distinctStatus = _.uniq(allStatus, function(status) {
         return status.ReferenceID;
       });
+
+      distinctStatus=utils.refreshSourceFromStorage("AvaiStatus",distinctStatus,_isBackHandler);
+
       var statusCollection = new Hktdc.Collections.Status(distinctStatus);
 
       var statusListView = new Hktdc.Views.StatusList({

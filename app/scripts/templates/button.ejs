@@ -1,6 +1,5 @@
+<div class='available-buttons text-center'>
 <% if (!noButton) {%>
-  <div class='available-buttons text-center'>
-
     <% if (showSave) {%>
       <button class="btn btn-primary" id="btnsave" type="button">Save</button>
     <% } %>
@@ -32,6 +31,9 @@
     <%
     });
     %>
-
-  </div>
 <% } %>
+
+<% if (showBack) {%>
+  <button class="btn btn-primary" id="btnBack" type="button">Back</button>      
+<% } %>
+</div>

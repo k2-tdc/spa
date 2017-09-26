@@ -340,12 +340,12 @@ Hktdc.Routers = Hktdc.Routers || {};
 
               var requestView;
               if (getMode() === 'edit') {
-				
+				console.log('Hktdc.Views.NewRequest');
                 requestView = new Hktdc.Views.NewRequest({
                   model: requestModel
                 });
               } else {
-				  
+				  console.log('Hktdc.Views.ReadRequest');
                 requestView = new Hktdc.Views.ReadRequest({
                   model: requestModel
                 });

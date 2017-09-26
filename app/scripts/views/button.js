@@ -18,7 +18,8 @@ Hktdc.Views = Hktdc.Views || {};
       'click #btndelete': 'clickDeleteBtnHandler',
       'click #btnrecall': 'clickRecallBtnHandler',
       'click #btnresend': 'clickResendBtnHandler',
-      'click .workflow-btn': 'clickWorkflowBtnHandler'
+      'click .workflow-btn': 'clickWorkflowBtnHandler',
+	    'click #btnBack': 'clickBackBtnHandler'
     },
 
     initialize: function(props) {
@@ -57,7 +58,6 @@ Hktdc.Views = Hktdc.Views || {};
         // FormStatus === 'Review' ||
         // FormStatus === 'Return'
       ) {
-        console.debug('NEED Check APPLICANT_RULECODE');
         /* load related button set */
         // var ApproverRuleCode = self.requestFormModel.toJSON().selectedRecommentModel.toJSON().RuleCode;
         //console.log('Preparer: ', Preparer);
@@ -71,7 +71,7 @@ Hktdc.Views = Hktdc.Views || {};
               showDelete: false
             });
           } else {
-            self.render({ showSave: true });
+            self.render({ showSave: true,showBack: false });
           }
         } else {
           self.renderDraftModeButton(FormStatus, Preparer, Applicant, Approver, ApplicantRuleCode);
@@ -131,6 +131,11 @@ Hktdc.Views = Hktdc.Views || {};
       var RuleCode1 = Hktdc.Config.RuleCode.split(',')[0];
       var RuleCode2 = Hktdc.Config.RuleCode.split(',')[1];
       var showButtonOptions = { showSave: true };
+      
+      if(!FormStatus){
+        showButtonOptions.showBack=false;
+      }
+
       if (self.requestFormModel.toJSON().FormStatus) {
         showButtonOptions.showDelete = true;
       }
@@ -466,6 +471,17 @@ Hktdc.Views = Hktdc.Views || {};
         }
       });
     },
+  
+  //handling when user clicks on back button
+	clickBackBtnHandler: function(ev) {
+      var self = this;
+      sessionStorage.setItem("isBackNavigation","true");
+      console.log('inside back button call:-' ,sessionStorage);
+      ev.preventDefault();
+      window.history.back();      
+	    //history.go(-1);
+    },
+    //clickBackBtnHandler function ends
 
     clickRecallBtnHandler: function() {
       var self = this;

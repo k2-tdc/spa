@@ -441,6 +441,7 @@ Hktdc.Views = Hktdc.Views || {};
 
     render: function() {
       // console.log(this.collection.toJSON());
+	  
       if (this.collection.toJSON().length > 0) {
         if (String(this.collection.toJSON()[0].ControlFlag) === '2') {
           this.renderTextServiceRequest();
