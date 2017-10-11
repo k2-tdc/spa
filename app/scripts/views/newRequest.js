@@ -16,7 +16,8 @@ Hktdc.Views = Hktdc.Views || {};
       'blur #txtestimatedcost': 'updateNewRequestModel',
       'blur #txtbudgetprovided': 'updateNewRequestModel',
       // 'blur #txtbudgetsum': 'updateNewRequestModel',
-      'blur #txtremark': 'updateNewRequestModel'
+      'blur #txtremark': 'updateNewRequestModel',
+      'click #btnBackNewReq': 'clickBackBtnHandlerNewReq'
     },
 
     initialize: function(props) {
@@ -196,26 +197,20 @@ Hktdc.Views = Hktdc.Views || {};
 	haveSelectService:function(allowEmptyService,validateNotes) {
       var self = this;
       var isValidService=true; 
-      console.log('haveSelectService');
+      //console.log('haveSelectService');
 
-      console.log('collection length',self.model.toJSON().selectedServiceCollection.toJSON().length);
-	    if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
+        if (self.model.toJSON().selectedServiceCollection.toJSON().length <= 0 && !allowEmptyService) {
         console.log('selected service validation');
         isValidService= false;
         return isValidService;
       }
       if(validateNotes)
         {
-            console.log('selected service',self.model.toJSON().selectedServiceCollection.toJSON());
             //Notes Validation...
-            console.log('validate notes');
             self.model.toJSON().selectedServiceCollection.each(function(service) {
-              console.log('validate notes service',service.toJSON());
-              console.log('validate notes service 1',service.toJSON().Notes);
               if(!(service.toJSON().Notes) ||
                 service.toJSON().Notes.length===0)
               {
-                console.log('validate notes failed');
                 isValidService=false;
                 return isValidService;
               }
@@ -425,8 +420,8 @@ Hktdc.Views = Hktdc.Views || {};
         // self.model.set({ selectedRecommentModel: null });
         // console.log('change{}{}{}{}');
         /* get new approver list */
-        console.log('selectedServiceCollection-->change');
-        console.log(changedModel);
+        //console.log('selectedServiceCollection-->change');
+        //console.log(changedModel);
         if(changedModel)
         {
           if(changedModel.toJSON().Notes && changedModel.toJSON().Notes.length>0){
@@ -451,8 +446,8 @@ Hktdc.Views = Hktdc.Views || {};
         /* get new approver list */
         // console.log('remove selected service');
 		
-        console.log('selectedServiceCollection-->remove');
-        console.log('changedModel:-',changedModel.toJSON());
+        //console.log('selectedServiceCollection-->remove');
+        //console.log('changedModel:-',changedModel.toJSON());
         var loadRecommend=true;
         if(changedModel && changedModel.toJSON().IsServiceChanged &&
            changedModel.toJSON().IsServiceChanged===1)
@@ -751,15 +746,15 @@ Hktdc.Views = Hktdc.Views || {};
           firstTimeValidate: false
         });
        
-      console.log('Service Invalid Chk');  
+      //console.log('Service Invalid Chk');  
 		  var serviceValid = true;
       if(!(self.validateServiceCatagory())){
         console.log('service is invalid');
         serviceValid =false;
         }
-      console.log('Service Invalid Chk ends',serviceValid);
-
-      //Call to higlight all the mandatory feilds..
+      //console.log('Service Invalid Chk ends',serviceValid);
+      
+	  //Call to higlight all the mandatory feilds..
       var mandatoryExist=false;
       mandatoryExist=this.highlightMandatoryFields();
       
@@ -1124,15 +1119,8 @@ Hktdc.Views = Hktdc.Views || {};
 
         //Check for Service validation(Model/UI)
         var validService=false;
-        console.log('haveSelectService');
         if(this.haveSelectService(false,true))
         {
-             console.log('haveSelectService passed');
-
-             console.log('validateServiceLevel1Inputs:-',this.validateServiceLevel1Inputs());
-             console.log('validateServiceLevel2Inputs:-',this.validateServiceLevel2Inputs());
-             console.log('validateServiceLevel3Inputs:-',this.validateServiceLevel3Inputs());
-
             //Check for valid service at UI level
              if(this.validateServiceLevel1Inputs() && this.validateServiceLevel2Inputs() && this.validateServiceLevel3Inputs()){
               validService=true;
@@ -1294,7 +1282,16 @@ Hktdc.Views = Hktdc.Views || {};
           successCallback();
         }
       }
-    }
+    },
+
+    //handling when user clicks on back button
+    clickBackBtnHandlerNewReq: function(ev) {
+        var self = this;
+        sessionStorage.setItem("isBackNavigation","true");
+        ev.preventDefault();
+        window.history.back();
+      }
+  //clickBackBtnHandler function ends
 
   });
 })();

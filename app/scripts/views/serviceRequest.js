@@ -167,10 +167,22 @@ Hktdc.Views = Hktdc.Views || {};
 
     addNotesToServiceObject: function(ev) {
     //console.log('addNotesToServiceObject');
-      var selectedServiceModel = this.requestFormModel.toJSON().selectedServiceCollection.get(this.model.toJSON().ServiceGUID);
+    //console.log('addNotesToServiceObject1' ,this.requestFormModel.toJSON().selectedServiceCollection);
+    var selectedServiceModel = this.requestFormModel.toJSON().selectedServiceCollection.get(this.model.toJSON().ServiceGUID);
+	  //console.log('selectedServiceModel',selectedServiceModel);
+	  //console.log('new notes value',$(ev.target).val().trim());
+	  //console.log('Current Model',this.model.toJSON());
+  
+      this.model.set({
+        Notes:null
+      });
+      
       this.model.set({
         Notes: $(ev.target).val().trim()
       });
+    
+      //console.log('Current Model',this.model.toJSON());
+
       if (selectedServiceModel) {
         selectedServiceModel.set({
           Notes: $(ev.target).val().trim()
@@ -198,6 +210,7 @@ Hktdc.Views = Hktdc.Views || {};
         // console.log($('.service-notes', self.el).find('textarea'));
         $('.service-notes', self.el).attr('placeholder', selectServiceModel.toJSON().Placeholder);
         $('.service-notes', self.el).val('');
+        //console.log('changeServiceSelect',selectServiceModel.toJSON());
       });
     },
 

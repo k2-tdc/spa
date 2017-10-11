@@ -12,7 +12,8 @@ Hktdc.Views = Hktdc.Views || {};
     tagName: 'div',
 
     events: {
-      'blur #txtRemark': 'updateNewRequestModel'
+      'blur #txtRemark': 'updateNewRequestModel',
+      'click #btnBackDraft': 'clickBackBtnHandlerDraft'
     },
 
     initialize: function() {
@@ -82,6 +83,15 @@ Hktdc.Views = Hktdc.Views || {};
       // this.model.set(updateObject, {validate: true, field: targetField});
       // this.checkRemark(false);
     },
+
+    //handling when user clicks on back button
+    clickBackBtnHandlerDraft: function(ev) {
+      var self = this;
+      sessionStorage.setItem("isBackNavigation","true");
+      ev.preventDefault();
+      window.history.back();
+    },
+    //clickBackBtnHandler function ends
 
     loadForwardUser: function() {
       var deferred = Q.defer();

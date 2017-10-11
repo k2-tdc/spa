@@ -27,7 +27,7 @@ Hktdc.Views = Hktdc.Views || {};
       //console.log('initializeBackHandler call ends',backHandler);
 
       // _.extend(this, props);
-      self.render(backHandler);
+      self.render(backHandler);  
       self.model.on('change:showAdvanced', function(model, isShow) {
         self.doToggleAdvanceMode(isShow,false);
       });
@@ -327,7 +327,12 @@ Hktdc.Views = Hktdc.Views || {};
       // console.log(this.model.toJSON().showAdvanced);
     },
 
-    doToggleAdvanceMode: function(isShow) {
+    doToggleAdvanceMode: function(isShow,_isBackHandler) {
+		
+	   //check if the navigation is from back else store the value in session for local storage
+      var self=this;
+      isShow=utils.toggleModeForBackNavigation(isShow,_isBackHandler);
+		
       if (isShow) {
         $('.advanced-form', this.el).show();
         //$('.advanced-btn .isHide', this.el).show();

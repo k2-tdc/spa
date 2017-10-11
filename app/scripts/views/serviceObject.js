@@ -17,7 +17,7 @@ Hktdc.Views = Hktdc.Views || {};
     },
     editServiceHandler: function(ev) {
       //console.log('#lastnosub blur; ', $(ev.target).val().trim() );
-      // console.log($(ev.target).val().trim());
+      //console.log($(ev.target).val().trim());
       if ($(ev.target).val().trim().length > 0) {
         this.model.set({
           Notes: $('textarea', this.el).val().trim()
@@ -108,9 +108,11 @@ Hktdc.Views = Hktdc.Views || {};
     initialize: function(props) {
       var self = this;
       _.extend(this, props);
+	  //console.log('initialize notes');
       this.serviceRequestModel.on('change:Notes', function(a, newNotes) {
         /* the requestFormModel.selectedServiceCollection will auto update */
-        self.model.set({ Notes: newNotes });
+		 //console.log('initialize newNotes',newNotes)
+         self.model.set({ Notes: newNotes });
       });
     },
 
